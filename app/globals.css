@@ -74,20 +74,21 @@ a { color: inherit; text-decoration: none; }
 }
 
 .logo-mark {
-  width: 42px;
-  height: 42px;
-  border-radius: 15px;
+  width: 62px;
+  height: 62px;
+  border-radius: 18px;
   display: grid;
   place-items: center;
-  overflow: hidden;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  box-shadow: 0 0 32px rgba(139,92,246,.75), 0 0 52px rgba(34,211,238,.22);
+  overflow: visible;
+  background: transparent;
+  box-shadow: 0 0 28px rgba(139, 92, 246, 0.8), 0 0 50px rgba(34, 211, 238, 0.35);
 }
 
 .logo-mark img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 12px rgba(139, 92, 246, 0.9));
 }
 
 .nav-links {
