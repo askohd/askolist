@@ -422,3 +422,95 @@ select option {
     align-items: flex-start;
   }
 }
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 13px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  font-weight: 800;
+}
+
+.user-pill img {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+}
+
+.user-avatar-fallback {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #8b5cf6, #22d3ee);
+}
+
+.logout-btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 13px;
+  cursor: pointer;
+  color: white;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  font-weight: 800;
+}
+
+.profile-page {
+  padding-top: 70px;
+  padding-bottom: 90px;
+}
+
+.profile-card,
+.profile-header-card {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.07), transparent),
+    rgba(15, 14, 34, 0.82);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 30px;
+  padding: 28px;
+  box-shadow: 0 30px 90px rgba(0,0,0,0.35);
+}
+
+.profile-user {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.profile-user img,
+.profile-avatar-fallback {
+  width: 92px;
+  height: 92px;
+  border-radius: 28px;
+  object-fit: cover;
+  box-shadow: 0 0 34px rgba(139,92,246,0.55);
+}
+
+.profile-avatar-fallback {
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #8b5cf6, #22d3ee);
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.profile-user h1 {
+  margin: 10px 0 6px;
+  font-size: clamp(34px, 5vw, 58px);
+  letter-spacing: -0.06em;
+}
+
+.profile-user p {
+  margin: 0;
+  color: #c6c3e6;
+}
