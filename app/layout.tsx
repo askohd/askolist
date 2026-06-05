@@ -11,11 +11,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>
-        <Header />
-        {children}
-        <footer className="footer"><div className="container">AskoList · Discord server list MVP</div></footer>
-      </body>
-    </html>
-  );
-}
+     <body>
+  <AuthProvider>
+    <Header />
+    {children}
+    <Footer />
+  </AuthProvider>
+</body>
