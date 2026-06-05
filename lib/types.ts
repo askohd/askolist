@@ -1,0 +1,24 @@
+export type Server = {
+  id: string;
+  serverName: string;
+  description: string;
+  inviteLink: string;
+  logo?: string;
+  discordServerId: string;
+  ownerDiscordUserId: string;
+  category: string;
+  tags: string[];
+  country: string;
+  language: string;
+  nsfw: boolean;
+  approved: boolean;
+  bumps: number;
+  lastBump: string | null;
+  premiumStatus: boolean;
+  premiumUntil: string | null;
+  partnerStatus: boolean;
+  partnerUntil: string | null;
+  ratingAverage: number;
+  ratingCount: number;
+  createdAt: string;
+};
