@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import LoginButton from "./LoginButton";
 
 export default function Header() {
   return (
@@ -22,11 +23,13 @@ export default function Header() {
           <Link href="/servers">Servers</Link>
           <Link href="/submit">Submit Server</Link>
           <Link href="/shop">Shop</Link>
+          <Link href="/profile">Profile</Link>
           <Link href="/admin">Admin</Link>
         </nav>
 
-        <button className="btn secondary">Login with Discord</button>
+        <LoginButton />
       </div>
     </header>
   );
+}
 }
