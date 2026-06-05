@@ -10,8 +10,8 @@ export default function Header() {
             <Image
               src="/logo.png"
               alt="AskoList Logo"
-              width={38}
-              height={38}
+              width={56}
+              height={56}
               priority
             />
           </span>
