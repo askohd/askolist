@@ -3,7 +3,15 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-const MAX_DESCRIPTION_LENGTH = 3000;
+const MAX_DESCRIPTION_WORDS = 1500;
+
+function countWords(text: string) {
+  return text.trim().split(/\s+/).filter(Boolean).length;
+}
+
+function limitWords(text: string, maxWords: number) {
+  return text.trim().split(/\s+/).filter(Boolean).slice(0, maxWords).join(" ");
+}
 
 export default function ProfileServerEditor({ server }: { server: any }) {
   const isPremiumOrPartner = Boolean(
@@ -23,7 +31,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
   );
 
   const [description, setDescription] = useState(
-    String(server.description ?? "").slice(0, MAX_DESCRIPTION_LENGTH)
+    limitWords(String(server.description ?? ""), MAX_DESCRIPTION_WORDS)
   );
 
   const [bannerX, setBannerX] = useState(Number(server.banner_position_x ?? 50));
@@ -192,14 +200,19 @@ export default function ProfileServerEditor({ server }: { server: any }) {
         <textarea
           name="description"
           value={description}
-          maxLength={MAX_DESCRIPTION_LENGTH}
           placeholder="Beschreibung deines Servers"
-          onChange={(event) =>
-            setDescription(event.target.value.slice(0, MAX_DESCRIPTION_LENGTH))
-          }
+          onChange={(event) => {
+            const value = event.target.value;
+
+            if (countWords(value) <= MAX_DESCRIPTION_WORDS) {
+              setDescription(value);
+            } else {
+              setDescription(limitWords(value, MAX_DESCRIPTION_WORDS));
+            }
+          }}
         />
         <small className="char-counter">
-          {description.length}/{MAX_DESCRIPTION_LENGTH} Zeichen
+          {countWords(description)}/{MAX_DESCRIPTION_WORDS} Wörter
         </small>
       </label>
 
