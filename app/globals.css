@@ -514,3 +514,25 @@ select option {
   margin: 0;
   color: #c6c3e6;
 }
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.admin-actions form {
+  margin: 0;
+}
+
+.btn.danger {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  color: white;
+  box-shadow: 0 0 22px rgba(239, 68, 68, 0.32);
+}
+
+.danger-badge {
+  color: #fecaca;
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.28);
+}
