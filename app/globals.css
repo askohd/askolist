@@ -1474,3 +1474,34 @@ select option {
 .premium-feature-grid {
   margin-top: 16px;
 }
+.server-description-box {
+  margin-top: 18px !important;
+  padding: 18px 20px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  white-space: pre-wrap !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  line-height: 1.75 !important;
+  max-width: 100%;
+  font-size: 15px;
+}
+
+.server-modern-description {
+  white-space: pre-wrap !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  line-height: 1.75 !important;
+}
+
+.server-modern-content,
+.server-modern-body,
+.server-modern-header,
+.server-modern-header > div {
+  min-width: 0;
+}
+
+.server-modern-card {
+  overflow: hidden;
+}
