@@ -1541,3 +1541,210 @@ select option {
 .server-modern-card {
   overflow: hidden;
 }
+.servers-directory-page {
+  padding-top: 52px;
+  padding-bottom: 80px;
+}
+
+.servers-directory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 34px;
+}
+
+.servers-directory-header h1 {
+  margin: 12px 0 8px;
+  font-size: clamp(34px, 5vw, 58px);
+}
+
+.servers-directory-header p {
+  margin: 0;
+  color: #cfc9ea;
+}
+
+.server-directory-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  align-items: start;
+}
+
+.server-directory-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025)),
+    rgba(16, 14, 35, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  min-width: 0;
+}
+
+.server-directory-banner {
+  position: relative;
+  height: 120px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #7c3aed, #06b6d4);
+}
+
+.server-directory-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.server-directory-banner-fallback {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #7c3aed, #06b6d4);
+}
+
+.server-directory-rating {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 13px;
+  font-weight: 900;
+  color: #fde68a;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  backdrop-filter: blur(10px);
+}
+
+.server-directory-body {
+  padding: 0 22px 22px;
+}
+
+.server-directory-top {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  margin-top: -34px;
+  position: relative;
+  z-index: 2;
+}
+
+.server-directory-logo {
+  width: 74px;
+  height: 74px;
+  border-radius: 22px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  background: linear-gradient(135deg, #8b5cf6, #22d3ee);
+  border: 4px solid rgba(16, 14, 35, 0.96);
+  font-size: 30px;
+  font-weight: 950;
+}
+
+.server-directory-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.server-directory-title {
+  min-width: 0;
+  padding-bottom: 5px;
+}
+
+.server-directory-title h3 {
+  margin: 0 0 5px;
+  font-size: 22px;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.server-directory-title p {
+  margin: 0;
+  color: #cfc9ea;
+  font-size: 14px;
+}
+
+.server-directory-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 18px;
+  color: #cfc9ea;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.server-online-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #22c55e;
+  box-shadow: 0 0 14px rgba(34, 197, 94, 0.7);
+}
+
+.server-directory-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.server-directory-description {
+  margin-top: 18px;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: normal;
+  line-height: 1.65;
+  font-size: 14px;
+  color: #eeeaff;
+  max-height: 190px;
+  overflow: hidden;
+  position: relative;
+}
+
+.server-directory-rating-box {
+  margin-top: 18px;
+}
+
+.server-directory-rating-box form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.server-directory-rating-box p {
+  margin: 0;
+  color: #cfc9ea;
+  font-size: 13px;
+}
+
+.server-directory-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.server-directory-footer .btn {
+  min-width: 140px;
+  justify-content: center;
+}
+
+@media (max-width: 1100px) {
+  .server-directory-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .servers-directory-header {
+    flex-direction: column;
+  }
+
+  .server-directory-grid {
+    grid-template-columns: 1fr;
+  }
+}
