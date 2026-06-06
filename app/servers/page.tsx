@@ -9,6 +9,10 @@ function sortServers(servers: any[]) {
       return a.premium_status ? -1 : 1;
     }
 
+    if (a.partner_status !== b.partner_status) {
+      return a.partner_status ? -1 : 1;
+    }
+
     const aBump = a.last_bump ? new Date(a.last_bump).getTime() : 0;
     const bBump = b.last_bump ? new Date(b.last_bump).getTime() : 0;
 
@@ -17,7 +21,9 @@ function sortServers(servers: any[]) {
 }
 
 function getRatingStats(reviews: any[], serverId: string) {
-  const serverReviews = reviews.filter((review) => review.server_id === serverId);
+  const serverReviews = reviews.filter(
+    (review) => review.server_id === serverId
+  );
 
   if (serverReviews.length === 0) {
     return {
@@ -46,7 +52,9 @@ export default async function ServersPage() {
     "servers?approved=eq.true&status=eq.approved&select=*"
   );
 
-  const reviews = await supabaseRequest("reviews?select=server_id,discord_user_id,rating");
+  const reviews = await supabaseRequest(
+    "reviews?select=server_id,discord_user_id,rating"
+  );
 
   const servers = sortServers(data ?? []);
 
@@ -72,6 +80,10 @@ export default async function ServersPage() {
         ) : (
           servers.map((server: any) => {
             const ratingStats = getRatingStats(reviews ?? [], server.id);
+            const isPremiumOrPartner = Boolean(
+              server.premium_status || server.partner_status
+            );
+
             const myReview = (reviews ?? []).find(
               (review: any) =>
                 review.server_id === server.id &&
@@ -82,15 +94,17 @@ export default async function ServersPage() {
               <article
                 key={server.id}
                 className={`server-modern-card ${
-                  server.premium_status ? "premium-server-card" : ""
+                  isPremiumOrPartner ? "premium-server-card" : ""
                 }`}
                 style={
-                  server.premium_status
+                  isPremiumOrPartner
                     ? {
                         boxShadow: `0 0 34px ${
                           server.premium_glow_color || "#8b5cf6"
                         }70`,
-                        borderColor: `${server.premium_glow_color || "#8b5cf6"}88`,
+                        borderColor: `${
+                          server.premium_glow_color || "#8b5cf6"
+                        }88`,
                       }
                     : undefined
                 }
@@ -114,8 +128,10 @@ export default async function ServersPage() {
                     <div className="server-modern-banner-fallback" />
                   )}
 
-                  {server.premium_status && (
-                    <span className="server-premium-badge">Premium</span>
+                  {isPremiumOrPartner && (
+                    <span className="server-premium-badge">
+                      {server.partner_status ? "Partner" : "Premium"}
+                    </span>
                   )}
                 </div>
 
@@ -131,8 +147,23 @@ export default async function ServersPage() {
                   <div className="server-modern-content">
                     <div className="server-modern-header">
                       <div>
-                        <h3>{server.server_name}</h3>
-                        <p>
+                        <h3
+                          style={{
+                            color: isPremiumOrPartner
+                              ? server.server_name_color ?? "#ffffff"
+                              : undefined,
+                          }}
+                        >
+                          {server.server_name}
+                        </h3>
+
+                        <p
+                          style={{
+                            color: isPremiumOrPartner
+                              ? server.server_text_color ?? "#cfc9ea"
+                              : undefined,
+                          }}
+                        >
                           {server.category} • {server.country} •{" "}
                           {server.language}
                         </p>
@@ -158,31 +189,16 @@ export default async function ServersPage() {
                       </div>
                     </div>
 
-                    <p className="server-modern-description">
+                    <p
+                      className="server-modern-description"
+                      style={{
+                        color: isPremiumOrPartner
+                          ? server.server_text_color ?? "#ddd9ef"
+                          : undefined,
+                      }}
+                    >
                       {server.description}
                     </p>
-
-                    {server.premium_status && (
-                      <div
-                        className="premium-showcase"
-                        style={{
-                          borderColor: `${server.premium_glow_color || "#8b5cf6"}66`,
-                          boxShadow: `0 0 28px ${
-                            server.premium_glow_color || "#8b5cf6"
-                          }33`,
-                        }}
-                      >
-                        <div>
-                          <strong>Premium Spotlight</strong>
-                          <p>
-                            {server.premium_message ||
-                              "Featured Premium Server"}
-                          </p>
-                        </div>
-
-                        <span>Top Placement</span>
-                      </div>
-                    )}
 
                     <div className="rating-box">
                       {session ? (
@@ -207,7 +223,10 @@ export default async function ServersPage() {
                               <option value="1">1 Stern</option>
                             </select>
 
-                            <button className="admin-action-btn primary" type="submit">
+                            <button
+                              className="admin-action-btn primary"
+                              type="submit"
+                            >
                               Bewerten
                             </button>
                           </form>
