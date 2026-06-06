@@ -1311,3 +1311,28 @@ select option {
     flex-direction: column;
   }
 }
+.profile-server-summary-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.profile-server-summary-actions .btn {
+  margin: 0;
+  width: fit-content;
+}
+
+.banner-control-top {
+  margin-top: 0;
+}
+
+.profile-edit-card {
+  gap: 18px;
+}
+
+@media (max-width: 800px) {
+  .profile-server-summary-actions {
+    align-items: flex-start;
+  }
+}
