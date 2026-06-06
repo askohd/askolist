@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { authOptions } from "@/lib/auth";
 import { supabaseRequest } from "@/lib/supabase";
+import ProfileServerEditor from "@/components/ProfileServerEditor";
 
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
@@ -134,127 +135,7 @@ export default async function ProfilePage() {
                   <span className="badge">Bumps: {server.bumps ?? 0}</span>
                 </div>
 
-                <form
-                  action="/api/profile/update-server"
-                  method="POST"
-                  encType="multipart/form-data"
-                  className="profile-edit-card"
-                >
-                  <h3>Server bearbeiten</h3>
-
-                  <label className="field">
-                    <span>Servername</span>
-                    <input
-                      className="input"
-                      name="server_name"
-                      defaultValue={server.server_name ?? ""}
-                      placeholder="Servername"
-                    />
-                  </label>
-
-                  <label className="field full">
-                    <span>Beschreibung</span>
-                    <textarea
-                      name="description"
-                      defaultValue={server.description ?? ""}
-                      placeholder="Beschreibung deines Servers"
-                    />
-                  </label>
-
-                  <div className="profile-upload-grid">
-                    <label className="field">
-                      <span>Server-Logo ändern</span>
-                      <input type="file" name="logo" accept="image/*" />
-                    </label>
-
-                    <label className="field">
-                      <span>Server-Banner ändern</span>
-                      <input type="file" name="banner" accept="image/*" />
-                    </label>
-                  </div>
-
-                  <div className="banner-control-card">
-                    <h3>Banner einstellen</h3>
-                    <p>
-                      Hier kannst du dein Banner verschieben und vergrößern.
-                    </p>
-
-                    <label className="field">
-                      <span>Banner links/rechts</span>
-                      <input
-                        type="range"
-                        name="banner_position_x"
-                        min="0"
-                        max="100"
-                        defaultValue={server.banner_position_x ?? 50}
-                      />
-                    </label>
-
-                    <label className="field">
-                      <span>Banner hoch/runter</span>
-                      <input
-                        type="range"
-                        name="banner_position_y"
-                        min="0"
-                        max="100"
-                        defaultValue={server.banner_position_y ?? 50}
-                      />
-                    </label>
-
-                    <label className="field">
-                      <span>Banner Zoom</span>
-                      <input
-                        type="range"
-                        name="banner_zoom"
-                        min="1"
-                        max="2.5"
-                        step="0.1"
-                        defaultValue={server.banner_zoom ?? 1}
-                      />
-                    </label>
-                  </div>
-
-                  <label className="field">
-                    <span>Premium Text</span>
-                    <input
-                      className="input"
-                      name="premium_message"
-                      defaultValue={
-                        server.premium_message ?? "Featured Premium Server"
-                      }
-                      placeholder="Featured Premium Server"
-                    />
-                  </label>
-
-                  <div className="profile-style-card inner-style-card">
-                    <div>
-                      <h3>Premium Glow Color</h3>
-                      <p>
-                        Diese Farbe wird für den Premium-Leuchteffekt deines
-                        Servers verwendet.
-                      </p>
-                    </div>
-
-                    <div className="color-row">
-                      <input
-                        type="color"
-                        name="premium_glow_color"
-                        defaultValue={server.premium_glow_color ?? "#8b5cf6"}
-                      />
-
-                      <button className="btn" type="submit">
-                        Änderungen speichern
-                      </button>
-                    </div>
-                  </div>
-
-                  {!server.premium_status && (
-                    <p className="form-note">
-                      Hinweis: Der Glow und der Premium Text sind erst sichtbar,
-                      wenn dein Server Premium hat.
-                    </p>
-                  )}
-                </form>
+                <ProfileServerEditor server={server} />
 
                 <a
                   className="btn secondary"
