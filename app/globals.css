@@ -1214,3 +1214,73 @@ select option {
 .server-modern-banner img {
   transition: transform 0.2s ease;
 }
+.live-preview-card {
+  overflow: hidden;
+  border-radius: 26px;
+  background: rgba(15, 14, 34, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.live-preview-banner {
+  position: relative;
+  height: 260px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.live-preview-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: object-position 0.15s ease, transform 0.15s ease;
+}
+
+.live-preview-banner-fallback {
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.22), transparent 30%),
+    linear-gradient(135deg, #7c3aed, #06b6d4);
+}
+
+.live-preview-body {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 22px 22px;
+  margin-top: -44px;
+  position: relative;
+  z-index: 2;
+}
+
+.live-preview-logo {
+  width: 92px;
+  height: 92px;
+  border-radius: 24px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  background: linear-gradient(135deg, #8b5cf6, #22d3ee);
+  border: 4px solid rgba(15, 14, 34, 0.96);
+  font-size: 34px;
+  font-weight: 950;
+  box-shadow: 0 0 28px rgba(139, 92, 246, 0.45);
+}
+
+.live-preview-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.live-preview-body h3 {
+  margin: 0 0 6px;
+  font-size: 28px;
+}
+
+.live-preview-body p {
+  margin: 0;
+  color: #c6c3e6;
+}
