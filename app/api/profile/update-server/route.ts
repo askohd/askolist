@@ -14,6 +14,11 @@ function redirectToProfile(request: Request, query: string) {
   });
 }
 
+function clampNumber(value: number, min: number, max: number, fallback: number) {
+  if (Number.isNaN(value)) return fallback;
+  return Math.min(max, Math.max(min, value));
+}
+
 async function uploadPublicFile(
   bucket: string,
   ownerDiscordUserId: string,
@@ -62,6 +67,31 @@ export async function POST(request: Request) {
       formData.get("premium_glow_color") ?? "#8b5cf6"
     ).trim();
 
+    const premiumMessage = String(
+      formData.get("premium_message") ?? "Featured Premium Server"
+    ).trim();
+
+    const bannerPositionX = clampNumber(
+      Number(formData.get("banner_position_x") ?? 50),
+      0,
+      100,
+      50
+    );
+
+    const bannerPositionY = clampNumber(
+      Number(formData.get("banner_position_y") ?? 50),
+      0,
+      100,
+      50
+    );
+
+    const bannerZoom = clampNumber(
+      Number(formData.get("banner_zoom") ?? 1),
+      1,
+      2.5,
+      1
+    );
+
     const logoFile = formData.get("logo");
     const bannerFile = formData.get("banner");
 
@@ -79,6 +109,10 @@ export async function POST(request: Request) {
       server_name: serverName || server.server_name,
       description: description || server.description,
       premium_glow_color: premiumGlowColor || "#8b5cf6",
+      premium_message: premiumMessage || "Featured Premium Server",
+      banner_position_x: bannerPositionX,
+      banner_position_y: bannerPositionY,
+      banner_zoom: bannerZoom,
     };
 
     if (logoFile instanceof File && logoFile.size > 0) {
