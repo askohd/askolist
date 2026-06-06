@@ -13,23 +13,34 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+
   session: {
     strategy: "jwt",
   },
+
   callbacks: {
     async jwt({ token, profile }) {
       if (profile) {
         const discordProfile = profile as any;
-        token.discordId = discordProfile.id;
+
+        token.discordId = discordProfile.id ?? token.sub;
         token.username = discordProfile.username;
+        token.avatar = discordProfile.avatar;
+      }
+
+      if (!token.discordId && token.sub) {
+        token.discordId = token.sub;
       }
 
       return token;
     },
+
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).id = token.discordId;
-        (session.user as any).discordId = token.discordId;
+        const discordId = token.discordId ?? token.sub;
+
+        (session.user as any).id = discordId;
+        (session.user as any).discordId = discordId;
         (session.user as any).username = token.username;
       }
 
