@@ -166,3 +166,13 @@ export default async function SubmitPage() {
     </main>
   );
 }
+<div className="form-row">
+  <label>Server Logo</label>
+  <input type="file" name="logo" accept="image/*" />
+</div>
+
+<div className="form-row">
+  <label>Server Banner</label>
+  <input type="file" name="banner" accept="image/*" />
+</div>
+  <form action="/api/submit-server" method="POST" encType="multipart/form-data">
