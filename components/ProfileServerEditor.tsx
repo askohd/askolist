@@ -10,7 +10,21 @@ function countWords(text: string) {
 }
 
 function limitWords(text: string, maxWords: number) {
-  return text.trim().split(/\s+/).filter(Boolean).slice(0, maxWords).join(" ");
+  const matches = [...text.matchAll(/\S+/g)];
+
+  if (matches.length <= maxWords) {
+    return text;
+  }
+
+  const lastAllowedWord = matches[maxWords - 1];
+
+  if (lastAllowedWord.index === undefined) {
+    return text;
+  }
+
+  const endIndex = lastAllowedWord.index + lastAllowedWord[0].length;
+
+  return text.slice(0, endIndex);
 }
 
 export default function ProfileServerEditor({ server }: { server: any }) {
