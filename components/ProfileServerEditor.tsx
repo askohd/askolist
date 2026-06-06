@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
+const MAX_DESCRIPTION_LENGTH = 3000;
+
 export default function ProfileServerEditor({ server }: { server: any }) {
   const isPremiumOrPartner = Boolean(
     server.premium_status || server.partner_status
@@ -18,6 +20,10 @@ export default function ProfileServerEditor({ server }: { server: any }) {
     server.logo_url && server.logo_url.startsWith("http")
       ? server.logo_url
       : null
+  );
+
+  const [description, setDescription] = useState(
+    String(server.description ?? "").slice(0, MAX_DESCRIPTION_LENGTH)
   );
 
   const [bannerX, setBannerX] = useState(Number(server.banner_position_x ?? 50));
@@ -185,9 +191,16 @@ export default function ProfileServerEditor({ server }: { server: any }) {
         <span>Beschreibung</span>
         <textarea
           name="description"
-          defaultValue={server.description ?? ""}
+          value={description}
+          maxLength={MAX_DESCRIPTION_LENGTH}
           placeholder="Beschreibung deines Servers"
+          onChange={(event) =>
+            setDescription(event.target.value.slice(0, MAX_DESCRIPTION_LENGTH))
+          }
         />
+        <small className="char-counter">
+          {description.length}/{MAX_DESCRIPTION_LENGTH} Zeichen
+        </small>
       </label>
 
       <section className="premium-feature-card">
