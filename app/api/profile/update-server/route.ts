@@ -44,6 +44,14 @@ async function uploadPublicFile(
   return data.publicUrl;
 }
 
+function safeColor(value: string, fallback: string) {
+  if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+    return value;
+  }
+
+  return fallback;
+}
+
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
@@ -64,13 +72,20 @@ export async function POST(request: Request) {
     const serverName = String(formData.get("server_name") ?? "").trim();
     const description = String(formData.get("description") ?? "").trim();
 
-    const premiumGlowColor = String(
-      formData.get("premium_glow_color") ?? "#8b5cf6"
-    ).trim();
+    const premiumGlowColor = safeColor(
+      String(formData.get("premium_glow_color") ?? "#8b5cf6").trim(),
+      "#8b5cf6"
+    );
 
-    const premiumMessage = String(
-      formData.get("premium_message") ?? "Featured Premium Server"
-    ).trim();
+    const serverNameColor = safeColor(
+      String(formData.get("server_name_color") ?? "#ffffff").trim(),
+      "#ffffff"
+    );
+
+    const serverTextColor = safeColor(
+      String(formData.get("server_text_color") ?? "#ddd9ef").trim(),
+      "#ddd9ef"
+    );
 
     const bannerPositionX = clampNumber(
       Number(formData.get("banner_position_x") ?? 50),
@@ -106,15 +121,23 @@ export async function POST(request: Request) {
       return redirectToProfile(request, "error=no_server");
     }
 
+    const isPremiumOrPartner = Boolean(
+      server.premium_status || server.partner_status
+    );
+
     const updateData: any = {
       server_name: serverName || server.server_name,
       description: description || server.description,
-      premium_glow_color: premiumGlowColor || "#8b5cf6",
-      premium_message: premiumMessage || "Featured Premium Server",
       banner_position_x: bannerPositionX,
       banner_position_y: bannerPositionY,
       banner_zoom: bannerZoom,
     };
+
+    if (isPremiumOrPartner) {
+      updateData.premium_glow_color = premiumGlowColor;
+      updateData.server_name_color = serverNameColor;
+      updateData.server_text_color = serverTextColor;
+    }
 
     if (logoFile instanceof File && logoFile.size > 0) {
       updateData.logo_url = await uploadPublicFile(
