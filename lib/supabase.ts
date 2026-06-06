@@ -2,14 +2,26 @@ export async function supabaseRequest(
   path: string,
   options: RequestInit = {}
 ) {
-  const supabaseUrl = process.env.SUPABASE_URL;
+  const rawSupabaseUrl = process.env.SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!supabaseUrl || !serviceRoleKey) {
+  if (!rawSupabaseUrl || !serviceRoleKey) {
     throw new Error("Missing Supabase environment variables");
   }
 
-  const response = await fetch(`${supabaseUrl}/rest/v1/${path}`, {
+  const supabaseUrl = rawSupabaseUrl
+    .trim()
+    .replace(/\/rest\/v1\/?$/i, "")
+    .replace(/\/$/i, "");
+
+  const cleanPath = path
+    .trim()
+    .replace(/^\/+/i, "")
+    .replace(/^rest\/v1\/?/i, "");
+
+  const requestUrl = `${supabaseUrl}/rest/v1/${cleanPath}`;
+
+  const response = await fetch(requestUrl, {
     ...options,
     headers: {
       apikey: serviceRoleKey,
@@ -23,7 +35,9 @@ export async function supabaseRequest(
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Supabase error: ${response.status} ${errorText}`);
+    throw new Error(
+      `Supabase error: ${response.status} ${errorText} | URL: ${requestUrl}`
+    );
   }
 
   if (response.status === 204) {
