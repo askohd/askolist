@@ -1284,3 +1284,30 @@ select option {
   margin: 0;
   color: #c6c3e6;
 }
+.profile-server-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 22px;
+  padding: 20px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.profile-server-summary h3 {
+  margin: 10px 0 6px;
+  font-size: 26px;
+}
+
+.profile-server-summary p {
+  margin: 0;
+  color: #c6c3e6;
+}
+
+@media (max-width: 800px) {
+  .profile-server-summary {
+    flex-direction: column;
+  }
+}
