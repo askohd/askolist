@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { supabaseRequest } from "@/lib/supabase";
+import { languages } from "@/lib/demoData";
 
 function getTimeValue(value: string | null | undefined) {
   if (!value) return 0;
@@ -17,10 +18,7 @@ function sortServers(servers: any[]) {
       return bBump - aBump;
     }
 
-    const aCreated = getTimeValue(a.created_at);
-    const bCreated = getTimeValue(b.created_at);
-
-    return bCreated - aCreated;
+    return getTimeValue(b.created_at) - getTimeValue(a.created_at);
   });
 }
 
@@ -30,10 +28,7 @@ function getRatingStats(reviews: any[], serverId: string) {
   );
 
   if (serverReviews.length === 0) {
-    return {
-      average: 0,
-      count: 0,
-    };
+    return { average: 0, count: 0 };
   }
 
   const total = serverReviews.reduce(
@@ -62,10 +57,25 @@ function formatLastBump(lastBump: string | null | undefined) {
   return `vor ${days} Tag${days === 1 ? "" : "en"}`;
 }
 
-export default async function ServersPage() {
-  const session = await getServerSession(authOptions);
-  const user = session?.user as any;
-  const discordUserId = user?.id || user?.discordId;
+function normalize(value: unknown) {
+  return String(value ?? "").toLowerCase();
+}
+
+export default async function ServersPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{
+    q?: string;
+    language?: string;
+    tag?: string;
+  }>;
+}) {
+  await getServerSession(authOptions);
+
+  const params = (await searchParams) ?? {};
+  const query = String(params.q ?? "").trim().toLowerCase();
+  const selectedLanguage = String(params.language ?? "").trim();
+  const selectedTag = String(params.tag ?? "").trim();
 
   const data = await supabaseRequest(
     "servers?approved=eq.true&status=eq.approved&select=*"
@@ -75,7 +85,35 @@ export default async function ServersPage() {
     "reviews?select=server_id,discord_user_id,rating"
   );
 
-  const servers = sortServers(data ?? []);
+  const allServers = sortServers(data ?? []);
+
+  const allTags = Array.from(
+    new Set(
+      allServers.flatMap((server: any) =>
+        Array.isArray(server.tags) ? server.tags : []
+      )
+    )
+  ).filter(Boolean);
+
+  const servers = allServers.filter((server: any) => {
+    const tagText = Array.isArray(server.tags) ? server.tags.join(" ") : "";
+
+    const matchesSearch =
+      !query ||
+      normalize(server.server_name).includes(query) ||
+      normalize(server.description).includes(query) ||
+      normalize(tagText).includes(query) ||
+      normalize(server.category).includes(query);
+
+    const matchesLanguage =
+      !selectedLanguage || server.language === selectedLanguage;
+
+    const matchesTag =
+      !selectedTag ||
+      (Array.isArray(server.tags) && server.tags.includes(selectedTag));
+
+    return matchesSearch && matchesLanguage && matchesTag;
+  });
 
   return (
     <main className="container servers-directory-page">
@@ -83,9 +121,7 @@ export default async function ServersPage() {
         <div>
           <span className="page-badge">AskoList Directory</span>
           <h1>Discord Server</h1>
-          <p>
-            Die zuletzt gebumpten Server stehen automatisch ganz oben.
-          </p>
+          <p>Die zuletzt gebumpten Server stehen automatisch ganz oben.</p>
         </div>
 
         <Link href="/submit" className="btn">
@@ -93,10 +129,47 @@ export default async function ServersPage() {
         </Link>
       </section>
 
+      <form className="server-directory-filters" action="/servers">
+        <input
+          className="input"
+          name="q"
+          defaultValue={query}
+          placeholder="Server suchen..."
+        />
+
+        <select name="language" defaultValue={selectedLanguage}>
+          <option value="">Alle Sprachen</option>
+          {languages.map((language) => (
+            <option key={language} value={language}>
+              {language}
+            </option>
+          ))}
+        </select>
+
+        <select name="tag" defaultValue={selectedTag}>
+          <option value="">Alle Tags</option>
+          {allTags.map((tag: string) => (
+            <option key={tag} value={tag}>
+              {tag}
+            </option>
+          ))}
+        </select>
+
+        <button className="btn" type="submit">
+          Suchen
+        </button>
+
+        {(query || selectedLanguage || selectedTag) && (
+          <Link className="btn secondary" href="/servers">
+            Zurücksetzen
+          </Link>
+        )}
+      </form>
+
       {servers.length === 0 ? (
         <section className="card empty">
-          <h3>No approved Discord servers yet</h3>
-          <p>Noch keine freigegebenen Server vorhanden.</p>
+          <h3>Keine Server gefunden</h3>
+          <p>Für deine Suche gibt es aktuell keine passenden Server.</p>
         </section>
       ) : (
         <section className="server-directory-grid">
@@ -104,12 +177,6 @@ export default async function ServersPage() {
             const ratingStats = getRatingStats(reviews ?? [], server.id);
             const isPremiumOrPartner = Boolean(
               server.premium_status || server.partner_status
-            );
-
-            const myReview = (reviews ?? []).find(
-              (review: any) =>
-                review.server_id === server.id &&
-                review.discord_user_id === discordUserId
             );
 
             return (
@@ -210,64 +277,35 @@ export default async function ServersPage() {
                     {server.nsfw && <span className="badge">NSFW</span>}
 
                     {Array.isArray(server.tags) &&
-                      server.tags.slice(0, 4).map((tag: string) => (
+                      server.tags.slice(0, 5).map((tag: string) => (
                         <span className="badge" key={tag}>
                           {tag}
                         </span>
                       ))}
                   </div>
 
-                  <div
-                    className="server-directory-description"
-                    style={{
-                      color: isPremiumOrPartner
-                        ? server.server_text_color ?? "#ddd9ef"
-                        : undefined,
-                    }}
-                  >
-                    {server.description}
-                  </div>
+                  <details className="server-description-toggle">
+                    <summary>Beschreibung anzeigen</summary>
 
-                  <div className="server-directory-rating-box">
-                    {session ? (
-                      myReview ? (
-                        <p>
-                          Bewertet: <strong>{myReview.rating}/5</strong>
-                        </p>
-                      ) : (
-                        <form action="/api/reviews/rate" method="POST">
-                          <input
-                            type="hidden"
-                            name="server_id"
-                            value={server.id}
-                          />
-
-                          <select name="rating" className="rating-select">
-                            <option value="5">5 Sterne</option>
-                            <option value="4">4 Sterne</option>
-                            <option value="3">3 Sterne</option>
-                            <option value="2">2 Sterne</option>
-                            <option value="1">1 Stern</option>
-                          </select>
-
-                          <button
-                            className="admin-action-btn primary"
-                            type="submit"
-                          >
-                            Bewerten
-                          </button>
-                        </form>
-                      )
-                    ) : (
-                      <Link className="admin-link-btn" href="/api/auth/signin">
-                        Login to rate
-                      </Link>
-                    )}
-                  </div>
+                    <div
+                      className="server-directory-description"
+                      style={{
+                        color: isPremiumOrPartner
+                          ? server.server_text_color ?? "#ddd9ef"
+                          : undefined,
+                      }}
+                    >
+                      {server.description}
+                    </div>
+                  </details>
 
                   <div className="server-directory-footer">
+                    <Link className="btn secondary" href={`/servers/${server.id}`}>
+                      Server ansehen
+                    </Link>
+
                     <a
-                      className="btn secondary"
+                      className="btn"
                       href={server.invite_link}
                       target="_blank"
                       rel="noreferrer"
