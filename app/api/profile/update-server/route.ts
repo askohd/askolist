@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import { supabaseRequest } from "@/lib/supabase";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
+const MAX_DESCRIPTION_LENGTH = 3000;
+
 function slugifyFileName(name: string) {
   return name.replace(/[^a-zA-Z0-9.-]/g, "_");
 }
@@ -17,6 +19,14 @@ function redirectToProfile(request: Request, query: string) {
 function clampNumber(value: number, min: number, max: number, fallback: number) {
   if (Number.isNaN(value)) return fallback;
   return Math.min(max, Math.max(min, value));
+}
+
+function safeColor(value: string, fallback: string) {
+  if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+    return value;
+  }
+
+  return fallback;
 }
 
 async function uploadPublicFile(
@@ -44,14 +54,6 @@ async function uploadPublicFile(
   return data.publicUrl;
 }
 
-function safeColor(value: string, fallback: string) {
-  if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
-    return value;
-  }
-
-  return fallback;
-}
-
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
@@ -70,7 +72,10 @@ export async function POST(request: Request) {
     const formData = await request.formData();
 
     const serverName = String(formData.get("server_name") ?? "").trim();
-    const description = String(formData.get("description") ?? "").trim();
+
+    const description = String(formData.get("description") ?? "")
+      .trim()
+      .slice(0, MAX_DESCRIPTION_LENGTH);
 
     const premiumGlowColor = safeColor(
       String(formData.get("premium_glow_color") ?? "#8b5cf6").trim(),
