@@ -87,33 +87,35 @@ export default async function ProfilePage() {
                     </p>
                   </div>
 
-                  <div className="badges separated-badges">
-                    <span className="badge">
-                      {server.approved ? "Approved" : "Waiting for approval"}
-                    </span>
+                  <div className="profile-server-summary-actions">
+                    <div className="badges separated-badges">
+                      <span className="badge">
+                        {server.approved ? "Approved" : "Waiting for approval"}
+                      </span>
 
-                    {server.premium_status && (
-                      <span className="badge premium">Premium</span>
-                    )}
+                      {server.premium_status && (
+                        <span className="badge premium">Premium</span>
+                      )}
 
-                    {server.partner_status && (
-                      <span className="badge partner">Partner</span>
-                    )}
+                      {server.partner_status && (
+                        <span className="badge partner">Partner</span>
+                      )}
 
-                    <span className="badge">Bumps: {server.bumps ?? 0}</span>
+                      <span className="badge">Bumps: {server.bumps ?? 0}</span>
+                    </div>
+
+                    <a
+                      className="btn secondary"
+                      href={server.invite_link}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Open Discord Invite
+                    </a>
                   </div>
                 </div>
 
                 <ProfileServerEditor server={server} />
-
-                <a
-                  className="btn secondary"
-                  href={server.invite_link}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Open Discord Invite
-                </a>
               </article>
             ))}
           </div>
