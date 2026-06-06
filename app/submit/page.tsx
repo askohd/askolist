@@ -61,16 +61,6 @@ export default async function SubmitPage() {
               />
             </label>
 
-            <label className="field">
-              <span>Discord Server ID</span>
-              <input
-                className="input"
-                name="discord_server_id"
-                placeholder="123456789012345678"
-                required
-              />
-            </label>
-
             <label className="field full">
               <span>Description</span>
               <textarea
@@ -78,6 +68,7 @@ export default async function SubmitPage() {
                 placeholder="Describe your Discord server..."
                 required
               />
+              <small className="char-counter">Maximal 1500 Wörter.</small>
             </label>
 
             <label className="field">
