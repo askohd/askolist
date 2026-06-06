@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 export default function ProfileServerEditor({ server }: { server: any }) {
   const [bannerPreview, setBannerPreview] = useState<string | null>(
@@ -15,20 +15,8 @@ export default function ProfileServerEditor({ server }: { server: any }) {
       : null
   );
 
-  const [bannerX, setBannerX] = useState(server.banner_position_x ?? 50);
-  const [bannerY, setBannerY] = useState(server.banner_position_y ?? 50);
-  const [bannerZoom, setBannerZoom] = useState(server.banner_zoom ?? 1);
   const [glowColor, setGlowColor] = useState(
     server.premium_glow_color ?? "#8b5cf6"
-  );
-
-  const bannerStyle = useMemo(
-    () => ({
-      objectPosition: `${bannerX}% ${bannerY}%`,
-      transform: `scale(${bannerZoom})`,
-      transformOrigin: `${bannerX}% ${bannerY}%`,
-    }),
-    [bannerX, bannerY, bannerZoom]
   );
 
   return (
@@ -51,7 +39,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           }}
         >
           {bannerPreview ? (
-            <img src={bannerPreview} alt="Banner preview" style={bannerStyle} />
+            <img src={bannerPreview} alt="Banner preview" />
           ) : (
             <div className="live-preview-banner-fallback" />
           )}
@@ -128,50 +116,6 @@ export default function ProfileServerEditor({ server }: { server: any }) {
                 setBannerPreview(URL.createObjectURL(file));
               }
             }}
-          />
-        </label>
-      </div>
-
-      <div className="banner-control-card">
-        <h3>Banner einstellen</h3>
-        <p>
-          Wähle ein Banner aus und passe es direkt in der Vorschau an.
-        </p>
-
-        <label className="field">
-          <span>Banner links/rechts: {bannerX}%</span>
-          <input
-            type="range"
-            name="banner_position_x"
-            min="0"
-            max="100"
-            value={bannerX}
-            onChange={(event) => setBannerX(Number(event.target.value))}
-          />
-        </label>
-
-        <label className="field">
-          <span>Banner hoch/runter: {bannerY}%</span>
-          <input
-            type="range"
-            name="banner_position_y"
-            min="0"
-            max="100"
-            value={bannerY}
-            onChange={(event) => setBannerY(Number(event.target.value))}
-          />
-        </label>
-
-        <label className="field">
-          <span>Banner Zoom: {bannerZoom}x</span>
-          <input
-            type="range"
-            name="banner_zoom"
-            min="1"
-            max="2.5"
-            step="0.1"
-            value={bannerZoom}
-            onChange={(event) => setBannerZoom(Number(event.target.value))}
           />
         </label>
       </div>
