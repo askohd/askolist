@@ -16,17 +16,24 @@ function ActionForm({
   action,
   label,
   danger = false,
+  primary = false,
 }: {
   serverId: string;
   action: string;
   label: string;
   danger?: boolean;
+  primary?: boolean;
 }) {
+  let className = "admin-action-btn";
+
+  if (danger) className += " danger";
+  if (primary) className += " primary";
+
   return (
     <form action="/api/admin/server-action" method="POST">
       <input type="hidden" name="server_id" value={serverId} />
       <input type="hidden" name="action" value={action} />
-      <button className={danger ? "btn danger" : "btn secondary"} type="submit">
+      <button className={className} type="submit">
         {label}
       </button>
     </form>
@@ -81,84 +88,170 @@ export default async function AdminPage() {
             <p>Submitted servers will appear here.</p>
           </div>
         ) : (
-          <div className="grid">
+          <div className="admin-server-list">
             {servers.map((server: any) => {
               const bumpBanned = isBumpBanned(server);
 
               return (
-                <div className="card server-card" key={server.id}>
-                  <div className="server-top">
-                    <div className="avatar">
+                <article className="admin-server-card" key={server.id}>
+                  <div className="admin-server-main">
+                    <div className="admin-avatar">
                       {server.server_name?.slice(0, 1) ?? "S"}
                     </div>
 
-                    <div>
-                      <h3 className="server-name">{server.server_name}</h3>
-                      <p className="meta">
-                        {server.category} • {server.country} • {server.language}
-                      </p>
+                    <div className="admin-server-content">
+                      <div className="admin-server-heading">
+                        <div>
+                          <h3>{server.server_name}</h3>
+                          <p>
+                            {server.category} • {server.country} •{" "}
+                            {server.language}
+                          </p>
+                        </div>
+
+                        <div className="admin-status-group">
+                          <span className={`status-pill ${server.status}`}>
+                            {server.status ?? "pending"}
+                          </span>
+
+                          <span
+                            className={
+                              server.approved
+                                ? "status-pill approved"
+                                : "status-pill not-approved"
+                            }
+                          >
+                            {server.approved ? "Approved" : "Not approved"}
+                          </span>
+                        </div>
+                      </div>
+
+                      <p className="admin-description">{server.description}</p>
+
+                      <div className="admin-meta-grid">
+                        <span>Bumps: {server.bumps ?? 0}</span>
+                        <span>NSFW: {server.nsfw ? "Yes" : "No"}</span>
+                        <span>
+                          Bump ban:{" "}
+                          {bumpBanned
+                            ? `until ${formatDate(server.bump_banned_until)}`
+                            : "No"}
+                        </span>
+                        <span>
+                          Premium:{" "}
+                          {server.premium_status
+                            ? `until ${formatDate(server.premium_until)}`
+                            : "No"}
+                        </span>
+                        <span>
+                          Partner:{" "}
+                          {server.partner_status
+                            ? `until ${formatDate(server.partner_until)}`
+                            : "No"}
+                        </span>
+                      </div>
+
+                      <div className="admin-link-row">
+                        <a
+                          className="admin-link-btn"
+                          href={server.invite_link}
+                          target="_blank"
+                        >
+                          Open Discord Invite
+                        </a>
+                      </div>
+
+                      <div className="admin-action-section">
+                        <h4>Review</h4>
+                        <div className="admin-actions">
+                          <ActionForm
+                            serverId={server.id}
+                            action="approve"
+                            label="Approve"
+                            primary
+                          />
+                          <ActionForm
+                            serverId={server.id}
+                            action="reject"
+                            label="Reject"
+                            danger
+                          />
+                        </div>
+                      </div>
+
+                      <div className="admin-action-section">
+                        <h4>Bump Moderation</h4>
+                        <div className="admin-actions">
+                          <ActionForm
+                            serverId={server.id}
+                            action="bump_ban_3d"
+                            label="Bump Ban 3 Days"
+                          />
+                          <ActionForm
+                            serverId={server.id}
+                            action="remove_bump_ban"
+                            label="Remove Bump Ban"
+                          />
+                        </div>
+                      </div>
+
+                      {isAdmin && (
+                        <div className="admin-action-section admin-only-section">
+                          <h4>Admin Actions</h4>
+                          <div className="admin-actions">
+                            <ActionForm
+                              serverId={server.id}
+                              action="premium_7d"
+                              label="Premium 7 Days"
+                            />
+                            <ActionForm
+                              serverId={server.id}
+                              action="remove_premium"
+                              label="Remove Premium"
+                            />
+                            <ActionForm
+                              serverId={server.id}
+                              action="partner_7d"
+                              label="Partner 7 Days"
+                            />
+                            <ActionForm
+                              serverId={server.id}
+                              action="remove_partner"
+                              label="Remove Partner"
+                            />
+                            <ActionForm
+                              serverId={server.id}
+                              action="lock"
+                              label="Lock"
+                            />
+                            <ActionForm
+                              serverId={server.id}
+                              action="unlock"
+                              label="Unlock"
+                            />
+                            <ActionForm
+                              serverId={server.id}
+                              action="ban"
+                              label="Ban"
+                              danger
+                            />
+                            <ActionForm
+                              serverId={server.id}
+                              action="unban"
+                              label="Unban"
+                            />
+                            <ActionForm
+                              serverId={server.id}
+                              action="delete"
+                              label="Delete"
+                              danger
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
-
-                  <p className="meta">{server.description}</p>
-
-                  <div className="badges">
-                    <span className="badge">
-                      Status: {server.status ?? "pending"}
-                    </span>
-
-                    <span className="badge">
-                      Approved: {server.approved ? "yes" : "no"}
-                    </span>
-
-                    {server.nsfw && <span className="badge danger-badge">NSFW</span>}
-
-                    {bumpBanned && (
-                      <span className="badge danger-badge">
-                        Bump banned until {formatDate(server.bump_banned_until)}
-                      </span>
-                    )}
-
-                    {server.premium_status && (
-                      <span className="badge premium">
-                        Premium until {formatDate(server.premium_until)}
-                      </span>
-                    )}
-
-                    {server.partner_status && (
-                      <span className="badge partner">
-                        Partner until {formatDate(server.partner_until)}
-                      </span>
-                    )}
-                  </div>
-
-                  <p className="meta">Bumps: {server.bumps ?? 0}</p>
-
-                  <a className="btn secondary" href={server.invite_link}>
-                    Open Invite
-                  </a>
-
-                  <div className="admin-actions">
-                    <ActionForm serverId={server.id} action="approve" label="Approve" />
-                    <ActionForm serverId={server.id} action="reject" label="Reject" danger />
-                    <ActionForm serverId={server.id} action="bump_ban_3d" label="Bump ban 3 days" />
-                    <ActionForm serverId={server.id} action="remove_bump_ban" label="Remove bump ban" />
-
-                    {isAdmin && (
-                      <>
-                        <ActionForm serverId={server.id} action="premium_7d" label="Premium 7 days" />
-                        <ActionForm serverId={server.id} action="remove_premium" label="Remove Premium" />
-                        <ActionForm serverId={server.id} action="partner_7d" label="Partner 7 days" />
-                        <ActionForm serverId={server.id} action="remove_partner" label="Remove Partner" />
-                        <ActionForm serverId={server.id} action="lock" label="Lock" />
-                        <ActionForm serverId={server.id} action="unlock" label="Unlock" />
-                        <ActionForm serverId={server.id} action="ban" label="Ban" danger />
-                        <ActionForm serverId={server.id} action="unban" label="Unban" />
-                        <ActionForm serverId={server.id} action="delete" label="Delete" danger />
-                      </>
-                    )}
-                  </div>
-                </div>
+                </article>
               );
             })}
           </div>
