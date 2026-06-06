@@ -59,7 +59,7 @@ export default async function ServersPage() {
               }
             >
               <div className="server-modern-banner">
-                {server.banner_url ? (
+                {server.banner_url && server.banner_url.startsWith("http") ? (
                   <img src={server.banner_url} alt={server.server_name} />
                 ) : (
                   <div className="server-modern-banner-fallback" />
@@ -72,7 +72,7 @@ export default async function ServersPage() {
 
               <div className="server-modern-body">
                 <div className="server-modern-logo">
-                  {server.logo_url ? (
+                  {server.logo_url && server.logo_url.startsWith("http") ? (
                     <img src={server.logo_url} alt={server.server_name} />
                   ) : (
                     <span>{server.server_name?.slice(0, 1) ?? "S"}</span>
