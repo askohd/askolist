@@ -1,6 +1,26 @@
+import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { categories, countries, languages } from "@/lib/demoData";
 
-export default function SubmitPage() {
+export default async function SubmitPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return (
+      <main className="container submit-page">
+        <section className="profile-card">
+          <span className="page-badge">Discord Login required</span>
+          <h1>Login required</h1>
+          <p>You need to login with Discord before submitting a server.</p>
+          <Link className="btn" href="/api/auth/signin">
+            Login with Discord
+          </Link>
+        </section>
+      </main>
+    );
+  }
+
   return (
     <main className="container submit-page">
       <section className="submit-hero">
@@ -13,36 +33,59 @@ export default function SubmitPage() {
       </section>
 
       <section className="submit-layout">
-        <form className="submit-card">
+        <form className="submit-card" action="/api/submit-server" method="POST">
           <div className="form-grid">
             <label className="field">
               <span>Server name</span>
-              <input className="input" placeholder="Example: Asko Community" />
+              <input
+                className="input"
+                name="server_name"
+                placeholder="Example: Asko Community"
+                required
+              />
             </label>
 
             <label className="field">
               <span>Discord invite link</span>
-              <input className="input" placeholder="https://discord.gg/..." />
+              <input
+                className="input"
+                name="invite_link"
+                placeholder="https://discord.gg/..."
+                required
+              />
             </label>
 
             <label className="field">
               <span>Discord Server ID</span>
-              <input className="input" placeholder="123456789012345678" />
+              <input
+                className="input"
+                name="discord_server_id"
+                placeholder="123456789012345678"
+                required
+              />
             </label>
 
             <label className="field">
-              <span>Owner Discord User ID</span>
-              <input className="input" placeholder="Your Discord User ID" />
+              <span>Server logo URL</span>
+              <input
+                className="input"
+                name="logo_url"
+                placeholder="https://example.com/logo.png"
+              />
             </label>
 
             <label className="field full">
               <span>Description</span>
-              <textarea placeholder="Describe your Discord server, community, rules and what makes it special..." />
+              <textarea
+                name="description"
+                placeholder="Describe your Discord server..."
+                required
+              />
             </label>
 
             <label className="field">
               <span>Category</span>
-              <select>
+              <select name="category">
                 {categories.map((category) => (
                   <option key={category}>{category}</option>
                 ))}
@@ -51,12 +94,16 @@ export default function SubmitPage() {
 
             <label className="field">
               <span>Tags</span>
-              <input className="input" placeholder="#chill, #gaming, #anime" />
+              <input
+                className="input"
+                name="tags"
+                placeholder="#chill, #gaming, #anime"
+              />
             </label>
 
             <label className="field">
               <span>Country</span>
-              <select>
+              <select name="country">
                 {countries.map((country) => (
                   <option key={country}>{country}</option>
                 ))}
@@ -65,7 +112,7 @@ export default function SubmitPage() {
 
             <label className="field">
               <span>Language</span>
-              <select>
+              <select name="language">
                 {languages.map((language) => (
                   <option key={language}>{language}</option>
                 ))}
@@ -73,19 +120,18 @@ export default function SubmitPage() {
             </label>
 
             <label className="check-row full">
-              <input type="checkbox" />
+              <input type="checkbox" name="nsfw" />
               <span>This server contains NSFW content</span>
             </label>
           </div>
 
-          <button className="btn submit-button" type="button">
+          <button className="btn submit-button" type="submit">
             Submit for admin review
           </button>
 
           <p className="form-note">
-            This starter version prepares the design only. Real saving,
-            Discord login and admin approval will be connected later with a
-            database.
+            Your server will be saved and shown in your profile. It becomes
+            public after admin approval.
           </p>
         </form>
 
