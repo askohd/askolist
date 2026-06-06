@@ -22,7 +22,7 @@ export default async function ProfilePage() {
   }
 
   const user = session.user as any;
-  const discordUserId = user.id;
+  const discordUserId = user.id || user.discordId;
 
   let myServers: any[] = [];
 
@@ -52,7 +52,8 @@ export default async function ProfilePage() {
 
       <section className="section">
         <div className="section-title">
-          <h2>My Servers</h2>
+          <h2>My Server</h2>
+
           {myServers.length === 0 && (
             <Link href="/submit" className="btn">
               Add Server
@@ -67,28 +68,35 @@ export default async function ProfilePage() {
               You have not submitted a Discord server yet. Each user can add one
               server.
             </p>
+
             <Link href="/submit" className="btn">
               Submit your server
             </Link>
           </div>
         ) : (
-          <div className="grid">
+          <div className="profile-server-list">
             {myServers.map((server) => (
-              <div className="card server-card" key={server.id}>
-                <div className="server-top">
-                  <div className="avatar">
-                    {server.server_name?.slice(0, 1) ?? "S"}
+              <article className="profile-server-card" key={server.id}>
+                <div className="profile-server-top">
+                  <div className="profile-server-logo">
+                    {server.logo_url ? (
+                      <img src={server.logo_url} alt={server.server_name} />
+                    ) : (
+                      <span>{server.server_name?.slice(0, 1) ?? "S"}</span>
+                    )}
                   </div>
 
                   <div>
-                    <h3 className="server-name">{server.server_name}</h3>
-                    <p className="meta">
+                    <h3>{server.server_name}</h3>
+                    <p>
                       {server.category} • {server.country} • {server.language}
                     </p>
                   </div>
                 </div>
 
-                <p className="meta">{server.description}</p>
+                <p className="profile-server-description">
+                  {server.description}
+                </p>
 
                 <div className="badges">
                   <span className="badge">
@@ -102,14 +110,52 @@ export default async function ProfilePage() {
                   {server.partner_status && (
                     <span className="badge partner">Partner</span>
                   )}
+
+                  <span className="badge">Bumps: {server.bumps ?? 0}</span>
                 </div>
 
-                <p className="meta">Bumps: {server.bumps}</p>
+                <form
+                  action="/api/profile/server-style"
+                  method="POST"
+                  className="profile-style-card"
+                >
+                  <div>
+                    <h3>Premium Glow Color</h3>
+                    <p>
+                      Diese Farbe wird für den Premium-Leuchteffekt deines
+                      Servers verwendet.
+                    </p>
+                  </div>
 
-                <a className="btn secondary" href={server.invite_link}>
+                  <div className="color-row">
+                    <input
+                      type="color"
+                      name="premium_glow_color"
+                      defaultValue={server.premium_glow_color ?? "#8b5cf6"}
+                    />
+
+                    <button className="btn" type="submit">
+                      Farbe speichern
+                    </button>
+                  </div>
+
+                  {!server.premium_status && (
+                    <p className="form-note">
+                      Hinweis: Der Glow ist erst sichtbar, wenn dein Server
+                      Premium hat.
+                    </p>
+                  )}
+                </form>
+
+                <a
+                  className="btn secondary"
+                  href={server.invite_link}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   Open Discord Invite
                 </a>
-              </div>
+              </article>
             ))}
           </div>
         )}
