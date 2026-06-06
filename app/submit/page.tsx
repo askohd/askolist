@@ -13,6 +13,7 @@ export default async function SubmitPage() {
           <span className="page-badge">Discord Login required</span>
           <h1>Login required</h1>
           <p>You need to login with Discord before submitting a server.</p>
+
           <Link className="btn" href="/api/auth/signin">
             Login with Discord
           </Link>
@@ -33,7 +34,12 @@ export default async function SubmitPage() {
       </section>
 
       <section className="submit-layout">
-        <form className="submit-card" action="/api/submit-server" method="POST">
+        <form
+          className="submit-card"
+          action="/api/submit-server"
+          method="POST"
+          encType="multipart/form-data"
+        >
           <div className="form-grid">
             <label className="field">
               <span>Server name</span>
@@ -65,15 +71,6 @@ export default async function SubmitPage() {
               />
             </label>
 
-            <label className="field">
-              <span>Server logo URL</span>
-              <input
-                className="input"
-                name="logo_url"
-                placeholder="https://example.com/logo.png"
-              />
-            </label>
-
             <label className="field full">
               <span>Description</span>
               <textarea
@@ -81,6 +78,16 @@ export default async function SubmitPage() {
                 placeholder="Describe your Discord server..."
                 required
               />
+            </label>
+
+            <label className="field">
+              <span>Server logo</span>
+              <input type="file" name="logo" accept="image/*" />
+            </label>
+
+            <label className="field">
+              <span>Server banner</span>
+              <input type="file" name="banner" accept="image/*" />
             </label>
 
             <label className="field">
@@ -130,8 +137,8 @@ export default async function SubmitPage() {
           </button>
 
           <p className="form-note">
-            Your server will be saved and shown in your profile. It becomes
-            public after admin approval.
+            Your server will be saved with logo and banner. It becomes public
+            after admin approval.
           </p>
         </form>
 
@@ -166,13 +173,3 @@ export default async function SubmitPage() {
     </main>
   );
 }
-<div className="form-row">
-  <label>Server Logo</label>
-  <input type="file" name="logo" accept="image/*" />
-</div>
-
-<div className="form-row">
-  <label>Server Banner</label>
-  <input type="file" name="banner" accept="image/*" />
-</div>
-  <form action="/api/submit-server" method="POST" encType="multipart/form-data">
