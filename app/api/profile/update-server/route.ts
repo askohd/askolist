@@ -8,6 +8,10 @@ function slugifyFileName(name: string) {
   return name.replace(/[^a-zA-Z0-9.-]/g, "_");
 }
 
+function redirectToProfile(request: Request, query: string) {
+  return NextResponse.redirect(new URL(`/profile?${query}`, request.url), 303);
+}
+
 async function uploadPublicFile(
   bucket: string,
   ownerDiscordUserId: string,
@@ -37,16 +41,14 @@ export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {
-    return NextResponse.redirect(new URL("/profile?error=login", request.url));
+    return redirectToProfile(request, "error=login");
   }
 
   const discordUserId =
     (session.user as any).discordId || (session.user as any).id;
 
   if (!discordUserId) {
-    return NextResponse.redirect(
-      new URL("/profile?error=no_user", request.url)
-    );
+    return redirectToProfile(request, "error=no_user");
   }
 
   const formData = await request.formData();
@@ -67,9 +69,7 @@ export async function POST(request: Request) {
   const server = servers?.[0];
 
   if (!server) {
-    return NextResponse.redirect(
-      new URL("/profile?error=no_server", request.url)
-    );
+    return redirectToProfile(request, "error=no_server");
   }
 
   const updateData: any = {
@@ -99,5 +99,5 @@ export async function POST(request: Request) {
     body: JSON.stringify(updateData),
   });
 
-  return NextResponse.redirect(new URL("/profile?saved=1", request.url));
+  return redirectToProfile(request, "saved=1");
 }
