@@ -189,8 +189,8 @@ export default async function ServersPage() {
                       </div>
                     </div>
 
-                    <p
-                      className="server-modern-description"
+                    <div
+                      className="server-modern-description server-description-box"
                       style={{
                         color: isPremiumOrPartner
                           ? server.server_text_color ?? "#ddd9ef"
@@ -198,7 +198,7 @@ export default async function ServersPage() {
                       }}
                     >
                       {server.description}
-                    </p>
+                    </div>
 
                     <div className="rating-box">
                       {session ? (
