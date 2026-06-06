@@ -22,7 +22,7 @@ export async function getCurrentStaff() {
     const discordUserId = getDiscordUserIdFromSession(session);
 
     if (!discordUserId) {
-      console.error("No Discord User ID found in session:", session);
+      console.error("No Discord User ID found in session");
       return null;
     }
 
@@ -33,7 +33,7 @@ export async function getCurrentStaff() {
     const currentUser = users?.[0];
 
     if (!currentUser) {
-      console.error("No user found in Supabase for Discord ID:", discordUserId);
+      console.error("No Supabase user found for Discord ID:", discordUserId);
       return null;
     }
 
