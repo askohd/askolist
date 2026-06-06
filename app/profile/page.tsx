@@ -77,6 +77,14 @@ export default async function ProfilePage() {
           <div className="profile-server-list">
             {myServers.map((server) => (
               <article className="profile-server-card" key={server.id}>
+                <div className="profile-server-banner">
+                  {server.banner_url ? (
+                    <img src={server.banner_url} alt={server.server_name} />
+                  ) : (
+                    <div className="profile-server-banner-fallback" />
+                  )}
+                </div>
+
                 <div className="profile-server-top">
                   <div className="profile-server-logo">
                     {server.logo_url ? (
@@ -98,7 +106,7 @@ export default async function ProfilePage() {
                   {server.description}
                 </p>
 
-                <div className="badges">
+                <div className="badges separated-badges">
                   <span className="badge">
                     {server.approved ? "Approved" : "Waiting for approval"}
                   </span>
@@ -115,28 +123,64 @@ export default async function ProfilePage() {
                 </div>
 
                 <form
-                  action="/api/profile/server-style"
+                  action="/api/profile/update-server"
                   method="POST"
-                  className="profile-style-card"
+                  encType="multipart/form-data"
+                  className="profile-edit-card"
                 >
-                  <div>
-                    <h3>Premium Glow Color</h3>
-                    <p>
-                      Diese Farbe wird für den Premium-Leuchteffekt deines
-                      Servers verwendet.
-                    </p>
+                  <h3>Server bearbeiten</h3>
+
+                  <label className="field">
+                    <span>Servername</span>
+                    <input
+                      className="input"
+                      name="server_name"
+                      defaultValue={server.server_name ?? ""}
+                      placeholder="Servername"
+                    />
+                  </label>
+
+                  <label className="field full">
+                    <span>Beschreibung</span>
+                    <textarea
+                      name="description"
+                      defaultValue={server.description ?? ""}
+                      placeholder="Beschreibung deines Servers"
+                    />
+                  </label>
+
+                  <div className="profile-upload-grid">
+                    <label className="field">
+                      <span>Server-Logo ändern</span>
+                      <input type="file" name="logo" accept="image/*" />
+                    </label>
+
+                    <label className="field">
+                      <span>Server-Banner ändern</span>
+                      <input type="file" name="banner" accept="image/*" />
+                    </label>
                   </div>
 
-                  <div className="color-row">
-                    <input
-                      type="color"
-                      name="premium_glow_color"
-                      defaultValue={server.premium_glow_color ?? "#8b5cf6"}
-                    />
+                  <div className="profile-style-card inner-style-card">
+                    <div>
+                      <h3>Premium Glow Color</h3>
+                      <p>
+                        Diese Farbe wird für den Premium-Leuchteffekt deines
+                        Servers verwendet.
+                      </p>
+                    </div>
 
-                    <button className="btn" type="submit">
-                      Farbe speichern
-                    </button>
+                    <div className="color-row">
+                      <input
+                        type="color"
+                        name="premium_glow_color"
+                        defaultValue={server.premium_glow_color ?? "#8b5cf6"}
+                      />
+
+                      <button className="btn" type="submit">
+                        Änderungen speichern
+                      </button>
+                    </div>
                   </div>
 
                   {!server.premium_status && (
