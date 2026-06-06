@@ -9,7 +9,9 @@ function slugifyFileName(name: string) {
 }
 
 function redirectToProfile(request: Request, query: string) {
-  return NextResponse.redirect(new URL(`/profile?${query}`, request.url), 303);
+  return NextResponse.redirect(new URL(`/profile?${query}`, request.url), {
+    status: 303,
+  });
 }
 
 async function uploadPublicFile(
@@ -24,12 +26,12 @@ async function uploadPublicFile(
   const { error } = await supabaseAdmin.storage
     .from(bucket)
     .upload(filePath, file, {
-      contentType: file.type,
+      contentType: file.type || "application/octet-stream",
       upsert: true,
     });
 
   if (error) {
-    throw new Error(error.message);
+    throw new Error(`Upload failed: ${error.message}`);
   }
 
   const { data } = supabaseAdmin.storage.from(bucket).getPublicUrl(filePath);
@@ -38,66 +40,77 @@ async function uploadPublicFile(
 }
 
 export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
+  try {
+    const session = await getServerSession(authOptions);
 
-  if (!session?.user) {
-    return redirectToProfile(request, "error=login");
-  }
+    if (!session?.user) {
+      return redirectToProfile(request, "error=login");
+    }
 
-  const discordUserId =
-    (session.user as any).discordId || (session.user as any).id;
+    const discordUserId =
+      (session.user as any).discordId || (session.user as any).id;
 
-  if (!discordUserId) {
-    return redirectToProfile(request, "error=no_user");
-  }
+    if (!discordUserId) {
+      return redirectToProfile(request, "error=no_user");
+    }
 
-  const formData = await request.formData();
+    const formData = await request.formData();
 
-  const serverName = String(formData.get("server_name") ?? "").trim();
-  const description = String(formData.get("description") ?? "").trim();
-  const premiumGlowColor = String(
-    formData.get("premium_glow_color") ?? "#8b5cf6"
-  ).trim();
+    const serverName = String(formData.get("server_name") ?? "").trim();
+    const description = String(formData.get("description") ?? "").trim();
+    const premiumGlowColor = String(
+      formData.get("premium_glow_color") ?? "#8b5cf6"
+    ).trim();
 
-  const logoFile = formData.get("logo");
-  const bannerFile = formData.get("banner");
+    const logoFile = formData.get("logo");
+    const bannerFile = formData.get("banner");
 
-  const servers = await supabaseRequest(
-    `servers?owner_discord_user_id=eq.${discordUserId}&select=*`
-  );
+    const servers = await supabaseRequest(
+      `servers?owner_discord_user_id=eq.${discordUserId}&select=*`
+    );
 
-  const server = servers?.[0];
+    const server = servers?.[0];
 
-  if (!server) {
-    return redirectToProfile(request, "error=no_server");
-  }
+    if (!server) {
+      return redirectToProfile(request, "error=no_server");
+    }
 
-  const updateData: any = {
-    server_name: serverName || server.server_name,
-    description: description || server.description,
-    premium_glow_color: premiumGlowColor || "#8b5cf6",
-  };
+    const updateData: any = {
+      server_name: serverName || server.server_name,
+      description: description || server.description,
+      premium_glow_color: premiumGlowColor || "#8b5cf6",
+    };
 
-  if (logoFile instanceof File && logoFile.size > 0) {
-    updateData.logo_url = await uploadPublicFile(
-      "server-logos",
-      discordUserId,
-      logoFile
+    if (logoFile instanceof File && logoFile.size > 0) {
+      updateData.logo_url = await uploadPublicFile(
+        "server-logos",
+        discordUserId,
+        logoFile
+      );
+    }
+
+    if (bannerFile instanceof File && bannerFile.size > 0) {
+      updateData.banner_url = await uploadPublicFile(
+        "server-banners",
+        discordUserId,
+        bannerFile
+      );
+    }
+
+    await supabaseRequest(`servers?id=eq.${server.id}`, {
+      method: "PATCH",
+      body: JSON.stringify(updateData),
+    });
+
+    return redirectToProfile(request, "saved=1");
+  } catch (error: any) {
+    console.error("Profile update failed:", error);
+
+    return NextResponse.json(
+      {
+        error: error.message ?? "Profile update failed",
+      },
+      { status: 500 }
     );
   }
-
-  if (bannerFile instanceof File && bannerFile.size > 0) {
-    updateData.banner_url = await uploadPublicFile(
-      "server-banners",
-      discordUserId,
-      bannerFile
-    );
-  }
-
-  await supabaseRequest(`servers?id=eq.${server.id}`, {
-    method: "PATCH",
-    body: JSON.stringify(updateData),
-  });
-
-  return redirectToProfile(request, "saved=1");
 }
