@@ -80,25 +80,6 @@ export default function ProfileServerEditor({ server }: { server: any }) {
         </div>
       </div>
 
-      <label className="field">
-        <span>Servername</span>
-        <input
-          className="input"
-          name="server_name"
-          defaultValue={server.server_name ?? ""}
-          placeholder="Servername"
-        />
-      </label>
-
-      <label className="field full">
-        <span>Beschreibung</span>
-        <textarea
-          name="description"
-          defaultValue={server.description ?? ""}
-          placeholder="Beschreibung deines Servers"
-        />
-      </label>
-
       <div className="profile-upload-grid">
         <label className="field">
           <span>Server-Logo ändern</span>
@@ -133,9 +114,11 @@ export default function ProfileServerEditor({ server }: { server: any }) {
         </label>
       </div>
 
-      <div className="banner-control-card">
+      <div className="banner-control-card banner-control-top">
         <h3>Banner positionieren</h3>
-        <p>Wähle ein Banner aus und stelle es direkt in der Vorschau ein.</p>
+        <p>
+          Wähle ein Banner aus und stelle es direkt oben in der Vorschau ein.
+        </p>
 
         <label className="field">
           <span>Links / Rechts: {bannerX}%</span>
@@ -174,6 +157,25 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           />
         </label>
       </div>
+
+      <label className="field">
+        <span>Servername</span>
+        <input
+          className="input"
+          name="server_name"
+          defaultValue={server.server_name ?? ""}
+          placeholder="Servername"
+        />
+      </label>
+
+      <label className="field full">
+        <span>Beschreibung</span>
+        <textarea
+          name="description"
+          defaultValue={server.description ?? ""}
+          placeholder="Beschreibung deines Servers"
+        />
+      </label>
 
       <label className="field">
         <span>Premium Text</span>
