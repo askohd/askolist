@@ -1132,3 +1132,85 @@ select option {
   object-fit: cover;
   display: block;
 }
+.banner-control-card {
+  display: grid;
+  gap: 14px;
+  border-radius: 24px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.banner-control-card h3,
+.banner-control-card p {
+  margin: 0;
+}
+
+.banner-control-card p {
+  color: #c6c3e6;
+}
+
+.banner-control-card input[type="range"] {
+  width: 100%;
+}
+
+.premium-showcase {
+  margin-top: 20px;
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: 22px;
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  background:
+    radial-gradient(circle at top left, rgba(139, 92, 246, 0.24), transparent 32%),
+    rgba(255, 255, 255, 0.055);
+}
+
+.premium-showcase strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 18px;
+}
+
+.premium-showcase p {
+  margin: 0;
+  color: #d8d2ff;
+}
+
+.premium-showcase span {
+  border-radius: 999px;
+  padding: 9px 12px;
+  font-weight: 900;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.rating-badge {
+  color: #fde68a;
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.rating-box {
+  margin-top: 18px;
+}
+
+.rating-box form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rating-select {
+  min-height: 42px;
+  border-radius: 14px;
+  padding: 0 12px;
+  color: white;
+  background: rgba(255, 255, 255, 0.075);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.server-modern-banner img {
+  transition: transform 0.2s ease;
+}
