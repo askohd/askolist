@@ -78,8 +78,20 @@ export default async function ProfilePage() {
             {myServers.map((server) => (
               <article className="profile-server-card" key={server.id}>
                 <div className="profile-server-banner">
-                  {server.banner_url ? (
-                    <img src={server.banner_url} alt={server.server_name} />
+                  {server.banner_url && server.banner_url.startsWith("http") ? (
+                    <img
+                      src={server.banner_url}
+                      alt={server.server_name}
+                      style={{
+                        objectPosition: `${server.banner_position_x ?? 50}% ${
+                          server.banner_position_y ?? 50
+                        }%`,
+                        transform: `scale(${server.banner_zoom ?? 1})`,
+                        transformOrigin: `${server.banner_position_x ?? 50}% ${
+                          server.banner_position_y ?? 50
+                        }%`,
+                      }}
+                    />
                   ) : (
                     <div className="profile-server-banner-fallback" />
                   )}
@@ -87,7 +99,7 @@ export default async function ProfilePage() {
 
                 <div className="profile-server-top">
                   <div className="profile-server-logo">
-                    {server.logo_url ? (
+                    {server.logo_url && server.logo_url.startsWith("http") ? (
                       <img src={server.logo_url} alt={server.server_name} />
                     ) : (
                       <span>{server.server_name?.slice(0, 1) ?? "S"}</span>
@@ -161,6 +173,59 @@ export default async function ProfilePage() {
                     </label>
                   </div>
 
+                  <div className="banner-control-card">
+                    <h3>Banner einstellen</h3>
+                    <p>
+                      Hier kannst du dein Banner verschieben und vergrößern.
+                    </p>
+
+                    <label className="field">
+                      <span>Banner links/rechts</span>
+                      <input
+                        type="range"
+                        name="banner_position_x"
+                        min="0"
+                        max="100"
+                        defaultValue={server.banner_position_x ?? 50}
+                      />
+                    </label>
+
+                    <label className="field">
+                      <span>Banner hoch/runter</span>
+                      <input
+                        type="range"
+                        name="banner_position_y"
+                        min="0"
+                        max="100"
+                        defaultValue={server.banner_position_y ?? 50}
+                      />
+                    </label>
+
+                    <label className="field">
+                      <span>Banner Zoom</span>
+                      <input
+                        type="range"
+                        name="banner_zoom"
+                        min="1"
+                        max="2.5"
+                        step="0.1"
+                        defaultValue={server.banner_zoom ?? 1}
+                      />
+                    </label>
+                  </div>
+
+                  <label className="field">
+                    <span>Premium Text</span>
+                    <input
+                      className="input"
+                      name="premium_message"
+                      defaultValue={
+                        server.premium_message ?? "Featured Premium Server"
+                      }
+                      placeholder="Featured Premium Server"
+                    />
+                  </label>
+
                   <div className="profile-style-card inner-style-card">
                     <div>
                       <h3>Premium Glow Color</h3>
@@ -185,8 +250,8 @@ export default async function ProfilePage() {
 
                   {!server.premium_status && (
                     <p className="form-note">
-                      Hinweis: Der Glow ist erst sichtbar, wenn dein Server
-                      Premium hat.
+                      Hinweis: Der Glow und der Premium Text sind erst sichtbar,
+                      wenn dein Server Premium hat.
                     </p>
                   )}
                 </form>
