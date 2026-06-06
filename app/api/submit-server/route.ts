@@ -4,7 +4,11 @@ import { authOptions } from "@/lib/auth";
 import { supabaseRequest } from "@/lib/supabase";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
-const MAX_DESCRIPTION_LENGTH = 3000;
+const MAX_DESCRIPTION_WORDS = 1500;
+
+function limitWords(text: string, maxWords: number) {
+  return text.trim().split(/\s+/).filter(Boolean).slice(0, maxWords).join(" ");
+}
 
 function slugifyFileName(name: string) {
   return name.replace(/[^a-zA-Z0-9.-]/g, "_");
@@ -66,9 +70,10 @@ export async function POST(request: Request) {
 
     const serverName = String(formData.get("server_name") ?? "").trim();
 
-    const description = String(formData.get("description") ?? "")
-      .trim()
-      .slice(0, MAX_DESCRIPTION_LENGTH);
+    const description = limitWords(
+      String(formData.get("description") ?? ""),
+      MAX_DESCRIPTION_WORDS
+    );
 
     const inviteLink = String(formData.get("invite_link") ?? "").trim();
     const discordServerId = String(
