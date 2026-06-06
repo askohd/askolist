@@ -3,33 +3,56 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { supabaseRequest } from "@/lib/supabase";
 
-function redirectToServers(request: Request, query: string) {
-  return NextResponse.redirect(new URL(`/servers?${query}`, request.url), {
-    status: 303,
-  });
+const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
+
+function redirectToServer(request: Request, serverId: string, query: string) {
+  return NextResponse.redirect(
+    new URL(`/servers/${serverId}?${query}`, request.url),
+    { status: 303 }
+  );
+}
+
+function canRateFromJoinDate(joinedAt: string | null | undefined) {
+  if (!joinedAt) return false;
+  return Date.now() - new Date(joinedAt).getTime() >= TWO_DAYS_MS;
 }
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
 
+  const formData = await request.formData();
+  const serverId = String(formData.get("server_id") ?? "");
+  const rating = Number(formData.get("rating") ?? 0);
+
+  if (!serverId) {
+    return NextResponse.redirect(new URL("/servers?error=no_server", request.url), {
+      status: 303,
+    });
+  }
+
   if (!session?.user) {
-    return redirectToServers(request, "error=login_required");
+    return redirectToServer(request, serverId, "error=login_required");
   }
 
   const discordUserId =
     (session.user as any).discordId || (session.user as any).id;
 
   if (!discordUserId) {
-    return redirectToServers(request, "error=no_discord_id");
+    return redirectToServer(request, serverId, "error=no_discord_id");
   }
 
-  const formData = await request.formData();
+  if (rating < 1 || rating > 5) {
+    return redirectToServer(request, serverId, "error=invalid_rating");
+  }
 
-  const serverId = String(formData.get("server_id") ?? "");
-  const rating = Number(formData.get("rating") ?? 0);
+  const memberRows = await supabaseRequest(
+    `server_members?server_id=eq.${serverId}&discord_user_id=eq.${discordUserId}&select=*`
+  );
 
-  if (!serverId || rating < 1 || rating > 5) {
-    return redirectToServers(request, "error=invalid_rating");
+  const memberEntry = memberRows?.[0];
+
+  if (!canRateFromJoinDate(memberEntry?.joined_at)) {
+    return redirectToServer(request, serverId, "error=not_2_days_member");
   }
 
   const existingReviews = await supabaseRequest(
@@ -37,15 +60,7 @@ export async function POST(request: Request) {
   );
 
   if (existingReviews?.length > 0) {
-    return redirectToServers(request, "error=already_rated");
-  }
-
-  const servers = await supabaseRequest(
-    `servers?id=eq.${serverId}&approved=eq.true&status=eq.approved&select=*`
-  );
-
-  if (!servers?.[0]) {
-    return redirectToServers(request, "error=server_not_found");
+    return redirectToServer(request, serverId, "error=already_rated");
   }
 
   await supabaseRequest("reviews", {
@@ -57,5 +72,5 @@ export async function POST(request: Request) {
     }),
   });
 
-  return redirectToServers(request, "rated=1");
+  return redirectToServer(request, serverId, "rated=1");
 }
