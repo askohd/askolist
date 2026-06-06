@@ -7,7 +7,17 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 const MAX_DESCRIPTION_WORDS = 1500;
 
 function limitWords(text: string, maxWords: number) {
-  return text.trim().split(/\s+/).filter(Boolean).slice(0, maxWords).join(" ");
+  const cleanText = text.trim();
+  const matches = [...cleanText.matchAll(/\S+/g)];
+
+  if (matches.length <= maxWords) {
+    return cleanText;
+  }
+
+  const lastAllowedWord = matches[maxWords - 1];
+  const endIndex = lastAllowedWord.index + lastAllowedWord[0].length;
+
+  return cleanText.slice(0, endIndex);
 }
 
 function slugifyFileName(name: string) {
