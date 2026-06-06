@@ -1,8 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 export default function ProfileServerEditor({ server }: { server: any }) {
+  const isPremiumOrPartner = Boolean(
+    server.premium_status || server.partner_status
+  );
+
   const [bannerPreview, setBannerPreview] = useState<string | null>(
     server.banner_url && server.banner_url.startsWith("http")
       ? server.banner_url
@@ -21,6 +26,14 @@ export default function ProfileServerEditor({ server }: { server: any }) {
 
   const [glowColor, setGlowColor] = useState(
     server.premium_glow_color ?? "#8b5cf6"
+  );
+
+  const [serverNameColor, setServerNameColor] = useState(
+    server.server_name_color ?? "#ffffff"
+  );
+
+  const [serverTextColor, setServerTextColor] = useState(
+    server.server_text_color ?? "#ddd9ef"
   );
 
   const bannerStyle = useMemo(
@@ -45,8 +58,8 @@ export default function ProfileServerEditor({ server }: { server: any }) {
         <div
           className="live-preview-banner"
           style={{
-            borderColor: server.premium_status ? glowColor : undefined,
-            boxShadow: server.premium_status
+            borderColor: isPremiumOrPartner ? glowColor : undefined,
+            boxShadow: isPremiumOrPartner
               ? `0 0 30px ${glowColor}66`
               : undefined,
           }}
@@ -57,8 +70,10 @@ export default function ProfileServerEditor({ server }: { server: any }) {
             <div className="live-preview-banner-fallback" />
           )}
 
-          {server.premium_status && (
-            <span className="server-premium-badge">Premium</span>
+          {isPremiumOrPartner && (
+            <span className="server-premium-badge">
+              {server.partner_status ? "Partner" : "Premium"}
+            </span>
           )}
         </div>
 
@@ -72,8 +87,8 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           </div>
 
           <div>
-            <h3>{server.server_name}</h3>
-            <p>
+            <h3 style={{ color: serverNameColor }}>{server.server_name}</h3>
+            <p style={{ color: serverTextColor }}>
               {server.category} • {server.country} • {server.language}
             </p>
           </div>
@@ -116,9 +131,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
 
       <div className="banner-control-card banner-control-top">
         <h3>Banner positionieren</h3>
-        <p>
-          Wähle ein Banner aus und stelle es direkt oben in der Vorschau ein.
-        </p>
+        <p>Stelle dein Banner direkt oben in der Vorschau ein.</p>
 
         <label className="field">
           <span>Links / Rechts: {bannerX}%</span>
@@ -177,45 +190,68 @@ export default function ProfileServerEditor({ server }: { server: any }) {
         />
       </label>
 
-      <label className="field">
-        <span>Premium Text</span>
-        <input
-          className="input"
-          name="premium_message"
-          defaultValue={server.premium_message ?? "Featured Premium Server"}
-          placeholder="Featured Premium Server"
-        />
-      </label>
-
-      <div className="profile-style-card inner-style-card">
-        <div>
-          <h3>Premium Glow Color</h3>
-          <p>
-            Diese Farbe wird für den Premium-Leuchteffekt deines Servers
-            verwendet.
-          </p>
+      <section className="premium-feature-card">
+        <div className="premium-feature-header">
+          <div>
+            <span className="page-badge">Only Premium & Partner</span>
+            <h3>Premium & Partner Features</h3>
+            <p>
+              Premium- und Partner-Server können Farben und Leuchteffekte
+              anpassen.
+            </p>
+          </div>
         </div>
 
-        <div className="color-row">
-          <input
-            type="color"
-            name="premium_glow_color"
-            value={glowColor}
-            onChange={(event) => setGlowColor(event.target.value)}
-          />
+        {isPremiumOrPartner ? (
+          <div className="premium-feature-grid">
+            <label className="premium-color-field">
+              <span>Servername-Farbe</span>
+              <input
+                type="color"
+                name="server_name_color"
+                value={serverNameColor}
+                onChange={(event) => setServerNameColor(event.target.value)}
+              />
+            </label>
 
-          <button className="btn" type="submit">
-            Änderungen speichern
-          </button>
-        </div>
-      </div>
+            <label className="premium-color-field">
+              <span>Textfarbe</span>
+              <input
+                type="color"
+                name="server_text_color"
+                value={serverTextColor}
+                onChange={(event) => setServerTextColor(event.target.value)}
+              />
+            </label>
 
-      {!server.premium_status && (
-        <p className="form-note">
-          Hinweis: Glow und Premium Text sind erst sichtbar, wenn dein Server
-          Premium hat.
-        </p>
-      )}
+            <label className="premium-color-field">
+              <span>Glow-Farbe</span>
+              <input
+                type="color"
+                name="premium_glow_color"
+                value={glowColor}
+                onChange={(event) => setGlowColor(event.target.value)}
+              />
+            </label>
+          </div>
+        ) : (
+          <div className="premium-locked-box">
+            <h4>Bitte werde Premium Mitglied</h4>
+            <p>
+              Diese Design-Funktionen sind nur für Premium- und Partner-Server
+              verfügbar.
+            </p>
+
+            <Link href="/shop" className="btn">
+              Zum Shop
+            </Link>
+          </div>
+        )}
+      </section>
+
+      <button className="btn" type="submit">
+        Änderungen speichern
+      </button>
     </form>
   );
 }
