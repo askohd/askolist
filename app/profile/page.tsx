@@ -78,61 +78,30 @@ export default async function ProfilePage() {
           <div className="profile-server-list">
             {myServers.map((server) => (
               <article className="profile-server-card" key={server.id}>
-                <div className="profile-server-banner">
-                  {server.banner_url && server.banner_url.startsWith("http") ? (
-                    <img
-                      src={server.banner_url}
-                      alt={server.server_name}
-                      style={{
-                        objectPosition: `${server.banner_position_x ?? 50}% ${
-                          server.banner_position_y ?? 50
-                        }%`,
-                        transform: `scale(${server.banner_zoom ?? 1})`,
-                        transformOrigin: `${server.banner_position_x ?? 50}% ${
-                          server.banner_position_y ?? 50
-                        }%`,
-                      }}
-                    />
-                  ) : (
-                    <div className="profile-server-banner-fallback" />
-                  )}
-                </div>
-
-                <div className="profile-server-top">
-                  <div className="profile-server-logo">
-                    {server.logo_url && server.logo_url.startsWith("http") ? (
-                      <img src={server.logo_url} alt={server.server_name} />
-                    ) : (
-                      <span>{server.server_name?.slice(0, 1) ?? "S"}</span>
-                    )}
-                  </div>
-
+                <div className="profile-server-summary">
                   <div>
+                    <span className="page-badge">Server Settings</span>
                     <h3>{server.server_name}</h3>
                     <p>
                       {server.category} • {server.country} • {server.language}
                     </p>
                   </div>
-                </div>
 
-                <p className="profile-server-description">
-                  {server.description}
-                </p>
+                  <div className="badges separated-badges">
+                    <span className="badge">
+                      {server.approved ? "Approved" : "Waiting for approval"}
+                    </span>
 
-                <div className="badges separated-badges">
-                  <span className="badge">
-                    {server.approved ? "Approved" : "Waiting for approval"}
-                  </span>
+                    {server.premium_status && (
+                      <span className="badge premium">Premium</span>
+                    )}
 
-                  {server.premium_status && (
-                    <span className="badge premium">Premium</span>
-                  )}
+                    {server.partner_status && (
+                      <span className="badge partner">Partner</span>
+                    )}
 
-                  {server.partner_status && (
-                    <span className="badge partner">Partner</span>
-                  )}
-
-                  <span className="badge">Bumps: {server.bumps ?? 0}</span>
+                    <span className="badge">Bumps: {server.bumps ?? 0}</span>
+                  </div>
                 </div>
 
                 <ProfileServerEditor server={server} />
