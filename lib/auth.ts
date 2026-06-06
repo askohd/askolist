@@ -1,4 +1,3 @@
-
 import type { NextAuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 
@@ -30,6 +29,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         (session.user as any).id = token.discordId;
+        (session.user as any).discordId = token.discordId;
         (session.user as any).username = token.username;
       }
 
