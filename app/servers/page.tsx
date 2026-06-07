@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { supabaseRequest } from "@/lib/supabase";
 import { languages } from "@/lib/demoData";
 
@@ -70,8 +68,6 @@ export default async function ServersPage({
     tag?: string;
   }>;
 }) {
-  await getServerSession(authOptions);
-
   const params = (await searchParams) ?? {};
   const query = String(params.q ?? "").trim().toLowerCase();
   const selectedLanguage = String(params.language ?? "").trim();
@@ -119,13 +115,13 @@ export default async function ServersPage({
     <main className="container servers-directory-page">
       <section className="servers-directory-header">
         <div>
-          <span className="page-badge">AskoList Directory</span>
-          <h1>Discord Server</h1>
+          <span className="page-badge">AskoCafe Directory</span>
+          <h1>AskoCafe Discord Server</h1>
           <p>Die zuletzt gebumpten Server stehen automatisch ganz oben.</p>
         </div>
 
         <Link href="/submit" className="btn">
-          Submit Server
+          Server eintragen
         </Link>
       </section>
 
@@ -150,7 +146,7 @@ export default async function ServersPage({
           <option value="">Alle Tags</option>
           {allTags.map((tag: string) => (
             <option key={tag} value={tag}>
-              {tag}
+              #{tag}
             </option>
           ))}
         </select>
@@ -179,6 +175,9 @@ export default async function ServersPage({
               server.premium_status || server.partner_status
             );
 
+            const premiumColor = server.premium_glow_color || "#8b5cf6";
+            const descriptionToggleId = `description-${server.id}`;
+
             return (
               <article
                 key={server.id}
@@ -187,17 +186,18 @@ export default async function ServersPage({
                 }`}
                 style={
                   isPremiumOrPartner
-                    ? {
-                        boxShadow: `0 0 26px ${
-                          server.premium_glow_color || "#8b5cf6"
-                        }55`,
-                        borderColor: `${
-                          server.premium_glow_color || "#8b5cf6"
-                        }88`,
-                      }
+                    ? ({
+                        "--premium-glow": premiumColor,
+                        boxShadow: `0 0 38px ${premiumColor}99, 0 0 90px ${premiumColor}44`,
+                        borderColor: `${premiumColor}`,
+                      } as any)
                     : undefined
                 }
               >
+                {isPremiumOrPartner && (
+                  <div className="premium-glow-ring" aria-hidden="true" />
+                )}
+
                 <div className="server-directory-banner">
                   {server.banner_url && server.banner_url.startsWith("http") ? (
                     <img
@@ -223,6 +223,12 @@ export default async function ServersPage({
                       ? "No ratings"
                       : `${ratingStats.average.toFixed(1)} (${ratingStats.count})`}
                   </div>
+
+                  {isPremiumOrPartner && (
+                    <span className="server-premium-badge strong-premium-badge">
+                      {server.partner_status ? "Partner" : "Premium"}
+                    </span>
+                  )}
                 </div>
 
                 <div className="server-directory-body">
@@ -253,16 +259,14 @@ export default async function ServersPage({
                             : undefined,
                         }}
                       >
-                        {server.category} • {server.country} •{" "}
-                        {server.language}
+                        {server.category} • {server.language}
                       </p>
                     </div>
                   </div>
 
                   <div className="server-directory-status-row">
                     <span className="server-online-dot" />
-                    <span>{server.bumps ?? 0} Bumps</span>
-                    <span>{formatLastBump(server.last_bump)}</span>
+                    <span>Zuletzt gebumpt: {formatLastBump(server.last_bump)}</span>
                   </div>
 
                   <div className="server-directory-badges">
@@ -279,13 +283,17 @@ export default async function ServersPage({
                     {Array.isArray(server.tags) &&
                       server.tags.slice(0, 5).map((tag: string) => (
                         <span className="badge" key={tag}>
-                          {tag}
+                          #{tag}
                         </span>
                       ))}
                   </div>
 
-                  <details className="server-description-toggle">
-                    <summary>Beschreibung anzeigen</summary>
+                  <div className="description-expand-box">
+                    <input
+                      id={descriptionToggleId}
+                      type="checkbox"
+                      className="description-toggle-input"
+                    />
 
                     <div
                       className="server-directory-description"
@@ -297,7 +305,15 @@ export default async function ServersPage({
                     >
                       {server.description}
                     </div>
-                  </details>
+
+                    <label
+                      htmlFor={descriptionToggleId}
+                      className="description-toggle-button"
+                    >
+                      <span className="show-more">Mehr anzeigen</span>
+                      <span className="show-less">Weniger anzeigen</span>
+                    </label>
+                  </div>
 
                   <div className="server-directory-footer">
                     <Link className="btn secondary" href={`/servers/${server.id}`}>
