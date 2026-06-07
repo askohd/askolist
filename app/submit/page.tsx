@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { categories, countries, languages } from "@/lib/demoData";
+import { categories, languages } from "@/lib/demoData";
+import TagInput from "@/components/TagInput";
 
 export default async function SubmitPage() {
   const session = await getServerSession(authOptions);
@@ -28,8 +29,8 @@ export default async function SubmitPage() {
         <span className="page-badge">One server per Discord user</span>
         <h1>Submit your Discord Server</h1>
         <p>
-          Add your community to AskoList. After submission, an admin will review
-          your server before it becomes public.
+          Add your community to AskoList. After submission, you will be sent to
+          Discord to invite the AskoList bot.
         </p>
       </section>
 
@@ -91,30 +92,17 @@ export default async function SubmitPage() {
             </label>
 
             <label className="field">
-              <span>Tags</span>
-              <input
-                className="input"
-                name="tags"
-                placeholder="#chill, #gaming, #anime"
-              />
-            </label>
-
-            <label className="field">
-              <span>Country</span>
-              <select name="country">
-                {countries.map((country) => (
-                  <option key={country}>{country}</option>
-                ))}
-              </select>
-            </label>
-
-            <label className="field">
               <span>Language</span>
               <select name="language">
                 {languages.map((language) => (
                   <option key={language}>{language}</option>
                 ))}
               </select>
+            </label>
+
+            <label className="field full">
+              <span>Tags</span>
+              <TagInput />
             </label>
 
             <label className="check-row full">
@@ -124,12 +112,12 @@ export default async function SubmitPage() {
           </div>
 
           <button className="btn submit-button" type="submit">
-            Submit for admin review
+            Submit server and invite bot
           </button>
 
           <p className="form-note">
-            Your server will be saved with logo and banner. It becomes public
-            after admin approval.
+            Nach dem Eintragen wirst du automatisch zu Discord weitergeleitet,
+            damit du den AskoList Bot auf deinen Server einladen kannst.
           </p>
         </form>
 
@@ -140,23 +128,23 @@ export default async function SubmitPage() {
             <strong>1</strong>
             <div>
               <h3>Submit your server</h3>
-              <p>Fill out all required server information.</p>
+              <p>Trage deinen Server ohne Server-ID ein.</p>
             </div>
           </div>
 
           <div className="info-step">
             <strong>2</strong>
             <div>
-              <h3>Admin review</h3>
-              <p>Your server will be checked before it appears publicly.</p>
+              <h3>Invite the bot</h3>
+              <p>Nach dem Eintragen öffnet sich automatisch die Bot-Einladung.</p>
             </div>
           </div>
 
           <div className="info-step">
             <strong>3</strong>
             <div>
-              <h3>Get discovered</h3>
-              <p>Once approved, users can find, rate and bump your server.</p>
+              <h3>Admin review</h3>
+              <p>Nach Freigabe kann dein Server gebumpt werden.</p>
             </div>
           </div>
         </aside>
