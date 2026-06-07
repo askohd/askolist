@@ -8,10 +8,13 @@ const MAX_DESCRIPTION_WORDS = 1500;
 
 const ALLOWED_PREMIUM_LAYOUTS = [
   "glow",
-  "sparkles",
+  "starborder",
   "sunset",
   "aurora",
   "neon",
+  "galaxy",
+  "flame",
+  "ocean",
 ];
 
 function limitWords(text: string, maxWords: number) {
