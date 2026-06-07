@@ -184,8 +184,7 @@ return ( <main className="container servers-directory-page"> <section className=
           server.discord_server_icon_url &&
           server.discord_server_icon_url.startsWith("http")
             ? server.discord_server_icon_url
-            : server.logo_url &&
-              server.logo_url.startsWith("http")
+            : server.logo_url && server.logo_url.startsWith("http")
             ? server.logo_url
             : null;
 
