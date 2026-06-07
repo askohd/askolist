@@ -6,6 +6,14 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 
 const MAX_DESCRIPTION_WORDS = 1500;
 
+const ALLOWED_PREMIUM_LAYOUTS = [
+  "glow",
+  "sparkles",
+  "sunset",
+  "aurora",
+  "neon",
+];
+
 function limitWords(text: string, maxWords: number) {
   const cleanText = text.trim();
   const matches = [...cleanText.matchAll(/\S+/g)];
@@ -15,6 +23,11 @@ function limitWords(text: string, maxWords: number) {
   }
 
   const lastAllowedWord = matches[maxWords - 1];
+
+  if (lastAllowedWord.index === undefined) {
+    return cleanText;
+  }
+
   const endIndex = lastAllowedWord.index + lastAllowedWord[0].length;
 
   return cleanText.slice(0, endIndex);
@@ -41,6 +54,14 @@ function safeColor(value: string, fallback: string) {
   }
 
   return fallback;
+}
+
+function safePremiumLayout(value: string) {
+  if (ALLOWED_PREMIUM_LAYOUTS.includes(value)) {
+    return value;
+  }
+
+  return "glow";
 }
 
 async function uploadPublicFile(
@@ -93,8 +114,8 @@ export async function POST(request: Request) {
     );
 
     const premiumGlowColor = safeColor(
-      String(formData.get("premium_glow_color") ?? "#8b5cf6").trim(),
-      "#8b5cf6"
+      String(formData.get("premium_glow_color") ?? "#ff4fd8").trim(),
+      "#ff4fd8"
     );
 
     const serverNameColor = safeColor(
@@ -105,6 +126,10 @@ export async function POST(request: Request) {
     const serverTextColor = safeColor(
       String(formData.get("server_text_color") ?? "#ddd9ef").trim(),
       "#ddd9ef"
+    );
+
+    const premiumLayout = safePremiumLayout(
+      String(formData.get("premium_layout") ?? "glow").trim()
     );
 
     const bannerPositionX = clampNumber(
@@ -157,6 +182,7 @@ export async function POST(request: Request) {
       updateData.premium_glow_color = premiumGlowColor;
       updateData.server_name_color = serverNameColor;
       updateData.server_text_color = serverTextColor;
+      updateData.premium_layout = premiumLayout;
     }
 
     if (logoFile instanceof File && logoFile.size > 0) {
