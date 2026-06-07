@@ -1872,3 +1872,23 @@ select option {
     flex-direction: column;
   }
 }
+.tag-input-box {
+  display: grid;
+  gap: 10px;
+}
+
+.tag-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-chip {
+  border: 1px solid rgba(139, 220, 255, 0.35);
+  background: rgba(139, 220, 255, 0.12);
+  color: #8bdcff;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
