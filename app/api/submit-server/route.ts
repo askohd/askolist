@@ -78,7 +78,7 @@ function extractInviteCode(inviteLink: string) {
   return null;
 }
 
-async function getGuildIdFromInvite(inviteLink: string) {
+async function getDiscordGuildFromInvite(inviteLink: string) {
   const inviteCode = extractInviteCode(inviteLink);
 
   if (!inviteCode) {
@@ -101,10 +101,25 @@ async function getGuildIdFromInvite(inviteLink: string) {
     }
 
     const data = await response.json();
+    const guild = data?.guild;
 
-    return data?.guild?.id ? String(data.guild.id) : null;
+    if (!guild?.id) {
+      return null;
+    }
+
+    const iconUrl = guild.icon
+      ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.${
+          String(guild.icon).startsWith("a_") ? "gif" : "png"
+        }?size=256`
+      : null;
+
+    return {
+      id: String(guild.id),
+      name: guild.name ? String(guild.name) : null,
+      iconUrl,
+    };
   } catch (error) {
-    console.error("Could not fetch Discord invite:", error);
+    console.error("Could not fetch Discord guild from invite:", error);
     return null;
   }
 }
@@ -117,7 +132,7 @@ async function redirectToBotInvite(request: Request, inviteLink: string) {
     return redirectToProfile(request, "submitted=1&bot_invite=missing");
   }
 
-  const guildId = await getGuildIdFromInvite(inviteLink);
+  const guild = await getDiscordGuildFromInvite(inviteLink);
 
   const inviteUrl = new URL("https://discord.com/oauth2/authorize");
 
@@ -125,8 +140,8 @@ async function redirectToBotInvite(request: Request, inviteLink: string) {
   inviteUrl.searchParams.set("permissions", "2147568640");
   inviteUrl.searchParams.set("scope", "bot applications.commands");
 
-  if (guildId) {
-    inviteUrl.searchParams.set("guild_id", guildId);
+  if (guild?.id) {
+    inviteUrl.searchParams.set("guild_id", guild.id);
     inviteUrl.searchParams.set("disable_guild_select", "true");
   }
 
@@ -188,7 +203,6 @@ export async function POST(request: Request) {
     const tagsText = String(formData.get("tags") ?? "").trim();
     const nsfw = formData.get("nsfw") === "on";
 
-    const logoFile = formData.get("logo");
     const bannerFile = formData.get("banner");
 
     if (!serverName || !inviteLink || !description) {
@@ -203,16 +217,9 @@ export async function POST(request: Request) {
       return redirectToSubmit(request, "error=only_one_server");
     }
 
-    let logoUrl: string | null = null;
-    let bannerUrl: string | null = null;
+    const discordGuild = await getDiscordGuildFromInvite(inviteLink);
 
-    if (logoFile instanceof File && logoFile.size > 0) {
-      logoUrl = await uploadPublicFile(
-        "server-logos",
-        ownerDiscordUserId,
-        logoFile
-      );
-    }
+    let bannerUrl: string | null = null;
 
     if (bannerFile instanceof File && bannerFile.size > 0) {
       bannerUrl = await uploadPublicFile(
@@ -224,22 +231,23 @@ export async function POST(request: Request) {
 
     const tags = cleanTags(tagsText);
 
-    const guildId = await getGuildIdFromInvite(inviteLink);
-
     await supabaseRequest("servers", {
       method: "POST",
       body: JSON.stringify({
         owner_discord_user_id: ownerDiscordUserId,
 
-        // Falls die Guild-ID aus dem Invite gelesen werden kann,
-        // speichern wir sie direkt. Sonst nutzt der Bot später Auto-Connect.
         discord_server_id:
-          guildId || `manual-${ownerDiscordUserId}-${Date.now()}`,
+          discordGuild?.id || `manual-${ownerDiscordUserId}-${Date.now()}`,
 
         server_name: serverName,
         description,
         invite_link: inviteLink,
-        logo_url: logoUrl,
+
+        // Wichtig:
+        // Das Logo kommt jetzt automatisch vom Discord-Server.
+        logo_url: discordGuild?.iconUrl || null,
+        discord_server_icon_url: discordGuild?.iconUrl || null,
+
         banner_url: bannerUrl,
         category,
         country: "International",
@@ -254,6 +262,7 @@ export async function POST(request: Request) {
         premium_glow_color: "#8b5cf6",
         server_name_color: "#ffffff",
         server_text_color: "#ddd9ef",
+        premium_layout: "glow",
         banner_position_x: 50,
         banner_position_y: 50,
         banner_zoom: 1,
