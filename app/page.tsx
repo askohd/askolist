@@ -10,6 +10,7 @@ export default function HomePage() {
 const [servers, setServers] = useState<Server[]>(initialServers);
 
 const approved = servers.filter((server) => server.approved);
+
 const featured = approved.filter(
 (server) => server.premiumStatus || server.partnerStatus
 );
@@ -40,10 +41,11 @@ lastBump: new Date().toISOString(),
 );
 }
 
-return ( <main> <section className="container hero"> <h1>Find Discord Servers Worldwide</h1> <p>
-Discover, rate and bump Discord communities on Asko Cafe. </p>
+return ( <main> <section className="container hero"> <h1>Find Discord Servers Worldwide</h1>
 
 ```
+    <p>Discover, rate and bump Discord communities on Asko Cafe.</p>
+
     <div className="hero-actions">
       <Link className="btn" href="/servers">
         Server entdecken
