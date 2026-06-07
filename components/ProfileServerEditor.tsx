@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type MouseEvent } from "react";
 
 const MAX_DESCRIPTION_WORDS = 1500;
 
@@ -108,7 +108,7 @@ setLockedNotice(true);
 }
 }
 
-function confirmDelete(event: React.MouseEvent<HTMLButtonElement>) {
+function confirmDelete(event: MouseEvent<HTMLButtonElement>) {
 const confirmed = window.confirm(
 "Willst du diesen Server wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden."
 );
