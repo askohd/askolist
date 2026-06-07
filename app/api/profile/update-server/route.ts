@@ -6,6 +6,14 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 
 const MAX_DESCRIPTION_WORDS = 1500;
 
+const ALLOWED_LANGUAGES = [
+  "Deutsch",
+  "English",
+  "Français",
+  "Italiano",
+  "Polski",
+];
+
 const ALLOWED_PREMIUM_LAYOUTS = [
   "glow",
   "starborder",
@@ -67,6 +75,20 @@ function safePremiumLayout(value: string) {
   return "glow";
 }
 
+function safeLanguage(value: string, fallback: string) {
+  if (ALLOWED_LANGUAGES.includes(value)) {
+    return value;
+  }
+
+  if (fallback === "German") return "Deutsch";
+  if (fallback === "French") return "Français";
+  if (fallback === "Italian") return "Italiano";
+  if (fallback === "Polish") return "Polski";
+  if (fallback === "English") return "English";
+
+  return "Deutsch";
+}
+
 async function uploadPublicFile(
   bucket: string,
   ownerDiscordUserId: string,
@@ -109,7 +131,10 @@ export async function POST(request: Request) {
 
     const formData = await request.formData();
 
+    const serverId = String(formData.get("server_id") ?? "").trim();
     const serverName = String(formData.get("server_name") ?? "").trim();
+
+    const language = String(formData.get("language") ?? "Deutsch").trim();
 
     const description = limitWords(
       String(formData.get("description") ?? ""),
@@ -156,13 +181,13 @@ export async function POST(request: Request) {
       1
     );
 
-    const logoFile = formData.get("logo");
     const bannerFile = formData.get("banner");
 
-    const servers = await supabaseRequest(
-      `servers?owner_discord_user_id=eq.${discordUserId}&select=*`
-    );
+    const serverQuery = serverId
+      ? `servers?id=eq.${serverId}&owner_discord_user_id=eq.${discordUserId}&select=*`
+      : `servers?owner_discord_user_id=eq.${discordUserId}&select=*`;
 
+    const servers = await supabaseRequest(serverQuery);
     const server = servers?.[0];
 
     if (!server) {
@@ -176,6 +201,7 @@ export async function POST(request: Request) {
     const updateData: any = {
       server_name: serverName || server.server_name,
       description: description || server.description,
+      language: safeLanguage(language, server.language || "Deutsch"),
       banner_position_x: bannerPositionX,
       banner_position_y: bannerPositionY,
       banner_zoom: bannerZoom,
@@ -188,14 +214,6 @@ export async function POST(request: Request) {
       updateData.premium_layout = premiumLayout;
     }
 
-    if (logoFile instanceof File && logoFile.size > 0) {
-      updateData.logo_url = await uploadPublicFile(
-        "server-logos",
-        discordUserId,
-        logoFile
-      );
-    }
-
     if (bannerFile instanceof File && bannerFile.size > 0) {
       updateData.banner_url = await uploadPublicFile(
         "server-banners",
@@ -204,10 +222,13 @@ export async function POST(request: Request) {
       );
     }
 
-    await supabaseRequest(`servers?id=eq.${server.id}`, {
-      method: "PATCH",
-      body: JSON.stringify(updateData),
-    });
+    await supabaseRequest(
+      `servers?id=eq.${server.id}&owner_discord_user_id=eq.${discordUserId}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(updateData),
+      }
+    );
 
     return redirectToProfile(request, "saved=1");
   } catch (error: any) {
