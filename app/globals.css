@@ -3014,3 +3014,26 @@ select option {
     padding: 18px;
   }
 }
+.profile-editor-actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn.danger {
+  background: linear-gradient(135deg, #ff3b5f, #a31635);
+  color: #ffffff;
+  border: 1px solid rgba(255, 92, 122, 0.75);
+  box-shadow: 0 0 24px rgba(255, 59, 95, 0.28);
+}
+
+.btn.danger:hover {
+  filter: brightness(1.08);
+}
+
+@media (max-width: 700px) {
+  .profile-editor-actions {
+    grid-template-columns: 1fr;
+  }
+}
