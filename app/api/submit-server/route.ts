@@ -15,9 +15,31 @@ function limitWords(text: string, maxWords: number) {
   }
 
   const lastAllowedWord = matches[maxWords - 1];
+
+  if (lastAllowedWord.index === undefined) {
+    return cleanText;
+  }
+
   const endIndex = lastAllowedWord.index + lastAllowedWord[0].length;
 
   return cleanText.slice(0, endIndex);
+}
+
+function cleanTags(tagsText: string) {
+  const tags = tagsText
+    .split(",")
+    .map((tag) =>
+      tag
+        .trim()
+        .replace(/^#+/, "")
+        .replace(/\s+/g, "-")
+        .replace(/[^a-zA-Z0-9äöüÄÖÜß_-]/g, "")
+        .toLowerCase()
+        .slice(0, 24)
+    )
+    .filter(Boolean);
+
+  return Array.from(new Set(tags)).slice(0, 5);
 }
 
 function slugifyFileName(name: string) {
@@ -34,6 +56,23 @@ function redirectToProfile(request: Request, query: string) {
   return NextResponse.redirect(new URL(`/profile?${query}`, request.url), {
     status: 303,
   });
+}
+
+function redirectToBotInvite(request: Request) {
+  const botClientId =
+    process.env.DISCORD_BOT_CLIENT_ID || process.env.DISCORD_CLIENT_ID;
+
+  if (!botClientId) {
+    return redirectToProfile(request, "submitted=1&bot_invite=missing");
+  }
+
+  const inviteUrl = new URL("https://discord.com/oauth2/authorize");
+
+  inviteUrl.searchParams.set("client_id", botClientId);
+  inviteUrl.searchParams.set("permissions", "2147568640");
+  inviteUrl.searchParams.set("scope", "bot applications.commands");
+
+  return NextResponse.redirect(inviteUrl, { status: 303 });
 }
 
 async function uploadPublicFile(
@@ -86,16 +125,7 @@ export async function POST(request: Request) {
     );
 
     const inviteLink = String(formData.get("invite_link") ?? "").trim();
-
-    const rawDiscordServerId = String(
-      formData.get("discord_server_id") ?? ""
-    ).trim();
-
-    const discordServerId =
-      rawDiscordServerId || `manual-${ownerDiscordUserId}`;
-
     const category = String(formData.get("category") ?? "Community").trim();
-    const country = String(formData.get("country") ?? "International").trim();
     const language = String(formData.get("language") ?? "English").trim();
     const tagsText = String(formData.get("tags") ?? "").trim();
     const nsfw = formData.get("nsfw") === "on";
@@ -103,7 +133,7 @@ export async function POST(request: Request) {
     const logoFile = formData.get("logo");
     const bannerFile = formData.get("banner");
 
-    if (!serverName || !inviteLink) {
+    if (!serverName || !inviteLink || !description) {
       return redirectToSubmit(request, "error=missing");
     }
 
@@ -134,23 +164,20 @@ export async function POST(request: Request) {
       );
     }
 
-    const tags = tagsText
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter(Boolean);
+    const tags = cleanTags(tagsText);
 
     await supabaseRequest("servers", {
       method: "POST",
       body: JSON.stringify({
         owner_discord_user_id: ownerDiscordUserId,
-        discord_server_id: discordServerId,
+        discord_server_id: `manual-${ownerDiscordUserId}-${Date.now()}`,
         server_name: serverName,
         description,
         invite_link: inviteLink,
         logo_url: logoUrl,
         banner_url: bannerUrl,
         category,
-        country,
+        country: "International",
         language,
         tags,
         nsfw,
@@ -168,7 +195,7 @@ export async function POST(request: Request) {
       }),
     });
 
-    return redirectToProfile(request, "submitted=1");
+    return redirectToBotInvite(request);
   } catch (error: any) {
     console.error("Submit server failed:", error);
 
