@@ -5,6 +5,19 @@ import { useMemo, useState } from "react";
 
 const MAX_DESCRIPTION_WORDS = 1500;
 
+const PREMIUM_LAYOUTS = [
+  { value: "glow", label: "Glow Classic" },
+  { value: "starborder", label: "Sternen Rand" },
+  { value: "sunset", label: "Sunset Dark" },
+  { value: "aurora", label: "Aurora Flow" },
+  { value: "neon", label: "Neon Pulse" },
+  { value: "galaxy", label: "Galaxy Dust" },
+  { value: "flame", label: "Fire Core" },
+  { value: "ocean", label: "Ocean Wave" },
+] as const;
+
+type PremiumLayout = (typeof PREMIUM_LAYOUTS)[number]["value"];
+
 function countWords(text: string) {
   return text.trim().split(/\s+/).filter(Boolean).length;
 }
@@ -28,13 +41,12 @@ function formatLastBump(lastBump: string | null | undefined) {
   return `vor ${days} Tag${days === 1 ? "" : "en"}`;
 }
 
-type PremiumLayout = "glow" | "sparkles" | "sunset" | "aurora" | "neon";
-
 export default function ProfileServerEditor({ server }: { server: any }) {
   const isPremiumOrPartner = Boolean(
     server.premium_status || server.partner_status
   );
 
+  const [lockedNotice, setLockedNotice] = useState(false);
   const [serverName, setServerName] = useState(server.server_name ?? "");
 
   const [bannerPreview, setBannerPreview] = useState<string | null>(
@@ -84,6 +96,8 @@ export default function ProfileServerEditor({ server }: { server: any }) {
     [bannerX, bannerY, bannerZoom]
   );
 
+  const tags = Array.isArray(server.tags) ? server.tags.slice(0, 5) : [];
+
   const cardStyle = isPremiumOrPartner
     ? ({
         "--premium-glow": glowColor,
@@ -92,7 +106,11 @@ export default function ProfileServerEditor({ server }: { server: any }) {
       } as any)
     : undefined;
 
-  const tags = Array.isArray(server.tags) ? server.tags.slice(0, 5) : [];
+  function showLockedNotice() {
+    if (!isPremiumOrPartner) {
+      setLockedNotice(true);
+    }
+  }
 
   return (
     <form
@@ -103,316 +121,361 @@ export default function ProfileServerEditor({ server }: { server: any }) {
     >
       <h3>Server bearbeiten</h3>
 
-      <section className="server-list-live-preview-wrap">
-        <div>
-          <span className="page-badge">Live Vorschau</span>
-          <h3>So sieht dein Server später in der Serverliste aus</h3>
-          <p>Änderungen an Banner, Farben, Layout und Beschreibung siehst du hier direkt.</p>
-        </div>
+      <div className="profile-editor-two-column">
+        <section className="profile-editor-controls">
+          <div className="profile-upload-grid">
+            <label className="field">
+              <span>Server-Logo ändern</span>
+              <input
+                type="file"
+                name="logo"
+                accept="image/*"
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
 
-        <article
-          className={`server-directory-card server-list-live-preview ${
-            isPremiumOrPartner ? "server-directory-card-premium" : ""
-          } ${isPremiumOrPartner ? `premium-layout-${premiumLayout}` : ""}`}
-          style={cardStyle}
-        >
-          {isPremiumOrPartner && (
-            <div className="premium-glow-ring" aria-hidden="true" />
-          )}
+                  if (file) {
+                    setLogoPreview(URL.createObjectURL(file));
+                  }
+                }}
+              />
 
-          {isPremiumOrPartner && premiumLayout === "sparkles" && (
-            <div className="premium-sparkles premium-sparkles-visible">
-              <span>✦</span>
-              <span>✦</span>
-              <span>✦</span>
-              <span>✦</span>
-              <span>✦</span>
-              <span>✦</span>
-              <span>✦</span>
+              <small className="form-note">
+                Später wird automatisch das Discord-Server-Icon bevorzugt, wenn
+                der Bot den Server erkannt hat.
+              </small>
+            </label>
+
+            <label className="field">
+              <span>Server-Banner ändern</span>
+              <input
+                type="file"
+                name="banner"
+                accept="image/*"
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+
+                  if (file) {
+                    setBannerPreview(URL.createObjectURL(file));
+                  }
+                }}
+              />
+            </label>
+          </div>
+
+          <div className="banner-control-card banner-control-top">
+            <h3>Banner positionieren</h3>
+            <p>Stelle dein Banner direkt rechts in der Vorschau ein.</p>
+
+            <label className="field">
+              <span>Links / Rechts: {bannerX}%</span>
+              <input
+                type="range"
+                name="banner_position_x"
+                min="0"
+                max="100"
+                value={bannerX}
+                onChange={(event) => setBannerX(Number(event.target.value))}
+              />
+            </label>
+
+            <label className="field">
+              <span>Hoch / Runter: {bannerY}%</span>
+              <input
+                type="range"
+                name="banner_position_y"
+                min="0"
+                max="100"
+                value={bannerY}
+                onChange={(event) => setBannerY(Number(event.target.value))}
+              />
+            </label>
+
+            <label className="field">
+              <span>Zoom: {bannerZoom}x</span>
+              <input
+                type="range"
+                name="banner_zoom"
+                min="1"
+                max="2.5"
+                step="0.1"
+                value={bannerZoom}
+                onChange={(event) => setBannerZoom(Number(event.target.value))}
+              />
+            </label>
+          </div>
+
+          <label className="field">
+            <span>Servername</span>
+            <input
+              className="input"
+              name="server_name"
+              value={serverName}
+              placeholder="Servername"
+              onChange={(event) => setServerName(event.target.value)}
+            />
+          </label>
+
+          <label className="field full">
+            <span>Beschreibung</span>
+            <textarea
+              name="description"
+              value={description}
+              placeholder="Beschreibung deines Servers"
+              onChange={(event) => {
+                const value = event.target.value;
+
+                if (countWords(value) <= MAX_DESCRIPTION_WORDS) {
+                  setDescription(value);
+                } else {
+                  setDescription(limitWords(value, MAX_DESCRIPTION_WORDS));
+                }
+              }}
+            />
+
+            <small className="char-counter">
+              {countWords(description)}/{MAX_DESCRIPTION_WORDS} Wörter
+            </small>
+          </label>
+
+          <div className="premium-inline-tools">
+            <div className="premium-inline-head">
+              <button
+                type="button"
+                className="premium-diamond"
+                onClick={showLockedNotice}
+                aria-label="Premium Funktion"
+              >
+                ◆
+              </button>
+
+              <div>
+                <h3>Design Features</h3>
+                <p>Farben, Glow und Layouts für Premium & Partner.</p>
+              </div>
             </div>
-          )}
 
-          {isPremiumOrPartner && premiumLayout === "neon" && (
-            <div className="premium-neon-lines">
-              <span />
-              <span />
-              <span />
-            </div>
-          )}
-
-          <div className="server-directory-banner">
-            {bannerPreview ? (
-              <img src={bannerPreview} alt="Banner preview" style={bannerStyle} />
-            ) : (
-              <div className="server-directory-banner-fallback" />
+            {lockedNotice && !isPremiumOrPartner && (
+              <div className="premium-locked-message">
+                <strong>Nur für Premium & Partner verfügbar</strong>
+                <p>
+                  Werde Premium Mitglied, um Layouts, Textfarben und Glow zu
+                  nutzen.
+                </p>
+                <Link href="/shop" className="btn">
+                  Zum Shop
+                </Link>
+              </div>
             )}
 
-            <div className="server-directory-rating">⭐ No ratings</div>
-          </div>
-
-          <div className="server-directory-body">
-            <div className="server-directory-top">
-              <div className="server-directory-logo">
-                {logoPreview ? (
-                  <img src={logoPreview} alt="Logo preview" />
-                ) : (
-                  <span>{serverName?.slice(0, 1) || "S"}</span>
+            <label className="field full premium-setting-line">
+              <span>
+                Layout auswählen{" "}
+                {!isPremiumOrPartner && (
+                  <button
+                    type="button"
+                    className="premium-mini-diamond"
+                    onClick={showLockedNotice}
+                  >
+                    ◆
+                  </button>
                 )}
-              </div>
+              </span>
 
-              <div className="server-directory-title">
-                <h3
-                  style={{
-                    color: isPremiumOrPartner ? serverNameColor : undefined,
-                  }}
-                >
-                  {serverName || "Servername"}
-                </h3>
-
-                <p
-                  style={{
-                    color: isPremiumOrPartner ? serverTextColor : undefined,
-                  }}
-                >
-                  {server.category} • {server.language}
-                </p>
-              </div>
-            </div>
-
-            <div className="server-directory-status-row">
-              <span className="server-online-dot" />
-              <span>Zuletzt gebumpt: {formatLastBump(server.last_bump)}</span>
-            </div>
-
-            <div className="server-directory-badges">
-              {server.nsfw && <span className="badge">NSFW</span>}
-
-              {tags.map((tag: string) => (
-                <span className="badge" key={tag}>
-                  #{tag}
-                </span>
-              ))}
-            </div>
-
-            <div
-              className="server-directory-description live-preview-description"
-              style={{
-                color: isPremiumOrPartner ? serverTextColor : undefined,
-              }}
-            >
-              {description || "Beschreibung deines Servers..."}
-            </div>
-
-            <div className="description-toggle-button fake-preview-toggle">
-              Mehr anzeigen
-            </div>
-
-            <div className="server-directory-footer">
-              <button className="btn secondary" type="button">
-                Server ansehen
-              </button>
-
-              <button className="btn" type="button">
-                Beitreten
-              </button>
-            </div>
-          </div>
-        </article>
-      </section>
-
-      <div className="profile-upload-grid">
-        <label className="field">
-          <span>Server-Logo ändern</span>
-          <input
-            type="file"
-            name="logo"
-            accept="image/*"
-            onChange={(event) => {
-              const file = event.target.files?.[0];
-
-              if (file) {
-                setLogoPreview(URL.createObjectURL(file));
-              }
-            }}
-          />
-
-          <small className="form-note">
-            Später soll hier automatisch das Discord-Server-Icon genutzt werden,
-            wenn der Bot den Server erkannt hat.
-          </small>
-        </label>
-
-        <label className="field">
-          <span>Server-Banner ändern</span>
-          <input
-            type="file"
-            name="banner"
-            accept="image/*"
-            onChange={(event) => {
-              const file = event.target.files?.[0];
-
-              if (file) {
-                setBannerPreview(URL.createObjectURL(file));
-              }
-            }}
-          />
-        </label>
-      </div>
-
-      <div className="banner-control-card banner-control-top">
-        <h3>Banner positionieren</h3>
-        <p>Stelle dein Banner direkt oben in der Vorschau ein.</p>
-
-        <label className="field">
-          <span>Links / Rechts: {bannerX}%</span>
-          <input
-            type="range"
-            name="banner_position_x"
-            min="0"
-            max="100"
-            value={bannerX}
-            onChange={(event) => setBannerX(Number(event.target.value))}
-          />
-        </label>
-
-        <label className="field">
-          <span>Hoch / Runter: {bannerY}%</span>
-          <input
-            type="range"
-            name="banner_position_y"
-            min="0"
-            max="100"
-            value={bannerY}
-            onChange={(event) => setBannerY(Number(event.target.value))}
-          />
-        </label>
-
-        <label className="field">
-          <span>Zoom: {bannerZoom}x</span>
-          <input
-            type="range"
-            name="banner_zoom"
-            min="1"
-            max="2.5"
-            step="0.1"
-            value={bannerZoom}
-            onChange={(event) => setBannerZoom(Number(event.target.value))}
-          />
-        </label>
-      </div>
-
-      <label className="field">
-        <span>Servername</span>
-        <input
-          className="input"
-          name="server_name"
-          value={serverName}
-          placeholder="Servername"
-          onChange={(event) => setServerName(event.target.value)}
-        />
-      </label>
-
-      <label className="field full">
-        <span>Beschreibung</span>
-        <textarea
-          name="description"
-          value={description}
-          placeholder="Beschreibung deines Servers"
-          onChange={(event) => {
-            const value = event.target.value;
-
-            if (countWords(value) <= MAX_DESCRIPTION_WORDS) {
-              setDescription(value);
-            } else {
-              setDescription(limitWords(value, MAX_DESCRIPTION_WORDS));
-            }
-          }}
-        />
-
-        <small className="char-counter">
-          {countWords(description)}/{MAX_DESCRIPTION_WORDS} Wörter
-        </small>
-      </label>
-
-      <section className="premium-feature-card">
-        <div className="premium-feature-header">
-          <div>
-            <span className="page-badge">Only Premium & Partner</span>
-            <h3>Premium & Partner Features</h3>
-            <p>
-              Premium- und Partner-Server können Farben, Glow und spezielle
-              Layouts anpassen.
-            </p>
-          </div>
-        </div>
-
-        {isPremiumOrPartner ? (
-          <div className="premium-feature-grid">
-            <label className="field full">
-              <span>Layout auswählen</span>
               <select
                 name="premium_layout"
                 value={premiumLayout}
+                disabled={!isPremiumOrPartner}
                 onChange={(event) =>
                   setPremiumLayout(event.target.value as PremiumLayout)
                 }
               >
-                <option value="glow">Glow Classic</option>
-                <option value="sparkles">Sparkle Stars</option>
-                <option value="sunset">Sunset Dark</option>
-                <option value="aurora">Aurora Flow</option>
-                <option value="neon">Neon Pulse</option>
+                {PREMIUM_LAYOUTS.map((layout) => (
+                  <option key={layout.value} value={layout.value}>
+                    {layout.label}
+                  </option>
+                ))}
               </select>
             </label>
 
-            <label className="premium-color-field">
-              <span>Servername-Farbe</span>
-              <input
-                type="color"
-                name="server_name_color"
-                value={serverNameColor}
-                onChange={(event) => setServerNameColor(event.target.value)}
-              />
-            </label>
+            <div className="premium-color-grid-inline">
+              <label className="premium-color-field">
+                <span>
+                  Servername-Farbe{" "}
+                  {!isPremiumOrPartner && (
+                    <button
+                      type="button"
+                      className="premium-mini-diamond"
+                      onClick={showLockedNotice}
+                    >
+                      ◆
+                    </button>
+                  )}
+                </span>
+                <input
+                  type="color"
+                  name="server_name_color"
+                  value={serverNameColor}
+                  disabled={!isPremiumOrPartner}
+                  onChange={(event) => setServerNameColor(event.target.value)}
+                />
+              </label>
 
-            <label className="premium-color-field">
-              <span>Textfarbe</span>
-              <input
-                type="color"
-                name="server_text_color"
-                value={serverTextColor}
-                onChange={(event) => setServerTextColor(event.target.value)}
-              />
-            </label>
+              <label className="premium-color-field">
+                <span>
+                  Textfarbe{" "}
+                  {!isPremiumOrPartner && (
+                    <button
+                      type="button"
+                      className="premium-mini-diamond"
+                      onClick={showLockedNotice}
+                    >
+                      ◆
+                    </button>
+                  )}
+                </span>
+                <input
+                  type="color"
+                  name="server_text_color"
+                  value={serverTextColor}
+                  disabled={!isPremiumOrPartner}
+                  onChange={(event) => setServerTextColor(event.target.value)}
+                />
+              </label>
 
-            <label className="premium-color-field">
-              <span>Glow-Farbe</span>
-              <input
-                type="color"
-                name="premium_glow_color"
-                value={glowColor}
-                onChange={(event) => setGlowColor(event.target.value)}
-              />
-            </label>
+              <label className="premium-color-field">
+                <span>
+                  Glow-Farbe{" "}
+                  {!isPremiumOrPartner && (
+                    <button
+                      type="button"
+                      className="premium-mini-diamond"
+                      onClick={showLockedNotice}
+                    >
+                      ◆
+                    </button>
+                  )}
+                </span>
+                <input
+                  type="color"
+                  name="premium_glow_color"
+                  value={glowColor}
+                  disabled={!isPremiumOrPartner}
+                  onChange={(event) => setGlowColor(event.target.value)}
+                />
+              </label>
+            </div>
           </div>
-        ) : (
-          <div className="premium-locked-box">
-            <h4>Bitte werde Premium Mitglied</h4>
-            <p>
-              Diese Design-Funktionen sind nur für Premium- und Partner-Server
-              verfügbar.
-            </p>
 
-            <Link href="/shop" className="btn">
-              Zum Shop
-            </Link>
+          <button className="btn profile-save-button" type="submit">
+            Änderungen speichern
+          </button>
+        </section>
+
+        <aside className="profile-editor-preview">
+          <div className="preview-sticky-box">
+            <span className="page-badge">Live Vorschau</span>
+            <h3>Serverlisten-Ansicht</h3>
+            <p>Genau so sieht deine Karte später auf der Serverliste aus.</p>
+
+            <article
+              className={`server-directory-card server-list-live-preview ${
+                isPremiumOrPartner
+                  ? `server-directory-card-premium premium-layout-${premiumLayout}`
+                  : ""
+              }`}
+              style={cardStyle}
+            >
+              {isPremiumOrPartner && (
+                <div className="premium-glow-ring" aria-hidden="true" />
+              )}
+
+              <div className="server-directory-banner">
+                {bannerPreview ? (
+                  <img
+                    src={bannerPreview}
+                    alt="Banner preview"
+                    style={bannerStyle}
+                  />
+                ) : (
+                  <div className="server-directory-banner-fallback" />
+                )}
+
+                <div className="server-directory-rating">⭐ No ratings</div>
+              </div>
+
+              <div className="server-directory-body">
+                <div className="server-directory-top">
+                  <div className="server-directory-logo">
+                    {logoPreview ? (
+                      <img src={logoPreview} alt="Logo preview" />
+                    ) : (
+                      <span>{serverName?.slice(0, 1) || "S"}</span>
+                    )}
+                  </div>
+
+                  <div className="server-directory-title">
+                    <h3
+                      style={{
+                        color: isPremiumOrPartner ? serverNameColor : undefined,
+                      }}
+                    >
+                      {serverName || "Servername"}
+                    </h3>
+
+                    <p
+                      style={{
+                        color: isPremiumOrPartner ? serverTextColor : undefined,
+                      }}
+                    >
+                      {server.category} • {server.language}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="server-directory-status-row">
+                  <span className="server-online-dot" />
+                  <span>
+                    Zuletzt gebumpt: {formatLastBump(server.last_bump)}
+                  </span>
+                </div>
+
+                <div className="server-directory-badges">
+                  {server.nsfw && <span className="badge">NSFW</span>}
+
+                  {tags.map((tag: string) => (
+                    <span className="badge" key={tag}>
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+
+                <div
+                  className="server-directory-description live-preview-description"
+                  style={{
+                    color: isPremiumOrPartner ? serverTextColor : undefined,
+                  }}
+                >
+                  {description || "Beschreibung deines Servers..."}
+                </div>
+
+                <div className="description-toggle-button fake-preview-toggle">
+                  Mehr anzeigen
+                </div>
+
+                <div className="server-directory-footer">
+                  <button className="btn secondary" type="button">
+                    Server ansehen
+                  </button>
+
+                  <button className="btn" type="button">
+                    Beitreten
+                  </button>
+                </div>
+              </div>
+            </article>
           </div>
-        )}
-      </section>
-
-      <button className="btn" type="submit">
-        Änderungen speichern
-      </button>
+        </aside>
+      </div>
     </form>
   );
 }
