@@ -481,6 +481,3 @@ return ( <form
           </div>
         </article>
       </div>
-
-);
-}
