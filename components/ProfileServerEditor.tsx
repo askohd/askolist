@@ -500,9 +500,3 @@ return ( <form
         </article>
       </div>
     </aside>
-  </div>
-</form>
-```
-
-);
-}
