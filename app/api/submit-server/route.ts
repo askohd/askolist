@@ -58,7 +58,58 @@ function redirectToProfile(request: Request, query: string) {
   });
 }
 
-function redirectToBotInvite(request: Request) {
+function extractInviteCode(inviteLink: string) {
+  const text = String(inviteLink ?? "").trim();
+
+  const patterns = [
+    /discord\.gg\/([a-zA-Z0-9-]+)/,
+    /discord\.com\/invite\/([a-zA-Z0-9-]+)/,
+    /discordapp\.com\/invite\/([a-zA-Z0-9-]+)/,
+  ];
+
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+
+    if (match?.[1]) {
+      return match[1];
+    }
+  }
+
+  return null;
+}
+
+async function getGuildIdFromInvite(inviteLink: string) {
+  const inviteCode = extractInviteCode(inviteLink);
+
+  if (!inviteCode) {
+    return null;
+  }
+
+  try {
+    const response = await fetch(
+      `https://discord.com/api/v10/invites/${inviteCode}?with_counts=false&with_expiration=false`,
+      {
+        headers: {
+          Accept: "application/json",
+        },
+        cache: "no-store",
+      }
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+
+    return data?.guild?.id ? String(data.guild.id) : null;
+  } catch (error) {
+    console.error("Could not fetch Discord invite:", error);
+    return null;
+  }
+}
+
+async function redirectToBotInvite(request: Request, inviteLink: string) {
   const botClientId =
     process.env.DISCORD_BOT_CLIENT_ID || process.env.DISCORD_CLIENT_ID;
 
@@ -66,11 +117,18 @@ function redirectToBotInvite(request: Request) {
     return redirectToProfile(request, "submitted=1&bot_invite=missing");
   }
 
+  const guildId = await getGuildIdFromInvite(inviteLink);
+
   const inviteUrl = new URL("https://discord.com/oauth2/authorize");
 
   inviteUrl.searchParams.set("client_id", botClientId);
   inviteUrl.searchParams.set("permissions", "2147568640");
   inviteUrl.searchParams.set("scope", "bot applications.commands");
+
+  if (guildId) {
+    inviteUrl.searchParams.set("guild_id", guildId);
+    inviteUrl.searchParams.set("disable_guild_select", "true");
+  }
 
   return NextResponse.redirect(inviteUrl, { status: 303 });
 }
@@ -166,11 +224,18 @@ export async function POST(request: Request) {
 
     const tags = cleanTags(tagsText);
 
+    const guildId = await getGuildIdFromInvite(inviteLink);
+
     await supabaseRequest("servers", {
       method: "POST",
       body: JSON.stringify({
         owner_discord_user_id: ownerDiscordUserId,
-        discord_server_id: `manual-${ownerDiscordUserId}-${Date.now()}`,
+
+        // Falls die Guild-ID aus dem Invite gelesen werden kann,
+        // speichern wir sie direkt. Sonst nutzt der Bot später Auto-Connect.
+        discord_server_id:
+          guildId || `manual-${ownerDiscordUserId}-${Date.now()}`,
+
         server_name: serverName,
         description,
         invite_link: inviteLink,
@@ -195,7 +260,7 @@ export async function POST(request: Request) {
       }),
     });
 
-    return redirectToBotInvite(request);
+    return await redirectToBotInvite(request, inviteLink);
   } catch (error: any) {
     console.error("Submit server failed:", error);
 
