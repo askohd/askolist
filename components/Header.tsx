@@ -13,13 +13,13 @@ export default async function Header() {
           <span className="logo-mark">
             <Image
               src="/logo.png"
-              alt="AskoList Logo"
+              alt="Asko Cafe Logo"
               width={56}
               height={56}
               priority
             />
           </span>
-          <span>AskoList</span>
+          <span>Asko Cafe</span>
         </Link>
 
         <nav className="nav-links">
