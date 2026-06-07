@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import LoginButton from "./LoginButton";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { getCurrentAdmin } from "@/lib/admin";
 
 export default async function Header() {
@@ -31,6 +32,7 @@ export default async function Header() {
           {admin && <Link href="/admin">Admin</Link>}
         </nav>
 
+        <LanguageSwitcher />
         <LoginButton />
       </div>
     </header>
