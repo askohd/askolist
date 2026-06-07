@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import AuthProvider from "@/components/AuthProvider";
 
 export const metadata: Metadata = {
-  title: "AskoList",
+  title: "Asko Cafe",
   description: "Discover Discord Servers Worldwide",
 };
 
