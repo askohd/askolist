@@ -341,9 +341,3 @@ return ( <main className="container servers-directory-page"> <section className=
         );
       })}
     </section>
-  )}
-</main>
-```
-
-);
-}
