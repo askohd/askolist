@@ -223,12 +223,6 @@ export default async function ServersPage({
                       ? "No ratings"
                       : `${ratingStats.average.toFixed(1)} (${ratingStats.count})`}
                   </div>
-
-                  {isPremiumOrPartner && (
-                    <span className="server-premium-badge strong-premium-badge">
-                      {server.partner_status ? "Partner" : "Premium"}
-                    </span>
-                  )}
                 </div>
 
                 <div className="server-directory-body">
@@ -266,16 +260,14 @@ export default async function ServersPage({
 
                   <div className="server-directory-status-row">
                     <span className="server-online-dot" />
-                    <span>Zuletzt gebumpt: {formatLastBump(server.last_bump)}</span>
+                    <span>
+                      Zuletzt gebumpt: {formatLastBump(server.last_bump)}
+                    </span>
                   </div>
 
                   <div className="server-directory-badges">
                     {server.partner_status && (
                       <span className="badge partner">Partner</span>
-                    )}
-
-                    {server.premium_status && (
-                      <span className="badge premium">Premium</span>
                     )}
 
                     {server.nsfw && <span className="badge">NSFW</span>}
@@ -316,7 +308,10 @@ export default async function ServersPage({
                   </div>
 
                   <div className="server-directory-footer">
-                    <Link className="btn secondary" href={`/servers/${server.id}`}>
+                    <Link
+                      className="btn secondary"
+                      href={`/servers/${server.id}`}
+                    >
                       Server ansehen
                     </Link>
 
