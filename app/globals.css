@@ -6721,3 +6721,438 @@ select option {
     grid-template-columns: 1fr;
   }
 }
+/* =========================
+   HERO TEXT KLEINER
+========================= */
+.hero-title-smaller {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  font-size: clamp(4rem, 7vw, 6.5rem) !important;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  text-align: center;
+  margin: 0 auto 1.25rem;
+  max-width: 780px;
+}
+
+.hero-title-smaller span:last-child {
+  background: linear-gradient(90deg, #f2e8ff 0%, #d89cff 45%, #8fd3ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* =========================
+   BADGE COOLER
+========================= */
+.cool-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.4rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(18, 23, 58, 0.92), rgba(32, 21, 66, 0.9));
+  border: 1px solid rgba(120, 205, 255, 0.45);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+    0 0 20px rgba(96, 214, 255, 0.18),
+    0 0 34px rgba(186, 97, 255, 0.18);
+  color: #9fe5ff;
+  font-weight: 800;
+  font-size: 1.45rem;
+  margin-bottom: 1.5rem;
+}
+
+.cool-badge span:first-child,
+.cool-badge span:last-child {
+  color: #b98cff;
+  font-size: 1.1rem;
+}
+
+/* =========================
+   HERO ZENTRIERT
+========================= */
+.home-hero-left-inner {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero-text-large {
+  max-width: 760px;
+  margin: 0 auto 1.6rem;
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.centered-search {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 620px;
+}
+
+.centered-actions {
+  justify-content: center;
+}
+
+/* =========================
+   RECHTE CARD WEITER RECHTS
+========================= */
+.home-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  align-items: center;
+  gap: 3rem;
+}
+
+.home-hero-right-pushed {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* =========================
+   DISCORD CARD NICHT GRÖSSER
+========================= */
+.anime-discord-card {
+  position: relative;
+  width: 100%;
+  max-width: 390px; /* Card bleibt normal groß */
+  border-radius: 34px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top left, rgba(255, 0, 170, 0.14), transparent 30%),
+    linear-gradient(180deg, rgba(42, 17, 69, 0.97) 0%, rgba(19, 15, 46, 0.98) 100%);
+  border: 1px solid rgba(220, 120, 255, 0.25);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+    0 0 30px rgba(197, 83, 255, 0.25),
+    0 0 55px rgba(91, 210, 255, 0.18);
+}
+
+/* =========================
+   BANNER
+========================= */
+.anime-card-banner {
+  position: relative;
+  height: 128px;
+  overflow: hidden;
+}
+
+.anime-card-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* =========================
+   OFFICIAL BADGE
+========================= */
+.anime-card-official-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(15, 18, 40, 0.92);
+  border: 1px solid rgba(111, 214, 255, 0.45);
+  box-shadow: 0 0 18px rgba(92, 217, 255, 0.2);
+  color: #fff;
+  font-size: 0.86rem;
+  font-weight: 800;
+  z-index: 3;
+}
+
+.anime-card-discord-dot {
+  color: #8be6ff;
+  font-size: 0.7rem;
+}
+
+/* =========================
+   CARD BODY
+========================= */
+.anime-card-body {
+  position: relative;
+  padding: 0 18px 18px;
+  text-align: center;
+}
+
+/* =========================
+   NUR ICON GRÖSSER
+========================= */
+.anime-card-icon-wrap {
+  width: 116px;
+  height: 116px;
+  margin: -24px auto 14px; /* nur leicht über Banner */
+  border-radius: 30px;
+  background: linear-gradient(180deg, rgba(25, 19, 48, 0.98), rgba(14, 13, 35, 0.98));
+  border: 1px solid rgba(190, 121, 255, 0.2);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.35),
+    0 0 20px rgba(224, 108, 255, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 4;
+}
+
+.bigger-icon-only {
+  width: 118px;
+  height: 118px;
+}
+
+.anime-card-icon {
+  width: 88px;  /* NUR das Icon größer */
+  height: 88px;
+  object-fit: contain;
+  display: block;
+}
+
+/* =========================
+   TITEL + FLAGGE
+========================= */
+.anime-card-title-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.2rem;
+}
+
+.anime-card-title-row h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.anime-card-subtitle {
+  margin: 0 0 1rem;
+  color: rgba(240, 236, 255, 0.75);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+/* =========================
+   DEUTSCHLAND FLAGGE
+========================= */
+.anime-card-germany-flag {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  overflow: hidden;
+  display: inline-flex;
+  flex-direction: column;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 0 0 2px rgba(0, 0, 0, 0.18),
+    0 0 18px rgba(255, 186, 67, 0.18);
+  flex-shrink: 0;
+}
+
+.anime-card-germany-flag span {
+  flex: 1;
+  display: block;
+}
+
+.anime-card-germany-flag span:nth-child(1) {
+  background: #111;
+}
+.anime-card-germany-flag span:nth-child(2) {
+  background: #d21f26;
+}
+.anime-card-germany-flag span:nth-child(3) {
+  background: #f3c623;
+}
+
+.anime-card-germany-flag.small {
+  width: 28px;
+  height: 28px;
+  margin: 0 auto;
+}
+
+/* =========================
+   TAGS
+========================= */
+.anime-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+  margin: 1rem 0 1.15rem;
+}
+
+.anime-card-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  background: rgba(80, 34, 116, 0.45);
+  border: 1px solid rgba(202, 115, 255, 0.35);
+  color: #f8f4ff;
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.02) inset,
+    0 0 16px rgba(165, 87, 255, 0.12);
+}
+
+/* =========================
+   BESCHREIBUNG
+========================= */
+.anime-card-description {
+  margin-top: 1rem;
+  padding: 1.25rem 1rem;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(69, 34, 91, 0.42), rgba(32, 67, 98, 0.36));
+  border: 1px solid rgba(158, 119, 255, 0.22);
+  color: #f5f1ff;
+  box-shadow: 0 0 20px rgba(143, 78, 255, 0.08) inset;
+}
+
+.anime-card-description p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.75;
+}
+
+.anime-card-description p + p {
+  margin-top: 0.9rem;
+}
+
+/* =========================
+   STATS
+========================= */
+.anime-card-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.9rem;
+  margin-top: 1rem;
+}
+
+.anime-card-stat {
+  padding: 1rem 0.7rem;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(40, 38, 84, 0.72), rgba(33, 59, 83, 0.55));
+  border: 1px solid rgba(120, 205, 255, 0.22);
+  box-shadow: 0 0 18px rgba(101, 208, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.anime-card-stat-icon {
+  font-size: 0.95rem;
+  margin-bottom: 0.35rem;
+  color: #d59aff;
+}
+
+.anime-card-stat strong {
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.anime-card-stat small {
+  margin-top: 0.35rem;
+  color: rgba(241, 238, 255, 0.7);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* =========================
+   NUR EIN BUTTON UNTEN
+========================= */
+.single-button-only {
+  margin-top: 1rem;
+}
+
+.anime-card-main-button {
+  width: 100%;
+  min-height: 54px;
+  border-radius: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 1rem;
+  color: #fff;
+  background: linear-gradient(90deg, #f541ce 0%, #c266ff 45%, #70d9ff 100%);
+  box-shadow:
+    0 0 24px rgba(223, 94, 255, 0.28),
+    0 0 28px rgba(96, 214, 255, 0.18);
+}
+
+/* =========================
+   GLOWS
+========================= */
+.anime-card-border-glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: 36px;
+  pointer-events: none;
+  box-shadow:
+    0 0 0 2px rgba(231, 95, 255, 0.22),
+    0 0 30px rgba(232, 92, 255, 0.28),
+    0 0 50px rgba(94, 215, 255, 0.22);
+}
+
+.anime-card-glow {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 999px;
+  filter: blur(44px);
+  opacity: 0.42;
+}
+
+.anime-card-glow-pink {
+  width: 140px;
+  height: 140px;
+  top: -25px;
+  right: -15px;
+  background: rgba(250, 77, 208, 0.4);
+}
+
+.anime-card-glow-blue {
+  width: 120px;
+  height: 120px;
+  bottom: 70px;
+  left: -25px;
+  background: rgba(85, 212, 255, 0.33);
+}
+
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 1100px) {
+  .home-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .home-hero-right-pushed {
+    justify-content: center;
+  }
+
+  .hero-title-smaller {
+    font-size: clamp(3rem, 12vw, 5rem) !important;
+  }
+}
