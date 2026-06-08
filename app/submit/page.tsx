@@ -147,4 +147,193 @@ const SUBMIT_TEXT = {
     loginButton: "Zaloguj przez Discord",
 
     badge: "Jeden serwer na użytkownika Discord",
-    title: "Dodaj swój ser
+    title: "Dodaj swój serwer Discord",
+    intro: "Dodaj swoją społeczność do Asko Cafe. Po wysłaniu zostaniesz przekierowany do Discorda, aby zaprosić bota Asko Cafe.",
+
+    serverName: "Nazwa serwera",
+    serverNamePlaceholder: "Przykład: Asko Community",
+    inviteLink: "Link zaproszenia Discord",
+    description: "Opis",
+    descriptionPlaceholder: "Opisz swój serwer Discord...",
+    maxWords: "Maksymalnie 1500 słów.",
+    banner: "Banner serwera",
+    category: "Kategoria",
+    language: "Język",
+    tags: "Tagi",
+    nsfw: "Ten serwer zawiera treści NSFW",
+    submitButton: "Dodaj serwer i zaproś bota",
+    note: "Logo serwera zostanie automatycznie pobrane z serwera Discord, gdy link zaproszenia będzie poprawny. Po dodaniu zostaniesz przekierowany do Discorda, aby zaprosić bota Asko Cafe.",
+
+    approvalTitle: "Jak działa zatwierdzanie",
+    step1Title: "Dodaj serwer",
+    step1Text: "Dodaj serwer bez ID serwera i bez przesyłania logo.",
+    step2Title: "Zaproś bota",
+    step2Text: "Po dodaniu automatycznie otworzy się zaproszenie bota.",
+    step3Title: "Sprawdzenie przez admina",
+    step3Text: "Po zatwierdzeniu serwer będzie można bumpować.",
+  },
+} as const;
+
+function normalizeLanguage(value: string | undefined): LanguageCode {
+  if (
+    value === "de" ||
+    value === "en" ||
+    value === "fr" ||
+    value === "it" ||
+    value === "pl"
+  ) {
+    return value;
+  }
+
+  return "de";
+}
+
+function text(language: LanguageCode, key: keyof typeof SUBMIT_TEXT.de) {
+  return SUBMIT_TEXT[language][key] || SUBMIT_TEXT.de[key];
+}
+
+export default async function SubmitPage() {
+  const session = await getServerSession(authOptions);
+  const cookieStore = await cookies();
+  const pageLanguage = normalizeLanguage(
+    cookieStore.get("asko_language")?.value
+  );
+
+  if (!session) {
+    return (
+      <main className="container submit-page">
+        <section className="profile-card">
+          <span className="page-badge">
+            {text(pageLanguage, "loginBadge")}
+          </span>
+          <h1>{text(pageLanguage, "loginTitle")}</h1>
+          <p>{text(pageLanguage, "loginText")}</p>
+
+          <Link className="btn" href="/api/auth/signin">
+            {text(pageLanguage, "loginButton")}
+          </Link>
+        </section>
+      </main>
+    );
+  }
+
+  return (
+    <main className="container submit-page">
+      <section className="submit-hero">
+        <span className="page-badge">{text(pageLanguage, "badge")}</span>
+        <h1>{text(pageLanguage, "title")}</h1>
+        <p>{text(pageLanguage, "intro")}</p>
+      </section>
+
+      <section className="submit-layout">
+        <form
+          className="submit-card"
+          action="/api/submit-server"
+          method="POST"
+          encType="multipart/form-data"
+        >
+          <div className="form-grid">
+            <label className="field">
+              <span>{text(pageLanguage, "serverName")}</span>
+              <input
+                className="input"
+                name="server_name"
+                placeholder={text(pageLanguage, "serverNamePlaceholder")}
+                required
+              />
+            </label>
+
+            <label className="field">
+              <span>{text(pageLanguage, "inviteLink")}</span>
+              <input
+                className="input"
+                name="invite_link"
+                placeholder="https://discord.gg/..."
+                required
+              />
+            </label>
+
+            <label className="field full">
+              <span>{text(pageLanguage, "description")}</span>
+              <textarea
+                name="description"
+                placeholder={text(pageLanguage, "descriptionPlaceholder")}
+                required
+              />
+              <small className="char-counter">
+                {text(pageLanguage, "maxWords")}
+              </small>
+            </label>
+
+            <label className="field">
+              <span>{text(pageLanguage, "banner")}</span>
+              <input type="file" name="banner" accept="image/*" />
+            </label>
+
+            <label className="field">
+              <span>{text(pageLanguage, "category")}</span>
+              <select name="category">
+                {categories.map((category) => (
+                  <option key={category}>{category}</option>
+                ))}
+              </select>
+            </label>
+
+            <label className="field">
+              <span>{text(pageLanguage, "language")}</span>
+              <select name="language">
+                {languages.map((language) => (
+                  <option key={language}>{language}</option>
+                ))}
+              </select>
+            </label>
+
+            <label className="field full">
+              <span>{text(pageLanguage, "tags")}</span>
+              <TagInput />
+            </label>
+
+            <label className="check-row full">
+              <input type="checkbox" name="nsfw" />
+              <span>{text(pageLanguage, "nsfw")}</span>
+            </label>
+          </div>
+
+          <button className="btn submit-button" type="submit">
+            {text(pageLanguage, "submitButton")}
+          </button>
+
+          <p className="form-note">{text(pageLanguage, "note")}</p>
+        </form>
+
+        <aside className="submit-info">
+          <h2>{text(pageLanguage, "approvalTitle")}</h2>
+
+          <div className="info-step">
+            <strong>1</strong>
+            <div>
+              <h3>{text(pageLanguage, "step1Title")}</h3>
+              <p>{text(pageLanguage, "step1Text")}</p>
+            </div>
+          </div>
+
+          <div className="info-step">
+            <strong>2</strong>
+            <div>
+              <h3>{text(pageLanguage, "step2Title")}</h3>
+              <p>{text(pageLanguage, "step2Text")}</p>
+            </div>
+          </div>
+
+          <div className="info-step">
+            <strong>3</strong>
+            <div>
+              <h3>{text(pageLanguage, "step3Title")}</h3>
+              <p>{text(pageLanguage, "step3Text")}</p>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </main>
+  );
+}
