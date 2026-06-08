@@ -3635,3 +3635,293 @@ select option {
     grid-template-columns: 1fr;
   }
 }
+.nav .container.nav-inner {
+  width: 100% !important;
+  max-width: none !important;
+  padding-left: 34px !important;
+  padding-right: 34px !important;
+}
+
+.nav-inner {
+  display: grid !important;
+  grid-template-columns: auto 1fr auto !important;
+  align-items: center !important;
+  gap: 28px !important;
+}
+
+.logo {
+  justify-self: start !important;
+}
+
+.nav-links {
+  justify-self: center !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 24px !important;
+}
+
+.nav-links a {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  white-space: nowrap !important;
+}
+
+.nav-link-icon {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.nav-right-actions {
+  justify-self: end !important;
+  margin-left: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  transform: none !important;
+}
+
+.user-menu-trigger {
+  height: 42px !important;
+  min-width: 0 !important;
+  max-width: 178px !important;
+  border-radius: 999px !important;
+  padding: 5px 13px 5px 6px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+  overflow: hidden !important;
+}
+
+.user-menu-avatar {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  border-radius: 999px !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+.user-menu-head-avatar {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  max-height: 44px !important;
+  border-radius: 999px !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+.user-menu-name {
+  max-width: 94px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.language-switcher-button {
+  width: 44px !important;
+  height: 34px !important;
+}
+
+.home-page {
+  overflow: hidden;
+}
+
+.home-network-hero {
+  position: relative;
+  min-height: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 88px 24px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.home-network-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(168, 85, 247, 0.48), transparent 30%),
+    radial-gradient(circle at 82% 22%, rgba(56, 189, 248, 0.38), transparent 34%),
+    radial-gradient(circle at 50% 95%, rgba(236, 72, 153, 0.28), transparent 32%),
+    linear-gradient(135deg, #180026 0%, #090617 45%, #0a2738 100%);
+}
+
+.home-network-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255,255,255,0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px);
+  background-size: 58px 58px;
+  mask-image: radial-gradient(circle at center, black 0%, transparent 72%);
+  opacity: 0.6;
+}
+
+.home-network-bg::after {
+  content: "";
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  right: 6%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.18), transparent 18%),
+    radial-gradient(circle at center, rgba(168, 85, 247, 0.28), transparent 44%),
+    radial-gradient(circle at center, rgba(56, 189, 248, 0.18), transparent 62%);
+  filter: blur(2px);
+  opacity: 0.9;
+}
+
+.home-network-content {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 980px);
+  text-align: center;
+}
+
+.home-network-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 16px;
+  border-radius: 999px;
+  color: #7dd3fc;
+  font-weight: 900;
+  background: rgba(14, 165, 233, 0.15);
+  border: 1px solid rgba(125, 211, 252, 0.35);
+  box-shadow: 0 0 24px rgba(14, 165, 233, 0.25);
+}
+
+.home-network-content h1 {
+  margin: 28px auto 18px;
+  max-width: 900px;
+  color: white;
+  font-size: clamp(48px, 7vw, 92px);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+}
+
+.home-network-content h1 span {
+  background: linear-gradient(135deg, #ffffff, #c084fc, #67e8f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.home-network-content p {
+  max-width: 720px;
+  margin: 0 auto 28px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.home-network-search {
+  width: min(100%, 640px);
+  margin: 0 auto 24px;
+  height: 58px;
+  display: grid;
+  grid-template-columns: 1fr 58px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 40px rgba(56, 189, 248, 0.22);
+}
+
+.home-network-search input {
+  border: 0;
+  outline: 0;
+  padding: 0 26px;
+  background: transparent;
+  color: #111827;
+  font-weight: 900;
+  font-size: 17px;
+}
+
+.home-network-search button {
+  border: 0;
+  background: transparent;
+  color: #111827;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.home-network-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.home-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  padding-top: 46px;
+  padding-bottom: 46px;
+}
+
+.home-feature-card {
+  padding: 28px;
+}
+
+.home-feature-card span {
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #a855f7, #38bdf8);
+  box-shadow: 0 0 24px rgba(168, 85, 247, 0.32);
+}
+
+.home-feature-card h3 {
+  margin-bottom: 8px;
+}
+
+.home-feature-card p {
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.6;
+}
+
+@media (max-width: 980px) {
+  .nav .container.nav-inner {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  .nav-inner {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .nav-links {
+    justify-self: start !important;
+    flex-wrap: wrap !important;
+  }
+
+  .nav-right-actions {
+    justify-self: start !important;
+  }
+
+  .home-feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-network-hero {
+    min-height: 460px;
+  }
+}
