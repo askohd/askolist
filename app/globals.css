@@ -3380,3 +3380,141 @@ select option {
     ),
     #ffffff;
 }
+.nav-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-menu {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.user-menu-trigger {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  border-radius: 999px;
+  padding: 6px 14px 6px 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.user-menu-trigger:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.user-menu-avatar,
+.user-menu-head-avatar {
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+.user-menu-avatar-fallback,
+.user-menu-head-avatar.fallback {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #a855f7, #38bdf8);
+  color: white;
+  font-weight: 900;
+}
+
+.user-menu-name {
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 9999;
+  width: 235px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(15, 15, 22, 0.98);
+  border: 1px solid rgba(120, 220, 255, 0.22);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+}
+
+.user-menu-head {
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-menu-head strong {
+  display: block;
+  color: white;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.user-menu-head span {
+  display: block;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+.user-menu-list {
+  padding: 10px;
+  display: grid;
+  gap: 4px;
+}
+
+.user-menu-list a,
+.user-menu-list button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: white;
+  text-decoration: none;
+  padding: 11px 12px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  text-align: left;
+}
+
+.user-menu-list a:hover,
+.user-menu-list button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.user-menu-logout {
+  color: #ff4d6d !important;
+  margin-top: 6px;
+}
+
+@media (max-width: 800px) {
+  .nav-right-actions {
+    gap: 8px;
+  }
+
+  .user-menu-name {
+    display: none;
+  }
+
+  .user-menu-trigger {
+    padding-right: 6px;
+  }
+}
