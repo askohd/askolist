@@ -5615,3 +5615,547 @@ select option {
     align-items: center !important;
   }
 }
+/* =========================================================
+   HOME HERO FINAL TUNING
+   - Server Card ganz rechts
+   - Hero Text kleiner und sauber mittig
+   - Mittlerer Bereich zentriert
+   - Asko Cafe Icon korrekt sichtbar
+   ========================================================= */
+
+.home-hero {
+  position: relative;
+  overflow: hidden;
+  padding-top: 48px;
+  padding-bottom: 64px;
+}
+
+.home-hero .container.home-hero-grid {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1680px;
+  margin: 0 auto;
+  padding-left: 40px;
+  padding-right: 40px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 390px;
+  gap: 56px;
+  align-items: center;
+}
+
+/* Linke Seite wirklich mittig */
+.home-hero-left {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-hero-left-inner {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Badge etwas höher und cooler */
+.page-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-size: 19px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #93ecff;
+  background: linear-gradient(180deg, rgba(22, 33, 72, 0.9), rgba(8, 15, 33, 0.92));
+  border: 1px solid rgba(101, 230, 255, 0.45);
+  box-shadow:
+    0 0 18px rgba(78, 205, 255, 0.2),
+    0 0 28px rgba(201, 88, 255, 0.12),
+    inset 0 0 0 1px rgba(255,255,255,0.04);
+  transform: translateY(-8px);
+}
+
+/* Haupttitel kleiner und mittig */
+.hero-title-large {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: clamp(72px, 7vw, 118px);
+  line-height: 0.92;
+  letter-spacing: -0.055em;
+  font-weight: 950;
+  color: #f7f5ff;
+  text-shadow:
+    0 0 20px rgba(255,255,255,0.06),
+    0 18px 50px rgba(0,0,0,0.35);
+}
+
+/* Beschreibung */
+.hero-text-large {
+  max-width: 720px;
+  margin: 26px auto 0;
+  text-align: center;
+  font-size: 17px;
+  line-height: 1.65;
+  color: rgba(244, 240, 255, 0.92);
+}
+
+/* Suchleiste mittig */
+.home-hero-search.centered-search {
+  width: 100%;
+  max-width: 640px;
+  margin: 28px auto 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.03) inset,
+    0 0 28px rgba(176, 84, 255, 0.12);
+}
+
+.home-hero-search.centered-search .input {
+  flex: 1;
+  min-width: 0;
+  height: 52px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.045);
+  color: #fff;
+  font-size: 15px;
+  padding: 0 18px;
+}
+
+.home-hero-search.centered-search .input::placeholder {
+  color: rgba(255,255,255,0.55);
+}
+
+.home-hero-search.centered-search .btn {
+  height: 52px;
+  padding: 0 24px;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+/* Buttons mittig */
+.hero-actions.centered-actions {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.hero-actions.centered-actions .btn {
+  min-height: 46px;
+  padding: 0 24px;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+/* Rechte Seite: Card ganz nach rechts */
+.home-hero-right,
+.home-hero-right-pushed {
+  width: 100%;
+  max-width: 390px;
+  justify-self: end;
+  margin-left: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* =========================================================
+   ANIME CARD - rechts, sauber, schöner
+   ========================================================= */
+
+.anime-discord-card {
+  position: relative;
+  width: 390px;
+  max-width: 390px;
+  border-radius: 30px;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(255, 87, 217, 0.18), transparent 35%),
+    radial-gradient(circle at 100% 100%, rgba(70, 208, 255, 0.16), transparent 38%),
+    linear-gradient(180deg, rgba(28, 12, 52, 0.98), rgba(10, 10, 30, 0.98));
+  border: 1px solid rgba(255, 95, 223, 0.45);
+  box-shadow:
+    0 0 26px rgba(255, 87, 223, 0.32),
+    0 0 52px rgba(74, 214, 255, 0.16),
+    inset 0 0 18px rgba(255,255,255,0.02);
+}
+
+.anime-card-border-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 18px rgba(255, 91, 224, 0.45),
+    inset 0 0 12px rgba(71, 213, 255, 0.18);
+}
+
+.anime-card-glow {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(56px);
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.anime-card-glow-pink {
+  top: -30px;
+  left: -20px;
+  width: 160px;
+  height: 160px;
+  background: rgba(255, 71, 203, 0.32);
+}
+
+.anime-card-glow-blue {
+  right: -20px;
+  bottom: 90px;
+  width: 180px;
+  height: 180px;
+  background: rgba(71, 206, 255, 0.22);
+}
+
+.anime-card-banner {
+  position: relative;
+  height: 126px;
+  overflow: hidden;
+}
+
+.anime-card-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Offizieller Discord Badge */
+.anime-card-official-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  color: #fff;
+  background: rgba(8, 18, 36, 0.88);
+  border: 1px solid rgba(110, 233, 255, 0.4);
+  box-shadow: 0 0 18px rgba(84, 214, 255, 0.18);
+}
+
+.anime-card-discord-dot {
+  color: #7cefff;
+  font-size: 11px;
+}
+
+.anime-card-body {
+  padding: 0 18px 18px;
+}
+
+/* Logo sauber sichtbar */
+.anime-card-icon-wrap {
+  width: 86px;
+  height: 86px;
+  margin-top: -22px;
+  margin-bottom: 12px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(16, 8, 35, 0.98), rgba(10, 10, 25, 0.98));
+  border: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 12px 28px rgba(0,0,0,0.45),
+    0 0 18px rgba(255, 75, 224, 0.18);
+}
+
+.anime-card-icon {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Titel */
+.anime-card-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.anime-card-title-row h3 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: -0.04em;
+  color: #fff;
+}
+
+.anime-card-germany-flag {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow: 0 0 12px rgba(255, 195, 73, 0.16);
+  flex-shrink: 0;
+}
+
+.anime-card-germany-flag span:nth-child(1) {
+  flex: 1;
+  background: #000;
+}
+
+.anime-card-germany-flag span:nth-child(2) {
+  flex: 1;
+  background: #dd0000;
+}
+
+.anime-card-germany-flag span:nth-child(3) {
+  flex: 1;
+  background: #ffce00;
+}
+
+.anime-card-germany-flag.small {
+  width: 28px;
+  height: 28px;
+}
+
+/* kleine Subtitle */
+.anime-card-body::before {
+  content: "Gaming • Anime • Community";
+  display: block;
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(228, 226, 255, 0.72);
+}
+
+/* Tags */
+.anime-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.anime-card-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 31px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  color: #fff;
+  background: rgba(129, 70, 195, 0.12);
+  border: 1px solid rgba(199, 123, 255, 0.34);
+  box-shadow: 0 0 12px rgba(194, 97, 255, 0.08);
+}
+
+/* Beschreibung */
+.anime-card-description {
+  padding: 18px 16px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(70, 29, 105, 0.25), rgba(26, 34, 63, 0.4));
+  border: 1px solid rgba(162, 129, 255, 0.2);
+  margin-bottom: 16px;
+}
+
+.anime-card-description p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.65;
+  font-weight: 800;
+  color: #fff;
+}
+
+.anime-card-description p + p {
+  margin-top: 12px;
+}
+
+/* Stats */
+.anime-card-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.anime-card-stat {
+  min-height: 92px;
+  padding: 12px 10px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(24, 22, 56, 0.96), rgba(26, 48, 82, 0.75));
+  border: 1px solid rgba(120, 211, 255, 0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.anime-card-stat-icon {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.anime-card-stat strong {
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 950;
+  color: #fff;
+}
+
+.anime-card-stat small {
+  font-size: 11px;
+  font-weight: 900;
+  color: rgba(230, 230, 255, 0.75);
+  text-transform: uppercase;
+}
+
+/* Buttons */
+.anime-card-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.anime-card-main-button,
+.anime-card-secondary-button {
+  min-height: 46px;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.anime-card-main-button {
+  color: #fff;
+  background: linear-gradient(90deg, #f04fda 0%, #57ddff 100%);
+  box-shadow: 0 0 18px rgba(199, 82, 255, 0.25);
+}
+
+.anime-card-secondary-button {
+  color: #fff;
+  background: rgba(115, 144, 171, 0.18);
+  border: 1px solid rgba(109, 219, 255, 0.24);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1450px) {
+  .home-hero .container.home-hero-grid {
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 42px;
+  }
+
+  .anime-discord-card {
+    width: 360px;
+    max-width: 360px;
+  }
+
+  .hero-title-large {
+    font-size: clamp(64px, 6vw, 98px);
+  }
+}
+
+@media (max-width: 1200px) {
+  .home-hero .container.home-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .home-hero-right,
+  .home-hero-right-pushed {
+    justify-self: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .home-hero-left-inner {
+    max-width: 760px;
+  }
+
+  .hero-title-large {
+    font-size: clamp(60px, 10vw, 92px);
+  }
+}
+
+@media (max-width: 700px) {
+  .home-hero {
+    padding-top: 36px;
+    padding-bottom: 48px;
+  }
+
+  .home-hero .container.home-hero-grid {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .page-badge {
+    font-size: 15px;
+    padding: 10px 18px;
+  }
+
+  .hero-title-large {
+    font-size: 54px;
+    line-height: 0.95;
+  }
+
+  .hero-text-large {
+    font-size: 15px;
+  }
+
+  .home-hero-search.centered-search {
+    flex-direction: column;
+    max-width: 100%;
+  }
+
+  .home-hero-search.centered-search .input,
+  .home-hero-search.centered-search .btn {
+    width: 100%;
+  }
+
+  .anime-discord-card {
+    width: 100%;
+    max-width: 390px;
+  }
+
+  .anime-card-stats,
+  .anime-card-actions {
+    grid-template-columns: 1fr;
+  }
+}
