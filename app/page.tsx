@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo } from "react";
 import { useLanguage } from "@/components/useLanguage";
+import { initialServers } from "@/lib/demoData";
+import type { Server } from "@/lib/types";
 
 type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
 
@@ -17,19 +20,23 @@ const HOME_TEXT = {
     cardBadge: "Offizieller Discord",
     cardTitle: "Asko Cafe",
     cardText:
-      "✨ Tritt unserem offiziellen Discord bei, entdecke neue Communities, lerne neue Leute kennen und bleibe immer auf dem Laufenden. 💬🚀",
+      "💜 Tritt unserem offiziellen Discord bei, entdecke neue Communities, chatte mit anderen Mitgliedern und bleibe immer auf dem Laufenden. ✨",
     join: "Discord beitreten",
     serverList: "Serverliste öffnen",
-    tagLanguage: "Deutsch",
-    tagCommunity: "Community",
-    tagSupport: "Support",
-    statActiveValue: "24/7",
-    statActiveLabel: "Aktiv",
-    statLanguageValue: "DE",
-    statLanguageLabel: "Sprache",
-    statFeaturesValue: "VIP",
-    statFeaturesLabel: "Features",
+    premiumBadge: "Premium Bereich",
+    premiumTitle: "Premium Server",
+    premiumText:
+      "Hier erscheinen Premium- und Partner-Server. Sie werden nach und nach elegant eingeblendet.",
+    noPremiumTitle: "Noch keine Premium Server",
+    noPremiumText:
+      "Sobald Premium- oder Partner-Server vorhanden sind, werden sie hier automatisch angezeigt.",
+    community: "Community",
+    support: "Support",
+    language: "Sprache",
+    active: "Aktiv",
+    features: "Features",
   },
+
   en: {
     badge: "Asko Cafe Network",
     title: "Discover Discord Servers",
@@ -41,19 +48,23 @@ const HOME_TEXT = {
     cardBadge: "Official Discord",
     cardTitle: "Asko Cafe",
     cardText:
-      "✨ Join our official Discord, discover new communities, meet new people and always stay up to date. 💬🚀",
+      "💜 Join our official Discord, discover new communities, chat with others and stay up to date. ✨",
     join: "Join Discord",
     serverList: "Open server list",
-    tagLanguage: "German",
-    tagCommunity: "Community",
-    tagSupport: "Support",
-    statActiveValue: "24/7",
-    statActiveLabel: "Active",
-    statLanguageValue: "DE",
-    statLanguageLabel: "Language",
-    statFeaturesValue: "VIP",
-    statFeaturesLabel: "Features",
+    premiumBadge: "Premium Area",
+    premiumTitle: "Premium Servers",
+    premiumText:
+      "Premium and partner servers appear here and fade in one after another.",
+    noPremiumTitle: "No premium servers yet",
+    noPremiumText:
+      "As soon as premium or partner servers exist, they will appear here automatically.",
+    community: "Community",
+    support: "Support",
+    language: "Language",
+    active: "Active",
+    features: "Features",
   },
+
   fr: {
     badge: "Réseau Asko Cafe",
     title: "Découvre des serveurs Discord",
@@ -65,19 +76,23 @@ const HOME_TEXT = {
     cardBadge: "Discord officiel",
     cardTitle: "Asko Cafe",
     cardText:
-      "✨ Rejoins notre Discord officiel, découvre de nouvelles communautés, fais de nouvelles rencontres et reste toujours informé. 💬🚀",
+      "💜 Rejoins notre Discord officiel, découvre de nouvelles communautés, discute avec les autres et reste informé. ✨",
     join: "Rejoindre Discord",
     serverList: "Ouvrir la liste",
-    tagLanguage: "Allemand",
-    tagCommunity: "Communauté",
-    tagSupport: "Support",
-    statActiveValue: "24/7",
-    statActiveLabel: "Actif",
-    statLanguageValue: "DE",
-    statLanguageLabel: "Langue",
-    statFeaturesValue: "VIP",
-    statFeaturesLabel: "Fonctions",
+    premiumBadge: "Zone Premium",
+    premiumTitle: "Serveurs Premium",
+    premiumText:
+      "Les serveurs premium et partenaires apparaissent ici avec une animation élégante.",
+    noPremiumTitle: "Aucun serveur premium",
+    noPremiumText:
+      "Dès qu'il y aura des serveurs premium ou partenaires, ils seront affichés ici automatiquement.",
+    community: "Communauté",
+    support: "Support",
+    language: "Langue",
+    active: "Actif",
+    features: "Fonctions",
   },
+
   it: {
     badge: "Asko Cafe Network",
     title: "Scopri server Discord",
@@ -89,19 +104,23 @@ const HOME_TEXT = {
     cardBadge: "Discord ufficiale",
     cardTitle: "Asko Cafe",
     cardText:
-      "✨ Unisciti al nostro Discord ufficiale, scopri nuove community, conosci nuove persone e resta sempre aggiornato. 💬🚀",
+      "💜 Unisciti al nostro Discord ufficiale, scopri nuove community, chatta con altri utenti e resta aggiornato. ✨",
     join: "Entra su Discord",
     serverList: "Apri lista server",
-    tagLanguage: "Tedesco",
-    tagCommunity: "Community",
-    tagSupport: "Supporto",
-    statActiveValue: "24/7",
-    statActiveLabel: "Attivo",
-    statLanguageValue: "DE",
-    statLanguageLabel: "Lingua",
-    statFeaturesValue: "VIP",
-    statFeaturesLabel: "Funzioni",
+    premiumBadge: "Area Premium",
+    premiumTitle: "Server Premium",
+    premiumText:
+      "I server premium e partner vengono mostrati qui con una bella animazione.",
+    noPremiumTitle: "Nessun server premium",
+    noPremiumText:
+      "Appena ci saranno server premium o partner, appariranno qui automaticamente.",
+    community: "Community",
+    support: "Supporto",
+    language: "Lingua",
+    active: "Attivo",
+    features: "Funzioni",
   },
+
   pl: {
     badge: "Asko Cafe Network",
     title: "Odkryj serwery Discord",
@@ -113,18 +132,21 @@ const HOME_TEXT = {
     cardBadge: "Oficjalny Discord",
     cardTitle: "Asko Cafe",
     cardText:
-      "✨ Dołącz do naszego oficjalnego Discorda, odkrywaj nowe społeczności, poznawaj ludzi i bądź zawsze na bieżąco. 💬🚀",
+      "💜 Dołącz do naszego oficjalnego Discorda, odkrywaj nowe społeczności, rozmawiaj z innymi i bądź na bieżąco. ✨",
     join: "Dołącz do Discorda",
     serverList: "Otwórz listę serwerów",
-    tagLanguage: "Niemiecki",
-    tagCommunity: "Społeczność",
-    tagSupport: "Pomoc",
-    statActiveValue: "24/7",
-    statActiveLabel: "Aktywny",
-    statLanguageValue: "DE",
-    statLanguageLabel: "Język",
-    statFeaturesValue: "VIP",
-    statFeaturesLabel: "Funkcje",
+    premiumBadge: "Strefa Premium",
+    premiumTitle: "Serwery Premium",
+    premiumText:
+      "Tutaj pojawią się serwery premium i partnerskie, pokazujące się jeden po drugim.",
+    noPremiumTitle: "Brak serwerów premium",
+    noPremiumText:
+      "Gdy pojawią się serwery premium lub partnerskie, będą tutaj automatycznie wyświetlane.",
+    community: "Społeczność",
+    support: "Support",
+    language: "Język",
+    active: "Aktywny",
+    features: "Funkcje",
   },
 } as const;
 
@@ -132,24 +154,37 @@ function t(language: UiLanguage, key: keyof typeof HOME_TEXT.de) {
   return HOME_TEXT[language]?.[key] || HOME_TEXT.de[key];
 }
 
+function shortText(text: string | undefined, maxLength: number) {
+  if (!text) return "";
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength).trim() + "…";
+}
+
 export default function HomePage() {
   const language = useLanguage() as UiLanguage;
 
+  const premiumServers = useMemo(() => {
+    return initialServers
+      .filter((server: any) => server.approved)
+      .filter((server: any) => server.premiumStatus || server.partnerStatus)
+      .slice(0, 6);
+  }, []);
+
   return (
     <main className="home-page">
-      <section className="home-hero">
+      <section className="home-hero bigger-centered-hero">
+        <div className="home-hero-grid-lines" />
         <div className="home-hero-orb home-hero-orb-left" />
         <div className="home-hero-orb home-hero-orb-right" />
-        <div className="home-hero-grid-lines" />
 
         <div className="container home-hero-grid">
           <div className="home-hero-left">
             <div className="home-hero-left-inner">
               <span className="page-badge">{t(language, "badge")}</span>
 
-              <h1>{t(language, "title")}</h1>
+              <h1 className="hero-title-large">{t(language, "title")}</h1>
 
-              <p>{t(language, "text")}</p>
+              <p className="hero-text-large">{t(language, "text")}</p>
 
               <form className="home-hero-search centered-search" action="/servers">
                 <input
@@ -177,16 +212,14 @@ export default function HomePage() {
           </div>
 
           <div className="home-hero-right home-hero-right-pushed">
-            <article className="discord-server-card featured-discord-card prettier-discord-card">
+            <article className="featured-discord-card prettier-discord-card">
               <div className="server-card-glow server-card-glow-pink" />
               <div className="server-card-glow server-card-glow-blue" />
               <div className="server-card-glow server-card-glow-soft" />
 
               <div className="discord-server-banner">
                 <img src="/asko-cafe-banner.png" alt="Asko Cafe Banner" />
-                <span className="discord-server-badge">
-                  {t(language, "cardBadge")}
-                </span>
+                <span className="discord-server-badge">{t(language, "cardBadge")}</span>
               </div>
 
               <div className="discord-server-content">
@@ -200,15 +233,13 @@ export default function HomePage() {
                   <div className="discord-server-meta">
                     <div className="discord-server-name-row">
                       <h3>{t(language, "cardTitle")}</h3>
-                      <span className="server-country-emoji" aria-label="Germany">
-                        🇩🇪
-                      </span>
+                      <span className="server-country-emoji">🇩🇪</span>
                     </div>
 
                     <div className="discord-server-tags">
-                      <span className="server-tag">{t(language, "tagLanguage")}</span>
-                      <span className="server-tag">{t(language, "tagCommunity")}</span>
-                      <span className="server-tag">{t(language, "tagSupport")}</span>
+                      <span className="server-tag">Deutsch</span>
+                      <span className="server-tag">{t(language, "community")}</span>
+                      <span className="server-tag">{t(language, "support")}</span>
                     </div>
                   </div>
                 </div>
@@ -219,18 +250,18 @@ export default function HomePage() {
 
                 <div className="discord-server-stats">
                   <div className="server-stat-box">
-                    <strong>{t(language, "statActiveValue")}</strong>
-                    <span>{t(language, "statActiveLabel")}</span>
+                    <strong>24/7</strong>
+                    <span>{t(language, "active")}</span>
                   </div>
 
                   <div className="server-stat-box">
-                    <strong>{t(language, "statLanguageValue")}</strong>
-                    <span>{t(language, "statLanguageLabel")}</span>
+                    <strong>DE</strong>
+                    <span>{t(language, "language")}</span>
                   </div>
 
                   <div className="server-stat-box">
-                    <strong>{t(language, "statFeaturesValue")}</strong>
-                    <span>{t(language, "statFeaturesLabel")}</span>
+                    <strong>VIP</strong>
+                    <span>{t(language, "features")}</span>
                   </div>
                 </div>
 
@@ -252,6 +283,86 @@ export default function HomePage() {
             </article>
           </div>
         </div>
+      </section>
+
+      <section className="container premium-section">
+        <div className="premium-section-heading">
+          <span className="page-badge">{t(language, "premiumBadge")}</span>
+          <h2>{t(language, "premiumTitle")}</h2>
+          <p>{t(language, "premiumText")}</p>
+        </div>
+
+        {premiumServers.length === 0 ? (
+          <div className="card empty premium-empty-card">
+            <h3>{t(language, "noPremiumTitle")}</h3>
+            <p>{t(language, "noPremiumText")}</p>
+          </div>
+        ) : (
+          <div className="premium-servers-grid">
+            {premiumServers.map((server: Server, index: number) => {
+              const serverData = server as any;
+
+              const banner =
+                serverData.banner_url ||
+                serverData.bannerUrl ||
+                "/asko-cafe-banner.png";
+
+              const icon =
+                serverData.discord_server_icon_url ||
+                serverData.logo_url ||
+                serverData.logoUrl ||
+                "/asko-cafe-icon.png";
+
+              return (
+                <article
+                  key={server.id}
+                  className="premium-server-card"
+                  style={{
+                    animationDelay: `${index * 0.15}s`,
+                  }}
+                >
+                  <div className="premium-server-card-banner">
+                    <img src={banner} alt={server.serverName || server.server_name} />
+                  </div>
+
+                  <div className="premium-server-card-body">
+                    <div className="premium-server-card-top">
+                      <img
+                        className="premium-server-card-icon"
+                        src={icon}
+                        alt={server.serverName || server.server_name}
+                      />
+
+                      <div>
+                        <h3>{server.serverName || server.server_name}</h3>
+                        <p>
+                          {(server as any).category} • {(server as any).language}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="premium-server-card-description">
+                      {shortText(
+                        (server as any).description,
+                        110
+                      )}
+                    </div>
+
+                    <div className="premium-server-card-actions">
+                      <Link href="/servers" className="btn secondary">
+                        {t(language, "serverList")}
+                      </Link>
+
+                      <button className="btn" type="button">
+                        {t(language, "discover")}
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
       </section>
     </main>
   );
