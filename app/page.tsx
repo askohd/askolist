@@ -20,7 +20,9 @@ const HOME_TEXT = {
     cardBadge: "Offizieller Discord",
     cardTitle: "Asko Cafe",
     cardText:
-      "💜 Tritt unserem offiziellen Discord bei, entdecke neue Communities, chatte mit anderen Mitgliedern und bleibe immer auf dem Laufenden. ✨",
+      "Tritt unserem offiziellen Discord bei, entdecke neue Communities, chatte mit anderen Mitgliedern und bleibe immer auf dem Laufenden.",
+    cardExtra:
+      "Chillige Community, Support bei Fragen und regelmäßig neue Updates.",
     join: "Discord beitreten",
     serverList: "Serverliste öffnen",
     premiumBadge: "Premium Bereich",
@@ -48,7 +50,8 @@ const HOME_TEXT = {
     cardBadge: "Official Discord",
     cardTitle: "Asko Cafe",
     cardText:
-      "💜 Join our official Discord, discover new communities, chat with others and stay up to date. ✨",
+      "Join our official Discord, discover new communities, chat with others and stay up to date.",
+    cardExtra: "Chill community, support for questions and regular new updates.",
     join: "Join Discord",
     serverList: "Open server list",
     premiumBadge: "Premium Area",
@@ -76,7 +79,9 @@ const HOME_TEXT = {
     cardBadge: "Discord officiel",
     cardTitle: "Asko Cafe",
     cardText:
-      "💜 Rejoins notre Discord officiel, découvre de nouvelles communautés, discute avec les autres et reste informé. ✨",
+      "Rejoins notre Discord officiel, découvre de nouvelles communautés, discute avec les autres et reste informé.",
+    cardExtra:
+      "Communauté chill, support pour les questions et nouvelles mises à jour régulières.",
     join: "Rejoindre Discord",
     serverList: "Ouvrir la liste",
     premiumBadge: "Zone Premium",
@@ -104,7 +109,9 @@ const HOME_TEXT = {
     cardBadge: "Discord ufficiale",
     cardTitle: "Asko Cafe",
     cardText:
-      "💜 Unisciti al nostro Discord ufficiale, scopri nuove community, chatta con altri utenti e resta aggiornato. ✨",
+      "Unisciti al nostro Discord ufficiale, scopri nuove community, chatta con altri utenti e resta aggiornato.",
+    cardExtra:
+      "Community chill, supporto per domande e nuovi aggiornamenti regolari.",
     join: "Entra su Discord",
     serverList: "Apri lista server",
     premiumBadge: "Area Premium",
@@ -132,7 +139,9 @@ const HOME_TEXT = {
     cardBadge: "Oficjalny Discord",
     cardTitle: "Asko Cafe",
     cardText:
-      "💜 Dołącz do naszego oficjalnego Discorda, odkrywaj nowe społeczności, rozmawiaj z innymi i bądź na bieżąco. ✨",
+      "Dołącz do naszego oficjalnego Discorda, odkrywaj nowe społeczności, rozmawiaj z innymi i bądź na bieżąco.",
+    cardExtra:
+      "Luźna społeczność, pomoc przy pytaniach i regularne nowe aktualizacje.",
     join: "Dołącz do Discorda",
     serverList: "Otwórz listę serwerów",
     premiumBadge: "Strefa Premium",
@@ -216,66 +225,70 @@ export default function HomePage() {
           </div>
 
           <div className="home-hero-right home-hero-right-pushed">
-            <article className="featured-discord-card prettier-discord-card">
-              <div className="server-card-glow server-card-glow-pink" />
-              <div className="server-card-glow server-card-glow-blue" />
-              <div className="server-card-glow server-card-glow-soft" />
+            <article className="hero-server-card-v2">
+              <div className="hero-server-card-v2-glow hero-server-card-v2-glow-pink" />
+              <div className="hero-server-card-v2-glow hero-server-card-v2-glow-blue" />
 
-              <div className="discord-server-banner">
+              <div className="hero-server-card-v2-banner">
                 <img src="/asko-cafe-banner.png" alt="Asko Cafe Banner" />
-                <span className="discord-server-badge">
+
+                <span className="hero-server-card-v2-badge">
                   {t(language, "cardBadge")}
                 </span>
               </div>
 
-              <div className="discord-server-content">
-                <div className="discord-server-top new-server-top-layout">
+              <div className="hero-server-card-v2-body">
+                <div className="hero-server-card-v2-head">
                   <img
-                    className="discord-server-icon"
+                    className="hero-server-card-v2-icon"
                     src="/asko-cafe-icon.png"
                     alt="Asko Cafe Icon"
                   />
 
-                  <div className="discord-server-meta">
-                    <div className="discord-server-name-row">
+                  <div className="hero-server-card-v2-meta">
+                    <div className="hero-server-card-v2-title-row">
                       <h3>{t(language, "cardTitle")}</h3>
-                      <span className="server-country-emoji">🇩🇪</span>
+                      <span className="hero-server-card-v2-flag">🇩🇪</span>
                     </div>
 
-                    <div className="discord-server-tags">
-                      <span className="server-tag">Deutsch</span>
-                      <span className="server-tag">
+                    <div className="hero-server-card-v2-pills">
+                      <span className="hero-server-card-v2-pill">Deutsch</span>
+
+                      <span className="hero-server-card-v2-pill">
                         {t(language, "community")}
                       </span>
-                      <span className="server-tag">
+
+                      <span className="hero-server-card-v2-pill">
                         {t(language, "support")}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <p className="discord-server-description prettier-description">
-                  {t(language, "cardText")}
+                <p className="hero-server-card-v2-description">
+                  💜 {t(language, "cardText")}
+                  <br />
+                  ✨ {t(language, "cardExtra")}
                 </p>
 
-                <div className="discord-server-stats">
-                  <div className="server-stat-box">
+                <div className="hero-server-card-v2-stats">
+                  <div className="hero-server-card-v2-stat">
                     <strong>24/7</strong>
                     <span>{t(language, "active")}</span>
                   </div>
 
-                  <div className="server-stat-box">
+                  <div className="hero-server-card-v2-stat">
                     <strong>DE</strong>
                     <span>{t(language, "language")}</span>
                   </div>
 
-                  <div className="server-stat-box">
+                  <div className="hero-server-card-v2-stat">
                     <strong>VIP</strong>
                     <span>{t(language, "features")}</span>
                   </div>
                 </div>
 
-                <div className="discord-server-actions">
+                <div className="hero-server-card-v2-actions">
                   <a
                     href="https://discord.gg/askocafe"
                     target="_blank"
@@ -298,7 +311,9 @@ export default function HomePage() {
       <section className="container premium-section">
         <div className="premium-section-heading">
           <span className="page-badge">{t(language, "premiumBadge")}</span>
+
           <h2>{t(language, "premiumTitle")}</h2>
+
           <p>{t(language, "premiumText")}</p>
         </div>
 
@@ -311,7 +326,6 @@ export default function HomePage() {
           <div className="premium-servers-grid">
             {premiumServers.map((server: Server, index: number) => {
               const serverData = server as any;
-
               const serverName = server.serverName || "Discord Server";
 
               const banner =
@@ -347,6 +361,7 @@ export default function HomePage() {
 
                       <div>
                         <h3>{serverName}</h3>
+
                         <p>
                           {serverData.category} • {serverData.language}
                         </p>
