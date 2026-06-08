@@ -24,7 +24,6 @@ const HOME_TEXT = {
     cardExtra:
       "Chillige Gaming- und Anime-Community, Support bei Fragen und regelmäßig neue Updates.",
     join: "Discord beitreten",
-    serverList: "Serverliste öffnen",
     premiumBadge: "Premium Bereich",
     premiumTitle: "Premium Server",
     premiumText:
@@ -54,7 +53,6 @@ const HOME_TEXT = {
     cardExtra:
       "Chill gaming and anime community, support for questions and regular new updates.",
     join: "Join Discord",
-    serverList: "Open server list",
     premiumBadge: "Premium Area",
     premiumTitle: "Premium Servers",
     premiumText:
@@ -84,7 +82,6 @@ const HOME_TEXT = {
     cardExtra:
       "Communauté gaming et anime chill, support pour les questions et mises à jour régulières.",
     join: "Rejoindre Discord",
-    serverList: "Ouvrir la liste",
     premiumBadge: "Zone Premium",
     premiumTitle: "Serveurs Premium",
     premiumText:
@@ -114,7 +111,6 @@ const HOME_TEXT = {
     cardExtra:
       "Community gaming e anime chill, supporto per domande e nuovi aggiornamenti regolari.",
     join: "Entra su Discord",
-    serverList: "Apri lista server",
     premiumBadge: "Area Premium",
     premiumTitle: "Server Premium",
     premiumText:
@@ -144,7 +140,6 @@ const HOME_TEXT = {
     cardExtra:
       "Luźna społeczność gaming i anime, pomoc przy pytaniach i regularne aktualizacje.",
     join: "Dołącz do Discorda",
-    serverList: "Otwórz listę serwerów",
     premiumBadge: "Strefa Premium",
     premiumTitle: "Serwery Premium",
     premiumText:
@@ -171,6 +166,30 @@ function shortText(text: string | undefined, maxLength: number) {
   return text.slice(0, maxLength).trim() + "…";
 }
 
+function GermanyFlag({ small = false }: { small?: boolean }) {
+  return (
+    <span
+      aria-label="Deutschland"
+      title="Deutschland"
+      style={{
+        width: small ? "30px" : "34px",
+        height: small ? "22px" : "24px",
+        borderRadius: "999px",
+        overflow: "hidden",
+        display: "inline-flex",
+        flexDirection: "column",
+        flexShrink: 0,
+        border: "1px solid rgba(255,255,255,0.22)",
+        boxShadow: "0 0 14px rgba(255,206,70,0.28)",
+      }}
+    >
+      <span style={{ flex: 1, background: "#000000" }} />
+      <span style={{ flex: 1, background: "#dd0000" }} />
+      <span style={{ flex: 1, background: "#ffce00" }} />
+    </span>
+  );
+}
+
 export default function HomePage() {
   const language = useLanguage() as UiLanguage;
 
@@ -186,7 +205,7 @@ export default function HomePage() {
       style={{
         minHeight: "100vh",
         background:
-          "radial-gradient(circle at 0% 25%, rgba(137, 32, 191, 0.32), transparent 32%), radial-gradient(circle at 100% 28%, rgba(56, 151, 202, 0.28), transparent 36%), linear-gradient(135deg, #07000f 0%, #10051f 44%, #13263d 100%)",
+          "radial-gradient(circle at 0% 25%, rgba(137,32,191,0.32), transparent 32%), radial-gradient(circle at 100% 28%, rgba(56,151,202,0.28), transparent 36%), linear-gradient(135deg, #07000f 0%, #10051f 44%, #13263d 100%)",
         color: "#ffffff",
         overflow: "hidden",
       }}
@@ -209,36 +228,6 @@ export default function HomePage() {
               "linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px)",
             backgroundSize: "92px 92px",
             opacity: 0.22,
-            pointerEvents: "none",
-          }}
-        />
-
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            left: "-120px",
-            top: "120px",
-            width: "380px",
-            height: "380px",
-            borderRadius: "999px",
-            background: "rgba(184, 61, 255, 0.32)",
-            filter: "blur(90px)",
-            pointerEvents: "none",
-          }}
-        />
-
-        <div
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            right: "90px",
-            top: "160px",
-            width: "420px",
-            height: "420px",
-            borderRadius: "999px",
-            background: "rgba(76, 196, 255, 0.22)",
-            filter: "blur(100px)",
             pointerEvents: "none",
           }}
         />
@@ -272,8 +261,8 @@ export default function HomePage() {
                 padding: "13px 28px",
                 borderRadius: "999px",
                 background:
-                  "linear-gradient(180deg, rgba(29, 45, 91, 0.82), rgba(16, 14, 52, 0.9))",
-                border: "1px solid rgba(112, 219, 255, 0.48)",
+                  "linear-gradient(180deg, rgba(29,45,91,0.82), rgba(16,14,52,0.9))",
+                border: "1px solid rgba(112,219,255,0.48)",
                 boxShadow:
                   "0 0 0 1px rgba(255,255,255,0.04) inset, 0 0 24px rgba(92,211,255,0.24), 0 0 42px rgba(192,91,255,0.16)",
                 color: "#9deaff",
@@ -332,7 +321,7 @@ export default function HomePage() {
                 margin: "24px auto 0",
                 fontSize: "16px",
                 lineHeight: 1.65,
-                color: "rgba(246, 243, 255, 0.92)",
+                color: "rgba(246,243,255,0.92)",
               }}
             >
               {t(language, "text")}
@@ -349,8 +338,8 @@ export default function HomePage() {
                 display: "flex",
                 alignItems: "center",
                 gap: "10px",
-                background: "rgba(55, 35, 70, 0.72)",
-                border: "1px solid rgba(235, 195, 255, 0.15)",
+                background: "rgba(55,35,70,0.72)",
+                border: "1px solid rgba(235,195,255,0.15)",
                 boxShadow:
                   "0 0 0 1px rgba(255,255,255,0.035) inset, 0 0 32px rgba(220,102,255,0.14)",
               }}
@@ -448,382 +437,373 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
+        </div>
 
-          <aside
+        <aside
+          style={{
+            position: "absolute",
+            right: "24px",
+            top: "50%",
+            transform: "translateY(-50%)",
+            width: "390px",
+            zIndex: 10,
+          }}
+        >
+          <article
             style={{
-              position: "absolute",
-              right: 0,
-              top: "50%",
-              transform: "translateY(-50%)",
               width: "390px",
-              zIndex: 4,
+              borderRadius: "34px",
+              overflow: "hidden",
+              position: "relative",
+              background:
+                "linear-gradient(180deg, rgba(51,19,77,0.98) 0%, rgba(18,16,46,0.98) 100%)",
+              border: "1px solid rgba(231,101,255,0.38)",
+              boxShadow:
+                "0 0 0 1px rgba(255,255,255,0.04) inset, 0 0 28px rgba(243,72,255,0.34), 0 0 56px rgba(93,204,255,0.22)",
             }}
           >
-            <article
+            <div
               style={{
-                width: "390px",
-                borderRadius: "34px",
-                overflow: "hidden",
+                height: "130px",
                 position: "relative",
-                background:
-                  "linear-gradient(180deg, rgba(51, 19, 77, 0.98) 0%, rgba(18, 16, 46, 0.98) 100%)",
-                border: "1px solid rgba(231, 101, 255, 0.38)",
-                boxShadow:
-                  "0 0 0 1px rgba(255,255,255,0.04) inset, 0 0 28px rgba(243,72,255,0.34), 0 0 56px rgba(93,204,255,0.22)",
+                overflow: "hidden",
+                borderBottom: "1px solid rgba(255,255,255,0.07)",
+              }}
+            >
+              <img
+                src="/asko-cafe-banner.png"
+                alt="Asko Cafe Banner"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "block",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                  filter: "none",
+                  transform: "none",
+                }}
+              />
+
+              <span
+                style={{
+                  position: "absolute",
+                  top: "14px",
+                  left: "16px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "8px 14px",
+                  borderRadius: "999px",
+                  background: "rgba(20,24,52,0.9)",
+                  border: "1px solid rgba(112,214,255,0.45)",
+                  color: "#ffffff",
+                  fontSize: "13px",
+                  fontWeight: 900,
+                  boxShadow: "0 0 18px rgba(95,214,255,0.22)",
+                }}
+              >
+                <span style={{ color: "#86ebff" }}>●</span>
+                {t(language, "cardBadge")}
+              </span>
+            </div>
+
+            <div
+              style={{
+                position: "relative",
+                padding: "66px 18px 18px",
+                textAlign: "center",
               }}
             >
               <div
                 style={{
-                  height: "130px",
-                  position: "relative",
+                  position: "absolute",
+                  top: "-46px",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: "104px",
+                  height: "104px",
+                  borderRadius: "28px",
+                  background:
+                    "linear-gradient(180deg, rgba(23,13,42,0.98), rgba(36,16,56,0.98))",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  boxShadow:
+                    "0 12px 28px rgba(0,0,0,0.38), 0 0 22px rgba(224,89,255,0.2)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                   overflow: "hidden",
-                  borderBottom: "1px solid rgba(255,255,255,0.07)",
                 }}
               >
                 <img
-                  src="/asko-cafe-banner.png"
-                  alt="Asko Cafe Banner"
+                  src="/asko-cafe-icon.png"
+                  alt="Asko Cafe Icon"
                   style={{
-                    width: "100%",
-                    height: "100%",
+                    width: "86px",
+                    height: "86px",
+                    objectFit: "contain",
                     display: "block",
-                    objectFit: "cover",
-                    objectPosition: "center",
                     filter: "none",
                     transform: "none",
                   }}
                 />
-
-                <span
-                  style={{
-                    position: "absolute",
-                    top: "14px",
-                    left: "16px",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    padding: "8px 14px",
-                    borderRadius: "999px",
-                    background: "rgba(20, 24, 52, 0.9)",
-                    border: "1px solid rgba(112,214,255,0.45)",
-                    color: "#ffffff",
-                    fontSize: "13px",
-                    fontWeight: 900,
-                    boxShadow: "0 0 18px rgba(95,214,255,0.22)",
-                  }}
-                >
-                  <span style={{ color: "#86ebff" }}>●</span>
-                  {t(language, "cardBadge")}
-                </span>
               </div>
 
               <div
                 style={{
-                  position: "relative",
-                  padding: "66px 18px 18px",
-                  textAlign: "center",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "10px",
+                  flexWrap: "wrap",
+                }}
+              >
+                <h3
+                  style={{
+                    margin: 0,
+                    fontSize: "31px",
+                    lineHeight: 1,
+                    fontWeight: 950,
+                    color: "#ffffff",
+                    letterSpacing: "-0.04em",
+                    textShadow: "0 0 22px rgba(255,255,255,0.12)",
+                  }}
+                >
+                  {t(language, "cardTitle")}
+                </h3>
+
+                <GermanyFlag />
+              </div>
+
+              <p
+                style={{
+                  margin: "7px 0 0",
+                  color: "rgba(241,238,255,0.72)",
+                  fontSize: "13px",
+                  fontWeight: 800,
+                }}
+              >
+                Gaming • Anime • Community
+              </p>
+
+              <div
+                style={{
+                  marginTop: "18px",
+                  display: "flex",
+                  justifyContent: "center",
+                  flexWrap: "wrap",
+                  gap: "9px",
+                }}
+              >
+                {[
+                  "🎮 Gaming",
+                  "🌸 Anime",
+                  "🎯 Valorant",
+                  "🎉 Events",
+                  "☕ Chill",
+                  `💬 ${t(language, "community")}`,
+                  `🛟 ${t(language, "support")}`,
+                ].map((tag) => (
+                  <span
+                    key={tag}
+                    style={{
+                      minHeight: "31px",
+                      padding: "0 12px",
+                      borderRadius: "999px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background: "rgba(80,34,116,0.48)",
+                      border: "1px solid rgba(202,115,255,0.36)",
+                      color: "#ffffff",
+                      fontSize: "12px",
+                      fontWeight: 900,
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <div
+                style={{
+                  marginTop: "18px",
+                  padding: "17px 15px",
+                  borderRadius: "22px",
+                  background:
+                    "linear-gradient(180deg, rgba(55,36,79,0.58), rgba(38,62,91,0.48))",
+                  border: "1px solid rgba(172,120,255,0.26)",
+                  color: "#ffffff",
+                }}
+              >
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: "13px",
+                    lineHeight: 1.6,
+                    fontWeight: 800,
+                  }}
+                >
+                  💜 {t(language, "cardText")}
+                </p>
+
+                <p
+                  style={{
+                    margin: "12px 0 0",
+                    fontSize: "13px",
+                    lineHeight: 1.6,
+                    fontWeight: 800,
+                  }}
+                >
+                  ✨ {t(language, "cardExtra")}
+                </p>
+              </div>
+
+              <div
+                style={{
+                  marginTop: "16px",
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: "10px",
                 }}
               >
                 <div
                   style={{
-                    position: "absolute",
-                    top: "-46px",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    width: "104px",
-                    height: "104px",
-                    borderRadius: "28px",
+                    minHeight: "76px",
+                    borderRadius: "18px",
                     background:
-                      "linear-gradient(180deg, rgba(23,13,42,0.98), rgba(36,16,56,0.98))",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    boxShadow:
-                      "0 12px 28px rgba(0,0,0,0.38), 0 0 22px rgba(224,89,255,0.2)",
+                      "linear-gradient(180deg, rgba(43,36,74,0.74), rgba(37,61,92,0.66))",
+                    border: "1px solid rgba(142,202,255,0.22)",
                     display: "flex",
+                    flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
-                    overflow: "hidden",
                   }}
                 >
-                  <img
-                    src="/asko-cafe-icon.png"
-                    alt="Asko Cafe Icon"
+                  <strong
                     style={{
-                      width: "86px",
-                      height: "86px",
-                      objectFit: "contain",
-                      display: "block",
-                      filter: "none",
-                      transform: "none",
-                    }}
-                  />
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "10px",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <h3
-                    style={{
-                      margin: 0,
-                      fontSize: "31px",
+                      color: "#ffffff",
+                      fontSize: "20px",
                       lineHeight: 1,
                       fontWeight: 950,
-                      color: "#ffffff",
-                      letterSpacing: "-0.04em",
-                      textShadow: "0 0 22px rgba(255,255,255,0.12)",
                     }}
                   >
-                    {t(language, "cardTitle")}
-                  </h3>
+                    24/7
+                  </strong>
 
-                  <span
-                    aria-label="Deutschland"
-                    title="Deutschland"
+                  <small
                     style={{
-                      fontSize: "27px",
-                      lineHeight: 1,
-                      filter: "drop-shadow(0 0 10px rgba(255,205,50,0.24))",
+                      marginTop: "6px",
+                      color: "rgba(255,255,255,0.72)",
+                      fontSize: "10px",
+                      fontWeight: 900,
+                      textTransform: "uppercase",
                     }}
                   >
-                    🇩🇪
-                  </span>
-                </div>
-
-                <p
-                  style={{
-                    margin: "7px 0 0",
-                    color: "rgba(241,238,255,0.72)",
-                    fontSize: "13px",
-                    fontWeight: 800,
-                  }}
-                >
-                  Gaming • Anime • Community
-                </p>
-
-                <div
-                  style={{
-                    marginTop: "18px",
-                    display: "flex",
-                    justifyContent: "center",
-                    flexWrap: "wrap",
-                    gap: "9px",
-                  }}
-                >
-                  {[
-                    "🎮 Gaming",
-                    "🌸 Anime",
-                    "🎯 Valorant",
-                    "🎉 Events",
-                    "☕ Chill",
-                    `💬 ${t(language, "community")}`,
-                    `🛟 ${t(language, "support")}`,
-                  ].map((tag) => (
-                    <span
-                      key={tag}
-                      style={{
-                        minHeight: "31px",
-                        padding: "0 12px",
-                        borderRadius: "999px",
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        background: "rgba(80, 34, 116, 0.48)",
-                        border: "1px solid rgba(202,115,255,0.36)",
-                        color: "#ffffff",
-                        fontSize: "12px",
-                        fontWeight: 900,
-                      }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                    {t(language, "active")}
+                  </small>
                 </div>
 
                 <div
                   style={{
-                    marginTop: "18px",
-                    padding: "17px 15px",
-                    borderRadius: "22px",
+                    minHeight: "76px",
+                    borderRadius: "18px",
                     background:
-                      "linear-gradient(180deg, rgba(55,36,79,0.58), rgba(38,62,91,0.48))",
-                    border: "1px solid rgba(172,120,255,0.26)",
-                    color: "#ffffff",
-                  }}
-                >
-                  <p
-                    style={{
-                      margin: 0,
-                      fontSize: "13px",
-                      lineHeight: 1.6,
-                      fontWeight: 800,
-                    }}
-                  >
-                    💜 {t(language, "cardText")}
-                  </p>
-
-                  <p
-                    style={{
-                      margin: "12px 0 0",
-                      fontSize: "13px",
-                      lineHeight: 1.6,
-                      fontWeight: 800,
-                    }}
-                  >
-                    ✨ {t(language, "cardExtra")}
-                  </p>
-                </div>
-
-                <div
-                  style={{
-                    marginTop: "16px",
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, 1fr)",
-                    gap: "10px",
-                  }}
-                >
-                  <div
-                    style={{
-                      minHeight: "76px",
-                      borderRadius: "18px",
-                      background:
-                        "linear-gradient(180deg, rgba(43,36,74,0.74), rgba(37,61,92,0.66))",
-                      border: "1px solid rgba(142,202,255,0.22)",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <strong
-                      style={{
-                        color: "#ffffff",
-                        fontSize: "20px",
-                        lineHeight: 1,
-                        fontWeight: 950,
-                      }}
-                    >
-                      24/7
-                    </strong>
-
-                    <small
-                      style={{
-                        marginTop: "6px",
-                        color: "rgba(255,255,255,0.72)",
-                        fontSize: "10px",
-                        fontWeight: 900,
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      {t(language, "active")}
-                    </small>
-                  </div>
-
-                  <div
-                    style={{
-                      minHeight: "76px",
-                      borderRadius: "18px",
-                      background:
-                        "linear-gradient(180deg, rgba(43,36,74,0.74), rgba(37,61,92,0.66))",
-                      border: "1px solid rgba(142,202,255,0.22)",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <strong
-                      style={{
-                        fontSize: "25px",
-                        lineHeight: 1,
-                      }}
-                    >
-                      🇩🇪
-                    </strong>
-
-                    <small
-                      style={{
-                        marginTop: "6px",
-                        color: "rgba(255,255,255,0.72)",
-                        fontSize: "10px",
-                        fontWeight: 900,
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      {t(language, "language")}
-                    </small>
-                  </div>
-
-                  <div
-                    style={{
-                      minHeight: "76px",
-                      borderRadius: "18px",
-                      background:
-                        "linear-gradient(180deg, rgba(43,36,74,0.74), rgba(37,61,92,0.66))",
-                      border: "1px solid rgba(142,202,255,0.22)",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <strong
-                      style={{
-                        color: "#ffffff",
-                        fontSize: "20px",
-                        lineHeight: 1,
-                        fontWeight: 950,
-                      }}
-                    >
-                      VIP
-                    </strong>
-
-                    <small
-                      style={{
-                        marginTop: "6px",
-                        color: "rgba(255,255,255,0.72)",
-                        fontSize: "10px",
-                        fontWeight: 900,
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      {t(language, "features")}
-                    </small>
-                  </div>
-                </div>
-
-                <a
-                  href="https://discord.gg/askocafe"
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{
-                    marginTop: "16px",
-                    minHeight: "52px",
-                    width: "100%",
-                    borderRadius: "17px",
-                    display: "inline-flex",
+                      "linear-gradient(180deg, rgba(43,36,74,0.74), rgba(37,61,92,0.66))",
+                    border: "1px solid rgba(142,202,255,0.22)",
+                    display: "flex",
+                    flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
-                    background:
-                      "linear-gradient(90deg, #d14cff 0%, #f35ad6 45%, #74dfff 100%)",
-                    color: "#ffffff",
-                    textDecoration: "none",
-                    fontSize: "15px",
-                    fontWeight: 950,
-                    boxShadow:
-                      "0 0 25px rgba(208,85,255,0.34), 0 0 28px rgba(112,221,255,0.18)",
                   }}
                 >
-                  {t(language, "join")}
-                </a>
+                  <strong
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <GermanyFlag small />
+                  </strong>
+
+                  <small
+                    style={{
+                      marginTop: "6px",
+                      color: "rgba(255,255,255,0.72)",
+                      fontSize: "10px",
+                      fontWeight: 900,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {t(language, "language")}
+                  </small>
+                </div>
+
+                <div
+                  style={{
+                    minHeight: "76px",
+                    borderRadius: "18px",
+                    background:
+                      "linear-gradient(180deg, rgba(43,36,74,0.74), rgba(37,61,92,0.66))",
+                    border: "1px solid rgba(142,202,255,0.22)",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <strong
+                    style={{
+                      color: "#ffffff",
+                      fontSize: "20px",
+                      lineHeight: 1,
+                      fontWeight: 950,
+                    }}
+                  >
+                    VIP
+                  </strong>
+
+                  <small
+                    style={{
+                      marginTop: "6px",
+                      color: "rgba(255,255,255,0.72)",
+                      fontSize: "10px",
+                      fontWeight: 900,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {t(language, "features")}
+                  </small>
+                </div>
               </div>
-            </article>
-          </aside>
-        </div>
+
+              <a
+                href="https://discord.gg/askocafe"
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  marginTop: "16px",
+                  minHeight: "52px",
+                  width: "100%",
+                  borderRadius: "17px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background:
+                    "linear-gradient(90deg, #d14cff 0%, #f35ad6 45%, #74dfff 100%)",
+                  color: "#ffffff",
+                  textDecoration: "none",
+                  fontSize: "15px",
+                  fontWeight: 950,
+                  boxShadow:
+                    "0 0 25px rgba(208,85,255,0.34), 0 0 28px rgba(112,221,255,0.18)",
+                }}
+              >
+                {t(language, "join")}
+              </a>
+            </div>
+          </article>
+        </aside>
       </section>
 
       <section
@@ -972,6 +952,7 @@ export default function HomePage() {
 
                       <div>
                         <h3 style={{ margin: 0 }}>{serverName}</h3>
+
                         <p
                           style={{
                             margin: "4px 0 0",
