@@ -98,6 +98,7 @@ const HOME_TEXT = {
     active: "Actif",
     features: "Fonctions",
   },
+
   it: {
     badge: "Asko Cafe Network",
     title: "Scopri server Discord",
@@ -127,3 +128,285 @@ const HOME_TEXT = {
     active: "Attivo",
     features: "Funzioni",
   },
+
+  pl: {
+    badge: "Asko Cafe Network",
+    title: "Odkryj serwery Discord",
+    text: "Znajdź aktywne społeczności, oceniaj serwery i odkrywaj nowe sieci Discord na Asko Cafe.",
+    searchPlaceholder: "Szukaj serwerów",
+    search: "Szukaj",
+    discover: "Odkryj serwery",
+    submit: "Dodaj serwer",
+    cardBadge: "Oficjalny Discord",
+    cardTitle: "Asko Cafe",
+    cardText:
+      "Dołącz do naszego oficjalnego Discorda, odkrywaj nowe społeczności, rozmawiaj z innymi i bądź na bieżąco.",
+    cardExtra:
+      "Luźna społeczność gaming i anime, pomoc przy pytaniach i regularne aktualizacje.",
+    join: "Dołącz do Discorda",
+    serverList: "Otwórz listę serwerów",
+    premiumBadge: "Strefa Premium",
+    premiumTitle: "Serwery Premium",
+    premiumText:
+      "Tutaj pojawią się serwery premium i partnerskie, pokazujące się jeden po drugim.",
+    noPremiumTitle: "Brak serwerów premium",
+    noPremiumText:
+      "Gdy pojawią się serwery premium lub partnerskie, będą tutaj automatycznie wyświetlane.",
+    community: "Społeczność",
+    support: "Support",
+    language: "Język",
+    active: "Aktywny",
+    features: "Funkcje",
+  },
+} as const;
+
+function t(language: UiLanguage, key: keyof typeof HOME_TEXT.de) {
+  return HOME_TEXT[language]?.[key] || HOME_TEXT.de[key];
+}
+
+function shortText(text: string | undefined, maxLength: number) {
+  if (!text) return "";
+  if (text.length <= maxLength) return text;
+
+  return text.slice(0, maxLength).trim() + "…";
+}
+
+export default function HomePage() {
+  const language = useLanguage() as UiLanguage;
+
+  const premiumServers = useMemo(() => {
+    return initialServers
+      .filter((server: any) => server.approved)
+      .filter((server: any) => server.premiumStatus || server.partnerStatus)
+      .slice(0, 6);
+  }, []);
+
+  return (
+    <main className="home-page">
+      <section className="home-hero bigger-centered-hero">
+        <div className="home-hero-grid-lines" />
+        <div className="home-hero-orb home-hero-orb-left" />
+        <div className="home-hero-orb home-hero-orb-right" />
+
+        <div className="container home-hero-grid">
+          <div className="home-hero-left">
+            <div className="home-hero-left-inner">
+              <span className="page-badge">{t(language, "badge")}</span>
+
+              <h1 className="hero-title-large">{t(language, "title")}</h1>
+
+              <p className="hero-text-large">{t(language, "text")}</p>
+
+              <form
+                className="home-hero-search centered-search"
+                action="/servers"
+              >
+                <input
+                  type="text"
+                  name="q"
+                  className="input"
+                  placeholder={t(language, "searchPlaceholder")}
+                />
+
+                <button className="btn" type="submit">
+                  {t(language, "search")}
+                </button>
+              </form>
+
+              <div className="hero-actions centered-actions">
+                <Link className="btn" href="/servers">
+                  {t(language, "discover")}
+                </Link>
+
+                <Link className="btn secondary" href="/submit">
+                  {t(language, "submit")}
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="home-hero-right home-hero-right-pushed">
+            <article className="asko-discord-card">
+              <div className="asko-discord-card-glow asko-discord-card-glow-pink" />
+              <div className="asko-discord-card-glow asko-discord-card-glow-blue" />
+
+              <div className="asko-discord-banner">
+                <img src="/asko-cafe-banner.png" alt="Asko Cafe Banner" />
+
+                <span className="asko-discord-badge">
+                  <span className="asko-discord-badge-dot" />
+                  {t(language, "cardBadge")}
+                </span>
+              </div>
+
+              <div className="asko-discord-body">
+                <div className="asko-discord-header">
+                  <img
+                    className="asko-discord-icon"
+                    src="/asko-cafe-icon.png"
+                    alt="Asko Cafe Server Logo"
+                  />
+
+                  <div className="asko-discord-title-box">
+                    <div className="asko-discord-title-row">
+                      <h3>{t(language, "cardTitle")}</h3>
+
+                      <span
+                        className="asko-germany-flag"
+                        aria-label="Deutschland"
+                        title="Deutschland"
+                      >
+                        <span />
+                        <span />
+                        <span />
+                      </span>
+                    </div>
+
+                    <p>Gaming • Anime • Community</p>
+                  </div>
+                </div>
+
+                <div className="asko-discord-tags">
+                  <span>🎮 Gaming</span>
+                  <span>🌸 Anime</span>
+                  <span>🎯 Valorant</span>
+                  <span>🎉 Events</span>
+                  <span>☕ Chill</span>
+                  <span>💬 Community</span>
+                  <span>🛟 Support</span>
+                </div>
+
+                <div className="asko-discord-description">
+                  <p>💜 {t(language, "cardText")}</p>
+                  <p>✨ {t(language, "cardExtra")}</p>
+                </div>
+
+                <div className="asko-discord-stats">
+                  <div>
+                    <strong>24/7</strong>
+                    <span>{t(language, "active")}</span>
+                  </div>
+
+                  <div>
+                    <strong>
+                      <span className="asko-germany-flag small">
+                        <span />
+                        <span />
+                        <span />
+                      </span>
+                    </strong>
+                    <span>{t(language, "language")}</span>
+                  </div>
+
+                  <div>
+                    <strong>VIP</strong>
+                    <span>{t(language, "features")}</span>
+                  </div>
+                </div>
+
+                <div className="asko-discord-actions">
+                  <a
+                    href="https://discord.gg/askocafe"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="asko-discord-primary"
+                  >
+                    {t(language, "join")}
+                  </a>
+
+                  <Link href="/servers" className="asko-discord-secondary">
+                    {t(language, "serverList")}
+                  </Link>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section className="container premium-section">
+        <div className="premium-section-heading">
+          <span className="page-badge">{t(language, "premiumBadge")}</span>
+
+          <h2>{t(language, "premiumTitle")}</h2>
+
+          <p>{t(language, "premiumText")}</p>
+        </div>
+
+        {premiumServers.length === 0 ? (
+          <div className="card empty premium-empty-card">
+            <h3>{t(language, "noPremiumTitle")}</h3>
+            <p>{t(language, "noPremiumText")}</p>
+          </div>
+        ) : (
+          <div className="premium-servers-grid">
+            {premiumServers.map((server: Server, index: number) => {
+              const serverData = server as any;
+              const serverName =
+                serverData.serverName ||
+                serverData.server_name ||
+                "Discord Server";
+
+              const banner =
+                serverData.bannerUrl ||
+                serverData.banner_url ||
+                "/asko-cafe-banner.png";
+
+              const icon =
+                serverData.logoUrl ||
+                serverData.logo_url ||
+                serverData.discord_server_icon_url ||
+                "/asko-cafe-icon.png";
+
+              return (
+                <article
+                  key={serverData.id || serverName}
+                  className="premium-server-card"
+                  style={{
+                    animationDelay: `${index * 0.15}s`,
+                  }}
+                >
+                  <div className="premium-server-card-banner">
+                    <img src={banner} alt={serverName} />
+                  </div>
+
+                  <div className="premium-server-card-body">
+                    <div className="premium-server-card-top">
+                      <img
+                        className="premium-server-card-icon"
+                        src={icon}
+                        alt={serverName}
+                      />
+
+                      <div>
+                        <h3>{serverName}</h3>
+
+                        <p>
+                          {serverData.category} • {serverData.language}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="premium-server-card-description">
+                      {shortText(serverData.description, 110)}
+                    </div>
+
+                    <div className="premium-server-card-actions">
+                      <Link href="/servers" className="btn secondary">
+                        {t(language, "serverList")}
+                      </Link>
+
+                      <Link href="/servers" className="btn">
+                        {t(language, "discover")}
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
+    </main>
+  );
+}
