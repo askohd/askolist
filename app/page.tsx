@@ -20,6 +20,16 @@ const HOME_TEXT = {
       "Tritt dem offiziellen Asko Cafe Discord Server bei. Entdecke neue Communities, tausche dich mit anderen aus und bleibe immer auf dem Laufenden.",
     join: "Discord beitreten",
     serverList: "Serverliste öffnen",
+    tagLanguage: "Deutsch",
+    tagCommunity: "Community",
+    tagSupport: "Support",
+    statActiveValue: "24/7",
+    statActiveLabel: "Aktiv",
+    statLanguageValue: "DE",
+    statLanguageLabel: "Sprache",
+    statFeaturesValue: "VIP",
+    statFeaturesLabel: "Features",
+    countryTitle: "Deutschland",
   },
   en: {
     badge: "Asko Cafe Network",
@@ -35,6 +45,16 @@ const HOME_TEXT = {
       "Join the official Asko Cafe Discord server. Discover new communities, connect with others and stay up to date.",
     join: "Join Discord",
     serverList: "Open server list",
+    tagLanguage: "German",
+    tagCommunity: "Community",
+    tagSupport: "Support",
+    statActiveValue: "24/7",
+    statActiveLabel: "Active",
+    statLanguageValue: "DE",
+    statLanguageLabel: "Language",
+    statFeaturesValue: "VIP",
+    statFeaturesLabel: "Features",
+    countryTitle: "Germany",
   },
   fr: {
     badge: "Réseau Asko Cafe",
@@ -50,6 +70,16 @@ const HOME_TEXT = {
       "Rejoins le serveur Discord officiel Asko Cafe. Découvre de nouvelles communautés, échange avec d'autres personnes et reste informé.",
     join: "Rejoindre Discord",
     serverList: "Ouvrir la liste",
+    tagLanguage: "Allemand",
+    tagCommunity: "Communauté",
+    tagSupport: "Support",
+    statActiveValue: "24/7",
+    statActiveLabel: "Actif",
+    statLanguageValue: "DE",
+    statLanguageLabel: "Langue",
+    statFeaturesValue: "VIP",
+    statFeaturesLabel: "Fonctions",
+    countryTitle: "Allemagne",
   },
   it: {
     badge: "Asko Cafe Network",
@@ -65,6 +95,16 @@ const HOME_TEXT = {
       "Unisciti al server Discord ufficiale Asko Cafe. Scopri nuove community, parla con altre persone e resta aggiornato.",
     join: "Entra su Discord",
     serverList: "Apri lista server",
+    tagLanguage: "Tedesco",
+    tagCommunity: "Community",
+    tagSupport: "Supporto",
+    statActiveValue: "24/7",
+    statActiveLabel: "Attivo",
+    statLanguageValue: "DE",
+    statLanguageLabel: "Lingua",
+    statFeaturesValue: "VIP",
+    statFeaturesLabel: "Funzioni",
+    countryTitle: "Germania",
   },
   pl: {
     badge: "Asko Cafe Network",
@@ -80,6 +120,16 @@ const HOME_TEXT = {
       "Dołącz do oficjalnego serwera Discord Asko Cafe. Odkrywaj nowe społeczności, rozmawiaj z innymi i bądź na bieżąco.",
     join: "Dołącz do Discorda",
     serverList: "Otwórz listę serwerów",
+    tagLanguage: "Niemiecki",
+    tagCommunity: "Społeczność",
+    tagSupport: "Pomoc",
+    statActiveValue: "24/7",
+    statActiveLabel: "Aktywny",
+    statLanguageValue: "DE",
+    statLanguageLabel: "Język",
+    statFeaturesValue: "VIP",
+    statFeaturesLabel: "Funkcje",
+    countryTitle: "Niemcy",
   },
 } as const;
 
@@ -128,9 +178,15 @@ export default function HomePage() {
           </div>
 
           <div className="home-hero-right">
-            <article className="discord-server-card">
+            <article className="discord-server-card featured-discord-card">
+              <div className="server-card-glow server-card-glow-pink" />
+              <div className="server-card-glow server-card-glow-blue" />
+
               <div className="discord-server-banner">
                 <img src="/asko-cafe-banner.png" alt="Asko Cafe Banner" />
+                <span className="discord-server-badge">
+                  {t(language, "cardBadge")}
+                </span>
               </div>
 
               <div className="discord-server-content">
@@ -142,17 +198,52 @@ export default function HomePage() {
                   />
 
                   <div className="discord-server-meta">
-                    <span className="page-badge">
-                      {t(language, "cardBadge")}
-                    </span>
-                    <h3>{t(language, "cardTitle")}</h3>
-                    <p>discord.gg/askocafe</p>
+                    <div className="discord-server-name-row">
+                      <h3>{t(language, "cardTitle")}</h3>
+
+                      <span
+                        className="flag-icon flag-de server-country-flag"
+                        title={t(language, "countryTitle")}
+                        aria-label={t(language, "countryTitle")}
+                      />
+                    </div>
+
+                    <p className="discord-server-link">discord.gg/askocafe</p>
+
+                    <div className="discord-server-tags">
+                      <span className="server-tag">
+                        {t(language, "tagLanguage")}
+                      </span>
+                      <span className="server-tag">
+                        {t(language, "tagCommunity")}
+                      </span>
+                      <span className="server-tag">
+                        {t(language, "tagSupport")}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
                 <p className="discord-server-description">
                   {t(language, "cardText")}
                 </p>
+
+                <div className="discord-server-stats">
+                  <div className="server-stat-box">
+                    <strong>{t(language, "statActiveValue")}</strong>
+                    <span>{t(language, "statActiveLabel")}</span>
+                  </div>
+
+                  <div className="server-stat-box">
+                    <strong>{t(language, "statLanguageValue")}</strong>
+                    <span>{t(language, "statLanguageLabel")}</span>
+                  </div>
+
+                  <div className="server-stat-box">
+                    <strong>{t(language, "statFeaturesValue")}</strong>
+                    <span>{t(language, "statFeaturesLabel")}</span>
+                  </div>
+                </div>
 
                 <div className="discord-server-actions">
                   <a
