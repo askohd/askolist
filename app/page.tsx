@@ -157,6 +157,7 @@ function t(language: UiLanguage, key: keyof typeof HOME_TEXT.de) {
 function shortText(text: string | undefined, maxLength: number) {
   if (!text) return "";
   if (text.length <= maxLength) return text;
+
   return text.slice(0, maxLength).trim() + "…";
 }
 
@@ -186,7 +187,10 @@ export default function HomePage() {
 
               <p className="hero-text-large">{t(language, "text")}</p>
 
-              <form className="home-hero-search centered-search" action="/servers">
+              <form
+                className="home-hero-search centered-search"
+                action="/servers"
+              >
                 <input
                   type="text"
                   name="q"
@@ -219,7 +223,9 @@ export default function HomePage() {
 
               <div className="discord-server-banner">
                 <img src="/asko-cafe-banner.png" alt="Asko Cafe Banner" />
-                <span className="discord-server-badge">{t(language, "cardBadge")}</span>
+                <span className="discord-server-badge">
+                  {t(language, "cardBadge")}
+                </span>
               </div>
 
               <div className="discord-server-content">
@@ -238,8 +244,12 @@ export default function HomePage() {
 
                     <div className="discord-server-tags">
                       <span className="server-tag">Deutsch</span>
-                      <span className="server-tag">{t(language, "community")}</span>
-                      <span className="server-tag">{t(language, "support")}</span>
+                      <span className="server-tag">
+                        {t(language, "community")}
+                      </span>
+                      <span className="server-tag">
+                        {t(language, "support")}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -302,15 +312,17 @@ export default function HomePage() {
             {premiumServers.map((server: Server, index: number) => {
               const serverData = server as any;
 
+              const serverName = server.serverName || "Discord Server";
+
               const banner =
-                serverData.banner_url ||
                 serverData.bannerUrl ||
+                serverData.banner_url ||
                 "/asko-cafe-banner.png";
 
               const icon =
-                serverData.discord_server_icon_url ||
-                serverData.logo_url ||
                 serverData.logoUrl ||
+                serverData.logo_url ||
+                serverData.discord_server_icon_url ||
                 "/asko-cafe-icon.png";
 
               return (
@@ -322,7 +334,7 @@ export default function HomePage() {
                   }}
                 >
                   <div className="premium-server-card-banner">
-                    <img src={banner} alt={server.serverName || server.server_name} />
+                    <img src={banner} alt={serverName} />
                   </div>
 
                   <div className="premium-server-card-body">
@@ -330,22 +342,19 @@ export default function HomePage() {
                       <img
                         className="premium-server-card-icon"
                         src={icon}
-                        alt={server.serverName || server.server_name}
+                        alt={serverName}
                       />
 
                       <div>
-                        <h3>{server.serverName || server.server_name}</h3>
+                        <h3>{serverName}</h3>
                         <p>
-                          {(server as any).category} • {(server as any).language}
+                          {serverData.category} • {serverData.language}
                         </p>
                       </div>
                     </div>
 
                     <div className="premium-server-card-description">
-                      {shortText(
-                        (server as any).description,
-                        110
-                      )}
+                      {shortText(serverData.description, 110)}
                     </div>
 
                     <div className="premium-server-card-actions">
@@ -353,9 +362,9 @@ export default function HomePage() {
                         {t(language, "serverList")}
                       </Link>
 
-                      <button className="btn" type="button">
+                      <Link href="/servers" className="btn">
                         {t(language, "discover")}
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </article>
