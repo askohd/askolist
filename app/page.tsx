@@ -36,6 +36,10 @@ const HOME_TEXT = {
     language: "Sprache",
     active: "Aktiv",
     features: "Features",
+    recommendedTitle: "Empfohlene Server",
+    premiumPartner: "Premium & Partner",
+    open: "Öffnen",
+    featured: "Featured",
   },
 
   en: {
@@ -65,6 +69,10 @@ const HOME_TEXT = {
     language: "Language",
     active: "Active",
     features: "Features",
+    recommendedTitle: "Recommended Servers",
+    premiumPartner: "Premium & Partner",
+    open: "Open",
+    featured: "Featured",
   },
 
   fr: {
@@ -94,6 +102,10 @@ const HOME_TEXT = {
     language: "Langue",
     active: "Actif",
     features: "Fonctions",
+    recommendedTitle: "Serveurs recommandés",
+    premiumPartner: "Premium & Partenaire",
+    open: "Ouvrir",
+    featured: "Featured",
   },
 
   it: {
@@ -123,6 +135,10 @@ const HOME_TEXT = {
     language: "Lingua",
     active: "Attivo",
     features: "Funzioni",
+    recommendedTitle: "Server consigliati",
+    premiumPartner: "Premium & Partner",
+    open: "Apri",
+    featured: "Featured",
   },
 
   pl: {
@@ -152,6 +168,10 @@ const HOME_TEXT = {
     language: "Język",
     active: "Aktywny",
     features: "Funkcje",
+    recommendedTitle: "Polecane serwery",
+    premiumPartner: "Premium & Partner",
+    open: "Otwórz",
+    featured: "Featured",
   },
 } as const;
 
@@ -190,14 +210,72 @@ function GermanyFlag({ small = false }: { small?: boolean }) {
   );
 }
 
+function getServerName(serverData: any) {
+  return serverData.serverName || serverData.server_name || "Discord Server";
+}
+
+function getServerBanner(serverData: any) {
+  return serverData.bannerUrl || serverData.banner_url || "/asko-cafe-banner.png";
+}
+
+function getServerIcon(serverData: any) {
+  return (
+    serverData.logoUrl ||
+    serverData.logo_url ||
+    serverData.discord_server_icon_url ||
+    "/asko-cafe-icon.png"
+  );
+}
+
+function getServerDescription(serverData: any) {
+  return serverData.description || "Entdecke diesen Discord Server auf Asko Cafe.";
+}
+
+function getServerInvite(serverData: any) {
+  return serverData.inviteLink || serverData.invite_link || "/servers";
+}
+
+function isPremiumServer(serverData: any) {
+  return Boolean(serverData.premiumStatus || serverData.premium_status);
+}
+
+function isPartnerServer(serverData: any) {
+  return Boolean(serverData.partnerStatus || serverData.partner_status);
+}
+
 export default function HomePage() {
   const language = useLanguage() as UiLanguage;
 
   const premiumServers = useMemo(() => {
     return initialServers
       .filter((server: any) => server.approved)
-      .filter((server: any) => server.premiumStatus || server.partnerStatus)
+      .filter(
+        (server: any) =>
+          server.premiumStatus ||
+          server.premium_status ||
+          server.partnerStatus ||
+          server.partner_status
+      )
       .slice(0, 6);
+  }, []);
+
+  const showcaseServers = useMemo(() => {
+    const premiumOrPartner = initialServers
+      .filter((server: any) => server.approved)
+      .filter(
+        (server: any) =>
+          server.premiumStatus ||
+          server.premium_status ||
+          server.partnerStatus ||
+          server.partner_status
+      )
+      .slice(0, 3);
+
+    if (premiumOrPartner.length > 0) {
+      return premiumOrPartner;
+    }
+
+    return initialServers.filter((server: any) => server.approved).slice(0, 3);
   }, []);
 
   return (
@@ -210,6 +288,239 @@ export default function HomePage() {
         overflow: "hidden",
       }}
     >
+      <style>{`
+        @keyframes premiumServerFadeIn {
+          from {
+            opacity: 0;
+            transform: translateX(-24px) scale(0.96);
+            filter: blur(8px);
+          }
+
+          to {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            filter: blur(0);
+          }
+        }
+
+        .hero-premium-showcase {
+          position: absolute;
+          left: 24px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 360px;
+          z-index: 10;
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+        }
+
+        .hero-premium-heading {
+          padding: 14px 16px;
+          border-radius: 22px;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(210, 78, 255, 0.20), transparent 38%),
+            linear-gradient(180deg, rgba(24, 18, 50, 0.92), rgba(13, 13, 32, 0.92));
+          border: 1px solid rgba(158, 105, 255, 0.22);
+          box-shadow:
+            0 0 0 1px rgba(255, 255, 255, 0.035) inset,
+            0 0 24px rgba(160, 84, 255, 0.16);
+        }
+
+        .hero-premium-heading span {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          color: #9deaff;
+          font-size: 12px;
+          font-weight: 900;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+
+        .hero-premium-heading h3 {
+          margin: 8px 0 0;
+          color: #fff;
+          font-size: 21px;
+          line-height: 1;
+          font-weight: 950;
+          letter-spacing: -0.04em;
+        }
+
+        .hero-premium-card {
+          position: relative;
+          min-height: 154px;
+          overflow: hidden;
+          border-radius: 24px;
+          text-decoration: none;
+          color: #fff;
+          isolation: isolate;
+          background: rgba(15, 15, 34, 0.88);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          box-shadow:
+            0 0 0 1px rgba(255, 255, 255, 0.025) inset,
+            0 0 24px rgba(112, 219, 255, 0.12),
+            0 0 34px rgba(213, 87, 255, 0.13);
+          opacity: 0;
+          animation: premiumServerFadeIn 0.75s ease forwards;
+        }
+
+        .hero-premium-card-bg {
+          position: absolute;
+          inset: 0;
+          z-index: -2;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          opacity: 0.42;
+          filter: brightness(0.72) saturate(1.15);
+        }
+
+        .hero-premium-card-overlay {
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          background:
+            linear-gradient(90deg, rgba(9, 10, 24, 0.94) 0%, rgba(13, 13, 30, 0.80) 52%, rgba(13, 13, 30, 0.58) 100%),
+            radial-gradient(circle at 100% 0%, rgba(105, 217, 255, 0.20), transparent 34%),
+            radial-gradient(circle at 0% 100%, rgba(218, 77, 255, 0.18), transparent 36%);
+        }
+
+        .hero-premium-card-content {
+          position: relative;
+          z-index: 2;
+          padding: 16px;
+        }
+
+        .hero-premium-card-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          margin-bottom: 14px;
+        }
+
+        .hero-premium-badges {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          flex-wrap: wrap;
+        }
+
+        .hero-premium-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          min-height: 25px;
+          padding: 0 10px;
+          border-radius: 999px;
+          font-size: 10px;
+          font-weight: 950;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          background: rgba(255, 255, 255, 0.075);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .hero-premium-badge.premium {
+          color: #ffe68a;
+          background: rgba(255, 207, 64, 0.12);
+          border-color: rgba(255, 207, 64, 0.32);
+        }
+
+        .hero-premium-badge.partner {
+          color: #9deaff;
+          background: rgba(86, 209, 255, 0.12);
+          border-color: rgba(86, 209, 255, 0.32);
+        }
+
+        .hero-premium-card-main {
+          display: grid;
+          grid-template-columns: 58px minmax(0, 1fr);
+          gap: 13px;
+          align-items: center;
+        }
+
+        .hero-premium-icon {
+          width: 58px;
+          height: 58px;
+          border-radius: 17px;
+          object-fit: cover;
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          box-shadow:
+            0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+            0 0 20px rgba(195, 78, 255, 0.20);
+        }
+
+        .hero-premium-card h4 {
+          margin: 0;
+          color: #fff;
+          font-size: 18px;
+          line-height: 1.1;
+          font-weight: 950;
+          letter-spacing: -0.035em;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+
+        .hero-premium-card p {
+          margin: 6px 0 0;
+          color: rgba(246, 243, 255, 0.78);
+          font-size: 12px;
+          line-height: 1.45;
+          font-weight: 650;
+        }
+
+        .hero-premium-card-bottom {
+          margin-top: 13px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+        }
+
+        .hero-premium-mini-info {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          color: rgba(246, 243, 255, 0.74);
+          font-size: 11px;
+          font-weight: 800;
+        }
+
+        .hero-premium-open {
+          min-height: 32px;
+          padding: 0 13px;
+          border-radius: 999px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(90deg, #c84dff 0%, #f35ad6 45%, #74dfff 100%);
+          color: #fff;
+          font-size: 11px;
+          font-weight: 950;
+          box-shadow: 0 0 18px rgba(211, 85, 255, 0.22);
+          flex-shrink: 0;
+        }
+
+        @media (max-width: 1500px) {
+          .hero-premium-showcase {
+            display: none;
+          }
+        }
+
+        @media (max-width: 1250px) {
+          .right-discord-card {
+            position: relative !important;
+            right: auto !important;
+            top: auto !important;
+            transform: none !important;
+            margin: 44px auto 0 !important;
+          }
+        }
+      `}</style>
+
       <section
         style={{
           position: "relative",
@@ -231,6 +542,104 @@ export default function HomePage() {
             pointerEvents: "none",
           }}
         />
+
+        {showcaseServers.length > 0 && (
+          <aside
+            className="hero-premium-showcase"
+            aria-label="Premium und Partner Server"
+          >
+            <div className="hero-premium-heading">
+              <span>👑 {t(language, "premiumPartner")}</span>
+              <h3>{t(language, "recommendedTitle")}</h3>
+            </div>
+
+            {showcaseServers.map((server: any, index: number) => {
+              const serverData = server as any;
+
+              const serverName = getServerName(serverData);
+              const banner = getServerBanner(serverData);
+              const icon = getServerIcon(serverData);
+              const description = shortText(getServerDescription(serverData), 92);
+              const invite = getServerInvite(serverData);
+              const premium = isPremiumServer(serverData);
+              const partner = isPartnerServer(serverData);
+              const externalInvite =
+                typeof invite === "string" && invite.startsWith("http");
+
+              return (
+                <a
+                  key={serverData.id || serverName}
+                  href={invite}
+                  target={externalInvite ? "_blank" : undefined}
+                  rel={externalInvite ? "noreferrer" : undefined}
+                  className="hero-premium-card"
+                  style={{
+                    animationDelay: `${index * 0.18}s`,
+                  }}
+                >
+                  <img
+                    className="hero-premium-card-bg"
+                    src={banner}
+                    alt={serverName}
+                  />
+
+                  <div className="hero-premium-card-overlay" />
+
+                  <div className="hero-premium-card-content">
+                    <div className="hero-premium-card-top">
+                      <div className="hero-premium-badges">
+                        {premium && (
+                          <span className="hero-premium-badge premium">
+                            👑 Premium
+                          </span>
+                        )}
+
+                        {partner && (
+                          <span className="hero-premium-badge partner">
+                            🤝 Partner
+                          </span>
+                        )}
+
+                        {!premium && !partner && (
+                          <span className="hero-premium-badge">
+                            ✨ {t(language, "featured")}
+                          </span>
+                        )}
+                      </div>
+
+                      <GermanyFlag small />
+                    </div>
+
+                    <div className="hero-premium-card-main">
+                      <img
+                        className="hero-premium-icon"
+                        src={icon}
+                        alt={serverName}
+                      />
+
+                      <div>
+                        <h4>{serverName}</h4>
+                        <p>{description}</p>
+                      </div>
+                    </div>
+
+                    <div className="hero-premium-card-bottom">
+                      <div className="hero-premium-mini-info">
+                        <span>🎮 Gaming</span>
+                        <span>•</span>
+                        <span>🌸 Anime</span>
+                      </div>
+
+                      <span className="hero-premium-open">
+                        {t(language, "open")}
+                      </span>
+                    </div>
+                  </div>
+                </a>
+              );
+            })}
+          </aside>
+        )}
 
         <div
           style={{
@@ -440,6 +849,7 @@ export default function HomePage() {
         </div>
 
         <aside
+          className="right-discord-card"
           style={{
             position: "absolute",
             right: "24px",
