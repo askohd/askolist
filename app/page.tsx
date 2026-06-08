@@ -1,240 +1,83 @@
-"use client";
+<main>
+  <section className="home-hero">
+    <div className="home-hero-overlay" />
+    <div className="container home-hero-inner">
+      <span className="page-badge">Asko Cafe Network</span>
 
-import Image from "next/image";
-import Link from "next/link";
-import { useMemo, useState } from "react";
-import ServerCard from "@/components/ServerCard";
-import { categories, initialServers, languages } from "@/lib/demoData";
-import { Server } from "@/lib/types";
+      <h1>Entdecke Discord Server</h1>
 
-export default function HomePage() {
-  const [servers, setServers] = useState<Server[]>(initialServers);
+      <p>
+        Finde aktive Communities, bewerte Server und entdecke neue Discord
+        Netzwerke auf Asko Cafe.
+      </p>
 
-  const approved = servers.filter((server) => server.approved);
-  const featured = approved.filter(
-    (server) => server.premiumStatus || server.partnerStatus
-  );
+      <div className="home-hero-search">
+        <input type="text" placeholder="Server suchen" />
+        <button className="btn">Suchen</button>
+      </div>
 
-  const bumped = [...approved].sort(
-    (a, b) =>
-      new Date(b.lastBump || 0).getTime() -
-      new Date(a.lastBump || 0).getTime()
-  );
+      <div className="hero-actions">
+        <Link href="/servers" className="btn">
+          Server entdecken
+        </Link>
 
-  const bestRated = [...approved].sort(
-    (a, b) => b.ratingAverage - a.ratingAverage
-  );
+        <Link href="/submit" className="btn secondary">
+          Server eintragen
+        </Link>
+      </div>
+    </div>
+  </section>
 
-  const shownCategories = useMemo(() => categories.slice(0, 8), []);
+  <section className="container home-featured-slider">
+    <div className="featured-slider-card">
+      <button className="slider-arrow left">‹</button>
 
-  function bumpServer(id: string) {
-    setServers((current) =>
-      current.map((server) =>
-        server.id === id
-          ? {
-              ...server,
-              bumps: server.bumps + 1,
-              lastBump: new Date().toISOString(),
-            }
-          : server
-      )
-    );
-  }
-
-  return (
-    <main>
-      <section className="hero-split">
-        <div className="container hero-split-inner">
-          <div className="hero-split-content">
-            <span className="page-badge">Asko Cafe Network</span>
-
-            <h1>
-              Entdecke Discord
-              <br />
-              Server
-            </h1>
-
-            <p>
-              Finde aktive Communities, bewerte Server und entdecke neue
-              Discord Netzwerke auf Asko Cafe.
-            </p>
-
-            <div className="hero-search">
-              <input
-                className="input"
-                placeholder="Server suchen"
-                type="text"
-              />
-              <button className="btn" type="button">
-                Suchen
-              </button>
-            </div>
-
-            <div className="hero-actions">
-              <Link className="btn" href="/servers">
-                Server entdecken
-              </Link>
-
-              <Link className="btn secondary" href="/submit">
-                Server eintragen
-              </Link>
-            </div>
-          </div>
-
-          <div className="hero-split-visual">
-            <div className="hero-art-card">
-              <Image
-                src="/asko-cafe-hero.png"
-                alt="Asko Cafe Hero"
-                fill
-                priority
-                className="hero-art-image"
-              />
-              <div className="hero-art-overlay" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="container home-feature-cards">
-        <div className="home-feature-card">
-          <div className="home-feature-icon">👑</div>
-          <h3>Premium Layouts</h3>
+      <div className="featured-slider-content">
+        <div className="featured-server-avatar" />
+        <div className="featured-server-info">
+          <h2>~ Sakura 🌸</h2>
           <p>
-            Heb deinen Server mit Glow, Farben und starken Designs hervor.
+            Bienvenue sur Sakura 🌸 Une communauté chill et conviviale pour
+            discuter, partager et rencontrer du monde.
           </p>
-        </div>
 
-        <div className="home-feature-card">
-          <div className="home-feature-icon">🌐</div>
-          <h3>Community Netzwerk</h3>
-          <p>
-            Finde Gaming, Anime, Chill, Roleplay, Coding und viele weitere
-            Server.
-          </p>
-        </div>
-
-        <div className="home-feature-card">
-          <div className="home-feature-icon">💬</div>
-          <h3>Support</h3>
-          <p>
-            Bekomme Hilfe beim Eintragen, Freigeben oder Bearbeiten deines
-            Servers.
-          </p>
-        </div>
-      </section>
-
-      <section className="container section">
-        <div className="section-title">
-          <h2>Featured Discord Servers</h2>
-          <span className="meta">Premium & Partner</span>
-        </div>
-
-        {featured.length === 0 ? (
-          <div className="card empty">No featured servers yet.</div>
-        ) : (
-          <div className="grid">
-            {featured.slice(0, 3).map((server) => (
-              <ServerCard
-                key={server.id}
-                server={server}
-                onBump={bumpServer}
-              />
-            ))}
+          <div className="featured-server-actions">
+            <button className="btn secondary">Server beitreten</button>
+            <button className="btn tertiary">Details</button>
           </div>
-        )}
-      </section>
-
-      <section className="container section">
-        <div className="card search-box">
-          <input className="input" placeholder="Search Discord servers..." />
-
-          <select>
-            <option>Alle Sprachen</option>
-            {languages.map((language) => (
-              <option key={language}>{language}</option>
-            ))}
-          </select>
-
-          <select>
-            <option>Alle Kategorien</option>
-            {categories.map((category) => (
-              <option key={category}>{category}</option>
-            ))}
-          </select>
-
-          <Link className="btn" href="/servers">
-            Search
-          </Link>
         </div>
-      </section>
+      </div>
 
-      <section className="container section">
-        <div className="section-title">
-          <h2>Popular Categories</h2>
-        </div>
+      <button className="slider-arrow right">›</button>
+    </div>
+  </section>
 
-        <div className="badges">
-          {shownCategories.map((category) => (
-            <Link
-              className="badge"
-              href={`/servers?category=${category}`}
-              key={category}
-            >
-              {category}
-            </Link>
-          ))}
-        </div>
-      </section>
+  <section className="container home-filter-box">
+    <div className="filter-card">
+      <div className="filter-top-row">
+        <input type="text" placeholder="Server suchen..." />
+        <Link href="/submit" className="btn">
+          Server hinzufügen
+        </Link>
+      </div>
 
-      <section className="container section">
-        <div className="section-title">
-          <h2>Zuletzt gebumpte Server</h2>
-        </div>
+      <div className="filter-bottom-row">
+        <select>
+          <option>Alle Sprachen</option>
+        </select>
 
-        {bumped.length === 0 ? (
-          <div className="card empty">
-            Noch keine Discord-Server eingetragen.
-            <br />
-            Sei der Erste und registriere deinen Server.
-            <br />
-            <br />
-            <Link className="btn" href="/submit">
-              Server eintragen
-            </Link>
-          </div>
-        ) : (
-          <div className="grid">
-            {bumped.slice(0, 6).map((server) => (
-              <ServerCard
-                key={server.id}
-                server={server}
-                onBump={bumpServer}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+        <select>
+          <option>Alle Kategorien</option>
+        </select>
 
-      <section className="container section">
-        <div className="section-title">
-          <h2>Bestbewertete Server</h2>
-        </div>
+        <select>
+          <option>Alle Tags</option>
+        </select>
 
-        {bestRated.length === 0 ? (
-          <div className="card empty">No rated servers yet.</div>
-        ) : (
-          <div className="grid">
-            {bestRated.slice(0, 6).map((server) => (
-              <ServerCard
-                key={server.id}
-                server={server}
-                onBump={bumpServer}
-              />
-            ))}
-          </div>
-        )}
-      </section>
-    </main>
-  );
-}
+        <select>
+          <option>Kürzlich gepusht</option>
+        </select>
+      </div>
+    </div>
+  </section>
+</main>
