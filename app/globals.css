@@ -4102,3 +4102,126 @@ select option {
     width: 100%;
   }
 }
+.home-hero {
+  position: relative;
+  min-height: 640px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 90px 20px 70px;
+  background-image: url("/asko-cafe-hero.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.home-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(7, 7, 18, 0.45), rgba(7, 7, 18, 0.78)),
+    radial-gradient(circle at center, rgba(112, 77, 255, 0.15), transparent 50%);
+}
+
+.home-hero-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+}
+
+.home-hero h1 {
+  font-size: clamp(48px, 7vw, 88px);
+  line-height: 0.95;
+  font-weight: 900;
+  margin: 18px 0 18px;
+  color: #fff;
+}
+
+.home-hero p {
+  max-width: 760px;
+  margin: 0 auto 24px;
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.home-hero-search {
+  max-width: 640px;
+  margin: 0 auto 20px;
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.home-hero-search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: white;
+  padding: 14px 18px;
+  font-size: 16px;
+}
+
+.home-featured-slider {
+  margin-top: -60px;
+  position: relative;
+  z-index: 4;
+}
+
+.featured-slider-card {
+  position: relative;
+  border-radius: 28px;
+  padding: 32px;
+  background: linear-gradient(180deg, rgba(18, 22, 40, 0.96), rgba(14, 17, 30, 0.96));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.featured-slider-content {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.featured-server-info h2 {
+  font-size: 36px;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.featured-server-info p {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+}
+
+.home-filter-box {
+  margin-top: 26px;
+}
+
+.filter-card {
+  border-radius: 24px;
+  padding: 24px;
+  background: linear-gradient(180deg, rgba(23, 27, 49, 0.96), rgba(18, 21, 38, 0.96));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.filter-top-row,
+.filter-bottom-row {
+  display: grid;
+  gap: 14px;
+}
+
+.filter-top-row {
+  grid-template-columns: 1fr auto;
+  margin-bottom: 18px;
+}
+
+.filter-bottom-row {
+  grid-template-columns: repeat(4, 1fr);
+}
