@@ -17,7 +17,7 @@ const HOME_TEXT = {
     cardBadge: "Offizieller Discord",
     cardTitle: "Asko Cafe",
     cardText:
-      "Tritt dem offiziellen Asko Cafe Discord Server bei. Entdecke neue Communities, tausche dich mit anderen aus und bleibe immer auf dem Laufenden.",
+      "✨ Tritt unserem offiziellen Discord bei, entdecke neue Communities, lerne neue Leute kennen und bleibe immer auf dem Laufenden. 💬🚀",
     join: "Discord beitreten",
     serverList: "Serverliste öffnen",
     tagLanguage: "Deutsch",
@@ -29,7 +29,6 @@ const HOME_TEXT = {
     statLanguageLabel: "Sprache",
     statFeaturesValue: "VIP",
     statFeaturesLabel: "Features",
-    countryTitle: "Deutschland",
   },
   en: {
     badge: "Asko Cafe Network",
@@ -42,7 +41,7 @@ const HOME_TEXT = {
     cardBadge: "Official Discord",
     cardTitle: "Asko Cafe",
     cardText:
-      "Join the official Asko Cafe Discord server. Discover new communities, connect with others and stay up to date.",
+      "✨ Join our official Discord, discover new communities, meet new people and always stay up to date. 💬🚀",
     join: "Join Discord",
     serverList: "Open server list",
     tagLanguage: "German",
@@ -54,7 +53,6 @@ const HOME_TEXT = {
     statLanguageLabel: "Language",
     statFeaturesValue: "VIP",
     statFeaturesLabel: "Features",
-    countryTitle: "Germany",
   },
   fr: {
     badge: "Réseau Asko Cafe",
@@ -67,7 +65,7 @@ const HOME_TEXT = {
     cardBadge: "Discord officiel",
     cardTitle: "Asko Cafe",
     cardText:
-      "Rejoins le serveur Discord officiel Asko Cafe. Découvre de nouvelles communautés, échange avec d'autres personnes et reste informé.",
+      "✨ Rejoins notre Discord officiel, découvre de nouvelles communautés, fais de nouvelles rencontres et reste toujours informé. 💬🚀",
     join: "Rejoindre Discord",
     serverList: "Ouvrir la liste",
     tagLanguage: "Allemand",
@@ -79,7 +77,6 @@ const HOME_TEXT = {
     statLanguageLabel: "Langue",
     statFeaturesValue: "VIP",
     statFeaturesLabel: "Fonctions",
-    countryTitle: "Allemagne",
   },
   it: {
     badge: "Asko Cafe Network",
@@ -92,7 +89,7 @@ const HOME_TEXT = {
     cardBadge: "Discord ufficiale",
     cardTitle: "Asko Cafe",
     cardText:
-      "Unisciti al server Discord ufficiale Asko Cafe. Scopri nuove community, parla con altre persone e resta aggiornato.",
+      "✨ Unisciti al nostro Discord ufficiale, scopri nuove community, conosci nuove persone e resta sempre aggiornato. 💬🚀",
     join: "Entra su Discord",
     serverList: "Apri lista server",
     tagLanguage: "Tedesco",
@@ -104,7 +101,6 @@ const HOME_TEXT = {
     statLanguageLabel: "Lingua",
     statFeaturesValue: "VIP",
     statFeaturesLabel: "Funzioni",
-    countryTitle: "Germania",
   },
   pl: {
     badge: "Asko Cafe Network",
@@ -117,7 +113,7 @@ const HOME_TEXT = {
     cardBadge: "Oficjalny Discord",
     cardTitle: "Asko Cafe",
     cardText:
-      "Dołącz do oficjalnego serwera Discord Asko Cafe. Odkrywaj nowe społeczności, rozmawiaj z innymi i bądź na bieżąco.",
+      "✨ Dołącz do naszego oficjalnego Discorda, odkrywaj nowe społeczności, poznawaj ludzi i bądź zawsze na bieżąco. 💬🚀",
     join: "Dołącz do Discorda",
     serverList: "Otwórz listę serwerów",
     tagLanguage: "Niemiecki",
@@ -129,7 +125,6 @@ const HOME_TEXT = {
     statLanguageLabel: "Język",
     statFeaturesValue: "VIP",
     statFeaturesLabel: "Funkcje",
-    countryTitle: "Niemcy",
   },
 } as const;
 
@@ -143,6 +138,10 @@ export default function HomePage() {
   return (
     <main className="home-page">
       <section className="home-hero">
+        <div className="home-hero-orb home-hero-orb-left" />
+        <div className="home-hero-orb home-hero-orb-right" />
+        <div className="home-hero-grid-lines" />
+
         <div className="container home-hero-grid">
           <div className="home-hero-left">
             <div className="home-hero-left-inner">
@@ -152,7 +151,7 @@ export default function HomePage() {
 
               <p>{t(language, "text")}</p>
 
-              <form className="home-hero-search" action="/servers">
+              <form className="home-hero-search centered-search" action="/servers">
                 <input
                   type="text"
                   name="q"
@@ -165,7 +164,7 @@ export default function HomePage() {
                 </button>
               </form>
 
-              <div className="hero-actions">
+              <div className="hero-actions centered-actions">
                 <Link className="btn" href="/servers">
                   {t(language, "discover")}
                 </Link>
@@ -177,10 +176,11 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="home-hero-right">
-            <article className="discord-server-card featured-discord-card">
+          <div className="home-hero-right home-hero-right-pushed">
+            <article className="discord-server-card featured-discord-card prettier-discord-card">
               <div className="server-card-glow server-card-glow-pink" />
               <div className="server-card-glow server-card-glow-blue" />
+              <div className="server-card-glow server-card-glow-soft" />
 
               <div className="discord-server-banner">
                 <img src="/asko-cafe-banner.png" alt="Asko Cafe Banner" />
@@ -190,7 +190,7 @@ export default function HomePage() {
               </div>
 
               <div className="discord-server-content">
-                <div className="discord-server-top">
+                <div className="discord-server-top new-server-top-layout">
                   <img
                     className="discord-server-icon"
                     src="/asko-cafe-icon.png"
@@ -200,31 +200,20 @@ export default function HomePage() {
                   <div className="discord-server-meta">
                     <div className="discord-server-name-row">
                       <h3>{t(language, "cardTitle")}</h3>
-
-                      <span
-                        className="flag-icon flag-de server-country-flag"
-                        title={t(language, "countryTitle")}
-                        aria-label={t(language, "countryTitle")}
-                      />
+                      <span className="server-country-emoji" aria-label="Germany">
+                        🇩🇪
+                      </span>
                     </div>
 
-                    <p className="discord-server-link">discord.gg/askocafe</p>
-
                     <div className="discord-server-tags">
-                      <span className="server-tag">
-                        {t(language, "tagLanguage")}
-                      </span>
-                      <span className="server-tag">
-                        {t(language, "tagCommunity")}
-                      </span>
-                      <span className="server-tag">
-                        {t(language, "tagSupport")}
-                      </span>
+                      <span className="server-tag">{t(language, "tagLanguage")}</span>
+                      <span className="server-tag">{t(language, "tagCommunity")}</span>
+                      <span className="server-tag">{t(language, "tagSupport")}</span>
                     </div>
                   </div>
                 </div>
 
-                <p className="discord-server-description">
+                <p className="discord-server-description prettier-description">
                   {t(language, "cardText")}
                 </p>
 
