@@ -98,8 +98,32 @@ const HOME_TEXT = {
     active: "Actif",
     features: "Fonctions",
   },
-
   it: {
     badge: "Asko Cafe Network",
     title: "Scopri server Discord",
-    text: "Tro
+    text: "Trova community attive, valuta server e scopri nuovi network Discord su Asko Cafe.",
+    searchPlaceholder: "Cerca server",
+    search: "Cerca",
+    discover: "Scopri server",
+    submit: "Aggiungi server",
+    cardBadge: "Discord ufficiale",
+    cardTitle: "Asko Cafe",
+    cardText:
+      "Unisciti al nostro Discord ufficiale, scopri nuove community, chatta con altri utenti e resta aggiornato.",
+    cardExtra:
+      "Community gaming e anime chill, supporto per domande e nuovi aggiornamenti regolari.",
+    join: "Entra su Discord",
+    serverList: "Apri lista server",
+    premiumBadge: "Area Premium",
+    premiumTitle: "Server Premium",
+    premiumText:
+      "I server premium e partner vengono mostrati qui con una bella animazione.",
+    noPremiumTitle: "Nessun server premium",
+    noPremiumText:
+      "Appena ci saranno server premium o partner, appariranno qui automaticamente.",
+    community: "Community",
+    support: "Supporto",
+    language: "Lingua",
+    active: "Attivo",
+    features: "Funzioni",
+  },
