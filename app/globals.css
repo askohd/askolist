@@ -2581,3 +2581,236 @@ select option {
     padding-right: 6px !important;
   }
 }
+.home-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  gap: 48px;
+  align-items: center;
+}
+
+.home-hero-right-pushed {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.hero-server-card-v2 {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+  border-radius: 26px;
+  border: 1px solid rgba(138, 110, 255, 0.24);
+  background:
+    linear-gradient(180deg, rgba(20, 14, 42, 0.96) 0%, rgba(13, 10, 32, 0.98) 100%);
+  box-shadow:
+    0 20px 70px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+    0 0 28px rgba(180, 92, 255, 0.16);
+  backdrop-filter: blur(18px);
+  isolation: isolate;
+}
+
+.hero-server-card-v2-glow {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.7;
+}
+
+.hero-server-card-v2-glow-pink {
+  top: -30px;
+  right: -40px;
+  width: 180px;
+  height: 180px;
+  background: rgba(255, 70, 190, 0.28);
+}
+
+.hero-server-card-v2-glow-blue {
+  bottom: -40px;
+  left: -30px;
+  width: 180px;
+  height: 180px;
+  background: rgba(77, 211, 255, 0.18);
+}
+
+.hero-server-card-v2-banner {
+  position: relative;
+  z-index: 1;
+  height: 148px;
+  overflow: hidden;
+}
+
+.hero-server-card-v2-banner img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.hero-server-card-v2-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.08), rgba(8, 7, 19, 0.54));
+}
+
+.hero-server-card-v2-badge {
+  position: absolute;
+  left: 18px;
+  bottom: 16px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #eef7ff;
+  background: rgba(16, 17, 34, 0.72);
+  border: 1px solid rgba(114, 223, 255, 0.32);
+  box-shadow: 0 0 18px rgba(73, 202, 255, 0.18);
+}
+
+.hero-server-card-v2-body {
+  position: relative;
+  z-index: 1;
+  padding: 20px 20px 22px;
+}
+
+.hero-server-card-v2-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: -44px;
+  margin-bottom: 18px;
+}
+
+.hero-server-card-v2-icon {
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+  border-radius: 24px;
+  object-fit: cover;
+  border: 3px solid rgba(24, 17, 45, 0.95);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.32),
+    0 0 24px rgba(184, 88, 255, 0.2);
+  background: #161224;
+}
+
+.hero-server-card-v2-meta {
+  min-width: 0;
+  padding-top: 34px;
+}
+
+.hero-server-card-v2-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.hero-server-card-v2-title-row h3 {
+  margin: 0;
+  font-size: 37px;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  text-shadow: 0 0 18px rgba(194, 118, 255, 0.24);
+}
+
+.hero-server-card-v2-flag {
+  font-size: 20px;
+  line-height: 1;
+  filter: drop-shadow(0 0 10px rgba(255, 210, 80, 0.2));
+}
+
+.hero-server-card-v2-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hero-server-card-v2-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #eae9ff;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(151, 157, 255, 0.18);
+}
+
+.hero-server-card-v2-description {
+  margin: 0 0 18px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(243, 241, 255, 0.9);
+}
+
+.hero-server-card-v2-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.hero-server-card-v2-stat {
+  padding: 14px 12px;
+  border-radius: 18px;
+  text-align: center;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  border: 1px solid rgba(144, 138, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.hero-server-card-v2-stat strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 18px;
+  color: #ffffff;
+}
+
+.hero-server-card-v2-stat span {
+  font-size: 12px;
+  color: rgba(232, 234, 255, 0.78);
+}
+
+.hero-server-card-v2-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.hero-server-card-v2-actions .btn,
+.hero-server-card-v2-actions .btn.secondary {
+  justify-content: center;
+  width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .home-hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-hero-right-pushed {
+    justify-content: center;
+  }
+
+  .hero-server-card-v2 {
+    max-width: 520px;
+  }
+}
