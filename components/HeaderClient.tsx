@@ -10,29 +10,34 @@ type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
 
 const HEADER_TEXT = {
   de: {
-    servers: "Server",
+    home: "Home",
     submit: "Server eintragen",
     shop: "Shop",
+    support: "Support",
   },
   en: {
-    servers: "Servers",
+    home: "Home",
     submit: "Submit Server",
     shop: "Shop",
+    support: "Support",
   },
   fr: {
-    servers: "Serveurs",
+    home: "Accueil",
     submit: "Ajouter un serveur",
     shop: "Boutique",
+    support: "Support",
   },
   it: {
-    servers: "Server",
+    home: "Home",
     submit: "Aggiungi server",
     shop: "Shop",
+    support: "Supporto",
   },
   pl: {
-    servers: "Serwery",
+    home: "Start",
     submit: "Dodaj serwer",
     shop: "Sklep",
+    support: "Pomoc",
   },
 } as const;
 
@@ -60,9 +65,25 @@ export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
         </Link>
 
         <nav className="nav-links">
-          <Link href="/servers">{t(language, "servers")}</Link>
-          <Link href="/submit">{t(language, "submit")}</Link>
-          <Link href="/shop">{t(language, "shop")}</Link>
+          <Link href="/">
+            <span className="nav-link-icon">🏠</span>
+            {t(language, "home")}
+          </Link>
+
+          <Link href="/submit">
+            <span className="nav-link-icon">🚀</span>
+            {t(language, "submit")}
+          </Link>
+
+          <Link href="/shop">
+            <span className="nav-link-icon">🛒</span>
+            {t(language, "shop")}
+          </Link>
+
+          <Link href="/support">
+            <span className="nav-link-icon">💬</span>
+            {t(language, "support")}
+          </Link>
         </nav>
 
         <div className="nav-right-actions">
