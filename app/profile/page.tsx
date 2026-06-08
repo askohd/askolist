@@ -10,15 +10,17 @@ type LanguageCode = "de" | "en" | "fr" | "it" | "pl";
 const PROFILE_TEXT = {
   de: {
     loginTitle: "Login erforderlich",
-    loginText: "Du musst dich mit Discord einloggen, um dein Profil zu sehen.",
+    loginText:
+      "Du musst dich mit Discord einloggen, um dein Server Dashboard zu sehen.",
     loginButton: "Mit Discord einloggen",
-    discordProfile: "Discord Profil",
+    dashboard: "Server Dashboard",
     discordUserId: "Discord Nutzer-ID",
     notAvailable: "Nicht verfügbar",
     myServer: "Mein Server",
     addServer: "Server hinzufügen",
     noServerTitle: "Noch kein Server hinzugefügt",
-    noServerText: "Du hast noch keinen Discord Server eingetragen. Jeder Nutzer kann einen Server hinzufügen.",
+    noServerText:
+      "Du hast noch keinen Discord Server eingetragen. Jeder Nutzer kann einen Server hinzufügen.",
     submitServer: "Server eintragen",
     serverSettings: "Server-Einstellungen",
     approved: "Freigegeben",
@@ -31,15 +33,16 @@ const PROFILE_TEXT = {
 
   en: {
     loginTitle: "Login required",
-    loginText: "You need to login with Discord to view your profile.",
+    loginText: "You need to login with Discord to view your server dashboard.",
     loginButton: "Login with Discord",
-    discordProfile: "Discord Profile",
+    dashboard: "Server Dashboard",
     discordUserId: "Discord User ID",
     notAvailable: "Not available",
     myServer: "My Server",
     addServer: "Add Server",
     noServerTitle: "No server added yet",
-    noServerText: "You have not submitted a Discord server yet. Each user can add one server.",
+    noServerText:
+      "You have not submitted a Discord server yet. Each user can add one server.",
     submitServer: "Submit your server",
     serverSettings: "Server Settings",
     approved: "Approved",
@@ -52,15 +55,17 @@ const PROFILE_TEXT = {
 
   fr: {
     loginTitle: "Connexion requise",
-    loginText: "Tu dois te connecter avec Discord pour voir ton profil.",
+    loginText:
+      "Tu dois te connecter avec Discord pour voir ton tableau de bord serveur.",
     loginButton: "Se connecter avec Discord",
-    discordProfile: "Profil Discord",
+    dashboard: "Tableau de bord serveur",
     discordUserId: "ID utilisateur Discord",
     notAvailable: "Non disponible",
     myServer: "Mon serveur",
     addServer: "Ajouter un serveur",
     noServerTitle: "Aucun serveur ajouté",
-    noServerText: "Tu n'as pas encore ajouté de serveur Discord. Chaque utilisateur peut ajouter un serveur.",
+    noServerText:
+      "Tu n'as pas encore ajouté de serveur Discord. Chaque utilisateur peut ajouter un serveur.",
     submitServer: "Ajouter ton serveur",
     serverSettings: "Paramètres du serveur",
     approved: "Approuvé",
@@ -73,15 +78,17 @@ const PROFILE_TEXT = {
 
   it: {
     loginTitle: "Accesso richiesto",
-    loginText: "Devi accedere con Discord per vedere il tuo profilo.",
+    loginText:
+      "Devi accedere con Discord per vedere la dashboard del tuo server.",
     loginButton: "Accedi con Discord",
-    discordProfile: "Profilo Discord",
+    dashboard: "Dashboard server",
     discordUserId: "ID utente Discord",
     notAvailable: "Non disponibile",
     myServer: "Il mio server",
     addServer: "Aggiungi server",
     noServerTitle: "Nessun server aggiunto",
-    noServerText: "Non hai ancora aggiunto un server Discord. Ogni utente può aggiungere un server.",
+    noServerText:
+      "Non hai ancora aggiunto un server Discord. Ogni utente può aggiungere un server.",
     submitServer: "Aggiungi il tuo server",
     serverSettings: "Impostazioni server",
     approved: "Approvato",
@@ -94,15 +101,17 @@ const PROFILE_TEXT = {
 
   pl: {
     loginTitle: "Wymagane logowanie",
-    loginText: "Musisz zalogować się przez Discord, aby zobaczyć swój profil.",
+    loginText:
+      "Musisz zalogować się przez Discord, aby zobaczyć panel swojego serwera.",
     loginButton: "Zaloguj przez Discord",
-    discordProfile: "Profil Discord",
+    dashboard: "Panel serwera",
     discordUserId: "ID użytkownika Discord",
     notAvailable: "Niedostępne",
     myServer: "Mój serwer",
     addServer: "Dodaj serwer",
     noServerTitle: "Nie dodano jeszcze serwera",
-    noServerText: "Nie dodałeś jeszcze serwera Discord. Każdy użytkownik może dodać jeden serwer.",
+    noServerText:
+      "Nie dodałeś jeszcze serwera Discord. Każdy użytkownik może dodać jeden serwer.",
     submitServer: "Dodaj swój serwer",
     serverSettings: "Ustawienia serwera",
     approved: "Zatwierdzony",
@@ -143,6 +152,7 @@ export default async function ProfilePage() {
     return (
       <main className="container profile-page">
         <section className="profile-card">
+          <span className="page-badge">{text(pageLanguage, "dashboard")}</span>
           <h1>{text(pageLanguage, "loginTitle")}</h1>
           <p>{text(pageLanguage, "loginText")}</p>
 
@@ -179,7 +189,7 @@ export default async function ProfilePage() {
 
           <div>
             <span className="page-badge">
-              {text(pageLanguage, "discordProfile")}
+              {text(pageLanguage, "dashboard")}
             </span>
             <h1>{session.user?.name}</h1>
             <p>
