@@ -6,27 +6,27 @@ const LANGUAGES = [
   {
     code: "de",
     label: "Deutsch",
-    flag: "🇩🇪",
+    flagClass: "flag-de",
   },
   {
     code: "en",
     label: "English",
-    flag: "🇬🇧",
+    flagClass: "flag-en",
   },
   {
     code: "fr",
     label: "Français",
-    flag: "🇫🇷",
+    flagClass: "flag-fr",
   },
   {
     code: "it",
     label: "Italiano",
-    flag: "🇮🇹",
+    flagClass: "flag-it",
   },
   {
     code: "pl",
     label: "Polski",
-    flag: "🇵🇱",
+    flagClass: "flag-pl",
   },
 ];
 
@@ -48,6 +48,7 @@ export default function LanguageSwitcher() {
 
   function selectLanguage(code: string) {
     localStorage.setItem("asko_language", code);
+
     document.cookie =
       "asko_language=" +
       code +
@@ -67,16 +68,14 @@ export default function LanguageSwitcher() {
     <div className="language-switcher">
       <button
         type="button"
-        className="language-switcher-button"
+        className="language-switcher-button flag-only"
         onClick={() => setOpen((current) => !current)}
         aria-label="Sprache auswählen"
       >
-        <span className="language-switcher-flag">
-          {selectedLanguage.flag}
-        </span>
-        <span className="language-switcher-label">
-          {selectedLanguage.code.toUpperCase()}
-        </span>
+        <span
+          className={"language-flag " + selectedLanguage.flagClass}
+          aria-hidden="true"
+        />
       </button>
 
       {open && (
@@ -93,7 +92,10 @@ export default function LanguageSwitcher() {
               }
               onClick={() => selectLanguage(language.code)}
             >
-              <span>{language.flag}</span>
+              <span
+                className={"language-flag " + language.flagClass}
+                aria-hidden="true"
+              />
               <span>{language.label}</span>
             </button>
           ))}
