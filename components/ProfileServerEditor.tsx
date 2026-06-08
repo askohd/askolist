@@ -368,7 +368,6 @@ setLockedNotice(true);
 function confirmDelete(event: MouseEvent<HTMLButtonElement>) {
 const confirmed = window.confirm(tr(uiLanguage, "deleteConfirm"));
 
-```
 if (!confirmed) {
   event.preventDefault();
 }
