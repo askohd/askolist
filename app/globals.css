@@ -5137,3 +5137,481 @@ select option {
     grid-template-columns: 1fr !important;
   }
 }
+/* =====================================================
+   ASKO CAFE HOME FINAL CLEAN DESIGN
+   Hero kleiner, Network-Badge cooler, Server-Card sauberer
+   ===================================================== */
+
+.home-page {
+  background:
+    radial-gradient(circle at 0% 18%, rgba(126, 32, 190, 0.34), transparent 34%),
+    radial-gradient(circle at 100% 24%, rgba(39, 128, 180, 0.28), transparent 36%),
+    linear-gradient(135deg, #07000f 0%, #0b0618 42%, #10243a 100%) !important;
+  min-height: 100vh !important;
+}
+
+/* Hero-Bereich insgesamt etwas kleiner */
+.home-hero {
+  min-height: calc(100vh - 78px) !important;
+  padding-top: 48px !important;
+  padding-bottom: 58px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Hintergrundlinien */
+.home-hero-grid-lines {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  opacity: 0.22 !important;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px) !important;
+  background-size: 96px 96px !important;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%) !important;
+}
+
+/* Glow-Orbs */
+.home-hero-orb {
+  position: absolute !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  border-radius: 999px !important;
+  filter: blur(90px) !important;
+  opacity: 0.45 !important;
+}
+
+.home-hero-orb-left {
+  width: 360px !important;
+  height: 360px !important;
+  left: -90px !important;
+  top: 120px !important;
+  background: rgba(184, 48, 255, 0.46) !important;
+}
+
+.home-hero-orb-right {
+  width: 380px !important;
+  height: 380px !important;
+  right: 90px !important;
+  top: 170px !important;
+  background: rgba(65, 198, 255, 0.34) !important;
+}
+
+/* Layout: Text mittig, Card rechts */
+.home-hero .container.home-hero-grid {
+  position: relative !important;
+  z-index: 2 !important;
+  width: 100% !important;
+  max-width: 1540px !important;
+  margin: 0 auto !important;
+  padding-left: 38px !important;
+  padding-right: 38px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 390px !important;
+  gap: 44px !important;
+  align-items: center !important;
+}
+
+.home-hero-left {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.home-hero-left-inner {
+  max-width: 720px !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+}
+
+/* Asko Cafe Network Badge cooler und etwas höher */
+.home-hero-left-inner > div:first-child {
+  transform: translateY(-22px) !important;
+  margin-bottom: 14px !important;
+  padding: 11px 22px !important;
+  min-height: 42px !important;
+  border-radius: 999px !important;
+  font-size: 18px !important;
+  font-weight: 950 !important;
+  color: #8ee8ff !important;
+  letter-spacing: 0.035em !important;
+  text-shadow: 0 0 14px rgba(88, 218, 255, 0.45) !important;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(113, 227, 255, 0.24), transparent 36%),
+    linear-gradient(180deg, rgba(22, 38, 80, 0.84), rgba(7, 15, 38, 0.84)) !important;
+  border: 1px solid rgba(102, 224, 255, 0.48) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+    0 0 20px rgba(74, 205, 255, 0.22),
+    0 0 34px rgba(160, 82, 255, 0.12) !important;
+}
+
+/* Hero-Titel etwas kleiner */
+.hero-title-large {
+  font-size: clamp(62px, 6.7vw, 92px) !important;
+  line-height: 0.92 !important;
+  letter-spacing: -0.055em !important;
+  font-weight: 950 !important;
+  margin: 0 !important;
+  text-shadow:
+    0 0 26px rgba(255, 255, 255, 0.08),
+    0 22px 60px rgba(0, 0, 0, 0.45) !important;
+}
+
+.hero-title-large span {
+  display: block !important;
+}
+
+/* Untertext kleiner */
+.hero-text-large {
+  max-width: 640px !important;
+  margin: 22px auto 0 !important;
+  font-size: 15.5px !important;
+  line-height: 1.6 !important;
+  color: rgba(244, 240, 255, 0.9) !important;
+}
+
+/* Suchleiste kompakter */
+.home-hero-search,
+.centered-search {
+  width: min(100%, 580px) !important;
+  margin: 26px auto 0 !important;
+  padding: 9px !important;
+  border-radius: 22px !important;
+  gap: 10px !important;
+  background: rgba(255, 255, 255, 0.052) !important;
+  border: 1px solid rgba(255, 255, 255, 0.105) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.035) inset,
+    0 0 32px rgba(182, 81, 255, 0.12) !important;
+}
+
+.home-hero-search input,
+.centered-search input {
+  height: 46px !important;
+  border-radius: 15px !important;
+  font-size: 14.5px !important;
+}
+
+.home-hero-search button,
+.centered-search button {
+  height: 46px !important;
+  border-radius: 15px !important;
+  padding-left: 22px !important;
+  padding-right: 22px !important;
+}
+
+/* Hero Buttons kleiner */
+.hero-actions,
+.centered-actions {
+  margin-top: 20px !important;
+  gap: 12px !important;
+}
+
+.hero-actions .btn,
+.centered-actions .btn {
+  min-height: 44px !important;
+  padding-left: 22px !important;
+  padding-right: 22px !important;
+  border-radius: 15px !important;
+  font-size: 14px !important;
+}
+
+/* Rechte Card kleiner */
+.home-hero-right,
+.home-hero-right-pushed {
+  justify-self: end !important;
+  width: 100% !important;
+  max-width: 390px !important;
+}
+
+/* =====================================================
+   DISCORD CARD CLEANER
+   ===================================================== */
+
+.asko-discord-card {
+  width: 390px !important;
+  max-width: 390px !important;
+  border-radius: 30px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  isolation: isolate !important;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 65, 215, 0.2), transparent 36%),
+    radial-gradient(circle at 90% 96%, rgba(65, 214, 255, 0.2), transparent 38%),
+    linear-gradient(180deg, rgba(24, 11, 50, 0.98), rgba(8, 8, 28, 0.98)) !important;
+  border: 1px solid rgba(255, 88, 232, 0.5) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.045) inset,
+    0 0 22px rgba(255, 72, 219, 0.45),
+    0 0 50px rgba(60, 210, 255, 0.2),
+    0 28px 80px rgba(0, 0, 0, 0.56) !important;
+}
+
+.asko-discord-card::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
+  border-radius: inherit !important;
+  box-shadow:
+    0 0 18px rgba(255, 79, 236, 0.7) inset,
+    0 0 18px rgba(72, 212, 255, 0.4) inset !important;
+}
+
+.asko-discord-banner {
+  height: 138px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.asko-discord-banner img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+.asko-discord-badge {
+  top: 14px !important;
+  left: 14px !important;
+  padding: 7px 12px !important;
+  border-radius: 999px !important;
+  font-size: 11.5px !important;
+  font-weight: 950 !important;
+}
+
+/* Body kompakter */
+.asko-discord-body {
+  padding: 0 18px 18px !important;
+}
+
+/* Header: Logo sauber, nicht gequetscht */
+.asko-discord-header {
+  display: flex !important;
+  align-items: flex-end !important;
+  gap: 13px !important;
+  margin-top: -16px !important;
+  margin-bottom: 14px !important;
+}
+
+.asko-discord-icon {
+  width: 78px !important;
+  height: 78px !important;
+  border-radius: 22px !important;
+  object-fit: cover !important;
+  flex-shrink: 0 !important;
+  background: #08071c !important;
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.45),
+    0 0 22px rgba(255, 74, 224, 0.28),
+    0 0 30px rgba(64, 214, 255, 0.14) !important;
+}
+
+.asko-discord-title-box {
+  padding-bottom: 5px !important;
+}
+
+.asko-discord-title-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.asko-discord-title-row h3 {
+  font-size: 27px !important;
+  line-height: 1 !important;
+  letter-spacing: -0.045em !important;
+  font-weight: 950 !important;
+  margin: 0 !important;
+}
+
+.asko-discord-title-box p {
+  margin-top: 6px !important;
+  font-size: 12.5px !important;
+  color: rgba(228, 226, 255, 0.76) !important;
+  font-weight: 800 !important;
+}
+
+/* Deutschland-Fahne im Titel */
+.asko-discord-title-row span[aria-label="Deutschland"] {
+  font-size: 26px !important;
+  filter: drop-shadow(0 0 10px rgba(255, 202, 62, 0.35)) !important;
+}
+
+/* Tags kleiner */
+.asko-discord-tags {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  margin-top: 14px !important;
+  margin-bottom: 16px !important;
+}
+
+.asko-discord-tags span {
+  min-height: 29px !important;
+  padding: 0 11px !important;
+  border-radius: 999px !important;
+  font-size: 11.5px !important;
+  font-weight: 950 !important;
+  color: #fff !important;
+  background: rgba(111, 58, 170, 0.18) !important;
+  border: 1px solid rgba(201, 128, 255, 0.34) !important;
+  box-shadow: 0 0 11px rgba(176, 88, 255, 0.12) !important;
+}
+
+/* Beschreibung kleiner */
+.asko-discord-description {
+  margin-top: 16px !important;
+  margin-bottom: 0 !important;
+  padding: 16px !important;
+  border-radius: 20px !important;
+  font-size: 13px !important;
+  line-height: 1.55 !important;
+}
+
+.asko-discord-description p {
+  font-size: 13px !important;
+  line-height: 1.55 !important;
+  font-weight: 800 !important;
+}
+
+.asko-discord-description p + p {
+  margin-top: 11px !important;
+}
+
+/* Stats kompakter */
+.asko-discord-stats {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  margin-top: 14px !important;
+}
+
+.asko-discord-stats div {
+  min-height: 70px !important;
+  padding: 12px 8px !important;
+  border-radius: 18px !important;
+}
+
+.asko-discord-stats strong {
+  font-size: 18px !important;
+  line-height: 1 !important;
+}
+
+.asko-discord-stats span {
+  margin-top: 5px !important;
+  font-size: 10.5px !important;
+  font-weight: 900 !important;
+}
+
+/* Sprache-Fahne sichtbar und größer */
+.asko-discord-stats div:nth-child(2) strong {
+  font-size: 25px !important;
+  line-height: 1 !important;
+  display: block !important;
+  filter: drop-shadow(0 0 10px rgba(255, 202, 62, 0.28)) !important;
+}
+
+/* Buttons kleiner */
+.asko-discord-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+  margin-top: 14px !important;
+}
+
+.asko-discord-primary,
+.asko-discord-secondary {
+  min-height: 48px !important;
+  border-radius: 15px !important;
+  font-size: 13px !important;
+  font-weight: 950 !important;
+}
+
+/* Premium Section näher und kleiner */
+.premium-section {
+  padding-top: 48px !important;
+  padding-bottom: 80px !important;
+}
+
+.premium-section-heading {
+  text-align: center !important;
+  max-width: 720px !important;
+  margin: 0 auto 28px !important;
+}
+
+.premium-section-heading h2 {
+  font-size: clamp(34px, 4vw, 56px) !important;
+  line-height: 1 !important;
+  margin: 14px 0 10px !important;
+}
+
+/* Responsive */
+@media (max-width: 1280px) {
+  .home-hero .container.home-hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 38px !important;
+  }
+
+  .home-hero-right,
+  .home-hero-right-pushed {
+    justify-self: center !important;
+    max-width: 390px !important;
+  }
+
+  .hero-title-large {
+    font-size: clamp(58px, 10vw, 86px) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .home-hero {
+    padding-top: 38px !important;
+    padding-bottom: 48px !important;
+  }
+
+  .home-hero .container.home-hero-grid {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  .home-hero-left-inner > div:first-child {
+    font-size: 14px !important;
+    transform: translateY(-10px) !important;
+  }
+
+  .hero-title-large {
+    font-size: 52px !important;
+  }
+
+  .home-hero-search,
+  .centered-search {
+    flex-direction: column !important;
+  }
+
+  .home-hero-search input,
+  .centered-search input,
+  .home-hero-search button,
+  .centered-search button {
+    width: 100% !important;
+  }
+
+  .asko-discord-card {
+    width: 100% !important;
+    max-width: 390px !important;
+  }
+
+  .asko-discord-actions,
+  .asko-discord-stats {
+    grid-template-columns: 1fr !important;
+  }
+
+  .asko-discord-header {
+    align-items: center !important;
+  }
+}
