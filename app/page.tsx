@@ -82,7 +82,7 @@ const HOME_TEXT = {
     cardText:
       "Rejoins notre Discord officiel, découvre de nouvelles communautés, discute avec les autres et reste informé.",
     cardExtra:
-      "Communauté gaming et anime chill, support pour les questions und mises à jour régulières.",
+      "Communauté gaming et anime chill, support pour les questions et mises à jour régulières.",
     join: "Rejoindre Discord",
     serverList: "Ouvrir la liste",
     premiumBadge: "Zone Premium",
@@ -167,6 +167,7 @@ function t(language: UiLanguage, key: keyof typeof HOME_TEXT.de) {
 function shortText(text: string | undefined, maxLength: number) {
   if (!text) return "";
   if (text.length <= maxLength) return text;
+
   return text.slice(0, maxLength).trim() + "…";
 }
 
@@ -255,10 +256,6 @@ export default function HomePage() {
                       key={index}
                       style={{
                         display: "block",
-                        color:
-                          index >= 2
-                            ? "linear-gradient(90deg, #ffffff 0%, #efc7ff 45%, #7dd7ff 100%)"
-                            : undefined,
                         background:
                           index >= 2
                             ? "linear-gradient(90deg, #ffffff 0%, #efc7ff 45%, #7dd7ff 100%)"
@@ -518,7 +515,7 @@ export default function HomePage() {
                   >
                     <img
                       className="asko-discord-icon"
-                      src="/logo.png"
+                      src="/asko-cafe-icon.png"
                       alt="Asko Cafe Server Logo"
                       style={{
                         width: "100%",
@@ -638,7 +635,9 @@ export default function HomePage() {
                   }}
                 >
                   <p style={{ margin: 0 }}>💜 {t(language, "cardText")}</p>
-                  <p style={{ margin: "14px 0 0" }}>✨ {t(language, "cardExtra")}</p>
+                  <p style={{ margin: "14px 0 0" }}>
+                    ✨ {t(language, "cardExtra")}
+                  </p>
                 </div>
 
                 <div
@@ -836,7 +835,7 @@ export default function HomePage() {
                 serverData.logoUrl ||
                 serverData.logo_url ||
                 serverData.discord_server_icon_url ||
-                "/logo.png";
+                "/asko-cafe-icon.png";
 
               return (
                 <article
