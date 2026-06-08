@@ -371,7 +371,6 @@ const confirmed = window.confirm(tr(uiLanguage, "deleteConfirm"));
 if (!confirmed) {
   event.preventDefault();
 }
-```
 
 }
 
