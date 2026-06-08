@@ -39,6 +39,8 @@ const HOME_TEXT = {
     premiumPartner: "Premium & Partner",
     open: "Öffnen",
     featured: "Featured",
+    viewServer: "Server ansehen",
+    joinServer: "Discord beitreten",
   },
 
   en: {
@@ -72,6 +74,8 @@ const HOME_TEXT = {
     premiumPartner: "Premium & Partner",
     open: "Open",
     featured: "Featured",
+    viewServer: "View server",
+    joinServer: "Join Discord",
   },
 
   fr: {
@@ -105,6 +109,8 @@ const HOME_TEXT = {
     premiumPartner: "Premium & Partenaire",
     open: "Ouvrir",
     featured: "Featured",
+    viewServer: "Voir le serveur",
+    joinServer: "Rejoindre Discord",
   },
 
   it: {
@@ -138,6 +144,8 @@ const HOME_TEXT = {
     premiumPartner: "Premium & Partner",
     open: "Apri",
     featured: "Featured",
+    viewServer: "Vedi server",
+    joinServer: "Entra su Discord",
   },
 
   pl: {
@@ -171,6 +179,8 @@ const HOME_TEXT = {
     premiumPartner: "Premium & Partner",
     open: "Otwórz",
     featured: "Featured",
+    viewServer: "Zobacz serwer",
+    joinServer: "Dołącz do Discorda",
   },
 } as const;
 
@@ -209,12 +219,33 @@ function GermanyFlag({ small = false }: { small?: boolean }) {
   );
 }
 
+function getServerId(serverData: any) {
+  return serverData.id || serverData.server_id || serverData.discord_server_id || "";
+}
+
+function getServerDetailsHref(serverData: any) {
+  const serverId = getServerId(serverData);
+
+  if (!serverId) {
+    return "/servers";
+  }
+
+  return `/servers/${serverId}`;
+}
+
 function getServerName(serverData: any) {
   return serverData.serverName || serverData.server_name || "Discord Server";
 }
 
 function getServerBanner(serverData: any) {
-  return serverData.bannerUrl || serverData.banner_url || "/asko-cafe-banner.png";
+  return (
+    serverData.premiumBannerUrl ||
+    serverData.premium_banner_url ||
+    serverData.bannerUrl ||
+    serverData.banner_url ||
+    serverData.banner ||
+    "/asko-cafe-banner.png"
+  );
 }
 
 function getServerIcon(serverData: any) {
@@ -523,21 +554,42 @@ export default function HomePage() {
           color: rgba(246, 243, 255, 0.74);
           font-size: 11px;
           font-weight: 800;
+          min-width: 0;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
 
-        .hero-premium-open {
-          min-height: 32px;
+        .hero-premium-actions {
+          margin-top: 14px;
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 9px;
+        }
+
+        .hero-premium-view,
+        .hero-premium-join {
+          min-height: 36px;
           padding: 0 13px;
           border-radius: 999px;
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(90deg, #c84dff 0%, #f35ad6 45%, #74dfff 100%);
-          color: #fff;
-          font-size: 11px;
+          text-decoration: none;
+          color: #ffffff;
+          font-size: 12px;
           font-weight: 950;
+          border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .hero-premium-view {
+          background: linear-gradient(90deg, #c84dff 0%, #f35ad6 45%, #74dfff 100%);
           box-shadow: 0 0 18px rgba(211, 85, 255, 0.22);
-          flex-shrink: 0;
+        }
+
+        .hero-premium-join {
+          background: rgba(255, 255, 255, 0.075);
+          box-shadow: 0 0 14px rgba(116, 223, 255, 0.12);
         }
 
         @media (max-width: 1150px) {
@@ -597,17 +649,15 @@ export default function HomePage() {
               const icon = getServerIcon(serverData);
               const description = shortText(getServerDescription(serverData), 92);
               const invite = getServerInvite(serverData);
+              const detailsHref = getServerDetailsHref(serverData);
               const premium = isPremiumServer(serverData);
               const partner = isPartnerServer(serverData);
               const externalInvite =
                 typeof invite === "string" && invite.startsWith("http");
 
               return (
-                <a
+                <article
                   key={serverData.id || serverName}
-                  href={invite}
-                  target={externalInvite ? "_blank" : undefined}
-                  rel={externalInvite ? "noreferrer" : undefined}
                   className="hero-premium-card"
                   style={{
                     animationDelay: `${index * 0.18}s`,
@@ -661,17 +711,28 @@ export default function HomePage() {
 
                     <div className="hero-premium-card-bottom">
                       <div className="hero-premium-mini-info">
-                        <span>🎮 Gaming</span>
+                        <span>{serverData.category || "Community"}</span>
                         <span>•</span>
-                        <span>🌸 Anime</span>
+                        <span>{serverData.language || "Deutsch"}</span>
                       </div>
+                    </div>
 
-                      <span className="hero-premium-open">
-                        {t(language, "open")}
-                      </span>
+                    <div className="hero-premium-actions">
+                      <Link href={detailsHref} className="hero-premium-view">
+                        {t(language, "viewServer")}
+                      </Link>
+
+                      <a
+                        href={invite}
+                        target={externalInvite ? "_blank" : undefined}
+                        rel={externalInvite ? "noreferrer" : undefined}
+                        className="hero-premium-join"
+                      >
+                        {t(language, "joinServer")}
+                      </a>
                     </div>
                   </div>
-                </a>
+                </article>
               );
             })}
           </aside>
@@ -1338,21 +1399,10 @@ export default function HomePage() {
             {premiumGridServers.map((server: Server, index: number) => {
               const serverData = server as any;
 
-              const serverName =
-                serverData.serverName ||
-                serverData.server_name ||
-                "Discord Server";
-
-              const banner =
-                serverData.bannerUrl ||
-                serverData.banner_url ||
-                "/asko-cafe-banner.png";
-
-              const icon =
-                serverData.logoUrl ||
-                serverData.logo_url ||
-                serverData.discord_server_icon_url ||
-                "/asko-cafe-icon.png";
+              const serverName = getServerName(serverData);
+              const banner = getServerBanner(serverData);
+              const icon = getServerIcon(serverData);
+              const detailsHref = getServerDetailsHref(serverData);
 
               return (
                 <article
@@ -1421,7 +1471,7 @@ export default function HomePage() {
                     </p>
 
                     <Link
-                      href="/servers"
+                      href={detailsHref}
                       style={{
                         minHeight: "44px",
                         display: "inline-flex",
@@ -1436,7 +1486,7 @@ export default function HomePage() {
                           "linear-gradient(135deg, #b54cff 0%, #f35acd 45%, #6fddff 100%)",
                       }}
                     >
-                      {t(language, "discover")}
+                      {t(language, "viewServer")}
                     </Link>
                   </div>
                 </article>
