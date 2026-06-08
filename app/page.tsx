@@ -248,7 +248,7 @@ export default function HomePage() {
 
   const premiumServers = useMemo(() => {
     return initialServers
-      .filter((server: any) => server.approved)
+      .filter((server: any) => server.approved !== false)
       .filter(
         (server: any) =>
           server.premiumStatus ||
@@ -261,7 +261,7 @@ export default function HomePage() {
 
   const showcaseServers = useMemo(() => {
     const premiumOrPartner = initialServers
-      .filter((server: any) => server.approved)
+      .filter((server: any) => server.approved !== false)
       .filter(
         (server: any) =>
           server.premiumStatus ||
@@ -275,7 +275,46 @@ export default function HomePage() {
       return premiumOrPartner;
     }
 
-    return initialServers.filter((server: any) => server.approved).slice(0, 3);
+    const approvedServers = initialServers
+      .filter((server: any) => server.approved !== false)
+      .slice(0, 3);
+
+    if (approvedServers.length > 0) {
+      return approvedServers;
+    }
+
+    return [
+      {
+        id: "asko-demo-1",
+        serverName: "Asko Gaming",
+        description: "Gaming, Anime, Events und Community-Abende auf Asko Cafe.",
+        bannerUrl: "/asko-cafe-banner.png",
+        logoUrl: "/asko-cafe-icon.png",
+        inviteLink: "/servers",
+        premiumStatus: true,
+        partnerStatus: false,
+      },
+      {
+        id: "asko-demo-2",
+        serverName: "Anime Lounge",
+        description: "Eine gemütliche Anime-Community mit Chats, Memes und Events.",
+        bannerUrl: "/asko-cafe-banner.png",
+        logoUrl: "/asko-cafe-icon.png",
+        inviteLink: "/servers",
+        premiumStatus: false,
+        partnerStatus: true,
+      },
+      {
+        id: "asko-demo-3",
+        serverName: "Valorant Hub",
+        description: "Finde Mates, spiele Ranked und entdecke neue Gaming-Server.",
+        bannerUrl: "/asko-cafe-banner.png",
+        logoUrl: "/asko-cafe-icon.png",
+        inviteLink: "/servers",
+        premiumStatus: true,
+        partnerStatus: true,
+      },
+    ];
   }, []);
 
   return (
@@ -305,10 +344,10 @@ export default function HomePage() {
 
         .hero-premium-showcase {
           position: absolute;
-          left: 24px;
+          left: 22px;
           top: 50%;
           transform: translateY(-50%);
-          width: 360px;
+          width: 320px;
           z-index: 10;
           display: flex;
           flex-direction: column;
@@ -504,7 +543,7 @@ export default function HomePage() {
           flex-shrink: 0;
         }
 
-        @media (max-width: 1500px) {
+        @media (max-width: 1150px) {
           .hero-premium-showcase {
             display: none;
           }
