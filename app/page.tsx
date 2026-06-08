@@ -1,360 +1,431 @@
-/* FINAL HOME FIX */
+"use client";
 
-.home-hero.bigger-centered-hero {
-  min-height: auto !important;
-  padding-top: 64px !important;
-  padding-bottom: 72px !important;
+import Link from "next/link";
+import { useMemo } from "react";
+import { useLanguage } from "@/components/useLanguage";
+import { initialServers } from "@/lib/demoData";
+import type { Server } from "@/lib/types";
+
+type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
+
+const HOME_TEXT = {
+  de: {
+    badge: "Asko Cafe Network",
+    title: "Entdecke Discord Server",
+    text: "Finde aktive Communities, bewerte Server und entdecke neue Discord Netzwerke auf Asko Cafe.",
+    searchPlaceholder: "Server suchen",
+    search: "Suchen",
+    discover: "Server entdecken",
+    submit: "Server eintragen",
+    cardBadge: "Offizieller Discord",
+    cardTitle: "Asko Cafe",
+    cardText:
+      "Tritt unserem offiziellen Discord bei, entdecke neue Communities, chatte mit anderen Mitgliedern und bleibe immer auf dem Laufenden.",
+    cardExtra:
+      "Chillige Gaming- und Anime-Community, Support bei Fragen und regelmäßig neue Updates.",
+    join: "Discord beitreten",
+    serverList: "Serverliste öffnen",
+    premiumBadge: "Premium Bereich",
+    premiumTitle: "Premium Server",
+    premiumText:
+      "Hier erscheinen Premium- und Partner-Server. Sie werden nach und nach elegant eingeblendet.",
+    noPremiumTitle: "Noch keine Premium Server",
+    noPremiumText:
+      "Sobald Premium- oder Partner-Server vorhanden sind, werden sie hier automatisch angezeigt.",
+    community: "Community",
+    support: "Support",
+    language: "Sprache",
+    active: "Aktiv",
+    features: "Features",
+  },
+
+  en: {
+    badge: "Asko Cafe Network",
+    title: "Discover Discord Servers",
+    text: "Find active communities, rate servers and discover new Discord networks on Asko Cafe.",
+    searchPlaceholder: "Search servers",
+    search: "Search",
+    discover: "Discover servers",
+    submit: "Submit server",
+    cardBadge: "Official Discord",
+    cardTitle: "Asko Cafe",
+    cardText:
+      "Join our official Discord, discover new communities, chat with others and stay up to date.",
+    cardExtra:
+      "Chill gaming and anime community, support for questions and regular new updates.",
+    join: "Join Discord",
+    serverList: "Open server list",
+    premiumBadge: "Premium Area",
+    premiumTitle: "Premium Servers",
+    premiumText:
+      "Premium and partner servers appear here and fade in one after another.",
+    noPremiumTitle: "No premium servers yet",
+    noPremiumText:
+      "As soon as premium or partner servers exist, they will appear here automatically.",
+    community: "Community",
+    support: "Support",
+    language: "Language",
+    active: "Active",
+    features: "Features",
+  },
+
+  fr: {
+    badge: "Réseau Asko Cafe",
+    title: "Découvre des serveurs Discord",
+    text: "Trouve des communautés actives, note des serveurs et découvre de nouveaux réseaux Discord sur Asko Cafe.",
+    searchPlaceholder: "Rechercher des serveurs",
+    search: "Rechercher",
+    discover: "Découvrir les serveurs",
+    submit: "Ajouter un serveur",
+    cardBadge: "Discord officiel",
+    cardTitle: "Asko Cafe",
+    cardText:
+      "Rejoins notre Discord officiel, découvre de nouvelles communautés, discute avec les autres et reste informé.",
+    cardExtra:
+      "Communauté gaming et anime chill, support pour les questions et mises à jour régulières.",
+    join: "Rejoindre Discord",
+    serverList: "Ouvrir la liste",
+    premiumBadge: "Zone Premium",
+    premiumTitle: "Serveurs Premium",
+    premiumText:
+      "Les serveurs premium et partenaires apparaissent ici avec une animation élégante.",
+    noPremiumTitle: "Aucun serveur premium",
+    noPremiumText:
+      "Dès qu'il y aura des serveurs premium ou partenaires, ils seront affichés ici automatiquement.",
+    community: "Communauté",
+    support: "Support",
+    language: "Langue",
+    active: "Actif",
+    features: "Fonctions",
+  },
+
+  it: {
+    badge: "Asko Cafe Network",
+    title: "Scopri server Discord",
+    text: "Trova community attive, valuta server e scopri nuovi network Discord su Asko Cafe.",
+    searchPlaceholder: "Cerca server",
+    search: "Cerca",
+    discover: "Scopri server",
+    submit: "Aggiungi server",
+    cardBadge: "Discord ufficiale",
+    cardTitle: "Asko Cafe",
+    cardText:
+      "Unisciti al nostro Discord ufficiale, scopri nuove community, chatta con altri utenti e resta aggiornato.",
+    cardExtra:
+      "Community gaming e anime chill, supporto per domande e nuovi aggiornamenti regolari.",
+    join: "Entra su Discord",
+    serverList: "Apri lista server",
+    premiumBadge: "Area Premium",
+    premiumTitle: "Server Premium",
+    premiumText:
+      "I server premium e partner vengono mostrati qui con una bella animazione.",
+    noPremiumTitle: "Nessun server premium",
+    noPremiumText:
+      "Appena ci saranno server premium o partner, appariranno qui automaticamente.",
+    community: "Community",
+    support: "Supporto",
+    language: "Lingua",
+    active: "Attivo",
+    features: "Funzioni",
+  },
+
+  pl: {
+    badge: "Asko Cafe Network",
+    title: "Odkryj serwery Discord",
+    text: "Znajdź aktywne społeczności, oceniaj serwery i odkrywaj nowe sieci Discord na Asko Cafe.",
+    searchPlaceholder: "Szukaj serwerów",
+    search: "Szukaj",
+    discover: "Odkryj serwery",
+    submit: "Dodaj serwer",
+    cardBadge: "Oficjalny Discord",
+    cardTitle: "Asko Cafe",
+    cardText:
+      "Dołącz do naszego oficjalnego Discorda, odkrywaj nowe społeczności, rozmawiaj z innymi i bądź na bieżąco.",
+    cardExtra:
+      "Luźna społeczność gaming i anime, pomoc przy pytaniach i regularne aktualizacje.",
+    join: "Dołącz do Discorda",
+    serverList: "Otwórz listę serwerów",
+    premiumBadge: "Strefa Premium",
+    premiumTitle: "Serwery Premium",
+    premiumText:
+      "Tutaj pojawią się serwery premium i partnerskie, pokazujące się jeden po drugim.",
+    noPremiumTitle: "Brak serwerów premium",
+    noPremiumText:
+      "Gdy pojawią się serwery premium lub partnerskie, będą tutaj automatycznie wyświetlane.",
+    community: "Społeczność",
+    support: "Support",
+    language: "Język",
+    active: "Aktywny",
+    features: "Funkcje",
+  },
+} as const;
+
+function t(language: UiLanguage, key: keyof typeof HOME_TEXT.de) {
+  return HOME_TEXT[language]?.[key] || HOME_TEXT.de[key];
 }
 
-.home-hero-grid {
-  width: 100% !important;
-  max-width: 1500px !important;
-  margin: 0 auto !important;
-  padding-left: 36px !important;
-  padding-right: 36px !important;
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 360px !important;
-  gap: 54px !important;
-  align-items: center !important;
+function shortText(text: string | undefined, maxLength: number) {
+  if (!text) return "";
+  if (text.length <= maxLength) return text;
+
+  return text.slice(0, maxLength).trim() + "…";
 }
 
-.home-hero-left {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-}
+export default function HomePage() {
+  const language = useLanguage() as UiLanguage;
 
-.home-hero-left-inner {
-  width: 100% !important;
-  max-width: 720px !important;
-  margin: 0 auto !important;
-  text-align: center !important;
-}
+  const premiumServers = useMemo(() => {
+    return initialServers
+      .filter((server: any) => server.approved)
+      .filter((server: any) => server.premiumStatus || server.partnerStatus)
+      .slice(0, 6);
+  }, []);
 
-.cool-badge,
-.home-hero-left-inner .page-badge {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 10px !important;
-  margin: 0 auto 22px !important;
-  padding: 10px 22px !important;
-  border-radius: 999px !important;
-  font-size: 18px !important;
-  line-height: 1 !important;
-  font-weight: 900 !important;
-  color: #95e9ff !important;
-  background:
-    radial-gradient(circle at 20% 0%, rgba(126, 227, 255, 0.18), transparent 38%),
-    linear-gradient(180deg, rgba(18, 29, 64, 0.92), rgba(9, 12, 36, 0.92)) !important;
-  border: 1px solid rgba(107, 215, 255, 0.42) !important;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
-    0 0 24px rgba(92, 211, 255, 0.18),
-    0 0 34px rgba(190, 92, 255, 0.14) !important;
-  transform: none !important;
-}
+  return (
+    <main className="home-page">
+      <section className="home-hero bigger-centered-hero">
+        <div className="home-hero-grid-lines" />
+        <div className="home-hero-orb home-hero-orb-left" />
+        <div className="home-hero-orb home-hero-orb-right" />
 
-.hero-title-large,
-.hero-title-smaller {
-  max-width: 680px !important;
-  margin: 0 auto !important;
-  text-align: center !important;
-  font-size: clamp(54px, 6vw, 82px) !important;
-  line-height: 0.94 !important;
-  letter-spacing: -0.055em !important;
-  font-weight: 950 !important;
-  color: #ffffff !important;
-  text-shadow: 0 16px 42px rgba(0, 0, 0, 0.36) !important;
-}
+        <div className="container home-hero-grid">
+          <div className="home-hero-left">
+            <div className="home-hero-left-inner">
+              <span className="page-badge cool-badge">
+                <span>✦</span>
+                <span>{t(language, "badge")}</span>
+                <span>✧</span>
+              </span>
 
-.hero-title-large span,
-.hero-title-smaller span {
-  display: block !important;
-}
+              <h1 className="hero-title-large hero-title-smaller">
+                {t(language, "title")
+                  .split(" ")
+                  .map((word, index) => (
+                    <span key={index}>{word}</span>
+                  ))}
+              </h1>
 
-.hero-title-large span:last-child,
-.hero-title-smaller span:last-child {
-  background: linear-gradient(90deg, #f5e7ff 0%, #d58dff 48%, #86d8ff 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-}
+              <p className="hero-text-large">{t(language, "text")}</p>
 
-.hero-text-large {
-  max-width: 620px !important;
-  margin: 22px auto 0 !important;
-  text-align: center !important;
-  font-size: 15.5px !important;
-  line-height: 1.6 !important;
-  color: rgba(245, 241, 255, 0.92) !important;
-}
+              <form
+                className="home-hero-search centered-search"
+                action="/servers"
+              >
+                <input
+                  type="text"
+                  name="q"
+                  className="input"
+                  placeholder={t(language, "searchPlaceholder")}
+                />
 
-.centered-search,
-.home-hero-search.centered-search {
-  width: 100% !important;
-  max-width: 560px !important;
-  margin: 26px auto 0 !important;
-  padding: 9px !important;
-  border-radius: 20px !important;
-  display: flex !important;
-  gap: 10px !important;
-}
+                <button className="btn" type="submit">
+                  {t(language, "search")}
+                </button>
+              </form>
 
-.centered-search .input,
-.home-hero-search.centered-search .input {
-  height: 46px !important;
-  font-size: 14px !important;
-  border-radius: 14px !important;
-}
+              <div className="hero-actions centered-actions">
+                <Link className="btn" href="/servers">
+                  {t(language, "discover")}
+                </Link>
 
-.centered-search .btn,
-.home-hero-search.centered-search .btn {
-  height: 46px !important;
-  padding-left: 22px !important;
-  padding-right: 22px !important;
-  border-radius: 14px !important;
-  font-size: 14px !important;
-}
+                <Link className="btn secondary" href="/submit">
+                  {t(language, "submit")}
+                </Link>
+              </div>
+            </div>
+          </div>
 
-.centered-actions {
-  margin-top: 20px !important;
-  gap: 12px !important;
-}
+          <div className="home-hero-right home-hero-right-pushed">
+            <article className="anime-discord-card">
+              <div className="anime-card-border-glow" />
+              <div className="anime-card-glow anime-card-glow-pink" />
+              <div className="anime-card-glow anime-card-glow-blue" />
 
-.centered-actions .btn {
-  min-height: 44px !important;
-  padding: 0 22px !important;
-  border-radius: 14px !important;
-  font-size: 14px !important;
-}
+              <div className="anime-card-banner">
+                <img src="/asko-cafe-banner.png" alt="Asko Cafe Banner" />
 
-.home-hero-right,
-.home-hero-right-pushed {
-  width: 100% !important;
-  max-width: 360px !important;
-  justify-self: end !important;
-  display: flex !important;
-  justify-content: flex-end !important;
-  align-items: center !important;
-}
+                <span className="anime-card-official-badge">
+                  <span className="anime-card-discord-dot">●</span>
+                  {t(language, "cardBadge")}
+                </span>
+              </div>
 
-.anime-discord-card {
-  width: 360px !important;
-  max-width: 360px !important;
-  min-height: 0 !important;
-  height: auto !important;
-  border-radius: 28px !important;
-  overflow: hidden !important;
-  transform: none !important;
-}
+              <div className="anime-card-body">
+                <div className="anime-card-icon-wrap bigger-icon-only">
+                  <img
+                    className="anime-card-icon"
+                    src="/asko-cafe-icon.png"
+                    alt="Asko Cafe Icon"
+                  />
+                </div>
 
-.anime-card-banner {
-  height: 118px !important;
-  min-height: 118px !important;
-  max-height: 118px !important;
-  overflow: hidden !important;
-}
+                <div className="anime-card-title-row">
+                  <h3>{t(language, "cardTitle")}</h3>
 
-.anime-card-banner img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  object-position: center !important;
-}
+                  <span
+                    className="anime-card-germany-flag"
+                    aria-label="Deutschland"
+                    title="Deutschland"
+                  >
+                    <span />
+                    <span />
+                    <span />
+                  </span>
+                </div>
 
-.anime-card-body {
-  padding: 0 16px 16px !important;
-  text-align: center !important;
-}
+                <p className="anime-card-subtitle">
+                  Gaming • Anime • Community
+                </p>
 
-.anime-card-icon-wrap,
-.bigger-icon-only {
-  width: 92px !important;
-  height: 92px !important;
-  margin: -30px auto 12px !important;
-  border-radius: 24px !important;
-  overflow: hidden !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  background: linear-gradient(180deg, #171027, #0b091a) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow:
-    0 12px 26px rgba(0, 0, 0, 0.38),
-    0 0 18px rgba(236, 89, 255, 0.18) !important;
-  position: relative !important;
-  z-index: 5 !important;
-}
+                <div className="anime-card-tags">
+                  <span className="anime-card-tag">🎮 Gaming</span>
+                  <span className="anime-card-tag">🌸 Anime</span>
+                  <span className="anime-card-tag">🎯 Valorant</span>
+                  <span className="anime-card-tag">🎉 Events</span>
+                  <span className="anime-card-tag">☕ Chill</span>
+                  <span className="anime-card-tag">
+                    💬 {t(language, "community")}
+                  </span>
+                  <span className="anime-card-tag">
+                    🛟 {t(language, "support")}
+                  </span>
+                </div>
 
-.anime-card-icon {
-  width: 78px !important;
-  height: 78px !important;
-  object-fit: contain !important;
-  object-position: center !important;
-  display: block !important;
-}
+                <div className="anime-card-description">
+                  <p>💜 {t(language, "cardText")}</p>
+                  <p>✨ {t(language, "cardExtra")}</p>
+                </div>
 
-.anime-card-title-row {
-  justify-content: center !important;
-  align-items: center !important;
-  gap: 8px !important;
-  margin: 0 !important;
-}
+                <div className="anime-card-stats">
+                  <div className="anime-card-stat">
+                    <span className="anime-card-stat-icon">〽</span>
+                    <strong>24/7</strong>
+                    <small>{t(language, "active")}</small>
+                  </div>
 
-.anime-card-title-row h3 {
-  font-size: 28px !important;
-  line-height: 1 !important;
-  margin: 0 !important;
-  font-weight: 950 !important;
-}
+                  <div className="anime-card-stat">
+                    <span className="anime-card-stat-icon">💬</span>
+                    <strong>
+                      <span
+                        className="anime-card-germany-flag small"
+                        aria-label="Deutschland"
+                        title="Deutschland"
+                      >
+                        <span />
+                        <span />
+                        <span />
+                      </span>
+                    </strong>
+                    <small>{t(language, "language")}</small>
+                  </div>
 
-.anime-card-subtitle {
-  margin: 6px 0 12px !important;
-  font-size: 12.5px !important;
-  line-height: 1.2 !important;
-}
+                  <div className="anime-card-stat">
+                    <span className="anime-card-stat-icon">☆</span>
+                    <strong>VIP</strong>
+                    <small>{t(language, "features")}</small>
+                  </div>
+                </div>
 
-.anime-card-germany-flag {
-  width: 30px !important;
-  height: 22px !important;
-  border-radius: 999px !important;
-  overflow: hidden !important;
-  display: inline-flex !important;
-  flex-direction: column !important;
-  flex-shrink: 0 !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  box-shadow: 0 0 14px rgba(255, 206, 70, 0.25) !important;
-}
+                <div className="anime-card-actions single-button-only">
+                  <a
+                    href="https://discord.gg/askocafe"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="anime-card-main-button"
+                  >
+                    {t(language, "join")}
+                  </a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
 
-.anime-card-germany-flag span {
-  display: block !important;
-  flex: 1 !important;
-  width: 100% !important;
-}
+      <section className="container premium-section">
+        <div className="premium-section-heading">
+          <span className="page-badge">{t(language, "premiumBadge")}</span>
 
-.anime-card-germany-flag span:nth-child(1) {
-  background: #000000 !important;
-}
+          <h2>{t(language, "premiumTitle")}</h2>
 
-.anime-card-germany-flag span:nth-child(2) {
-  background: #dd0000 !important;
-}
+          <p>{t(language, "premiumText")}</p>
+        </div>
 
-.anime-card-germany-flag span:nth-child(3) {
-  background: #ffce00 !important;
-}
+        {premiumServers.length === 0 ? (
+          <div className="card empty premium-empty-card">
+            <h3>{t(language, "noPremiumTitle")}</h3>
+            <p>{t(language, "noPremiumText")}</p>
+          </div>
+        ) : (
+          <div className="premium-servers-grid">
+            {premiumServers.map((server: Server, index: number) => {
+              const serverData = server as any;
 
-.anime-card-germany-flag.small {
-  width: 28px !important;
-  height: 20px !important;
-  margin: 0 auto !important;
-}
+              const serverName =
+                serverData.serverName ||
+                serverData.server_name ||
+                "Discord Server";
 
-.anime-card-tags {
-  gap: 7px !important;
-  margin: 12px 0 14px !important;
-  justify-content: center !important;
-}
+              const banner =
+                serverData.bannerUrl ||
+                serverData.banner_url ||
+                "/asko-cafe-banner.png";
 
-.anime-card-tag {
-  min-height: 28px !important;
-  padding: 0 10px !important;
-  border-radius: 999px !important;
-  font-size: 11.5px !important;
-  line-height: 1 !important;
-}
+              const icon =
+                serverData.logoUrl ||
+                serverData.logo_url ||
+                serverData.discord_server_icon_url ||
+                "/asko-cafe-icon.png";
 
-.anime-card-description {
-  margin-top: 14px !important;
-  padding: 15px 14px !important;
-  border-radius: 18px !important;
-}
+              return (
+                <article
+                  key={serverData.id || serverName}
+                  className="premium-server-card"
+                  style={{
+                    animationDelay: `${index * 0.15}s`,
+                  }}
+                >
+                  <div className="premium-server-card-banner">
+                    <img src={banner} alt={serverName} />
+                  </div>
 
-.anime-card-description p {
-  font-size: 12.5px !important;
-  line-height: 1.55 !important;
-  margin: 0 !important;
-}
+                  <div className="premium-server-card-body">
+                    <div className="premium-server-card-top">
+                      <img
+                        className="premium-server-card-icon"
+                        src={icon}
+                        alt={serverName}
+                      />
 
-.anime-card-description p + p {
-  margin-top: 10px !important;
-}
+                      <div>
+                        <h3>{serverName}</h3>
 
-.anime-card-stats {
-  display: grid !important;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  gap: 9px !important;
-  margin-top: 14px !important;
-}
+                        <p>
+                          {serverData.category} • {serverData.language}
+                        </p>
+                      </div>
+                    </div>
 
-.anime-card-stat {
-  min-height: 72px !important;
-  padding: 10px 8px !important;
-  border-radius: 16px !important;
-}
+                    <div className="premium-server-card-description">
+                      {shortText(serverData.description, 110)}
+                    </div>
 
-.anime-card-stat-icon {
-  font-size: 12px !important;
-  margin-bottom: 4px !important;
-}
+                    <div className="premium-server-card-actions">
+                      <Link href="/servers" className="btn secondary">
+                        {t(language, "serverList")}
+                      </Link>
 
-.anime-card-stat strong {
-  font-size: 17px !important;
-  line-height: 1 !important;
-}
-
-.anime-card-stat small {
-  font-size: 10px !important;
-  margin-top: 4px !important;
-}
-
-.anime-card-actions,
-.single-button-only {
-  display: block !important;
-  margin-top: 14px !important;
-}
-
-.anime-card-main-button {
-  width: 100% !important;
-  min-height: 46px !important;
-  border-radius: 15px !important;
-  font-size: 13.5px !important;
-}
-
-.anime-card-secondary-button {
-  display: none !important;
-}
-
-@media (max-width: 1100px) {
-  .home-hero-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  .home-hero-right,
-  .home-hero-right-pushed {
-    justify-self: center !important;
-    justify-content: center !important;
-  }
-}
-
-@media (max-width: 680px) {
-  .hero-title-large,
-  .hero-title-smaller {
-    font-size: clamp(42px, 12vw, 58px) !important;
-  }
-
-  .anime-discord-card {
-    width: 100% !important;
-    max-width: 360px !important;
-  }
-
-  .centered-search {
-    flex-direction: column !important;
-  }
-
-  .centered-search .input,
-  .centered-search .btn {
-    width: 100% !important;
-  }
+                      <Link href="/servers" className="btn">
+                        {t(language, "discover")}
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
+    </main>
+  );
 }
