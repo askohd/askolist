@@ -30,14 +30,12 @@ minutesAgo: "vor {value} Min.",
 hoursAgo: "vor {value} Std.",
 daysAgoSingular: "vor {value} Tag",
 daysAgoPlural: "vor {value} Tagen",
-
 deleteConfirm:
-  "Willst du diesen Server wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-
+"Willst du diesen Server wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
 editServer: "Server bearbeiten",
 changeBanner: "Server-Banner ändern",
 logoNote:
-  "Das Server-Logo wird automatisch vom Discord-Serverprofilbild übernommen. Ein manuelles Logo kann hier nicht mehr hochgeladen werden.",
+"Das Server-Logo wird automatisch vom Discord-Serverprofilbild übernommen. Ein manuelles Logo kann hier nicht mehr hochgeladen werden.",
 bannerPosition: "Banner positionieren",
 bannerPositionText: "Stelle dein Banner direkt rechts in der Vorschau ein.",
 leftRight: "Links / Rechts",
@@ -49,21 +47,18 @@ language: "Sprache",
 description: "Beschreibung",
 descriptionPlaceholder: "Beschreibung deines Servers",
 words: "Wörter",
-
 designFeatures: "Design Features",
 designText: "Farben, Glow und Layouts für Premium & Partner.",
 premiumOnlyTitle: "Nur für Premium & Partner verfügbar",
 premiumOnlyText:
-  "Werde Premium Mitglied, um Layouts, Textfarben und Glow zu nutzen.",
+"Werde Premium Mitglied, um Layouts, Textfarben und Glow zu nutzen.",
 shop: "Zum Shop",
 layout: "Layout auswählen",
 nameColor: "Servername-Farbe",
 textColor: "Textfarbe",
 glowColor: "Glow-Farbe",
-
 save: "Änderungen speichern",
 deleteServer: "Server löschen",
-
 livePreview: "Live Vorschau",
 serverListView: "Serverlisten-Ansicht",
 previewText: "Genau so sieht deine Karte später auf der Serverliste aus.",
@@ -73,7 +68,6 @@ previewDescription: "Beschreibung deines Servers...",
 showMore: "Mehr anzeigen",
 viewServer: "Server ansehen",
 join: "Beitreten",
-
 },
 
 en: {
@@ -83,14 +77,12 @@ minutesAgo: "{value} min. ago",
 hoursAgo: "{value} hrs. ago",
 daysAgoSingular: "{value} day ago",
 daysAgoPlural: "{value} days ago",
-
 deleteConfirm:
-  "Do you really want to delete this server? This action cannot be undone.",
-
+"Do you really want to delete this server? This action cannot be undone.",
 editServer: "Edit server",
 changeBanner: "Change server banner",
 logoNote:
-  "The server logo is automatically taken from the Discord server icon. Manual logo upload is no longer available here.",
+"The server logo is automatically taken from the Discord server icon. Manual logo upload is no longer available here.",
 bannerPosition: "Position banner",
 bannerPositionText: "Adjust your banner directly in the preview on the right.",
 leftRight: "Left / Right",
@@ -102,21 +94,18 @@ language: "Language",
 description: "Description",
 descriptionPlaceholder: "Description of your server",
 words: "words",
-
 designFeatures: "Design Features",
 designText: "Colors, glow and layouts for Premium & Partner.",
 premiumOnlyTitle: "Only available for Premium & Partner",
 premiumOnlyText:
-  "Become a Premium member to use layouts, text colors and glow.",
+"Become a Premium member to use layouts, text colors and glow.",
 shop: "Go to shop",
 layout: "Choose layout",
 nameColor: "Server name color",
 textColor: "Text color",
 glowColor: "Glow color",
-
 save: "Save changes",
 deleteServer: "Delete server",
-
 livePreview: "Live preview",
 serverListView: "Server list view",
 previewText: "This is exactly how your card will look in the server list.",
@@ -126,7 +115,6 @@ previewDescription: "Description of your server...",
 showMore: "Show more",
 viewServer: "View server",
 join: "Join",
-
 },
 
 fr: {
@@ -136,14 +124,12 @@ minutesAgo: "il y a {value} min.",
 hoursAgo: "il y a {value} h",
 daysAgoSingular: "il y a {value} jour",
 daysAgoPlural: "il y a {value} jours",
-
 deleteConfirm:
-  "Veux-tu vraiment supprimer ce serveur ? Cette action ne peut pas être annulée.",
-
+"Veux-tu vraiment supprimer ce serveur ? Cette action ne peut pas être annulée.",
 editServer: "Modifier le serveur",
 changeBanner: "Changer la bannière du serveur",
 logoNote:
-  "Le logo du serveur est automatiquement repris depuis l'icône du serveur Discord. Le téléchargement manuel d'un logo n'est plus disponible ici.",
+"Le logo du serveur est automatiquement repris depuis l'icône du serveur Discord. Le téléchargement manuel d'un logo n'est plus disponible ici.",
 bannerPosition: "Positionner la bannière",
 bannerPositionText: "Ajuste ta bannière directement dans l'aperçu à droite.",
 leftRight: "Gauche / Droite",
@@ -155,21 +141,18 @@ language: "Langue",
 description: "Description",
 descriptionPlaceholder: "Description de ton serveur",
 words: "mots",
-
 designFeatures: "Fonctions design",
 designText: "Couleurs, glow et layouts pour Premium & Partenaire.",
 premiumOnlyTitle: "Disponible uniquement pour Premium & Partenaire",
 premiumOnlyText:
-  "Deviens membre Premium pour utiliser les layouts, couleurs de texte et glow.",
+"Deviens membre Premium pour utiliser les layouts, couleurs de texte et glow.",
 shop: "Aller à la boutique",
 layout: "Choisir un layout",
 nameColor: "Couleur du nom",
 textColor: "Couleur du texte",
 glowColor: "Couleur du glow",
-
 save: "Enregistrer les modifications",
 deleteServer: "Supprimer le serveur",
-
 livePreview: "Aperçu en direct",
 serverListView: "Vue de la liste des serveurs",
 previewText: "Voici exactement à quoi ressemblera ta carte dans la liste.",
@@ -179,7 +162,6 @@ previewDescription: "Description de ton serveur...",
 showMore: "Afficher plus",
 viewServer: "Voir le serveur",
 join: "Rejoindre",
-
 },
 
 it: {
@@ -189,14 +171,12 @@ minutesAgo: "{value} min. fa",
 hoursAgo: "{value} ore fa",
 daysAgoSingular: "{value} giorno fa",
 daysAgoPlural: "{value} giorni fa",
-
 deleteConfirm:
-  "Vuoi davvero eliminare questo server? Questa azione non può essere annullata.",
-
+"Vuoi davvero eliminare questo server? Questa azione non può essere annullata.",
 editServer: "Modifica server",
 changeBanner: "Cambia banner del server",
 logoNote:
-  "Il logo del server viene preso automaticamente dall'icona del server Discord. Il caricamento manuale del logo non è più disponibile qui.",
+"Il logo del server viene preso automaticamente dall'icona del server Discord. Il caricamento manuale del logo non è più disponibile qui.",
 bannerPosition: "Posiziona banner",
 bannerPositionText: "Regola il banner direttamente nell'anteprima a destra.",
 leftRight: "Sinistra / Destra",
@@ -208,21 +188,18 @@ language: "Lingua",
 description: "Descrizione",
 descriptionPlaceholder: "Descrizione del tuo server",
 words: "parole",
-
 designFeatures: "Funzioni design",
 designText: "Colori, glow e layout per Premium & Partner.",
 premiumOnlyTitle: "Disponibile solo per Premium & Partner",
 premiumOnlyText:
-  "Diventa membro Premium per usare layout, colori del testo e glow.",
+"Diventa membro Premium per usare layout, colori del testo e glow.",
 shop: "Vai allo shop",
 layout: "Scegli layout",
 nameColor: "Colore nome server",
 textColor: "Colore testo",
 glowColor: "Colore glow",
-
 save: "Salva modifiche",
 deleteServer: "Elimina server",
-
 livePreview: "Anteprima live",
 serverListView: "Vista lista server",
 previewText: "Ecco esattamente come apparirà la tua card nella lista.",
@@ -232,7 +209,6 @@ previewDescription: "Descrizione del tuo server...",
 showMore: "Mostra altro",
 viewServer: "Vedi server",
 join: "Entra",
-
 },
 
 pl: {
@@ -242,14 +218,12 @@ minutesAgo: "{value} min. temu",
 hoursAgo: "{value} godz. temu",
 daysAgoSingular: "{value} dzień temu",
 daysAgoPlural: "{value} dni temu",
-
 deleteConfirm:
-  "Czy na pewno chcesz usunąć ten serwer? Tej akcji nie można cofnąć.",
-
+"Czy na pewno chcesz usunąć ten serwer? Tej akcji nie można cofnąć.",
 editServer: "Edytuj serwer",
 changeBanner: "Zmień banner serwera",
 logoNote:
-  "Logo serwera jest automatycznie pobierane z ikony serwera Discord. Ręczne przesyłanie logo nie jest już tutaj dostępne.",
+"Logo serwera jest automatycznie pobierane z ikony serwera Discord. Ręczne przesyłanie logo nie jest już tutaj dostępne.",
 bannerPosition: "Ustaw banner",
 bannerPositionText: "Dopasuj banner bezpośrednio w podglądzie po prawej.",
 leftRight: "Lewo / Prawo",
@@ -261,21 +235,18 @@ language: "Język",
 description: "Opis",
 descriptionPlaceholder: "Opis twojego serwera",
 words: "słów",
-
 designFeatures: "Funkcje designu",
 designText: "Kolory, glow i layouty dla Premium & Partner.",
 premiumOnlyTitle: "Dostępne tylko dla Premium & Partner",
 premiumOnlyText:
-  "Zostań członkiem Premium, aby używać layoutów, kolorów tekstu i glow.",
+"Zostań członkiem Premium, aby używać layoutów, kolorów tekstu i glow.",
 shop: "Przejdź do sklepu",
 layout: "Wybierz layout",
 nameColor: "Kolor nazwy serwera",
 textColor: "Kolor tekstu",
 glowColor: "Kolor glow",
-
 save: "Zapisz zmiany",
 deleteServer: "Usuń serwer",
-
 livePreview: "Podgląd na żywo",
 serverListView: "Widok listy serwerów",
 previewText: "Tak dokładnie będzie wyglądać twoja karta na liście serwerów.",
@@ -285,7 +256,6 @@ previewDescription: "Opis twojego serwera...",
 showMore: "Pokaż więcej",
 viewServer: "Zobacz serwer",
 join: "Dołącz",
-
 },
 } as const;
 
@@ -365,7 +335,7 @@ const [serverTextColor, setServerTextColor] = useState(
 server.server_text_color ?? "#ddd9ef"
 );
 
-const [premiumLayout, setPremiumLayout] = useState(
+const [premiumLayout, setPremiumLayout] = useState<PremiumLayout>(
 (server.premium_layout as PremiumLayout) ?? "glow"
 );
 
@@ -395,20 +365,25 @@ setLockedNotice(true);
 }
 }
 
-function confirmDelete(event: MouseEvent) {
+function confirmDelete(event: MouseEvent<HTMLButtonElement>) {
 const confirmed = window.confirm(tr(uiLanguage, "deleteConfirm"));
 
+```
 if (!confirmed) {
   event.preventDefault();
 }
+```
 
 }
 
-return (
+return ( <form
+   action="/api/profile/update-server"
+   method="POST"
+   encType="multipart/form-data"
+   className="profile-edit-card"
+ > <input type="hidden" name="server_id" value={server.id} />
 
-
-
-
+```
   <h3>{tr(uiLanguage, "editServer")}</h3>
 
   <div className="profile-editor-two-column">
@@ -784,6 +759,7 @@ return (
     </aside>
   </div>
 </form>
-  
+```
+
 );
 }
