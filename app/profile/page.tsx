@@ -1,21 +1,153 @@
+import { cookies } from "next/headers";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { authOptions } from "@/lib/auth";
 import { supabaseRequest } from "@/lib/supabase";
 import ProfileServerEditor from "@/components/ProfileServerEditor";
 
+type LanguageCode = "de" | "en" | "fr" | "it" | "pl";
+
+const PROFILE_TEXT = {
+  de: {
+    loginTitle: "Login erforderlich",
+    loginText: "Du musst dich mit Discord einloggen, um dein Profil zu sehen.",
+    loginButton: "Mit Discord einloggen",
+    discordProfile: "Discord Profil",
+    discordUserId: "Discord Nutzer-ID",
+    notAvailable: "Nicht verfügbar",
+    myServer: "Mein Server",
+    addServer: "Server hinzufügen",
+    noServerTitle: "Noch kein Server hinzugefügt",
+    noServerText: "Du hast noch keinen Discord Server eingetragen. Jeder Nutzer kann einen Server hinzufügen.",
+    submitServer: "Server eintragen",
+    serverSettings: "Server-Einstellungen",
+    approved: "Freigegeben",
+    waiting: "Wartet auf Freigabe",
+    premium: "Premium",
+    partner: "Partner",
+    bumps: "Bumps",
+    openInvite: "Discord Einladung öffnen",
+  },
+
+  en: {
+    loginTitle: "Login required",
+    loginText: "You need to login with Discord to view your profile.",
+    loginButton: "Login with Discord",
+    discordProfile: "Discord Profile",
+    discordUserId: "Discord User ID",
+    notAvailable: "Not available",
+    myServer: "My Server",
+    addServer: "Add Server",
+    noServerTitle: "No server added yet",
+    noServerText: "You have not submitted a Discord server yet. Each user can add one server.",
+    submitServer: "Submit your server",
+    serverSettings: "Server Settings",
+    approved: "Approved",
+    waiting: "Waiting for approval",
+    premium: "Premium",
+    partner: "Partner",
+    bumps: "Bumps",
+    openInvite: "Open Discord Invite",
+  },
+
+  fr: {
+    loginTitle: "Connexion requise",
+    loginText: "Tu dois te connecter avec Discord pour voir ton profil.",
+    loginButton: "Se connecter avec Discord",
+    discordProfile: "Profil Discord",
+    discordUserId: "ID utilisateur Discord",
+    notAvailable: "Non disponible",
+    myServer: "Mon serveur",
+    addServer: "Ajouter un serveur",
+    noServerTitle: "Aucun serveur ajouté",
+    noServerText: "Tu n'as pas encore ajouté de serveur Discord. Chaque utilisateur peut ajouter un serveur.",
+    submitServer: "Ajouter ton serveur",
+    serverSettings: "Paramètres du serveur",
+    approved: "Approuvé",
+    waiting: "En attente d'approbation",
+    premium: "Premium",
+    partner: "Partenaire",
+    bumps: "Bumps",
+    openInvite: "Ouvrir l'invitation Discord",
+  },
+
+  it: {
+    loginTitle: "Accesso richiesto",
+    loginText: "Devi accedere con Discord per vedere il tuo profilo.",
+    loginButton: "Accedi con Discord",
+    discordProfile: "Profilo Discord",
+    discordUserId: "ID utente Discord",
+    notAvailable: "Non disponibile",
+    myServer: "Il mio server",
+    addServer: "Aggiungi server",
+    noServerTitle: "Nessun server aggiunto",
+    noServerText: "Non hai ancora aggiunto un server Discord. Ogni utente può aggiungere un server.",
+    submitServer: "Aggiungi il tuo server",
+    serverSettings: "Impostazioni server",
+    approved: "Approvato",
+    waiting: "In attesa di approvazione",
+    premium: "Premium",
+    partner: "Partner",
+    bumps: "Bump",
+    openInvite: "Apri invito Discord",
+  },
+
+  pl: {
+    loginTitle: "Wymagane logowanie",
+    loginText: "Musisz zalogować się przez Discord, aby zobaczyć swój profil.",
+    loginButton: "Zaloguj przez Discord",
+    discordProfile: "Profil Discord",
+    discordUserId: "ID użytkownika Discord",
+    notAvailable: "Niedostępne",
+    myServer: "Mój serwer",
+    addServer: "Dodaj serwer",
+    noServerTitle: "Nie dodano jeszcze serwera",
+    noServerText: "Nie dodałeś jeszcze serwera Discord. Każdy użytkownik może dodać jeden serwer.",
+    submitServer: "Dodaj swój serwer",
+    serverSettings: "Ustawienia serwera",
+    approved: "Zatwierdzony",
+    waiting: "Oczekuje na zatwierdzenie",
+    premium: "Premium",
+    partner: "Partner",
+    bumps: "Bumpy",
+    openInvite: "Otwórz zaproszenie Discord",
+  },
+} as const;
+
+function normalizeLanguage(value: string | undefined): LanguageCode {
+  if (
+    value === "de" ||
+    value === "en" ||
+    value === "fr" ||
+    value === "it" ||
+    value === "pl"
+  ) {
+    return value;
+  }
+
+  return "de";
+}
+
+function text(language: LanguageCode, key: keyof typeof PROFILE_TEXT.de) {
+  return PROFILE_TEXT[language][key] || PROFILE_TEXT.de[key];
+}
+
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
+  const cookieStore = await cookies();
+  const pageLanguage = normalizeLanguage(
+    cookieStore.get("asko_language")?.value
+  );
 
   if (!session) {
     return (
       <main className="container profile-page">
         <section className="profile-card">
-          <h1>Login required</h1>
-          <p>You need to login with Discord to view your profile.</p>
+          <h1>{text(pageLanguage, "loginTitle")}</h1>
+          <p>{text(pageLanguage, "loginText")}</p>
 
           <Link className="btn" href="/api/auth/signin">
-            Login with Discord
+            {text(pageLanguage, "loginButton")}
           </Link>
         </section>
       </main>
@@ -29,7 +161,9 @@ export default async function ProfilePage() {
 
   if (discordUserId) {
     myServers = await supabaseRequest(
-      `servers?owner_discord_user_id=eq.${discordUserId}&select=*&order=created_at.desc`
+      "servers?owner_discord_user_id=eq." +
+        discordUserId +
+        "&select=*&order=created_at.desc"
     );
   }
 
@@ -44,34 +178,36 @@ export default async function ProfilePage() {
           )}
 
           <div>
-            <span className="page-badge">Discord Profile</span>
+            <span className="page-badge">
+              {text(pageLanguage, "discordProfile")}
+            </span>
             <h1>{session.user?.name}</h1>
-            <p>Discord User ID: {discordUserId ?? "Not available"}</p>
+            <p>
+              {text(pageLanguage, "discordUserId")}:{" "}
+              {discordUserId ?? text(pageLanguage, "notAvailable")}
+            </p>
           </div>
         </div>
       </section>
 
       <section className="section">
         <div className="section-title">
-          <h2>My Server</h2>
+          <h2>{text(pageLanguage, "myServer")}</h2>
 
           {myServers.length === 0 && (
             <Link href="/submit" className="btn">
-              Add Server
+              {text(pageLanguage, "addServer")}
             </Link>
           )}
         </div>
 
         {myServers.length === 0 ? (
           <div className="card empty">
-            <h3>No server added yet</h3>
-            <p>
-              You have not submitted a Discord server yet. Each user can add one
-              server.
-            </p>
+            <h3>{text(pageLanguage, "noServerTitle")}</h3>
+            <p>{text(pageLanguage, "noServerText")}</p>
 
             <Link href="/submit" className="btn">
-              Submit your server
+              {text(pageLanguage, "submitServer")}
             </Link>
           </div>
         ) : (
@@ -80,28 +216,38 @@ export default async function ProfilePage() {
               <article className="profile-server-card" key={server.id}>
                 <div className="profile-server-summary">
                   <div>
-                    <span className="page-badge">Server Settings</span>
+                    <span className="page-badge">
+                      {text(pageLanguage, "serverSettings")}
+                    </span>
                     <h3>{server.server_name}</h3>
                     <p>
-                      {server.category} • {server.country} • {server.language}
+                      {server.category} • {server.language}
                     </p>
                   </div>
 
                   <div className="profile-server-summary-actions">
                     <div className="badges separated-badges">
                       <span className="badge">
-                        {server.approved ? "Approved" : "Waiting for approval"}
+                        {server.approved
+                          ? text(pageLanguage, "approved")
+                          : text(pageLanguage, "waiting")}
                       </span>
 
                       {server.premium_status && (
-                        <span className="badge premium">Premium</span>
+                        <span className="badge premium">
+                          {text(pageLanguage, "premium")}
+                        </span>
                       )}
 
                       {server.partner_status && (
-                        <span className="badge partner">Partner</span>
+                        <span className="badge partner">
+                          {text(pageLanguage, "partner")}
+                        </span>
                       )}
 
-                      <span className="badge">Bumps: {server.bumps ?? 0}</span>
+                      <span className="badge">
+                        {text(pageLanguage, "bumps")}: {server.bumps ?? 0}
+                      </span>
                     </div>
 
                     <a
@@ -110,7 +256,7 @@ export default async function ProfilePage() {
                       target="_blank"
                       rel="noreferrer"
                     >
-                      Open Discord Invite
+                      {text(pageLanguage, "openInvite")}
                     </a>
                   </div>
                 </div>
