@@ -241,11 +241,13 @@ export default function HomePage() {
               </div>
 
               <div className="anime-card-body">
-                <img
-                  className="anime-card-icon"
-                  src="/logo.png"
-                  alt="Asko Cafe Icon"
-                />
+                <div className="anime-card-icon-wrap">
+                  <img
+                    className="anime-card-icon"
+                    src="/logo.png"
+                    alt="Asko Cafe Icon"
+                  />
+                </div>
 
                 <div className="anime-card-title-row">
                   <h3>{t(language, "cardTitle")}</h3>
@@ -264,11 +266,14 @@ export default function HomePage() {
                 <div className="anime-card-tags">
                   <span className="anime-card-tag">🎮 Gaming</span>
                   <span className="anime-card-tag">🌸 Anime</span>
+                  <span className="anime-card-tag">🎯 Valorant</span>
+                  <span className="anime-card-tag">🎉 Events</span>
+                  <span className="anime-card-tag">☕ Chill</span>
                   <span className="anime-card-tag">
-                    {t(language, "community")}
+                    💬 {t(language, "community")}
                   </span>
                   <span className="anime-card-tag">
-                    {t(language, "support")}
+                    🛟 {t(language, "support")}
                   </span>
                 </div>
 
