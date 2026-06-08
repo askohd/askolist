@@ -5,8 +5,11 @@ import { useMemo, useState } from "react";
 import ServerCard from "@/components/ServerCard";
 import { categories, initialServers, languages } from "@/lib/demoData";
 import { Server } from "@/lib/types";
+import { t } from "@/lib/i18n";
+import { useLanguage } from "@/components/useLanguage";
 
 export default function HomePage() {
+  const language = useLanguage();
   const [servers, setServers] = useState<Server[]>(initialServers);
 
   const approved = servers.filter((server) => server.approved);
@@ -44,29 +47,29 @@ export default function HomePage() {
   return (
     <main>
       <section className="container hero">
-        <h1>Find Discord Servers Worldwide</h1>
+        <h1>{t(language, "home.title")}</h1>
 
-        <p>Discover, rate and bump Discord communities on Asko Cafe.</p>
+        <p>{t(language, "home.subtitle")}</p>
 
         <div className="hero-actions">
           <Link className="btn" href="/servers">
-            Server entdecken
+            {t(language, "home.discover")}
           </Link>
 
           <Link className="btn secondary" href="/submit">
-            Server eintragen
+            {t(language, "home.submit")}
           </Link>
         </div>
       </section>
 
       <section className="container section">
         <div className="section-title">
-          <h2>Featured Discord Servers</h2>
-          <span className="meta">Premium & Partner</span>
+          <h2>{t(language, "home.featuredTitle")}</h2>
+          <span className="meta">{t(language, "home.featuredMeta")}</span>
         </div>
 
         {featured.length === 0 ? (
-          <div className="card empty">No featured servers yet.</div>
+          <div className="card empty">{t(language, "home.noFeatured")}</div>
         ) : (
           <div className="grid">
             {featured.slice(0, 3).map((server) => (
@@ -82,38 +85,41 @@ export default function HomePage() {
 
       <section className="container section">
         <div className="card search-box">
-          <input className="input" placeholder="Search Discord servers..." />
+          <input
+            className="input"
+            placeholder={t(language, "home.searchPlaceholder")}
+          />
 
           <select>
-            <option>Alle Sprachen</option>
-            {languages.map((language) => (
-              <option key={language}>{language}</option>
+            <option>{t(language, "home.allLanguages")}</option>
+            {languages.map((item) => (
+              <option key={item}>{item}</option>
             ))}
           </select>
 
           <select>
-            <option>Alle Kategorien</option>
+            <option>{t(language, "home.allCategories")}</option>
             {categories.map((category) => (
               <option key={category}>{category}</option>
             ))}
           </select>
 
           <Link className="btn" href="/servers">
-            Search
+            {t(language, "home.search")}
           </Link>
         </div>
       </section>
 
       <section className="container section">
         <div className="section-title">
-          <h2>Popular Categories</h2>
+          <h2>{t(language, "home.popularCategories")}</h2>
         </div>
 
         <div className="badges">
           {shownCategories.map((category) => (
             <Link
               className="badge"
-              href={`/servers?category=${category}`}
+              href={"/servers?category=" + encodeURIComponent(category)}
               key={category}
             >
               {category}
@@ -124,18 +130,18 @@ export default function HomePage() {
 
       <section className="container section">
         <div className="section-title">
-          <h2>Zuletzt gebumpte Server</h2>
+          <h2>{t(language, "home.bumpedTitle")}</h2>
         </div>
 
         {bumped.length === 0 ? (
           <div className="card empty">
-            Noch keine Discord-Server eingetragen.
+            {t(language, "home.noServers1")}
             <br />
-            Sei der Erste und registriere deinen Server.
+            {t(language, "home.noServers2")}
             <br />
             <br />
             <Link className="btn" href="/submit">
-              Server eintragen
+              {t(language, "home.submit")}
             </Link>
           </div>
         ) : (
@@ -153,11 +159,11 @@ export default function HomePage() {
 
       <section className="container section">
         <div className="section-title">
-          <h2>Bestbewertete Server</h2>
+          <h2>{t(language, "home.bestRatedTitle")}</h2>
         </div>
 
         {bestRated.length === 0 ? (
-          <div className="card empty">No rated servers yet.</div>
+          <div className="card empty">{t(language, "home.noRated")}</div>
         ) : (
           <div className="grid">
             {bestRated.slice(0, 6).map((server) => (
