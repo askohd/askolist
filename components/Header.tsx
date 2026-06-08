@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import LoginButton from "./LoginButton";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import TranslatedText from "@/components/TranslatedText";
 import { getCurrentAdmin } from "@/lib/admin";
 
 export default async function Header() {
@@ -24,12 +25,27 @@ export default async function Header() {
         </Link>
 
         <nav className="nav-links">
-          <Link href="/servers">Servers</Link>
-          <Link href="/submit">Submit Server</Link>
-          <Link href="/shop">Shop</Link>
-          <Link href="/profile">Profile</Link>
+          <Link href="/servers">
+            <TranslatedText textKey="nav.servers" />
+          </Link>
 
-          {admin && <Link href="/admin">Admin</Link>}
+          <Link href="/submit">
+            <TranslatedText textKey="nav.submit" />
+          </Link>
+
+          <Link href="/shop">
+            <TranslatedText textKey="nav.shop" />
+          </Link>
+
+          <Link href="/profile">
+            <TranslatedText textKey="nav.profile" />
+          </Link>
+
+          {admin && (
+            <Link href="/admin">
+              <TranslatedText textKey="nav.admin" />
+            </Link>
+          )}
         </nav>
 
         <LanguageSwitcher />
