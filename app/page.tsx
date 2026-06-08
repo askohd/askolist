@@ -243,7 +243,7 @@ export default function HomePage() {
               <div className="anime-card-body">
                 <img
                   className="anime-card-icon"
-                  src="/asko-cafe-icon.png"
+                  src="/logo.png"
                   alt="Asko Cafe Icon"
                 />
 
@@ -356,7 +356,7 @@ export default function HomePage() {
                 serverData.logoUrl ||
                 serverData.logo_url ||
                 serverData.discord_server_icon_url ||
-                "/asko-cafe-icon.png";
+                "/logo.png";
 
               return (
                 <article
