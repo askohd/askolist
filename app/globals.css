@@ -1645,3 +1645,259 @@ select option {
     display: none;
   }
 }
+/* =========================
+   HOME HERO LAYOUT FIX
+   ========================= */
+
+.home-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 56px 0 40px;
+}
+
+.bigger-centered-hero {
+  min-height: 840px;
+}
+
+.home-hero-grid {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 430px;
+  align-items: center;
+  column-gap: 72px;
+}
+
+.home-hero-left {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+}
+
+.home-hero-left-inner {
+  width: 100%;
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.home-hero-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.home-hero-right-pushed {
+  justify-content: flex-end;
+}
+
+.page-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  margin-bottom: 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(109, 208, 255, 0.45);
+  background: linear-gradient(
+    180deg,
+    rgba(30, 39, 85, 0.78) 0%,
+    rgba(20, 14, 52, 0.88) 100%
+  );
+  color: #9ee8ff;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  box-shadow:
+    0 0 0 1px rgba(115, 220, 255, 0.12) inset,
+    0 0 20px rgba(89, 186, 255, 0.28),
+    0 0 38px rgba(217, 93, 255, 0.16);
+}
+
+.hero-title-large {
+  margin: 0;
+  max-width: 760px;
+  text-align: center;
+  font-size: clamp(4.7rem, 7vw, 6.6rem);
+  line-height: 0.92;
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  color: #f7f7fb;
+}
+
+.hero-title-large .gradient-text,
+.hero-title-large span.gradient-text {
+  background: linear-gradient(135deg, #f1d2ff 0%, #d7a7ff 38%, #8fdcff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-text-large {
+  margin: 26px auto 0;
+  max-width: 720px;
+  color: rgba(244, 243, 255, 0.92);
+  font-size: 1.1rem;
+  line-height: 1.65;
+  text-align: center;
+}
+
+.home-hero-search,
+.centered-search {
+  width: 100%;
+  max-width: 640px;
+  margin: 34px auto 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 24px;
+  border: 1px solid rgba(215, 175, 255, 0.18);
+  background: rgba(42, 26, 59, 0.78);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 0 30px rgba(223, 104, 255, 0.12);
+}
+
+.home-hero-search .input,
+.centered-search .input {
+  flex: 1;
+  min-width: 0;
+  height: 56px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+  font-size: 1rem;
+  padding: 0 18px;
+  outline: none;
+}
+
+.home-hero-search .input::placeholder,
+.centered-search .input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.home-hero-search .btn,
+.centered-search .btn {
+  height: 56px;
+  padding: 0 26px;
+  border: 0;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f149d1 0%, #a456ff 45%, #75ddff 100%);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow:
+    0 0 22px rgba(233, 91, 255, 0.38),
+    0 0 32px rgba(107, 220, 255, 0.22);
+}
+
+.hero-actions,
+.centered-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+
+.hero-actions .btn,
+.centered-actions .btn {
+  min-width: 190px;
+}
+
+/* =========================
+   DISCORD CARD RIGHT SIDE
+   ========================= */
+
+.anime-discord-card {
+  position: relative;
+  width: 100%;
+  max-width: 390px;
+  margin-left: auto;
+  border-radius: 34px;
+  overflow: hidden;
+  border: 1px solid rgba(231, 101, 255, 0.38);
+  background:
+    linear-gradient(180deg, rgba(51, 19, 77, 0.98) 0%, rgba(18, 16, 46, 0.98) 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 0 28px rgba(243, 72, 255, 0.34),
+    0 0 56px rgba(93, 204, 255, 0.22);
+}
+
+.anime-card-banner {
+  position: relative;
+  height: 124px;
+  overflow: hidden;
+}
+
+.anime-card-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* optional responsive fix */
+@media (max-width: 1200px) {
+  .home-hero-grid {
+    grid-template-columns: 1fr;
+    row-gap: 40px;
+  }
+
+  .home-hero-right,
+  .home-hero-right-pushed {
+    justify-content: center;
+  }
+
+  .anime-discord-card {
+    margin: 0 auto;
+  }
+
+  .hero-title-large {
+    font-size: clamp(3.9rem, 10vw, 5.6rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .home-hero {
+    padding: 32px 0 24px;
+  }
+
+  .home-hero-grid {
+    padding: 0 18px;
+  }
+
+  .hero-title-large {
+    font-size: clamp(3rem, 13vw, 4.6rem);
+  }
+
+  .hero-text-large {
+    font-size: 0.98rem;
+  }
+
+  .home-hero-search,
+  .centered-search {
+    flex-direction: column;
+    padding: 12px;
+  }
+
+  .home-hero-search .input,
+  .centered-search .input,
+  .home-hero-search .btn,
+  .centered-search .btn {
+    width: 100%;
+  }
+}
