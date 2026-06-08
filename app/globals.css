@@ -4702,3 +4702,492 @@ select option {
     font-size: 1.7rem;
   }
 }
+/* =========================
+   HOME HERO FINAL VERSION
+   ========================= */
+
+.home-page {
+  overflow-x: hidden;
+}
+
+.home-hero {
+  position: relative;
+  min-height: calc(100vh - 74px);
+  padding: 88px 0 72px !important;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 12% 20%, rgba(168, 85, 247, 0.36), transparent 30%),
+    radial-gradient(circle at 88% 34%, rgba(56, 189, 248, 0.24), transparent 34%),
+    radial-gradient(circle at 52% 92%, rgba(236, 72, 153, 0.16), transparent 34%),
+    linear-gradient(135deg, #170026 0%, #080414 45%, #0d2438 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.home-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+  opacity: 0.32;
+  pointer-events: none;
+}
+
+.home-hero-grid-lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 38% 45%, rgba(168, 85, 247, 0.16), transparent 32%),
+    radial-gradient(circle at 75% 55%, rgba(56, 189, 248, 0.13), transparent 34%);
+}
+
+.home-hero-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(70px);
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.home-hero-orb-left {
+  width: 340px;
+  height: 340px;
+  left: -120px;
+  top: 100px;
+  background: rgba(168, 85, 247, 0.36);
+}
+
+.home-hero-orb-right {
+  width: 420px;
+  height: 420px;
+  right: -90px;
+  top: 180px;
+  background: rgba(56, 189, 248, 0.22);
+}
+
+.home-hero .container.home-hero-grid {
+  position: relative;
+  z-index: 2;
+  width: 100% !important;
+  max-width: none !important;
+  padding-left: clamp(32px, 6vw, 110px) !important;
+  padding-right: clamp(32px, 5vw, 90px) !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(390px, 450px) !important;
+  gap: clamp(44px, 6vw, 120px) !important;
+  align-items: center !important;
+}
+
+.home-hero-left {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.home-hero-left-inner {
+  width: 100% !important;
+  max-width: 690px !important;
+  text-align: center !important;
+}
+
+.home-hero-left-inner .page-badge {
+  margin-bottom: 20px !important;
+}
+
+.home-hero-left-inner h1 {
+  margin: 0 auto 22px !important;
+  max-width: 690px !important;
+  color: #ffffff !important;
+  font-size: clamp(62px, 6.7vw, 108px) !important;
+  line-height: 0.88 !important;
+  letter-spacing: -0.065em !important;
+  font-weight: 950 !important;
+  text-shadow:
+    0 0 28px rgba(0, 0, 0, 0.5),
+    0 0 52px rgba(168, 85, 247, 0.22);
+}
+
+.home-hero-left-inner p {
+  margin: 0 auto 28px !important;
+  max-width: 650px !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 20px !important;
+  line-height: 1.65 !important;
+  text-shadow: 0 0 18px rgba(0, 0, 0, 0.65);
+}
+
+.home-hero-search,
+.centered-search {
+  width: min(100%, 610px) !important;
+  margin: 0 auto 24px !important;
+  padding: 12px !important;
+  display: grid !important;
+  grid-template-columns: 1fr auto !important;
+  gap: 12px !important;
+  align-items: center !important;
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, 0.075) !important;
+  border: 1px solid rgba(255, 255, 255, 0.11) !important;
+  box-shadow:
+    0 0 34px rgba(168, 85, 247, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+.home-hero-search .input,
+.centered-search .input {
+  width: 100% !important;
+  height: 54px !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.065) !important;
+  color: #ffffff !important;
+  padding: 0 18px !important;
+  font-weight: 800 !important;
+}
+
+.home-hero-search .input::placeholder,
+.centered-search .input::placeholder {
+  color: rgba(255, 255, 255, 0.48) !important;
+}
+
+.centered-actions {
+  justify-content: center !important;
+}
+
+.hero-actions {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 14px !important;
+  flex-wrap: wrap !important;
+}
+
+/* =========================
+   RIGHT DISCORD CARD
+   ========================= */
+
+.home-hero-right,
+.home-hero-right-pushed {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  justify-self: end !important;
+  width: 100% !important;
+}
+
+.featured-discord-card,
+.prettier-discord-card {
+  position: relative !important;
+  width: 100% !important;
+  max-width: 450px !important;
+  overflow: hidden !important;
+  border-radius: 30px !important;
+  background:
+    linear-gradient(180deg, rgba(28, 18, 52, 0.96), rgba(10, 8, 24, 0.98)) !important;
+  border: 1px solid rgba(154, 132, 255, 0.34) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.035) inset,
+    0 28px 80px rgba(0, 0, 0, 0.46),
+    0 0 60px rgba(168, 85, 247, 0.22),
+    0 0 90px rgba(56, 189, 248, 0.11) !important;
+  backdrop-filter: blur(18px) !important;
+  transform: translateX(18px);
+}
+
+.featured-discord-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 28%),
+    radial-gradient(circle at 22% 12%, rgba(236, 72, 153, 0.18), transparent 32%),
+    radial-gradient(circle at 88% 80%, rgba(56, 189, 248, 0.16), transparent 34%);
+  z-index: 1;
+}
+
+.server-card-glow {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(72px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.server-card-glow-pink {
+  width: 190px;
+  height: 190px;
+  top: -50px;
+  left: -55px;
+  background: rgba(255, 60, 180, 0.34);
+}
+
+.server-card-glow-blue {
+  width: 230px;
+  height: 230px;
+  right: -80px;
+  bottom: 40px;
+  background: rgba(72, 202, 255, 0.24);
+}
+
+.server-card-glow-soft {
+  width: 200px;
+  height: 200px;
+  left: 35%;
+  bottom: -90px;
+  background: rgba(168, 85, 247, 0.22);
+}
+
+.discord-server-banner {
+  position: relative !important;
+  z-index: 2 !important;
+  height: 168px !important;
+  overflow: hidden !important;
+}
+
+.discord-server-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04), rgba(10, 8, 24, 0.72)),
+    radial-gradient(circle at 75% 10%, rgba(255, 60, 180, 0.2), transparent 32%);
+  pointer-events: none;
+}
+
+.discord-server-banner img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+  transform: scale(1.03);
+}
+
+.discord-server-badge {
+  position: absolute !important;
+  left: 18px !important;
+  bottom: 18px !important;
+  z-index: 3 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 8px 13px !important;
+  border-radius: 999px !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  background: rgba(23, 18, 45, 0.72) !important;
+  border: 1px solid rgba(125, 211, 252, 0.46) !important;
+  box-shadow:
+    0 0 18px rgba(56, 189, 248, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.discord-server-content {
+  position: relative !important;
+  z-index: 2 !important;
+  padding: 0 22px 24px !important;
+}
+
+.discord-server-top,
+.new-server-top-layout {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: 86px 1fr !important;
+  gap: 16px !important;
+  align-items: end !important;
+  margin-top: -42px !important;
+  margin-bottom: 18px !important;
+}
+
+.discord-server-icon {
+  width: 86px !important;
+  height: 86px !important;
+  border-radius: 24px !important;
+  object-fit: cover !important;
+  display: block !important;
+  background: rgba(20, 14, 38, 0.96) !important;
+  border: 4px solid rgba(20, 14, 38, 0.98) !important;
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.42),
+    0 0 28px rgba(168, 85, 247, 0.3) !important;
+}
+
+.discord-server-meta {
+  min-width: 0 !important;
+  padding-bottom: 4px !important;
+}
+
+.discord-server-name-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+.discord-server-name-row h3 {
+  margin: 0 !important;
+  color: #ffffff !important;
+  font-size: 32px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.04em !important;
+  text-shadow:
+    0 0 16px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(168, 85, 247, 0.24) !important;
+}
+
+.server-country-emoji {
+  font-size: 22px !important;
+  line-height: 1 !important;
+  filter: drop-shadow(0 0 10px rgba(255, 220, 80, 0.34));
+}
+
+.discord-server-tags {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+.server-tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 7px 11px !important;
+  border-radius: 999px !important;
+  color: #f4f0ff !important;
+  font-size: 12px !important;
+  font-weight: 850 !important;
+  background: rgba(255, 255, 255, 0.065) !important;
+  border: 1px solid rgba(168, 132, 255, 0.24) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
+}
+
+.prettier-description,
+.discord-server-description {
+  margin: 18px 0 22px !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 16px !important;
+  line-height: 1.75 !important;
+  text-align: center !important;
+}
+
+.discord-server-stats {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 12px !important;
+  margin-bottom: 22px !important;
+}
+
+.server-stat-box {
+  padding: 14px 10px !important;
+  border-radius: 18px !important;
+  text-align: center !important;
+  background: rgba(255, 255, 255, 0.052) !important;
+  border: 1px solid rgba(151, 132, 255, 0.22) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 0 20px rgba(168, 85, 247, 0.06) !important;
+}
+
+.server-stat-box strong {
+  display: block !important;
+  margin-bottom: 4px !important;
+  color: #ffffff !important;
+  font-size: 16px !important;
+  font-weight: 950 !important;
+}
+
+.server-stat-box span {
+  color: rgba(228, 232, 255, 0.76) !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+}
+
+.discord-server-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+}
+
+.discord-server-actions .btn {
+  width: 100% !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 1150px) {
+  .home-hero .container.home-hero-grid {
+    grid-template-columns: 1fr !important;
+    max-width: 900px !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+
+  .home-hero-right,
+  .home-hero-right-pushed {
+    justify-content: center !important;
+    justify-self: center !important;
+  }
+
+  .featured-discord-card,
+  .prettier-discord-card {
+    transform: none !important;
+  }
+
+  .home-hero-left-inner {
+    max-width: 760px !important;
+  }
+}
+
+@media (max-width: 680px) {
+  .home-hero {
+    min-height: auto !important;
+    padding: 62px 0 52px !important;
+  }
+
+  .home-hero-left-inner h1 {
+    font-size: 52px !important;
+  }
+
+  .home-hero-left-inner p {
+    font-size: 16px !important;
+  }
+
+  .home-hero-search,
+  .centered-search {
+    grid-template-columns: 1fr !important;
+  }
+
+  .home-hero-search .btn,
+  .centered-search .btn {
+    width: 100% !important;
+  }
+
+  .discord-server-top,
+  .new-server-top-layout {
+    grid-template-columns: 76px 1fr !important;
+    gap: 12px !important;
+  }
+
+  .discord-server-icon {
+    width: 76px !important;
+    height: 76px !important;
+  }
+
+  .discord-server-name-row h3 {
+    font-size: 26px !important;
+  }
+
+  .discord-server-stats,
+  .discord-server-actions {
+    grid-template-columns: 1fr !important;
+  }
+}
