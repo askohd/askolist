@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
@@ -84,12 +83,11 @@ export default function LoginButton({ isAdmin }: { isAdmin?: boolean }) {
         aria-label="User menu öffnen"
       >
         {image ? (
-          <Image
+          <img
             src={image}
             alt={name}
-            width={34}
-            height={34}
             className="user-menu-avatar"
+            referrerPolicy="no-referrer"
           />
         ) : (
           <span className="user-menu-avatar-fallback">
@@ -104,12 +102,11 @@ export default function LoginButton({ isAdmin }: { isAdmin?: boolean }) {
         <div className="user-menu-dropdown">
           <div className="user-menu-head">
             {image ? (
-              <Image
+              <img
                 src={image}
                 alt={name}
-                width={44}
-                height={44}
                 className="user-menu-head-avatar"
+                referrerPolicy="no-referrer"
               />
             ) : (
               <span className="user-menu-head-avatar fallback">
