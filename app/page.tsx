@@ -22,7 +22,7 @@ const HOME_TEXT = {
     cardText:
       "Tritt unserem offiziellen Discord bei, entdecke neue Communities, chatte mit anderen Mitgliedern und bleibe immer auf dem Laufenden.",
     cardExtra:
-      "Chillige Community, Support bei Fragen und regelmäßig neue Updates.",
+      "Chillige Gaming- und Anime-Community, Support bei Fragen und regelmäßig neue Updates.",
     join: "Discord beitreten",
     serverList: "Serverliste öffnen",
     premiumBadge: "Premium Bereich",
@@ -51,7 +51,8 @@ const HOME_TEXT = {
     cardTitle: "Asko Cafe",
     cardText:
       "Join our official Discord, discover new communities, chat with others and stay up to date.",
-    cardExtra: "Chill community, support for questions and regular new updates.",
+    cardExtra:
+      "Chill gaming and anime community, support for questions and regular new updates.",
     join: "Join Discord",
     serverList: "Open server list",
     premiumBadge: "Premium Area",
@@ -81,7 +82,7 @@ const HOME_TEXT = {
     cardText:
       "Rejoins notre Discord officiel, découvre de nouvelles communautés, discute avec les autres et reste informé.",
     cardExtra:
-      "Communauté chill, support pour les questions et nouvelles mises à jour régulières.",
+      "Communauté gaming et anime chill, support pour les questions et mises à jour régulières.",
     join: "Rejoindre Discord",
     serverList: "Ouvrir la liste",
     premiumBadge: "Zone Premium",
@@ -111,7 +112,7 @@ const HOME_TEXT = {
     cardText:
       "Unisciti al nostro Discord ufficiale, scopri nuove community, chatta con altri utenti e resta aggiornato.",
     cardExtra:
-      "Community chill, supporto per domande e nuovi aggiornamenti regolari.",
+      "Community gaming e anime chill, supporto per domande e nuovi aggiornamenti regolari.",
     join: "Entra su Discord",
     serverList: "Apri lista server",
     premiumBadge: "Area Premium",
@@ -141,7 +142,7 @@ const HOME_TEXT = {
     cardText:
       "Dołącz do naszego oficjalnego Discorda, odkrywaj nowe społeczności, rozmawiaj z innymi i bądź na bieżąco.",
     cardExtra:
-      "Luźna społeczność, pomoc przy pytaniach i regularne nowe aktualizacje.",
+      "Luźna społeczność gaming i anime, pomoc przy pytaniach i regularne aktualizacje.",
     join: "Dołącz do Discorda",
     serverList: "Otwórz listę serwerów",
     premiumBadge: "Strefa Premium",
@@ -225,80 +226,98 @@ export default function HomePage() {
           </div>
 
           <div className="home-hero-right home-hero-right-pushed">
-            <article className="hero-server-card-v2">
-              <div className="hero-server-card-v2-glow hero-server-card-v2-glow-pink" />
-              <div className="hero-server-card-v2-glow hero-server-card-v2-glow-blue" />
+            <article className="anime-discord-card">
+              <div className="anime-card-border-glow" />
+              <div className="anime-card-glow anime-card-glow-pink" />
+              <div className="anime-card-glow anime-card-glow-blue" />
 
-              <div className="hero-server-card-v2-banner">
+              <div className="anime-card-banner">
                 <img src="/asko-cafe-banner.png" alt="Asko Cafe Banner" />
 
-                <span className="hero-server-card-v2-badge">
+                <span className="anime-card-official-badge">
+                  <span className="anime-card-discord-dot">●</span>
                   {t(language, "cardBadge")}
                 </span>
               </div>
 
-              <div className="hero-server-card-v2-body">
-                <div className="hero-server-card-v2-head">
-                  <img
-                    className="hero-server-card-v2-icon"
-                    src="/asko-cafe-icon.png"
-                    alt="Asko Cafe Icon"
-                  />
+              <div className="anime-card-body">
+                <img
+                  className="anime-card-icon"
+                  src="/asko-cafe-icon.png"
+                  alt="Asko Cafe Icon"
+                />
 
-                  <div className="hero-server-card-v2-meta">
-                    <div className="hero-server-card-v2-title-row">
-                      <h3>{t(language, "cardTitle")}</h3>
-                      <span className="hero-server-card-v2-flag">🇩🇪</span>
-                    </div>
+                <div className="anime-card-title-row">
+                  <h3>{t(language, "cardTitle")}</h3>
 
-                    <div className="hero-server-card-v2-pills">
-                      <span className="hero-server-card-v2-pill">Deutsch</span>
-
-                      <span className="hero-server-card-v2-pill">
-                        {t(language, "community")}
-                      </span>
-
-                      <span className="hero-server-card-v2-pill">
-                        {t(language, "support")}
-                      </span>
-                    </div>
-                  </div>
+                  <span
+                    className="anime-card-germany-flag"
+                    aria-label="Deutschland"
+                    title="Deutschland"
+                  >
+                    <span />
+                    <span />
+                    <span />
+                  </span>
                 </div>
 
-                <p className="hero-server-card-v2-description">
-                  💜 {t(language, "cardText")}
-                  <br />
-                  ✨ {t(language, "cardExtra")}
-                </p>
+                <div className="anime-card-tags">
+                  <span className="anime-card-tag">🎮 Gaming</span>
+                  <span className="anime-card-tag">🌸 Anime</span>
+                  <span className="anime-card-tag">
+                    {t(language, "community")}
+                  </span>
+                  <span className="anime-card-tag">
+                    {t(language, "support")}
+                  </span>
+                </div>
 
-                <div className="hero-server-card-v2-stats">
-                  <div className="hero-server-card-v2-stat">
+                <div className="anime-card-description">
+                  <p>💜 {t(language, "cardText")}</p>
+                  <p>✨ {t(language, "cardExtra")}</p>
+                </div>
+
+                <div className="anime-card-stats">
+                  <div className="anime-card-stat">
+                    <span className="anime-card-stat-icon">〽</span>
                     <strong>24/7</strong>
-                    <span>{t(language, "active")}</span>
+                    <small>{t(language, "active")}</small>
                   </div>
 
-                  <div className="hero-server-card-v2-stat">
-                    <strong>DE</strong>
-                    <span>{t(language, "language")}</span>
+                  <div className="anime-card-stat">
+                    <span className="anime-card-stat-icon">💬</span>
+                    <strong>
+                      <span
+                        className="anime-card-germany-flag small"
+                        aria-label="Deutschland"
+                        title="Deutschland"
+                      >
+                        <span />
+                        <span />
+                        <span />
+                      </span>
+                    </strong>
+                    <small>{t(language, "language")}</small>
                   </div>
 
-                  <div className="hero-server-card-v2-stat">
+                  <div className="anime-card-stat">
+                    <span className="anime-card-stat-icon">☆</span>
                     <strong>VIP</strong>
-                    <span>{t(language, "features")}</span>
+                    <small>{t(language, "features")}</small>
                   </div>
                 </div>
 
-                <div className="hero-server-card-v2-actions">
+                <div className="anime-card-actions">
                   <a
                     href="https://discord.gg/askocafe"
                     target="_blank"
                     rel="noreferrer"
-                    className="btn"
+                    className="anime-card-main-button"
                   >
                     {t(language, "join")}
                   </a>
 
-                  <Link href="/servers" className="btn secondary">
+                  <Link href="/servers" className="anime-card-secondary-button">
                     {t(language, "serverList")}
                   </Link>
                 </div>
