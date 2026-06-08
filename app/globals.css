@@ -4729,3 +4729,411 @@ select option {
     height: 165px !important;
   }
 }
+/* =====================================================
+   ASKO CAFE DISCORD CARD CLEAN FINAL
+   ===================================================== */
+
+.home-hero-right,
+.home-hero-right-pushed {
+  position: absolute !important;
+  right: clamp(30px, 5vw, 90px) !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 20 !important;
+  width: 430px !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+}
+
+.asko-discord-card {
+  position: relative !important;
+  width: 430px !important;
+  overflow: hidden !important;
+  border-radius: 32px !important;
+  isolation: isolate !important;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(255, 55, 220, 0.22), transparent 36%),
+    radial-gradient(circle at 90% 100%, rgba(67, 217, 255, 0.22), transparent 38%),
+    linear-gradient(180deg, rgba(14, 10, 36, 0.98), rgba(7, 9, 28, 0.99)) !important;
+  border: 1px solid rgba(255, 75, 236, 0.55) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+    0 0 24px rgba(255, 67, 230, 0.55),
+    0 0 64px rgba(63, 214, 255, 0.24),
+    0 32px 95px rgba(0, 0, 0, 0.58) !important;
+}
+
+.asko-discord-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow:
+    0 0 20px rgba(255, 75, 236, 0.75) inset,
+    0 0 20px rgba(63, 214, 255, 0.45) inset;
+}
+
+.asko-discord-card-glow {
+  position: absolute;
+  z-index: 0;
+  border-radius: 999px;
+  filter: blur(76px);
+  pointer-events: none;
+}
+
+.asko-discord-card-glow-pink {
+  width: 230px;
+  height: 230px;
+  left: -90px;
+  top: -80px;
+  background: rgba(255, 45, 210, 0.48);
+}
+
+.asko-discord-card-glow-blue {
+  width: 240px;
+  height: 240px;
+  right: -90px;
+  bottom: -70px;
+  background: rgba(50, 210, 255, 0.36);
+}
+
+.asko-discord-banner {
+  position: relative !important;
+  z-index: 2 !important;
+  height: 168px !important;
+  overflow: hidden !important;
+}
+
+.asko-discord-banner img {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;
+}
+
+.asko-discord-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(4, 4, 18, 0.05), rgba(10, 8, 28, 0.82)),
+    radial-gradient(circle at 82% 8%, rgba(255, 54, 220, 0.26), transparent 36%);
+  pointer-events: none;
+}
+
+.asko-discord-badge {
+  position: absolute !important;
+  left: 20px !important;
+  top: 18px !important;
+  z-index: 5 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 14px !important;
+  border-radius: 999px !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 950 !important;
+  background: rgba(7, 14, 32, 0.76) !important;
+  border: 1px solid rgba(97, 232, 255, 0.62) !important;
+  box-shadow:
+    0 0 16px rgba(97, 232, 255, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+.asko-discord-badge-dot {
+  width: 7px;
+  height: 7px;
+  display: inline-block;
+  border-radius: 999px;
+  background: #8fefff;
+  box-shadow: 0 0 10px rgba(143, 239, 255, 0.95);
+}
+
+.asko-discord-body {
+  position: relative !important;
+  z-index: 3 !important;
+  padding: 22px 22px 24px !important;
+}
+
+.asko-discord-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  margin-top: -46px !important;
+  margin-bottom: 18px !important;
+}
+
+.asko-discord-icon {
+  width: 92px !important;
+  height: 92px !important;
+  flex-shrink: 0 !important;
+  display: block !important;
+  object-fit: cover !important;
+  border-radius: 26px !important;
+  background: #0b0a20 !important;
+  border: 5px solid rgba(9, 9, 27, 0.98) !important;
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.52),
+    0 0 28px rgba(255, 58, 221, 0.45),
+    0 0 44px rgba(63, 214, 255, 0.2) !important;
+}
+
+.asko-discord-title-box {
+  min-width: 0 !important;
+  padding-top: 48px !important;
+}
+
+.asko-discord-title-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-bottom: 5px !important;
+}
+
+.asko-discord-title-row h3 {
+  margin: 0 !important;
+  color: #ffffff !important;
+  font-size: 34px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.045em !important;
+  text-shadow:
+    0 0 18px rgba(255, 255, 255, 0.15),
+    0 0 24px rgba(255, 58, 221, 0.24) !important;
+}
+
+.asko-discord-title-box p {
+  margin: 0 !important;
+  color: rgba(235, 235, 255, 0.7) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+.asko-germany-flag {
+  width: 32px !important;
+  height: 32px !important;
+  flex-shrink: 0 !important;
+  display: inline-grid !important;
+  grid-template-rows: repeat(3, 1fr) !important;
+  overflow: hidden !important;
+  border-radius: 999px !important;
+  border: 2px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow:
+    0 0 12px rgba(255, 206, 64, 0.35),
+    0 0 18px rgba(255, 58, 221, 0.14) !important;
+}
+
+.asko-germany-flag.small {
+  width: 30px !important;
+  height: 30px !important;
+  margin: 0 auto !important;
+}
+
+.asko-germany-flag span:nth-child(1) {
+  background: #000000 !important;
+}
+
+.asko-germany-flag span:nth-child(2) {
+  background: #dd0000 !important;
+}
+
+.asko-germany-flag span:nth-child(3) {
+  background: #ffce00 !important;
+}
+
+.asko-discord-tags {
+  display: flex !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  gap: 9px !important;
+  margin-bottom: 20px !important;
+}
+
+.asko-discord-tags span {
+  min-height: 31px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 7px 12px !important;
+  border-radius: 999px !important;
+  color: #f8f4ff !important;
+  font-size: 12px !important;
+  font-weight: 950 !important;
+  text-transform: uppercase !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.04)) !important;
+  border: 1px solid rgba(181, 122, 255, 0.38) !important;
+  box-shadow:
+    0 0 13px rgba(255, 58, 221, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.asko-discord-description {
+  margin-bottom: 20px !important;
+  padding: 18px 18px !important;
+  border-radius: 23px !important;
+  text-align: center !important;
+  color: rgba(255, 255, 255, 0.94) !important;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(255, 58, 221, 0.12), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.03)) !important;
+  border: 1px solid rgba(156, 126, 255, 0.32) !important;
+  box-shadow:
+    0 0 22px rgba(255, 58, 221, 0.11),
+    0 0 26px rgba(63, 214, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+.asko-discord-description p {
+  margin: 0 !important;
+  font-size: 14px !important;
+  line-height: 1.65 !important;
+  font-weight: 800 !important;
+}
+
+.asko-discord-description p + p {
+  margin-top: 10px !important;
+}
+
+.asko-discord-stats {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 12px !important;
+  margin-bottom: 20px !important;
+}
+
+.asko-discord-stats div {
+  min-height: 82px !important;
+  padding: 13px 8px !important;
+  border-radius: 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(117, 139, 255, 0.15), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.064), rgba(255, 255, 255, 0.032)) !important;
+  border: 1px solid rgba(145, 140, 255, 0.3) !important;
+}
+
+.asko-discord-stats strong {
+  color: #ffffff !important;
+  font-size: 22px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+}
+
+.asko-discord-stats span {
+  margin-top: 7px !important;
+  color: rgba(219, 226, 255, 0.78) !important;
+  font-size: 11px !important;
+  font-weight: 950 !important;
+  text-transform: uppercase !important;
+}
+
+.asko-discord-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+}
+
+.asko-discord-primary,
+.asko-discord-secondary {
+  min-height: 56px !important;
+  border-radius: 18px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 16px !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  color: #ffffff !important;
+  font-size: 14px !important;
+  font-weight: 950 !important;
+  line-height: 1.2 !important;
+  border: 1px solid rgba(255, 255, 255, 0.13) !important;
+}
+
+.asko-discord-primary {
+  background:
+    linear-gradient(135deg, #b24dff 0%, #ff35b4 48%, #47d9ff 100%) !important;
+  box-shadow:
+    0 0 20px rgba(255, 58, 221, 0.42),
+    0 0 24px rgba(63, 214, 255, 0.22) !important;
+}
+
+.asko-discord-secondary {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.038)) !important;
+  border-color: rgba(90, 225, 255, 0.36) !important;
+}
+
+.asko-discord-primary:hover,
+.asko-discord-secondary:hover {
+  transform: translateY(-2px) !important;
+  filter: brightness(1.08) !important;
+}
+
+/* alte anime-card Styles neutralisieren */
+.anime-discord-card,
+.anime-card-icon,
+.anime-card-icon-wrap,
+.anime-card-title-row,
+.anime-card-tags,
+.anime-card-description,
+.anime-card-stats,
+.anime-card-actions {
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 1250px) {
+  .home-hero-right,
+  .home-hero-right-pushed {
+    position: relative !important;
+    right: auto !important;
+    top: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    justify-content: center !important;
+    margin-top: 44px !important;
+  }
+
+  .asko-discord-card {
+    width: min(100%, 430px) !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .asko-discord-card {
+    width: 100% !important;
+    border-radius: 26px !important;
+  }
+
+  .asko-discord-header {
+    flex-direction: column !important;
+    text-align: center !important;
+    margin-top: -40px !important;
+  }
+
+  .asko-discord-title-box {
+    padding-top: 0 !important;
+  }
+
+  .asko-discord-title-row {
+    justify-content: center !important;
+  }
+
+  .asko-discord-title-row h3 {
+    font-size: 38px !important;
+  }
+
+  .asko-discord-stats,
+  .asko-discord-actions {
+    grid-template-columns: 1fr !important;
+  }
+}
