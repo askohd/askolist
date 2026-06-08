@@ -7,13 +7,13 @@ const LANGUAGES: Array<{
   code: LanguageCode;
   label: string;
   short: string;
-  flag: string;
+  flagClass: string;
 }> = [
-  { code: "de", label: "Deutsch", short: "DE", flag: "🇩🇪" },
-  { code: "en", label: "English", short: "EN", flag: "🇬🇧" },
-  { code: "fr", label: "Français", short: "FR", flag: "🇫🇷" },
-  { code: "it", label: "Italiano", short: "IT", flag: "🇮🇹" },
-  { code: "pl", label: "Polski", short: "PL", flag: "🇵🇱" },
+  { code: "de", label: "Deutsch", short: "DE", flagClass: "flag-de" },
+  { code: "en", label: "English", short: "EN", flagClass: "flag-en" },
+  { code: "fr", label: "Français", short: "FR", flagClass: "flag-fr" },
+  { code: "it", label: "Italiano", short: "IT", flagClass: "flag-it" },
+  { code: "pl", label: "Polski", short: "PL", flagClass: "flag-pl" },
 ];
 
 function saveLanguage(language: LanguageCode) {
@@ -66,8 +66,12 @@ export default function LanguageSwitcher() {
         className="language-switcher-button"
         onClick={() => setOpen((current) => !current)}
         aria-label="Website Sprache auswählen"
+        title={currentLanguage.label}
       >
-        <span className="language-flag">{currentLanguage.flag}</span>
+        <span
+          className={"flag-icon " + currentLanguage.flagClass}
+          aria-hidden="true"
+        />
       </button>
 
       {open && (
@@ -82,7 +86,7 @@ export default function LanguageSwitcher() {
               }
               onClick={() => chooseLanguage(item.code)}
             >
-              <span>{item.flag}</span>
+              <span className={"flag-icon " + item.flagClass} />
               <span>{item.label}</span>
               <strong>{item.short}</strong>
             </button>
