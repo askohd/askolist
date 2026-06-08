@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/components/useLanguage";
-import { initialServers } from "@/lib/demoData";
 import type { Server } from "@/lib/types";
 
 type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
@@ -246,30 +245,34 @@ function isPartnerServer(serverData: any) {
 export default function HomePage() {
   const language = useLanguage() as UiLanguage;
 
-  const premiumServers = useMemo(() => {
-    return initialServers
-      .filter((server: any) => server.approved !== false)
-      .filter(
-        (server: any) =>
-          server.premiumStatus ||
-          server.premium_status ||
-          server.partnerStatus ||
-          server.partner_status
-      )
-      .slice(0, 6);
+  const [premiumServers, setPremiumServers] = useState<Server[]>([]);
+
+  useEffect(() => {
+    async function loadPremiumServers() {
+      try {
+        const response = await fetch("/api/premium-servers", {
+          cache: "no-store",
+        });
+
+        const data = await response.json();
+
+        setPremiumServers(data.servers || []);
+      } catch (error) {
+        console.error("Could not load premium servers:", error);
+        setPremiumServers([]);
+      }
+    }
+
+    loadPremiumServers();
   }, []);
 
+  const premiumGridServers = useMemo(() => {
+    return premiumServers.slice(0, 6);
+  }, [premiumServers]);
+
   const allShowcaseServers = useMemo(() => {
-    return initialServers
-      .filter((server: any) => server.approved !== false)
-      .filter(
-        (server: any) =>
-          server.premiumStatus ||
-          server.premium_status ||
-          server.partnerStatus ||
-          server.partner_status
-      );
-  }, []);
+    return premiumServers;
+  }, [premiumServers]);
 
   const [showcaseStartIndex, setShowcaseStartIndex] = useState(0);
 
@@ -1304,7 +1307,7 @@ export default function HomePage() {
           </p>
         </div>
 
-        {premiumServers.length === 0 ? (
+        {premiumGridServers.length === 0 ? (
           <div
             style={{
               maxWidth: "620px",
@@ -1332,7 +1335,7 @@ export default function HomePage() {
               gap: "22px",
             }}
           >
-            {premiumServers.map((server: Server, index: number) => {
+            {premiumGridServers.map((server: Server, index: number) => {
               const serverData = server as any;
 
               const serverName =
