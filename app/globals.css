@@ -4081,3 +4081,320 @@ select option {
     height: 165px;
   }
 }
+/* =====================================================
+   FIX ANIME CARD TOP + LOGO + GERMAN FLAG
+   GANZ UNTEN in globals.css einfügen
+   ===================================================== */
+
+.anime-discord-card {
+  width: 430px !important;
+  border-radius: 34px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  isolation: isolate !important;
+  background:
+    radial-gradient(circle at 18% 4%, rgba(255, 54, 221, 0.24), transparent 34%),
+    radial-gradient(circle at 90% 95%, rgba(53, 211, 255, 0.24), transparent 36%),
+    linear-gradient(180deg, rgba(12, 11, 34, 0.99), rgba(7, 10, 28, 0.99)) !important;
+  border: 1px solid rgba(255, 87, 246, 0.58) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+    0 0 24px rgba(255, 64, 231, 0.7),
+    0 0 55px rgba(53, 211, 255, 0.35),
+    0 34px 100px rgba(0, 0, 0, 0.62) !important;
+}
+
+.anime-card-border-glow {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 5 !important;
+  pointer-events: none !important;
+  border-radius: inherit !important;
+  box-shadow:
+    0 0 22px rgba(255, 79, 240, 0.84) inset,
+    0 0 22px rgba(52, 210, 255, 0.55) inset !important;
+}
+
+.anime-card-banner {
+  position: relative !important;
+  z-index: 2 !important;
+  height: 178px !important;
+  overflow: hidden !important;
+}
+
+.anime-card-banner img {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;
+  transform: scale(1.04) !important;
+}
+
+.anime-card-banner::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background:
+    linear-gradient(to bottom, rgba(5, 5, 20, 0.02), rgba(8, 8, 26, 0.86)),
+    radial-gradient(circle at 78% 8%, rgba(255, 61, 220, 0.26), transparent 35%) !important;
+  pointer-events: none !important;
+}
+
+.anime-card-official-badge {
+  position: absolute !important;
+  left: 22px !important;
+  top: 18px !important;
+  bottom: auto !important;
+  z-index: 4 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 9px 16px !important;
+  border-radius: 999px !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 950 !important;
+  background: rgba(8, 16, 36, 0.74) !important;
+  border: 1px solid rgba(90, 225, 255, 0.65) !important;
+  box-shadow:
+    0 0 18px rgba(69, 215, 255, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+.anime-card-discord-dot {
+  color: #9ee7ff !important;
+  text-shadow: 0 0 12px rgba(90, 225, 255, 0.95) !important;
+}
+
+.anime-card-body {
+  position: relative !important;
+  z-index: 3 !important;
+  padding: 0 24px 26px !important;
+  text-align: center !important;
+}
+
+.anime-card-icon {
+  width: 110px !important;
+  height: 110px !important;
+  margin: -54px auto 16px !important;
+  display: block !important;
+  object-fit: cover !important;
+  border-radius: 30px !important;
+  background: #090a1d !important;
+  border: 5px solid rgba(9, 10, 29, 0.98) !important;
+  box-shadow:
+    0 18px 36px rgba(0, 0, 0, 0.52),
+    0 0 30px rgba(255, 61, 220, 0.6),
+    0 0 48px rgba(53, 211, 255, 0.28) !important;
+}
+
+.anime-card-title-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  margin-bottom: 16px !important;
+}
+
+.anime-card-title-row h3 {
+  margin: 0 !important;
+  color: #ffffff !important;
+  font-size: 46px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.055em !important;
+  text-shadow:
+    0 0 20px rgba(255, 255, 255, 0.18),
+    0 0 30px rgba(255, 61, 220, 0.35) !important;
+}
+
+.anime-card-germany-flag {
+  width: 38px !important;
+  height: 38px !important;
+  display: inline-grid !important;
+  grid-template-rows: repeat(3, 1fr) !important;
+  overflow: hidden !important;
+  border-radius: 999px !important;
+  border: 2px solid rgba(255, 255, 255, 0.24) !important;
+  box-shadow:
+    0 0 12px rgba(255, 206, 64, 0.4),
+    0 0 20px rgba(255, 61, 220, 0.18) !important;
+  flex-shrink: 0 !important;
+}
+
+.anime-card-germany-flag.small {
+  width: 34px !important;
+  height: 34px !important;
+  margin: 0 auto !important;
+}
+
+.anime-card-germany-flag span:nth-child(1) {
+  background: #000000 !important;
+}
+
+.anime-card-germany-flag span:nth-child(2) {
+  background: #dd0000 !important;
+}
+
+.anime-card-germany-flag span:nth-child(3) {
+  background: #ffce00 !important;
+}
+
+.anime-card-tags {
+  display: flex !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin-bottom: 22px !important;
+}
+
+.anime-card-tag {
+  min-height: 34px !important;
+  padding: 8px 15px !important;
+  border-radius: 999px !important;
+  color: #f7f3ff !important;
+  font-size: 13px !important;
+  font-weight: 950 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.01em !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.045)) !important;
+  border: 1px solid rgba(178, 121, 255, 0.42) !important;
+  box-shadow:
+    0 0 14px rgba(255, 61, 220, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09) !important;
+}
+
+.anime-card-description {
+  margin-bottom: 24px !important;
+  padding: 22px 20px !important;
+  border-radius: 24px !important;
+  color: rgba(255, 255, 255, 0.94) !important;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(255, 61, 220, 0.13), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.056), rgba(255, 255, 255, 0.03)) !important;
+  border: 1px solid rgba(155, 125, 255, 0.34) !important;
+  box-shadow:
+    0 0 24px rgba(255, 61, 220, 0.13),
+    0 0 28px rgba(53, 211, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.065) !important;
+}
+
+.anime-card-description p {
+  margin: 0 !important;
+  font-size: 16px !important;
+  line-height: 1.75 !important;
+  font-weight: 750 !important;
+}
+
+.anime-card-description p + p {
+  margin-top: 10px !important;
+}
+
+.anime-card-stats {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 14px !important;
+  margin-bottom: 24px !important;
+}
+
+.anime-card-stat {
+  min-height: 92px !important;
+  padding: 14px 10px !important;
+  border-radius: 22px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(118, 140, 255, 0.16), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.034)) !important;
+  border: 1px solid rgba(145, 140, 255, 0.34) !important;
+  box-shadow:
+    0 0 20px rgba(93, 128, 255, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.anime-card-stat-icon {
+  margin-bottom: 6px !important;
+  color: #b37cff !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+  text-shadow: 0 0 14px rgba(179, 124, 255, 0.6) !important;
+}
+
+.anime-card-stat strong {
+  color: #ffffff !important;
+  font-size: 24px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+}
+
+.anime-card-stat small {
+  margin-top: 7px !important;
+  color: rgba(218, 225, 255, 0.78) !important;
+  font-size: 12px !important;
+  font-weight: 950 !important;
+  text-transform: uppercase !important;
+}
+
+.anime-card-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 14px !important;
+}
+
+.anime-card-main-button,
+.anime-card-secondary-button {
+  min-height: 62px !important;
+  border-radius: 20px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 18px !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  color: #ffffff !important;
+  font-weight: 950 !important;
+  line-height: 1.2 !important;
+  border: 1px solid rgba(255, 255, 255, 0.13) !important;
+}
+
+.anime-card-main-button {
+  background:
+    linear-gradient(135deg, #b24dff 0%, #ff35b4 48%, #47d9ff 100%) !important;
+  box-shadow:
+    0 0 22px rgba(255, 61, 220, 0.5),
+    0 0 26px rgba(53, 211, 255, 0.25) !important;
+}
+
+.anime-card-secondary-button {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.038)) !important;
+  border-color: rgba(90, 225, 255, 0.4) !important;
+  box-shadow:
+    0 0 22px rgba(53, 211, 255, 0.17),
+    inset 0 1px 0 rgba(255, 255, 255, 0.075) !important;
+}
+
+.anime-card-main-button:hover,
+.anime-card-secondary-button:hover {
+  transform: translateY(-2px) !important;
+  filter: brightness(1.08) !important;
+}
+
+@media (max-width: 600px) {
+  .anime-card-title-row h3 {
+    font-size: 38px !important;
+  }
+
+  .anime-card-stats,
+  .anime-card-actions {
+    grid-template-columns: 1fr !important;
+  }
+
+  .anime-card-banner {
+    height: 165px !important;
+  }
+}
