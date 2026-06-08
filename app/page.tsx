@@ -1,83 +1,80 @@
-<main>
-  <section className="home-hero">
-    <div className="home-hero-overlay" />
-    <div className="container home-hero-inner">
-      <span className="page-badge">Asko Cafe Network</span>
+<section className="home-hero">
+  <div className="container home-hero-grid">
+    <div className="home-hero-left">
+      <div className="home-hero-left-inner">
+        <span className="page-badge">Asko Cafe Network</span>
 
-      <h1>Entdecke Discord Server</h1>
+        <h1>Entdecke Discord Server</h1>
 
-      <p>
-        Finde aktive Communities, bewerte Server und entdecke neue Discord
-        Netzwerke auf Asko Cafe.
-      </p>
+        <p>
+          Finde aktive Communities, bewerte Server und entdecke neue Discord
+          Netzwerke auf Asko Cafe.
+        </p>
 
-      <div className="home-hero-search">
-        <input type="text" placeholder="Server suchen" />
-        <button className="btn">Suchen</button>
-      </div>
+        <div className="home-hero-search">
+          <input
+            type="text"
+            className="input"
+            placeholder="Server suchen"
+          />
+          <button className="btn" type="button">
+            Suchen
+          </button>
+        </div>
 
-      <div className="hero-actions">
-        <Link href="/servers" className="btn">
-          Server entdecken
-        </Link>
+        <div className="hero-actions">
+          <a className="btn" href="/servers">
+            Server entdecken
+          </a>
 
-        <Link href="/submit" className="btn secondary">
-          Server eintragen
-        </Link>
-      </div>
-    </div>
-  </section>
-
-  <section className="container home-featured-slider">
-    <div className="featured-slider-card">
-      <button className="slider-arrow left">‹</button>
-
-      <div className="featured-slider-content">
-        <div className="featured-server-avatar" />
-        <div className="featured-server-info">
-          <h2>~ Sakura 🌸</h2>
-          <p>
-            Bienvenue sur Sakura 🌸 Une communauté chill et conviviale pour
-            discuter, partager et rencontrer du monde.
-          </p>
-
-          <div className="featured-server-actions">
-            <button className="btn secondary">Server beitreten</button>
-            <button className="btn tertiary">Details</button>
-          </div>
+          <a className="btn secondary" href="/submit">
+            Server eintragen
+          </a>
         </div>
       </div>
-
-      <button className="slider-arrow right">›</button>
     </div>
-  </section>
 
-  <section className="container home-filter-box">
-    <div className="filter-card">
-      <div className="filter-top-row">
-        <input type="text" placeholder="Server suchen..." />
-        <Link href="/submit" className="btn">
-          Server hinzufügen
-        </Link>
-      </div>
+    <div className="home-hero-right">
+      <article className="discord-server-card">
+        <div className="discord-server-banner">
+          <img
+            src="/asko-cafe-banner.png"
+            alt="Asko Cafe Banner"
+          />
+        </div>
 
-      <div className="filter-bottom-row">
-        <select>
-          <option>Alle Sprachen</option>
-        </select>
+        <div className="discord-server-content">
+          <div className="discord-server-top">
+            <img
+              className="discord-server-icon"
+              src="/asko-cafe-icon.png"
+              alt="Asko Cafe Icon"
+            />
 
-        <select>
-          <option>Alle Kategorien</option>
-        </select>
+            <div className="discord-server-meta">
+              <h3>Asko Cafe</h3>
+              <span>Discord Community</span>
+            </div>
+          </div>
 
-        <select>
-          <option>Alle Tags</option>
-        </select>
+          <p className="discord-server-description">
+            Offizieller Asko Cafe Discord Server. Tritt unserer Community bei,
+            entdecke neue Server, tausche dich mit anderen aus und bleibe immer
+            auf dem Laufenden.
+          </p>
 
-        <select>
-          <option>Kürzlich gepusht</option>
-        </select>
-      </div>
+          <div className="discord-server-actions">
+            <a
+              href="https://discord.gg/askocafe"
+              target="_blank"
+              rel="noreferrer"
+              className="btn"
+            >
+              Discord beitreten
+            </a>
+          </div>
+        </div>
+      </article>
     </div>
-  </section>
-</main>
+  </div>
+</section>
