@@ -11,30 +11,35 @@ type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
 const HEADER_TEXT = {
   de: {
     home: "Home",
+    servers: "Serverliste",
     submit: "Server eintragen",
     shop: "Shop",
     support: "Support",
   },
   en: {
     home: "Home",
+    servers: "Server List",
     submit: "Submit Server",
     shop: "Shop",
     support: "Support",
   },
   fr: {
     home: "Accueil",
+    servers: "Liste des serveurs",
     submit: "Ajouter un serveur",
     shop: "Boutique",
     support: "Support",
   },
   it: {
     home: "Home",
+    servers: "Lista server",
     submit: "Aggiungi server",
     shop: "Shop",
     support: "Supporto",
   },
   pl: {
     home: "Start",
+    servers: "Lista serwerów",
     submit: "Dodaj serwer",
     shop: "Sklep",
     support: "Pomoc",
@@ -68,6 +73,11 @@ export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
           <Link href="/">
             <span className="nav-link-icon">🏠</span>
             {t(language, "home")}
+          </Link>
+
+          <Link href="/servers">
+            <span className="nav-link-icon">📋</span>
+            {t(language, "servers")}
           </Link>
 
           <Link href="/submit">
