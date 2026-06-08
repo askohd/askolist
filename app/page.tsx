@@ -191,9 +191,13 @@ export default function HomePage() {
         <div className="container home-hero-grid">
           <div className="home-hero-left">
             <div className="home-hero-left-inner">
-              <span className="page-badge">{t(language, "badge")}</span>
+              <span className="page-badge cool-badge">
+                <span>✦</span>
+                <span>{t(language, "badge")}</span>
+                <span>✧</span>
+              </span>
 
-              <h1 className="hero-title-large">
+              <h1 className="hero-title-large hero-title-smaller">
                 {t(language, "title")
                   .split(" ")
                   .map((word, index) => (
@@ -247,7 +251,7 @@ export default function HomePage() {
               </div>
 
               <div className="anime-card-body">
-                <div className="anime-card-icon-wrap">
+                <div className="anime-card-icon-wrap bigger-icon-only">
                   <img
                     className="anime-card-icon"
                     src="/asko-cafe-icon.png"
@@ -322,7 +326,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="anime-card-actions">
+                <div className="anime-card-actions single-button-only">
                   <a
                     href="https://discord.gg/askocafe"
                     target="_blank"
