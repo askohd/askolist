@@ -510,14 +510,14 @@ export default function HomePage() {
             <div
               style={{
                 position: "relative",
-                padding: "66px 18px 18px",
+                padding: "92px 18px 18px",
                 textAlign: "center",
               }}
             >
               <div
                 style={{
                   position: "absolute",
-                  top: "-46px",
+                  top: "-18px",
                   left: "50%",
                   transform: "translateX(-50%)",
                   width: "104px",
