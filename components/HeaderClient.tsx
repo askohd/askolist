@@ -13,36 +13,26 @@ const HEADER_TEXT = {
     servers: "Server",
     submit: "Server eintragen",
     shop: "Shop",
-    dashboard: "Server Dashboard",
-    admin: "Admin",
   },
   en: {
     servers: "Servers",
     submit: "Submit Server",
     shop: "Shop",
-    dashboard: "Server Dashboard",
-    admin: "Admin",
   },
   fr: {
     servers: "Serveurs",
     submit: "Ajouter un serveur",
     shop: "Boutique",
-    dashboard: "Tableau de bord serveur",
-    admin: "Admin",
   },
   it: {
     servers: "Server",
     submit: "Aggiungi server",
     shop: "Shop",
-    dashboard: "Dashboard server",
-    admin: "Admin",
   },
   pl: {
     servers: "Serwery",
     submit: "Dodaj serwer",
     shop: "Sklep",
-    dashboard: "Panel serwera",
-    admin: "Admin",
   },
 } as const;
 
@@ -73,9 +63,6 @@ export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
           <Link href="/servers">{t(language, "servers")}</Link>
           <Link href="/submit">{t(language, "submit")}</Link>
           <Link href="/shop">{t(language, "shop")}</Link>
-          <Link href="/profile">{t(language, "dashboard")}</Link>
-
-          {isAdmin && <Link href="/admin">{t(language, "admin")}</Link>}
         </nav>
 
         <div className="nav-right-actions">
