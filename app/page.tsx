@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLanguage } from "@/components/useLanguage";
 import { initialServers } from "@/lib/demoData";
 import type { Server } from "@/lib/types";
@@ -259,8 +259,8 @@ export default function HomePage() {
       .slice(0, 6);
   }, []);
 
-  const showcaseServers = useMemo(() => {
-    const premiumOrPartner = initialServers
+  const allShowcaseServers = useMemo(() => {
+    return initialServers
       .filter((server: any) => server.approved !== false)
       .filter(
         (server: any) =>
@@ -268,54 +268,48 @@ export default function HomePage() {
           server.premium_status ||
           server.partnerStatus ||
           server.partner_status
-      )
-      .slice(0, 3);
+      );
+  }, []);
 
-    if (premiumOrPartner.length > 0) {
-      return premiumOrPartner;
+  const [showcaseStartIndex, setShowcaseStartIndex] = useState(0);
+
+  useEffect(() => {
+    if (allShowcaseServers.length <= 3) return;
+
+    const interval = window.setInterval(() => {
+      setShowcaseStartIndex((currentIndex) => {
+        const nextIndex = currentIndex + 3;
+
+        if (nextIndex >= allShowcaseServers.length) {
+          return 0;
+        }
+
+        return nextIndex;
+      });
+    }, 10000);
+
+    return () => window.clearInterval(interval);
+  }, [allShowcaseServers.length]);
+
+  const showcaseServers = useMemo(() => {
+    if (allShowcaseServers.length <= 3) {
+      return allShowcaseServers;
     }
 
-    const approvedServers = initialServers
-      .filter((server: any) => server.approved !== false)
-      .slice(0, 3);
+    const selectedServers = allShowcaseServers.slice(
+      showcaseStartIndex,
+      showcaseStartIndex + 3
+    );
 
-    if (approvedServers.length > 0) {
-      return approvedServers;
+    if (selectedServers.length === 3) {
+      return selectedServers;
     }
 
     return [
-      {
-        id: "asko-demo-1",
-        serverName: "Asko Gaming",
-        description: "Gaming, Anime, Events und Community-Abende auf Asko Cafe.",
-        bannerUrl: "/asko-cafe-banner.png",
-        logoUrl: "/asko-cafe-icon.png",
-        inviteLink: "/servers",
-        premiumStatus: true,
-        partnerStatus: false,
-      },
-      {
-        id: "asko-demo-2",
-        serverName: "Anime Lounge",
-        description: "Eine gemütliche Anime-Community mit Chats, Memes und Events.",
-        bannerUrl: "/asko-cafe-banner.png",
-        logoUrl: "/asko-cafe-icon.png",
-        inviteLink: "/servers",
-        premiumStatus: false,
-        partnerStatus: true,
-      },
-      {
-        id: "asko-demo-3",
-        serverName: "Valorant Hub",
-        description: "Finde Mates, spiele Ranked und entdecke neue Gaming-Server.",
-        bannerUrl: "/asko-cafe-banner.png",
-        logoUrl: "/asko-cafe-icon.png",
-        inviteLink: "/servers",
-        premiumStatus: true,
-        partnerStatus: true,
-      },
+      ...selectedServers,
+      ...allShowcaseServers.slice(0, 3 - selectedServers.length),
     ];
-  }, []);
+  }, [allShowcaseServers, showcaseStartIndex]);
 
   return (
     <main
@@ -345,8 +339,8 @@ export default function HomePage() {
         .hero-premium-showcase {
           position: absolute;
           left: 22px;
-          top: 50%;
-          transform: translateY(-50%);
+          top: 96px;
+          transform: none;
           width: 320px;
           z-index: 10;
           display: flex;
