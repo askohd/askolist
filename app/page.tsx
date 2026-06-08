@@ -182,182 +182,733 @@ export default function HomePage() {
   }, []);
 
   return (
-    <main className="home-page">
-      <section className="home-hero bigger-centered-hero">
-        <div className="home-hero-grid-lines" />
-        <div className="home-hero-orb home-hero-orb-left" />
-        <div className="home-hero-orb home-hero-orb-right" />
+    <main
+      style={{
+        minHeight: "100vh",
+        background:
+          "radial-gradient(circle at 0% 25%, rgba(137, 32, 191, 0.32), transparent 32%), radial-gradient(circle at 100% 28%, rgba(56, 151, 202, 0.28), transparent 36%), linear-gradient(135deg, #07000f 0%, #10051f 44%, #13263d 100%)",
+        color: "#ffffff",
+        overflow: "hidden",
+      }}
+    >
+      <section
+        style={{
+          position: "relative",
+          minHeight: "calc(100vh - 80px)",
+          padding: "72px 28px 70px",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px)",
+            backgroundSize: "92px 92px",
+            opacity: 0.22,
+            pointerEvents: "none",
+          }}
+        />
 
-        <div className="container home-hero-grid">
-          <div className="home-hero-left">
-            <div className="home-hero-left-inner">
-              <span className="page-badge cool-badge">
-                <span>✦</span>
-                <span>{t(language, "badge")}</span>
-                <span>✧</span>
-              </span>
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            left: "-120px",
+            top: "120px",
+            width: "380px",
+            height: "380px",
+            borderRadius: "999px",
+            background: "rgba(184, 61, 255, 0.32)",
+            filter: "blur(90px)",
+            pointerEvents: "none",
+          }}
+        />
 
-              <h1 className="hero-title-large hero-title-smaller">
-                {t(language, "title")
-                  .split(" ")
-                  .map((word, index) => (
-                    <span key={index}>{word}</span>
-                  ))}
-              </h1>
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            right: "90px",
+            top: "160px",
+            width: "420px",
+            height: "420px",
+            borderRadius: "999px",
+            background: "rgba(76, 196, 255, 0.22)",
+            filter: "blur(100px)",
+            pointerEvents: "none",
+          }}
+        />
 
-              <p className="hero-text-large">{t(language, "text")}</p>
+        <div
+          style={{
+            position: "relative",
+            zIndex: 2,
+            width: "100%",
+            maxWidth: "1580px",
+            margin: "0 auto",
+            minHeight: "660px",
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              maxWidth: "720px",
+              margin: "0 auto",
+              textAlign: "center",
+              position: "relative",
+              zIndex: 3,
+            }}
+          >
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "12px",
+                padding: "13px 28px",
+                borderRadius: "999px",
+                background:
+                  "linear-gradient(180deg, rgba(29, 45, 91, 0.82), rgba(16, 14, 52, 0.9))",
+                border: "1px solid rgba(112, 219, 255, 0.48)",
+                boxShadow:
+                  "0 0 0 1px rgba(255,255,255,0.04) inset, 0 0 24px rgba(92,211,255,0.24), 0 0 42px rgba(192,91,255,0.16)",
+                color: "#9deaff",
+                fontSize: "18px",
+                fontWeight: 900,
+                letterSpacing: "0.02em",
+                marginBottom: "34px",
+              }}
+            >
+              <span style={{ color: "#69d9ff" }}>✦</span>
+              <span>{t(language, "badge")}</span>
+              <span style={{ color: "#c876ff" }}>✧</span>
+            </span>
 
-              <form
-                className="home-hero-search centered-search"
-                action="/servers"
+            <h1
+              style={{
+                margin: 0,
+                fontSize: "clamp(54px, 5.9vw, 88px)",
+                lineHeight: 0.92,
+                letterSpacing: "-0.055em",
+                fontWeight: 950,
+                textAlign: "center",
+                color: "#ffffff",
+                textShadow: "0 18px 48px rgba(0,0,0,0.42)",
+              }}
+            >
+              {t(language, "title")
+                .split(" ")
+                .map((word, index, words) => {
+                  const isLastWord = index === words.length - 1;
+
+                  return (
+                    <span
+                      key={index}
+                      style={{
+                        display: "block",
+                        background: isLastWord
+                          ? "linear-gradient(90deg, #f4e1ff 0%, #d18dff 48%, #86d9ff 100%)"
+                          : undefined,
+                        WebkitBackgroundClip: isLastWord ? "text" : undefined,
+                        backgroundClip: isLastWord ? "text" : undefined,
+                        WebkitTextFillColor: isLastWord
+                          ? "transparent"
+                          : undefined,
+                      }}
+                    >
+                      {word}
+                    </span>
+                  );
+                })}
+            </h1>
+
+            <p
+              style={{
+                maxWidth: "650px",
+                margin: "24px auto 0",
+                fontSize: "16px",
+                lineHeight: 1.65,
+                color: "rgba(246, 243, 255, 0.92)",
+              }}
+            >
+              {t(language, "text")}
+            </p>
+
+            <form
+              action="/servers"
+              style={{
+                width: "100%",
+                maxWidth: "610px",
+                margin: "32px auto 0",
+                padding: "10px",
+                borderRadius: "23px",
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                background: "rgba(55, 35, 70, 0.72)",
+                border: "1px solid rgba(235, 195, 255, 0.15)",
+                boxShadow:
+                  "0 0 0 1px rgba(255,255,255,0.035) inset, 0 0 32px rgba(220,102,255,0.14)",
+              }}
+            >
+              <input
+                type="text"
+                name="q"
+                placeholder={t(language, "searchPlaceholder")}
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  height: "52px",
+                  padding: "0 18px",
+                  borderRadius: "16px",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  background: "rgba(255,255,255,0.045)",
+                  color: "#ffffff",
+                  outline: "none",
+                  fontSize: "15px",
+                  fontWeight: 700,
+                }}
+              />
+
+              <button
+                type="submit"
+                style={{
+                  height: "52px",
+                  padding: "0 26px",
+                  border: 0,
+                  borderRadius: "16px",
+                  background:
+                    "linear-gradient(135deg, #f149d1 0%, #a456ff 45%, #75ddff 100%)",
+                  color: "#ffffff",
+                  fontSize: "15px",
+                  fontWeight: 900,
+                  cursor: "pointer",
+                  boxShadow:
+                    "0 0 22px rgba(233,91,255,0.36), 0 0 32px rgba(107,220,255,0.2)",
+                }}
               >
-                <input
-                  type="text"
-                  name="q"
-                  className="input"
-                  placeholder={t(language, "searchPlaceholder")}
-                />
+                {t(language, "search")}
+              </button>
+            </form>
 
-                <button className="btn" type="submit">
-                  {t(language, "search")}
-                </button>
-              </form>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "14px",
+                marginTop: "24px",
+                flexWrap: "wrap",
+              }}
+            >
+              <Link
+                href="/servers"
+                style={{
+                  minHeight: "48px",
+                  minWidth: "180px",
+                  padding: "0 24px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "16px",
+                  background:
+                    "linear-gradient(135deg, #b54cff 0%, #f35acd 45%, #6fddff 100%)",
+                  color: "#ffffff",
+                  fontWeight: 900,
+                  textDecoration: "none",
+                  boxShadow:
+                    "0 0 24px rgba(211,85,255,0.28), 0 0 28px rgba(103,218,255,0.16)",
+                }}
+              >
+                {t(language, "discover")}
+              </Link>
 
-              <div className="hero-actions centered-actions">
-                <Link className="btn" href="/servers">
-                  {t(language, "discover")}
-                </Link>
-
-                <Link className="btn secondary" href="/submit">
-                  {t(language, "submit")}
-                </Link>
-              </div>
+              <Link
+                href="/submit"
+                style={{
+                  minHeight: "48px",
+                  minWidth: "180px",
+                  padding: "0 24px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "16px",
+                  background: "rgba(255,255,255,0.055)",
+                  border: "1px solid rgba(255,255,255,0.14)",
+                  color: "#ffffff",
+                  fontWeight: 900,
+                  textDecoration: "none",
+                }}
+              >
+                {t(language, "submit")}
+              </Link>
             </div>
           </div>
 
-          <div className="home-hero-right home-hero-right-pushed">
-            <article className="anime-discord-card">
-              <div className="anime-card-border-glow" />
-              <div className="anime-card-glow anime-card-glow-pink" />
-              <div className="anime-card-glow anime-card-glow-blue" />
+          <aside
+            style={{
+              position: "absolute",
+              right: 0,
+              top: "50%",
+              transform: "translateY(-50%)",
+              width: "390px",
+              zIndex: 4,
+            }}
+          >
+            <article
+              style={{
+                width: "390px",
+                borderRadius: "34px",
+                overflow: "hidden",
+                position: "relative",
+                background:
+                  "linear-gradient(180deg, rgba(51, 19, 77, 0.98) 0%, rgba(18, 16, 46, 0.98) 100%)",
+                border: "1px solid rgba(231, 101, 255, 0.38)",
+                boxShadow:
+                  "0 0 0 1px rgba(255,255,255,0.04) inset, 0 0 28px rgba(243,72,255,0.34), 0 0 56px rgba(93,204,255,0.22)",
+              }}
+            >
+              <div
+                style={{
+                  height: "130px",
+                  position: "relative",
+                  overflow: "hidden",
+                  borderBottom: "1px solid rgba(255,255,255,0.07)",
+                }}
+              >
+                <img
+                  src="/asko-cafe-banner.png"
+                  alt="Asko Cafe Banner"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    display: "block",
+                    objectFit: "cover",
+                    objectPosition: "center",
+                    filter: "none",
+                    transform: "none",
+                  }}
+                />
 
-              <div className="anime-card-banner">
-                <img src="/asko-cafe-banner.png" alt="Asko Cafe Banner" />
-
-                <span className="anime-card-official-badge">
-                  <span className="anime-card-discord-dot">●</span>
+                <span
+                  style={{
+                    position: "absolute",
+                    top: "14px",
+                    left: "16px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "8px 14px",
+                    borderRadius: "999px",
+                    background: "rgba(20, 24, 52, 0.9)",
+                    border: "1px solid rgba(112,214,255,0.45)",
+                    color: "#ffffff",
+                    fontSize: "13px",
+                    fontWeight: 900,
+                    boxShadow: "0 0 18px rgba(95,214,255,0.22)",
+                  }}
+                >
+                  <span style={{ color: "#86ebff" }}>●</span>
                   {t(language, "cardBadge")}
                 </span>
               </div>
 
-              <div className="anime-card-body">
-                <div className="anime-card-icon-wrap bigger-icon-only">
+              <div
+                style={{
+                  position: "relative",
+                  padding: "66px 18px 18px",
+                  textAlign: "center",
+                }}
+              >
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "-46px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: "104px",
+                    height: "104px",
+                    borderRadius: "28px",
+                    background:
+                      "linear-gradient(180deg, rgba(23,13,42,0.98), rgba(36,16,56,0.98))",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    boxShadow:
+                      "0 12px 28px rgba(0,0,0,0.38), 0 0 22px rgba(224,89,255,0.2)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    overflow: "hidden",
+                  }}
+                >
                   <img
-                    className="anime-card-icon"
                     src="/asko-cafe-icon.png"
                     alt="Asko Cafe Icon"
+                    style={{
+                      width: "86px",
+                      height: "86px",
+                      objectFit: "contain",
+                      display: "block",
+                      filter: "none",
+                      transform: "none",
+                    }}
                   />
                 </div>
 
-                <div className="anime-card-title-row">
-                  <h3>{t(language, "cardTitle")}</h3>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "10px",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <h3
+                    style={{
+                      margin: 0,
+                      fontSize: "31px",
+                      lineHeight: 1,
+                      fontWeight: 950,
+                      color: "#ffffff",
+                      letterSpacing: "-0.04em",
+                      textShadow: "0 0 22px rgba(255,255,255,0.12)",
+                    }}
+                  >
+                    {t(language, "cardTitle")}
+                  </h3>
 
                   <span
-                    className="anime-card-germany-flag"
                     aria-label="Deutschland"
                     title="Deutschland"
+                    style={{
+                      fontSize: "27px",
+                      lineHeight: 1,
+                      filter: "drop-shadow(0 0 10px rgba(255,205,50,0.24))",
+                    }}
                   >
-                    <span />
-                    <span />
-                    <span />
+                    🇩🇪
                   </span>
                 </div>
 
-                <p className="anime-card-subtitle">
+                <p
+                  style={{
+                    margin: "7px 0 0",
+                    color: "rgba(241,238,255,0.72)",
+                    fontSize: "13px",
+                    fontWeight: 800,
+                  }}
+                >
                   Gaming • Anime • Community
                 </p>
 
-                <div className="anime-card-tags">
-                  <span className="anime-card-tag">🎮 Gaming</span>
-                  <span className="anime-card-tag">🌸 Anime</span>
-                  <span className="anime-card-tag">🎯 Valorant</span>
-                  <span className="anime-card-tag">🎉 Events</span>
-                  <span className="anime-card-tag">☕ Chill</span>
-                  <span className="anime-card-tag">
-                    💬 {t(language, "community")}
-                  </span>
-                  <span className="anime-card-tag">
-                    🛟 {t(language, "support")}
-                  </span>
+                <div
+                  style={{
+                    marginTop: "18px",
+                    display: "flex",
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                    gap: "9px",
+                  }}
+                >
+                  {[
+                    "🎮 Gaming",
+                    "🌸 Anime",
+                    "🎯 Valorant",
+                    "🎉 Events",
+                    "☕ Chill",
+                    `💬 ${t(language, "community")}`,
+                    `🛟 ${t(language, "support")}`,
+                  ].map((tag) => (
+                    <span
+                      key={tag}
+                      style={{
+                        minHeight: "31px",
+                        padding: "0 12px",
+                        borderRadius: "999px",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background: "rgba(80, 34, 116, 0.48)",
+                        border: "1px solid rgba(202,115,255,0.36)",
+                        color: "#ffffff",
+                        fontSize: "12px",
+                        fontWeight: 900,
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
                 </div>
 
-                <div className="anime-card-description">
-                  <p>💜 {t(language, "cardText")}</p>
-                  <p>✨ {t(language, "cardExtra")}</p>
-                </div>
-
-                <div className="anime-card-stats">
-                  <div className="anime-card-stat">
-                    <span className="anime-card-stat-icon">〽</span>
-                    <strong>24/7</strong>
-                    <small>{t(language, "active")}</small>
-                  </div>
-
-                  <div className="anime-card-stat">
-                    <span className="anime-card-stat-icon">💬</span>
-                    <strong>
-                      <span
-                        className="anime-card-germany-flag small"
-                        aria-label="Deutschland"
-                        title="Deutschland"
-                      >
-                        <span />
-                        <span />
-                        <span />
-                      </span>
-                    </strong>
-                    <small>{t(language, "language")}</small>
-                  </div>
-
-                  <div className="anime-card-stat">
-                    <span className="anime-card-stat-icon">☆</span>
-                    <strong>VIP</strong>
-                    <small>{t(language, "features")}</small>
-                  </div>
-                </div>
-
-                <div className="anime-card-actions single-button-only">
-                  <a
-                    href="https://discord.gg/askocafe"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="anime-card-main-button"
+                <div
+                  style={{
+                    marginTop: "18px",
+                    padding: "17px 15px",
+                    borderRadius: "22px",
+                    background:
+                      "linear-gradient(180deg, rgba(55,36,79,0.58), rgba(38,62,91,0.48))",
+                    border: "1px solid rgba(172,120,255,0.26)",
+                    color: "#ffffff",
+                  }}
+                >
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: "13px",
+                      lineHeight: 1.6,
+                      fontWeight: 800,
+                    }}
                   >
-                    {t(language, "join")}
-                  </a>
+                    💜 {t(language, "cardText")}
+                  </p>
+
+                  <p
+                    style={{
+                      margin: "12px 0 0",
+                      fontSize: "13px",
+                      lineHeight: 1.6,
+                      fontWeight: 800,
+                    }}
+                  >
+                    ✨ {t(language, "cardExtra")}
+                  </p>
                 </div>
+
+                <div
+                  style={{
+                    marginTop: "16px",
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, 1fr)",
+                    gap: "10px",
+                  }}
+                >
+                  <div
+                    style={{
+                      minHeight: "76px",
+                      borderRadius: "18px",
+                      background:
+                        "linear-gradient(180deg, rgba(43,36,74,0.74), rgba(37,61,92,0.66))",
+                      border: "1px solid rgba(142,202,255,0.22)",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <strong
+                      style={{
+                        color: "#ffffff",
+                        fontSize: "20px",
+                        lineHeight: 1,
+                        fontWeight: 950,
+                      }}
+                    >
+                      24/7
+                    </strong>
+
+                    <small
+                      style={{
+                        marginTop: "6px",
+                        color: "rgba(255,255,255,0.72)",
+                        fontSize: "10px",
+                        fontWeight: 900,
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {t(language, "active")}
+                    </small>
+                  </div>
+
+                  <div
+                    style={{
+                      minHeight: "76px",
+                      borderRadius: "18px",
+                      background:
+                        "linear-gradient(180deg, rgba(43,36,74,0.74), rgba(37,61,92,0.66))",
+                      border: "1px solid rgba(142,202,255,0.22)",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <strong
+                      style={{
+                        fontSize: "25px",
+                        lineHeight: 1,
+                      }}
+                    >
+                      🇩🇪
+                    </strong>
+
+                    <small
+                      style={{
+                        marginTop: "6px",
+                        color: "rgba(255,255,255,0.72)",
+                        fontSize: "10px",
+                        fontWeight: 900,
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {t(language, "language")}
+                    </small>
+                  </div>
+
+                  <div
+                    style={{
+                      minHeight: "76px",
+                      borderRadius: "18px",
+                      background:
+                        "linear-gradient(180deg, rgba(43,36,74,0.74), rgba(37,61,92,0.66))",
+                      border: "1px solid rgba(142,202,255,0.22)",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <strong
+                      style={{
+                        color: "#ffffff",
+                        fontSize: "20px",
+                        lineHeight: 1,
+                        fontWeight: 950,
+                      }}
+                    >
+                      VIP
+                    </strong>
+
+                    <small
+                      style={{
+                        marginTop: "6px",
+                        color: "rgba(255,255,255,0.72)",
+                        fontSize: "10px",
+                        fontWeight: 900,
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {t(language, "features")}
+                    </small>
+                  </div>
+                </div>
+
+                <a
+                  href="https://discord.gg/askocafe"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{
+                    marginTop: "16px",
+                    minHeight: "52px",
+                    width: "100%",
+                    borderRadius: "17px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background:
+                      "linear-gradient(90deg, #d14cff 0%, #f35ad6 45%, #74dfff 100%)",
+                    color: "#ffffff",
+                    textDecoration: "none",
+                    fontSize: "15px",
+                    fontWeight: 950,
+                    boxShadow:
+                      "0 0 25px rgba(208,85,255,0.34), 0 0 28px rgba(112,221,255,0.18)",
+                  }}
+                >
+                  {t(language, "join")}
+                </a>
               </div>
             </article>
-          </div>
+          </aside>
         </div>
       </section>
 
-      <section className="container premium-section">
-        <div className="premium-section-heading">
-          <span className="page-badge">{t(language, "premiumBadge")}</span>
+      <section
+        style={{
+          position: "relative",
+          zIndex: 2,
+          maxWidth: "1180px",
+          margin: "0 auto",
+          padding: "40px 28px 90px",
+        }}
+      >
+        <div
+          style={{
+            textAlign: "center",
+            maxWidth: "720px",
+            margin: "0 auto 32px",
+          }}
+        >
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "9px 18px",
+              borderRadius: "999px",
+              background: "rgba(255,255,255,0.06)",
+              border: "1px solid rgba(112,219,255,0.32)",
+              color: "#9deaff",
+              fontSize: "13px",
+              fontWeight: 900,
+            }}
+          >
+            {t(language, "premiumBadge")}
+          </span>
 
-          <h2>{t(language, "premiumTitle")}</h2>
+          <h2
+            style={{
+              margin: "18px 0 10px",
+              fontSize: "clamp(34px, 4vw, 54px)",
+              lineHeight: 1,
+              letterSpacing: "-0.04em",
+            }}
+          >
+            {t(language, "premiumTitle")}
+          </h2>
 
-          <p>{t(language, "premiumText")}</p>
+          <p
+            style={{
+              margin: 0,
+              color: "rgba(246,243,255,0.78)",
+              lineHeight: 1.65,
+            }}
+          >
+            {t(language, "premiumText")}
+          </p>
         </div>
 
         {premiumServers.length === 0 ? (
-          <div className="card empty premium-empty-card">
-            <h3>{t(language, "noPremiumTitle")}</h3>
-            <p>{t(language, "noPremiumText")}</p>
+          <div
+            style={{
+              maxWidth: "620px",
+              margin: "0 auto",
+              padding: "28px",
+              borderRadius: "24px",
+              background: "rgba(255,255,255,0.055)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              textAlign: "center",
+            }}
+          >
+            <h3 style={{ margin: "0 0 10px" }}>
+              {t(language, "noPremiumTitle")}
+            </h3>
+
+            <p style={{ margin: 0, color: "rgba(246,243,255,0.78)" }}>
+              {t(language, "noPremiumText")}
+            </p>
           </div>
         ) : (
-          <div className="premium-servers-grid">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap: "22px",
+            }}
+          >
             {premiumServers.map((server: Server, index: number) => {
               const serverData = server as any;
 
@@ -380,45 +931,86 @@ export default function HomePage() {
               return (
                 <article
                   key={serverData.id || serverName}
-                  className="premium-server-card"
                   style={{
+                    overflow: "hidden",
+                    borderRadius: "24px",
+                    background: "rgba(255,255,255,0.055)",
+                    border: "1px solid rgba(255,255,255,0.1)",
                     animationDelay: `${index * 0.15}s`,
                   }}
                 >
-                  <div className="premium-server-card-banner">
-                    <img src={banner} alt={serverName} />
+                  <div style={{ height: "130px", overflow: "hidden" }}>
+                    <img
+                      src={banner}
+                      alt={serverName}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
                   </div>
 
-                  <div className="premium-server-card-body">
-                    <div className="premium-server-card-top">
+                  <div style={{ padding: "18px" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "12px",
+                      }}
+                    >
                       <img
-                        className="premium-server-card-icon"
                         src={icon}
                         alt={serverName}
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          borderRadius: "16px",
+                          objectFit: "cover",
+                        }}
                       />
 
                       <div>
-                        <h3>{serverName}</h3>
-
-                        <p>
+                        <h3 style={{ margin: 0 }}>{serverName}</h3>
+                        <p
+                          style={{
+                            margin: "4px 0 0",
+                            color: "rgba(246,243,255,0.72)",
+                          }}
+                        >
                           {serverData.category} • {serverData.language}
                         </p>
                       </div>
                     </div>
 
-                    <div className="premium-server-card-description">
+                    <p
+                      style={{
+                        margin: "14px 0 16px",
+                        color: "rgba(246,243,255,0.78)",
+                        lineHeight: 1.55,
+                      }}
+                    >
                       {shortText(serverData.description, 110)}
-                    </div>
+                    </p>
 
-                    <div className="premium-server-card-actions">
-                      <Link href="/servers" className="btn secondary">
-                        {t(language, "serverList")}
-                      </Link>
-
-                      <Link href="/servers" className="btn">
-                        {t(language, "discover")}
-                      </Link>
-                    </div>
+                    <Link
+                      href="/servers"
+                      style={{
+                        minHeight: "44px",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "100%",
+                        borderRadius: "14px",
+                        color: "#ffffff",
+                        textDecoration: "none",
+                        fontWeight: 900,
+                        background:
+                          "linear-gradient(135deg, #b54cff 0%, #f35acd 45%, #6fddff 100%)",
+                      }}
+                    >
+                      {t(language, "discover")}
+                    </Link>
                   </div>
                 </article>
               );
