@@ -3047,3 +3047,295 @@ select option {
     max-width: 520px;
   }
 }
+/* ================================
+   HERO SERVER CARD V2 FINAL OVERRIDE
+   ganz unten in globals.css einfügen
+   ================================ */
+
+.home-hero .container.home-hero-grid {
+  max-width: none !important;
+  width: 100% !important;
+  padding-left: clamp(40px, 6vw, 120px) !important;
+  padding-right: clamp(40px, 4vw, 70px) !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 440px !important;
+  gap: clamp(60px, 8vw, 150px) !important;
+  align-items: center !important;
+}
+
+.home-hero-left {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.home-hero-left-inner {
+  max-width: 860px !important;
+  text-align: center !important;
+}
+
+.home-hero-right,
+.home-hero-right-pushed {
+  display: flex !important;
+  justify-content: flex-end !important;
+  justify-self: end !important;
+  width: 100% !important;
+}
+
+.hero-server-card-v2 {
+  position: relative !important;
+  width: 100% !important;
+  max-width: 440px !important;
+  overflow: hidden !important;
+  border-radius: 34px !important;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255, 61, 190, 0.18), transparent 35%),
+    radial-gradient(circle at 85% 85%, rgba(75, 207, 255, 0.16), transparent 35%),
+    linear-gradient(180deg, rgba(28, 16, 56, 0.98), rgba(9, 8, 24, 0.98)) !important;
+  border: 1px solid rgba(170, 140, 255, 0.36) !important;
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 0 55px rgba(181, 92, 255, 0.22),
+    0 0 90px rgba(77, 211, 255, 0.12) !important;
+  isolation: isolate !important;
+  transform: translateX(22px) !important;
+}
+
+.hero-server-card-v2::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent 28%),
+    linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.03) 100%);
+}
+
+.hero-server-card-v2-glow {
+  position: absolute !important;
+  border-radius: 999px !important;
+  filter: blur(70px) !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+.hero-server-card-v2-glow-pink {
+  width: 220px !important;
+  height: 220px !important;
+  top: -80px !important;
+  left: -70px !important;
+  background: rgba(255, 60, 190, 0.35) !important;
+}
+
+.hero-server-card-v2-glow-blue {
+  width: 240px !important;
+  height: 240px !important;
+  right: -90px !important;
+  bottom: 30px !important;
+  background: rgba(70, 210, 255, 0.25) !important;
+}
+
+.hero-server-card-v2-banner {
+  position: relative !important;
+  z-index: 2 !important;
+  height: 190px !important;
+  overflow: hidden !important;
+}
+
+.hero-server-card-v2-banner img {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;
+  transform: scale(1.04) !important;
+}
+
+.hero-server-card-v2-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.05), rgba(9, 8, 24, 0.82)),
+    radial-gradient(circle at 80% 15%, rgba(255, 60, 190, 0.2), transparent 32%);
+  pointer-events: none;
+}
+
+.hero-server-card-v2-badge {
+  position: absolute !important;
+  left: 20px !important;
+  bottom: 18px !important;
+  z-index: 3 !important;
+  padding: 8px 14px !important;
+  border-radius: 999px !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  background: rgba(16, 13, 34, 0.78) !important;
+  border: 1px solid rgba(103, 232, 249, 0.46) !important;
+  box-shadow:
+    0 0 18px rgba(103, 232, 249, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+.hero-server-card-v2-body {
+  position: relative !important;
+  z-index: 2 !important;
+  padding: 0 24px 26px !important;
+}
+
+.hero-server-card-v2-head {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  gap: 12px !important;
+  margin-top: -54px !important;
+  margin-bottom: 20px !important;
+}
+
+.hero-server-card-v2-icon {
+  width: 104px !important;
+  height: 104px !important;
+  border-radius: 30px !important;
+  object-fit: cover !important;
+  background: #161126 !important;
+  border: 5px solid rgba(14, 10, 28, 0.98) !important;
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.45),
+    0 0 35px rgba(188, 90, 255, 0.35),
+    0 0 55px rgba(77, 211, 255, 0.1) !important;
+}
+
+.hero-server-card-v2-meta {
+  width: 100% !important;
+  padding-top: 0 !important;
+}
+
+.hero-server-card-v2-title-row {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 10px !important;
+  margin-bottom: 12px !important;
+}
+
+.hero-server-card-v2-title-row h3 {
+  margin: 0 !important;
+  color: #ffffff !important;
+  font-size: 42px !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.045em !important;
+  text-shadow:
+    0 0 18px rgba(0, 0, 0, 0.55),
+    0 0 25px rgba(186, 104, 255, 0.28) !important;
+}
+
+.hero-server-card-v2-flag {
+  font-size: 24px !important;
+  line-height: 1 !important;
+  filter: drop-shadow(0 0 10px rgba(255, 220, 80, 0.35)) !important;
+}
+
+.hero-server-card-v2-pills {
+  display: flex !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  gap: 9px !important;
+}
+
+.hero-server-card-v2-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 32px !important;
+  padding: 7px 14px !important;
+  border-radius: 999px !important;
+  color: #f5f2ff !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(170, 140, 255, 0.28) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 16px rgba(168, 85, 247, 0.08) !important;
+}
+
+.hero-server-card-v2-description {
+  margin: 0 0 22px !important;
+  padding: 18px !important;
+  border-radius: 22px !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  font-size: 16px !important;
+  line-height: 1.75 !important;
+  text-align: center !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 0 28px rgba(168, 85, 247, 0.08) !important;
+}
+
+.hero-server-card-v2-stats {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  margin-bottom: 22px !important;
+}
+
+.hero-server-card-v2-stat {
+  padding: 16px 10px !important;
+  border-radius: 20px !important;
+  text-align: center !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.035)) !important;
+  border: 1px solid rgba(160, 145, 255, 0.22) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 22px rgba(168, 85, 247, 0.07) !important;
+}
+
+.hero-server-card-v2-stat strong {
+  display: block !important;
+  margin-bottom: 5px !important;
+  color: #ffffff !important;
+  font-size: 18px !important;
+  font-weight: 950 !important;
+}
+
+.hero-server-card-v2-stat span {
+  color: rgba(231, 235, 255, 0.78) !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+}
+
+.hero-server-card-v2-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+}
+
+.hero-server-card-v2-actions .btn {
+  width: 100% !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+@media (max-width: 1150px) {
+  .home-hero .container.home-hero-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .home-hero-right,
+  .home-hero-right-pushed {
+    justify-content: center !important;
+    justify-self: center !important;
+  }
+
+  .hero-server-card-v2 {
+    transform: none !important;
+    max-width: 520px !important;
+  }
+}
