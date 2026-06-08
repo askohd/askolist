@@ -1,102 +1,90 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { normalizeLanguageCode, type LanguageCode } from "@/lib/i18n";
 
-const LANGUAGES = [
-  {
-    code: "de",
-    label: "Deutsch",
-    flagClass: "flag-de",
-  },
-  {
-    code: "en",
-    label: "English",
-    flagClass: "flag-en",
-  },
-  {
-    code: "fr",
-    label: "Français",
-    flagClass: "flag-fr",
-  },
-  {
-    code: "it",
-    label: "Italiano",
-    flagClass: "flag-it",
-  },
-  {
-    code: "pl",
-    label: "Polski",
-    flagClass: "flag-pl",
-  },
+const LANGUAGES: Array<{
+  code: LanguageCode;
+  label: string;
+  short: string;
+  flag: string;
+}> = [
+  { code: "de", label: "Deutsch", short: "DE", flag: "🇩🇪" },
+  { code: "en", label: "English", short: "EN", flag: "🇬🇧" },
+  { code: "fr", label: "Français", short: "FR", flag: "🇫🇷" },
+  { code: "it", label: "Italiano", short: "IT", flag: "🇮🇹" },
+  { code: "pl", label: "Polski", short: "PL", flag: "🇵🇱" },
 ];
 
+function saveLanguage(language: LanguageCode) {
+  localStorage.setItem("asko_language", language);
+
+  document.cookie =
+    "asko_language=" +
+    language +
+    "; path=/; max-age=31536000; SameSite=Lax";
+
+  window.dispatchEvent(
+    new CustomEvent("asko-language-change", {
+      detail: language,
+    })
+  );
+}
+
 export default function LanguageSwitcher() {
+  const [language, setLanguage] = useState<LanguageCode>("de");
   const [open, setOpen] = useState(false);
-  const [selectedCode, setSelectedCode] = useState("de");
 
   useEffect(() => {
-    const savedLanguage = localStorage.getItem("asko_language");
+    const savedLanguage = normalizeLanguageCode(
+      localStorage.getItem("asko_language")
+    );
 
-    if (savedLanguage) {
-      setSelectedCode(savedLanguage);
-    }
-  }, []);
-
-  const selectedLanguage =
-    LANGUAGES.find((language) => language.code === selectedCode) ??
-    LANGUAGES[0];
-
-  function selectLanguage(code: string) {
-    localStorage.setItem("asko_language", code);
+    setLanguage(savedLanguage);
 
     document.cookie =
       "asko_language=" +
-      code +
+      savedLanguage +
       "; path=/; max-age=31536000; SameSite=Lax";
+  }, []);
 
-    setSelectedCode(code);
+  const currentLanguage =
+    LANGUAGES.find((item) => item.code === language) ?? LANGUAGES[0];
+
+  function chooseLanguage(nextLanguage: LanguageCode) {
+    setLanguage(nextLanguage);
+    saveLanguage(nextLanguage);
     setOpen(false);
 
-    window.dispatchEvent(
-      new CustomEvent("asko-language-change", {
-        detail: code,
-      })
-    );
+    window.location.reload();
   }
 
   return (
     <div className="language-switcher">
       <button
         type="button"
-        className="language-switcher-button flag-only"
+        className="language-switcher-button"
         onClick={() => setOpen((current) => !current)}
-        aria-label="Sprache auswählen"
+        aria-label="Website Sprache auswählen"
       >
-        <span
-          className={"language-flag " + selectedLanguage.flagClass}
-          aria-hidden="true"
-        />
+        <span className="language-flag">{currentLanguage.flag}</span>
       </button>
 
       {open && (
         <div className="language-switcher-menu">
-          {LANGUAGES.map((language) => (
+          {LANGUAGES.map((item) => (
             <button
-              key={language.code}
+              key={item.code}
               type="button"
               className={
                 "language-switcher-option " +
-                (language.code === selectedCode
-                  ? "language-switcher-option-active"
-                  : "")
+                (item.code === language ? "active" : "")
               }
-              onClick={() => selectLanguage(language.code)}
+              onClick={() => chooseLanguage(item.code)}
             >
-              <span
-                className={"language-flag " + language.flagClass}
-                aria-hidden="true"
-              />
-              <span>{language.label}</span>
+              <span>{item.flag}</span>
+              <span>{item.label}</span>
+              <strong>{item.short}</strong>
             </button>
           ))}
         </div>
