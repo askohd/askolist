@@ -7,6 +7,8 @@ import type { Server } from "@/lib/types";
 
 type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
 
+const SHOWCASE_ROTATION_MS = 10000;
+
 const HOME_TEXT = {
   de: {
     badge: "Asko Cafe Network",
@@ -37,8 +39,11 @@ const HOME_TEXT = {
     featured: "Featured",
     viewServer: "Server ansehen",
     joinServer: "Discord beitreten",
+    loadingServers: "Server werden geladen...",
+    noPremiumFound: "Keine Premium- oder Partner-Server gefunden.",
+    nextServersIn: "Nächste Server in",
+    visibleNow: "Server aktuell sichtbar",
   },
-
   en: {
     badge: "Asko Cafe Network",
     title: "Discover Discord Servers",
@@ -68,8 +73,11 @@ const HOME_TEXT = {
     featured: "Featured",
     viewServer: "View server",
     joinServer: "Join Discord",
+    loadingServers: "Loading servers...",
+    noPremiumFound: "No premium or partner servers found.",
+    nextServersIn: "Next servers in",
+    visibleNow: "servers currently visible",
   },
-
   fr: {
     badge: "Réseau Asko Cafe",
     title: "Découvre des serveurs Discord",
@@ -99,8 +107,11 @@ const HOME_TEXT = {
     featured: "Featured",
     viewServer: "Voir le serveur",
     joinServer: "Rejoindre Discord",
+    loadingServers: "Chargement des serveurs...",
+    noPremiumFound: "Aucun serveur premium ou partenaire trouvé.",
+    nextServersIn: "Prochains serveurs dans",
+    visibleNow: "serveurs visibles actuellement",
   },
-
   it: {
     badge: "Asko Cafe Network",
     title: "Scopri server Discord",
@@ -130,8 +141,11 @@ const HOME_TEXT = {
     featured: "Featured",
     viewServer: "Vedi server",
     joinServer: "Entra su Discord",
+    loadingServers: "Caricamento server...",
+    noPremiumFound: "Nessun server premium o partner trovato.",
+    nextServersIn: "Prossimi server tra",
+    visibleNow: "server visibili ora",
   },
-
   pl: {
     badge: "Asko Cafe Network",
     title: "Odkryj serwery Discord",
@@ -161,6 +175,10 @@ const HOME_TEXT = {
     featured: "Featured",
     viewServer: "Zobacz serwer",
     joinServer: "Dołącz do Discorda",
+    loadingServers: "Ładowanie serwerów...",
+    noPremiumFound: "Nie znaleziono serwerów premium lub partner.",
+    nextServersIn: "Następne serwery za",
+    visibleNow: "serwery widoczne teraz",
   },
 } as const;
 
@@ -181,7 +199,6 @@ const HOME_OVERVIEW_TEXT = {
     daysAgoSingular: "vor {value} Tag",
     daysAgoPlural: "vor {value} Tagen",
   },
-
   en: {
     overviewTitle: "Recently bumped servers",
     overviewText:
@@ -198,7 +215,6 @@ const HOME_OVERVIEW_TEXT = {
     daysAgoSingular: "{value} day ago",
     daysAgoPlural: "{value} days ago",
   },
-
   fr: {
     overviewTitle: "Serveurs récemment bumpés",
     overviewText:
@@ -215,7 +231,6 @@ const HOME_OVERVIEW_TEXT = {
     daysAgoSingular: "il y a {value} jour",
     daysAgoPlural: "il y a {value} jours",
   },
-
   it: {
     overviewTitle: "Server bumpati di recente",
     overviewText:
@@ -232,7 +247,6 @@ const HOME_OVERVIEW_TEXT = {
     daysAgoSingular: "{value} giorno fa",
     daysAgoPlural: "{value} giorni fa",
   },
-
   pl: {
     overviewTitle: "Ostatnio bumpowane serwery",
     overviewText:
@@ -529,12 +543,22 @@ function formatLastBump(lastBump: string | null | undefined, language: UiLanguag
   return replaceValue(ot(language, "daysAgoPlural"), days);
 }
 
+function isEnabled(value: any) {
+  return value === true || value === "true" || value === 1 || value === "1";
+}
+
 function isPremiumServer(serverData: any) {
-  return Boolean(serverData.premiumStatus || serverData.premium_status);
+  return (
+    isEnabled(serverData.premiumStatus) ||
+    isEnabled(serverData.premium_status)
+  );
 }
 
 function isPartnerServer(serverData: any) {
-  return Boolean(serverData.partnerStatus || serverData.partner_status);
+  return (
+    isEnabled(serverData.partnerStatus) ||
+    isEnabled(serverData.partner_status)
+  );
 }
 
 function isPremiumOrPartner(serverData: any) {
@@ -546,10 +570,15 @@ export default function HomePage() {
 
   const [premiumServers, setPremiumServers] = useState<Server[]>([]);
   const [overviewServers, setOverviewServers] = useState<Server[]>([]);
+  const [premiumLoading, setPremiumLoading] = useState(true);
+  const [showcaseProgress, setShowcaseProgress] = useState(0);
+  const [showcaseStartIndex, setShowcaseStartIndex] = useState(0);
 
   useEffect(() => {
     async function loadHomeData() {
       try {
+        setPremiumLoading(true);
+
         const [premiumResponse, overviewResponse] = await Promise.all([
           fetch("/api/premium-servers", {
             cache: "no-store",
@@ -567,12 +596,22 @@ export default function HomePage() {
           ? await overviewResponse.json()
           : { servers: premiumData.servers || [] };
 
-        setPremiumServers(premiumData.servers || []);
-        setOverviewServers(overviewData.servers || premiumData.servers || []);
+        const safePremiumServers = Array.isArray(premiumData.servers)
+          ? premiumData.servers
+          : [];
+
+        const safeOverviewServers = Array.isArray(overviewData.servers)
+          ? overviewData.servers
+          : safePremiumServers;
+
+        setPremiumServers(safePremiumServers);
+        setOverviewServers(safeOverviewServers);
       } catch (error) {
         console.error("Could not load home servers:", error);
         setPremiumServers([]);
         setOverviewServers([]);
+      } finally {
+        setPremiumLoading(false);
       }
     }
 
@@ -584,15 +623,44 @@ export default function HomePage() {
   }, [overviewServers]);
 
   const allShowcaseServers = useMemo(() => {
-    return sortByLastBump(premiumServers);
-  }, [premiumServers]);
+    const directPremiumServers = sortByLastBump(
+      premiumServers.filter((server: any) => isPremiumOrPartner(server))
+    );
 
-  const [showcaseStartIndex, setShowcaseStartIndex] = useState(0);
+    if (directPremiumServers.length > 0) {
+      return directPremiumServers;
+    }
+
+    return sortByLastBump(
+      overviewServers.filter((server: any) => isPremiumOrPartner(server))
+    );
+  }, [premiumServers, overviewServers]);
 
   useEffect(() => {
-    if (allShowcaseServers.length <= 3) return;
+    setShowcaseProgress(0);
+    setShowcaseStartIndex(0);
+  }, [allShowcaseServers.length]);
 
-    const interval = window.setInterval(() => {
+  useEffect(() => {
+    setShowcaseProgress(0);
+
+    if (allShowcaseServers.length <= 3) {
+      return;
+    }
+
+    let cycleStart = Date.now();
+
+    const progressInterval = window.setInterval(() => {
+      const elapsed = Date.now() - cycleStart;
+      const progress = Math.min(100, (elapsed / SHOWCASE_ROTATION_MS) * 100);
+
+      setShowcaseProgress(progress);
+    }, 100);
+
+    const rotationInterval = window.setInterval(() => {
+      cycleStart = Date.now();
+      setShowcaseProgress(0);
+
       setShowcaseStartIndex((currentIndex) => {
         const nextIndex = currentIndex + 3;
 
@@ -602,9 +670,12 @@ export default function HomePage() {
 
         return nextIndex;
       });
-    }, 10000);
+    }, SHOWCASE_ROTATION_MS);
 
-    return () => window.clearInterval(interval);
+    return () => {
+      window.clearInterval(progressInterval);
+      window.clearInterval(rotationInterval);
+    };
   }, [allShowcaseServers.length]);
 
   const showcaseServers = useMemo(() => {
@@ -626,6 +697,11 @@ export default function HomePage() {
       ...allShowcaseServers.slice(0, 3 - selectedServers.length),
     ];
   }, [allShowcaseServers, showcaseStartIndex]);
+
+  const nextShowcaseSeconds = Math.max(
+    1,
+    Math.ceil((SHOWCASE_ROTATION_MS * (1 - showcaseProgress / 100)) / 1000)
+  );
 
   return (
     <main
@@ -1068,144 +1144,212 @@ export default function HomePage() {
           }}
         />
 
-        {showcaseServers.length > 0 && (
-          <aside
-            className="hero-premium-showcase"
-            aria-label="Premium und Partner Server"
-          >
-            <div className="hero-premium-heading">
-              <span>👑 {t(language, "premiumPartner")}</span>
-              <h3>{t(language, "recommendedTitle")}</h3>
-            </div>
+        <aside
+          className="hero-premium-showcase"
+          aria-label="Premium und Partner Server"
+        >
+          <div className="hero-premium-heading">
+            <span>👑 {t(language, "premiumPartner")}</span>
+            <h3>{t(language, "recommendedTitle")}</h3>
 
-            {showcaseServers.map((server: any, index: number) => {
-              const serverData = server as any;
-
-              const serverName = getServerName(serverData);
-              const banner = getServerBanner(serverData);
-              const icon = getServerIcon(serverData);
-              const description = shortText(getServerDescription(serverData), 92);
-              const invite = getServerInvite(serverData);
-              const detailsHref = getServerDetailsHref(serverData);
-              const premium = isPremiumServer(serverData);
-              const partner = isPartnerServer(serverData);
-              const premiumLayout = getPremiumLayout(serverData);
-              const externalInvite =
-                typeof invite === "string" && invite.startsWith("http");
-
-              return (
-                <article
-                  key={serverData.id || serverName}
-                  className={`hero-premium-card server-directory-card-premium premium-layout-${premiumLayout}`}
+            {premiumLoading ? (
+              <p
+                style={{
+                  margin: "10px 0 0",
+                  color: "rgba(246,243,255,0.72)",
+                  fontSize: "12px",
+                  fontWeight: 800,
+                }}
+              >
+                {t(language, "loadingServers")}
+              </p>
+            ) : allShowcaseServers.length === 0 ? (
+              <p
+                style={{
+                  margin: "10px 0 0",
+                  color: "rgba(246,243,255,0.72)",
+                  fontSize: "12px",
+                  fontWeight: 800,
+                  lineHeight: 1.45,
+                }}
+              >
+                {t(language, "noPremiumFound")}
+              </p>
+            ) : allShowcaseServers.length > 3 ? (
+              <div style={{ marginTop: "12px" }}>
+                <div
                   style={{
-                    ...getPremiumCardStyle(serverData),
-                    animationDelay: `${index * 0.18}s`,
+                    height: "8px",
+                    borderRadius: "999px",
+                    overflow: "hidden",
+                    background: "rgba(255,255,255,0.10)",
+                    border: "1px solid rgba(255,255,255,0.08)",
                   }}
                 >
-                  {banner ? (
-                    <img
-                      className="hero-premium-card-bg"
-                      src={banner}
-                      alt={serverName}
-                      style={{
-                        objectPosition: `${serverData.banner_position_x ?? 50}% ${
-                          serverData.banner_position_y ?? 50
-                        }%`,
-                        transform: `scale(${serverData.banner_zoom ?? 1})`,
-                        transformOrigin: `${serverData.banner_position_x ?? 50}% ${
-                          serverData.banner_position_y ?? 50
-                        }%`,
-                      }}
-                    />
-                  ) : (
-                    <div className="hero-premium-card-fallback-bg" />
-                  )}
+                  <div
+                    style={{
+                      width: `${showcaseProgress}%`,
+                      height: "100%",
+                      borderRadius: "999px",
+                      background:
+                        "linear-gradient(90deg, #c84dff 0%, #f35ad6 45%, #74dfff 100%)",
+                      boxShadow: "0 0 14px rgba(116,223,255,0.35)",
+                      transition: "width 0.1s linear",
+                    }}
+                  />
+                </div>
 
-                  <div className="hero-premium-card-overlay" />
+                <p
+                  style={{
+                    margin: "8px 0 0",
+                    color: "rgba(246,243,255,0.68)",
+                    fontSize: "11px",
+                    fontWeight: 850,
+                  }}
+                >
+                  {t(language, "nextServersIn")} {nextShowcaseSeconds}s
+                </p>
+              </div>
+            ) : (
+              <p
+                style={{
+                  margin: "10px 0 0",
+                  color: "rgba(246,243,255,0.68)",
+                  fontSize: "11px",
+                  fontWeight: 850,
+                }}
+              >
+                {allShowcaseServers.length} {t(language, "visibleNow")}
+              </p>
+            )}
+          </div>
 
-                  <div className="premium-layout-effect" aria-hidden="true" />
+          {showcaseServers.map((server: any, index: number) => {
+            const serverData = server as any;
 
-                  <div className="hero-premium-card-content">
-                    <div className="hero-premium-card-top">
-                      <div className="hero-premium-badges">
-                        {premium && (
-                          <span className="hero-premium-badge premium">
-                            👑 Premium
-                          </span>
-                        )}
+            const serverName = getServerName(serverData);
+            const banner = getServerBanner(serverData);
+            const icon = getServerIcon(serverData);
+            const description = shortText(getServerDescription(serverData), 92);
+            const invite = getServerInvite(serverData);
+            const detailsHref = getServerDetailsHref(serverData);
+            const premium = isPremiumServer(serverData);
+            const partner = isPartnerServer(serverData);
+            const premiumLayout = getPremiumLayout(serverData);
+            const externalInvite =
+              typeof invite === "string" && invite.startsWith("http");
 
-                        {partner && (
-                          <span className="hero-premium-badge partner">
-                            🤝 Partner
-                          </span>
-                        )}
+            return (
+              <article
+                key={serverData.id || serverName}
+                className={`hero-premium-card server-directory-card-premium premium-layout-${premiumLayout}`}
+                style={{
+                  ...getPremiumCardStyle(serverData),
+                  animationDelay: `${index * 0.18}s`,
+                }}
+              >
+                {banner ? (
+                  <img
+                    className="hero-premium-card-bg"
+                    src={banner}
+                    alt={serverName}
+                    style={{
+                      objectPosition: `${serverData.banner_position_x ?? 50}% ${
+                        serverData.banner_position_y ?? 50
+                      }%`,
+                      transform: `scale(${serverData.banner_zoom ?? 1})`,
+                      transformOrigin: `${serverData.banner_position_x ?? 50}% ${
+                        serverData.banner_position_y ?? 50
+                      }%`,
+                    }}
+                  />
+                ) : (
+                  <div className="hero-premium-card-fallback-bg" />
+                )}
 
-                        {!premium && !partner && (
-                          <span className="hero-premium-badge">
-                            ✨ {t(language, "featured")}
-                          </span>
-                        )}
-                      </div>
+                <div className="hero-premium-card-overlay" />
+                <div className="premium-layout-effect" aria-hidden="true" />
 
-                      <GermanyFlag small />
-                    </div>
-
-                    <div className="hero-premium-card-main">
-                      <img
-                        className="hero-premium-icon"
-                        src={icon}
-                        alt={serverName}
-                      />
-
-                      <div>
-                        <h4>{serverName}</h4>
-                        <p>{description}</p>
-                      </div>
-                    </div>
-
-                    <div className="hero-premium-card-bottom">
-                      <div className="hero-premium-mini-info">
-                        <span>{serverData.category || "Community"}</span>
-                        <span>•</span>
-                        <span>{serverData.language || "Deutsch"}</span>
-                      </div>
-                    </div>
-
-                    <div className="home-premium-overview-row compact">
-                      <span className="home-premium-overview-pill online">
-                        <span className="home-premium-online-dot" />
-                        <span>{formatOnlineCount(serverData, language)}</span>
-                      </span>
-
-                      <span className="home-premium-overview-pill bump">
-                        <span>⚡</span>
-                        <span>
-                          {ot(language, "bump")}:{" "}
-                          {formatLastBump(serverData.last_bump, language)}
+                <div className="hero-premium-card-content">
+                  <div className="hero-premium-card-top">
+                    <div className="hero-premium-badges">
+                      {premium && (
+                        <span className="hero-premium-badge premium">
+                          👑 Premium
                         </span>
-                      </span>
+                      )}
+
+                      {partner && (
+                        <span className="hero-premium-badge partner">
+                          🤝 Partner
+                        </span>
+                      )}
+
+                      {!premium && !partner && (
+                        <span className="hero-premium-badge">
+                          ✨ {t(language, "featured")}
+                        </span>
+                      )}
                     </div>
 
-                    <div className="hero-premium-actions">
-                      <Link href={detailsHref} className="hero-premium-view">
-                        {t(language, "viewServer")}
-                      </Link>
+                    <GermanyFlag small />
+                  </div>
 
-                      <a
-                        href={invite}
-                        target={externalInvite ? "_blank" : undefined}
-                        rel={externalInvite ? "noreferrer" : undefined}
-                        className="hero-premium-join"
-                      >
-                        {t(language, "joinServer")}
-                      </a>
+                  <div className="hero-premium-card-main">
+                    <img
+                      className="hero-premium-icon"
+                      src={icon}
+                      alt={serverName}
+                    />
+
+                    <div>
+                      <h4>{serverName}</h4>
+                      <p>{description}</p>
                     </div>
                   </div>
-                </article>
-              );
-            })}
-          </aside>
-        )}
+
+                  <div className="hero-premium-card-bottom">
+                    <div className="hero-premium-mini-info">
+                      <span>{serverData.category || "Community"}</span>
+                      <span>•</span>
+                      <span>{serverData.language || "Deutsch"}</span>
+                    </div>
+                  </div>
+
+                  <div className="home-premium-overview-row compact">
+                    <span className="home-premium-overview-pill online">
+                      <span className="home-premium-online-dot" />
+                      <span>{formatOnlineCount(serverData, language)}</span>
+                    </span>
+
+                    <span className="home-premium-overview-pill bump">
+                      <span>⚡</span>
+                      <span>
+                        {ot(language, "bump")}: {" "}
+                        {formatLastBump(serverData.last_bump, language)}
+                      </span>
+                    </span>
+                  </div>
+
+                  <div className="hero-premium-actions">
+                    <Link href={detailsHref} className="hero-premium-view">
+                      {t(language, "viewServer")}
+                    </Link>
+
+                    <a
+                      href={invite}
+                      target={externalInvite ? "_blank" : undefined}
+                      rel={externalInvite ? "noreferrer" : undefined}
+                      className="hero-premium-join"
+                    >
+                      {t(language, "joinServer")}
+                    </a>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </aside>
 
         <div
           style={{
@@ -1980,7 +2124,7 @@ export default function HomePage() {
                       <span className="home-premium-overview-pill bump">
                         <span>⚡</span>
                         <span>
-                          {ot(language, "bump")}:{" "}
+                          {ot(language, "bump")}: {" "}
                           {formatLastBump(serverData.last_bump, language)}
                         </span>
                       </span>
