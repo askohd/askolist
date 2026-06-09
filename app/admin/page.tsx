@@ -11,6 +11,30 @@ function isBumpBanned(server: any) {
   return new Date(server.bump_banned_until).getTime() > Date.now();
 }
 
+function getServerName(server: any) {
+  return server?.server_name || "Unbekannter Server";
+}
+
+function getReviewText(review: any) {
+  return (
+    review?.comment ||
+    review?.review_comment ||
+    review?.text ||
+    review?.message ||
+    "Keine Kommentar-Bewertung vorhanden."
+  );
+}
+
+function getReviewAuthor(review: any) {
+  return (
+    review?.discord_username ||
+    review?.user_name ||
+    review?.username ||
+    review?.discord_user_id ||
+    "Unbekannter Nutzer"
+  );
+}
+
 function ActionForm({
   serverId,
   action,
@@ -40,6 +64,44 @@ function ActionForm({
   );
 }
 
+function ReportActionForm({
+  reportType,
+  reportId,
+  serverId,
+  reviewId,
+  action,
+  label,
+  danger = false,
+  primary = false,
+}: {
+  reportType: "server" | "review";
+  reportId: string;
+  serverId?: string;
+  reviewId?: string;
+  action: string;
+  label: string;
+  danger?: boolean;
+  primary?: boolean;
+}) {
+  let className = "admin-action-btn";
+
+  if (danger) className += " danger";
+  if (primary) className += " primary";
+
+  return (
+    <form action="/api/admin/reports/action" method="POST">
+      <input type="hidden" name="report_type" value={reportType} />
+      <input type="hidden" name="report_id" value={reportId} />
+      {serverId && <input type="hidden" name="server_id" value={serverId} />}
+      {reviewId && <input type="hidden" name="review_id" value={reviewId} />}
+      <input type="hidden" name="action" value={action} />
+      <button className={className} type="submit">
+        {label}
+      </button>
+    </form>
+  );
+}
+
 export default async function AdminPage() {
   const staff = await getCurrentStaff();
 
@@ -55,10 +117,68 @@ export default async function AdminPage() {
     );
   }
 
-  const isAdmin = canModerateServers(staff.role);
+  const canModerate = canModerateServers(staff.role);
+  const isAdmin = staff.role === "admin";
 
   const servers = await supabaseRequest(
     "servers?select=*&order=created_at.desc"
+  );
+
+  let serverReports: any[] = [];
+  let reviewReports: any[] = [];
+  let reportedReviews: any[] = [];
+
+  try {
+    serverReports =
+      (await supabaseRequest(
+        "server_reports?select=*&order=created_at.desc"
+      )) ?? [];
+  } catch (error) {
+    console.error("Could not load server reports:", error);
+  }
+
+  try {
+    reviewReports =
+      (await supabaseRequest(
+        "review_reports?select=*&order=created_at.desc"
+      )) ?? [];
+  } catch (error) {
+    console.error("Could not load review reports:", error);
+  }
+
+  const reviewIds = Array.from(
+    new Set(
+      reviewReports
+        .map((report: any) => report.review_id)
+        .filter(Boolean)
+    )
+  );
+
+  if (reviewIds.length > 0) {
+    try {
+      reportedReviews =
+        (await supabaseRequest(
+          `reviews?id=in.(${reviewIds.join(",")})&select=*`
+        )) ?? [];
+    } catch (error) {
+      console.error("Could not load reported reviews:", error);
+    }
+  }
+
+  const serverById = new Map(
+    (servers ?? []).map((server: any) => [server.id, server])
+  );
+
+  const reviewById = new Map(
+    (reportedReviews ?? []).map((review: any) => [review.id, review])
+  );
+
+  const openServerReports = serverReports.filter(
+    (report) => (report.status || "open") === "open"
+  );
+
+  const openReviewReports = reviewReports.filter(
+    (report) => (report.status || "open") === "open"
   );
 
   return (
@@ -75,6 +195,289 @@ export default async function AdminPage() {
           <strong>{staff.role}</strong>
         </p>
       </section>
+
+      {canModerate && (
+        <section className="section">
+          <div className="section-title">
+            <h2>Meldungen</h2>
+            <span className="meta">
+              {openServerReports.length + openReviewReports.length} offen
+            </span>
+          </div>
+
+          {serverReports.length === 0 && reviewReports.length === 0 ? (
+            <div className="card empty">
+              <h3>Keine Meldungen</h3>
+              <p>Gemeldete Server und Bewertungen erscheinen hier.</p>
+            </div>
+          ) : (
+            <div className="admin-server-list">
+              {serverReports.map((report: any) => {
+                const server = serverById.get(report.server_id);
+                const status = report.status || "open";
+
+                return (
+                  <article className="admin-server-card" key={report.id}>
+                    <div className="admin-server-main">
+                      <div className="admin-avatar">!</div>
+
+                      <div className="admin-server-content">
+                        <div className="admin-server-heading">
+                          <div>
+                            <h3>Server-Meldung: {getServerName(server)}</h3>
+                            <p>
+                              Gemeldet von{" "}
+                              <strong>
+                                {report.reporter_username ||
+                                  report.reporter_discord_user_id ||
+                                  "Unbekannt"}
+                              </strong>{" "}
+                              • {formatDate(report.created_at)}
+                            </p>
+                          </div>
+
+                          <div className="admin-status-group">
+                            <span className={`status-pill ${status}`}>
+                              {status}
+                            </span>
+                          </div>
+                        </div>
+
+                        <p className="admin-description">
+                          <strong>Grund:</strong>{" "}
+                          {report.reason || "Kein Grund angegeben"}
+                        </p>
+
+                        {report.details && (
+                          <p className="admin-description">
+                            <strong>Details:</strong> {report.details}
+                          </p>
+                        )}
+
+                        {report.action_taken && (
+                          <p className="admin-description">
+                            <strong>Aktion:</strong> {report.action_taken}
+                            {report.handled_by_username
+                              ? ` von ${report.handled_by_username}`
+                              : ""}
+                            {report.handled_at
+                              ? ` am ${formatDate(report.handled_at)}`
+                              : ""}
+                          </p>
+                        )}
+
+                        <div className="admin-link-row">
+                          {server?.id && (
+                            <a
+                              className="admin-link-btn"
+                              href={`/servers/${server.id}`}
+                              target="_blank"
+                            >
+                              Server ansehen
+                            </a>
+                          )}
+
+                          {server?.invite_link && (
+                            <a
+                              className="admin-link-btn"
+                              href={server.invite_link}
+                              target="_blank"
+                            >
+                              Discord Invite öffnen
+                            </a>
+                          )}
+                        </div>
+
+                        {status === "open" && (
+                          <div className="admin-action-section">
+                            <h4>Entscheidung</h4>
+                            <div className="admin-actions">
+                              <ReportActionForm
+                                reportType="server"
+                                reportId={report.id}
+                                serverId={report.server_id}
+                                action="dismiss_server_report"
+                                label="Ablehnen / Kein Problem"
+                              />
+
+                              <ReportActionForm
+                                reportType="server"
+                                reportId={report.id}
+                                serverId={report.server_id}
+                                action="mark_server_report_done"
+                                label="Als erledigt markieren"
+                                primary
+                              />
+
+                              {server?.id && (
+                                <ReportActionForm
+                                  reportType="server"
+                                  reportId={report.id}
+                                  serverId={server.id}
+                                  action="lock_reported_server"
+                                  label="Server sperren"
+                                  danger
+                                />
+                              )}
+
+                              {isAdmin && server?.id && (
+                                <>
+                                  <ReportActionForm
+                                    reportType="server"
+                                    reportId={report.id}
+                                    serverId={server.id}
+                                    action="ban_reported_server"
+                                    label="Server bannen"
+                                    danger
+                                  />
+
+                                  <ReportActionForm
+                                    reportType="server"
+                                    reportId={report.id}
+                                    serverId={server.id}
+                                    action="delete_reported_server"
+                                    label="Server löschen"
+                                    danger
+                                  />
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+
+              {reviewReports.map((report: any) => {
+                const review = reviewById.get(report.review_id);
+                const server = serverById.get(report.server_id);
+                const status = report.status || "open";
+
+                return (
+                  <article className="admin-server-card" key={report.id}>
+                    <div className="admin-server-main">
+                      <div className="admin-avatar">★</div>
+
+                      <div className="admin-server-content">
+                        <div className="admin-server-heading">
+                          <div>
+                            <h3>
+                              Bewertungs-Meldung: {getServerName(server)}
+                            </h3>
+                            <p>
+                              Gemeldet von{" "}
+                              <strong>
+                                {report.reporter_username ||
+                                  report.reporter_discord_user_id ||
+                                  "Unbekannt"}
+                              </strong>{" "}
+                              • {formatDate(report.created_at)}
+                            </p>
+                          </div>
+
+                          <div className="admin-status-group">
+                            <span className={`status-pill ${status}`}>
+                              {status}
+                            </span>
+                          </div>
+                        </div>
+
+                        <p className="admin-description">
+                          <strong>Grund:</strong>{" "}
+                          {report.reason || "Kein Grund angegeben"}
+                        </p>
+
+                        <div className="admin-meta-grid">
+                          <span>
+                            Bewertung von: {getReviewAuthor(review)}
+                          </span>
+                          <span>
+                            Sterne: {review?.rating ?? "?"}/5
+                          </span>
+                          <span>
+                            Review-ID: {report.review_id}
+                          </span>
+                          <span>
+                            Server-ID: {report.server_id}
+                          </span>
+                        </div>
+
+                        <p className="admin-description">
+                          <strong>Bewertung:</strong> {getReviewText(review)}
+                        </p>
+
+                        {report.action_taken && (
+                          <p className="admin-description">
+                            <strong>Aktion:</strong> {report.action_taken}
+                            {report.handled_by_username
+                              ? ` von ${report.handled_by_username}`
+                              : ""}
+                            {report.handled_at
+                              ? ` am ${formatDate(report.handled_at)}`
+                              : ""}
+                          </p>
+                        )}
+
+                        <div className="admin-link-row">
+                          {server?.id && (
+                            <a
+                              className="admin-link-btn"
+                              href={`/servers/${server.id}`}
+                              target="_blank"
+                            >
+                              Server ansehen
+                            </a>
+                          )}
+                        </div>
+
+                        {status === "open" && (
+                          <div className="admin-action-section">
+                            <h4>Entscheidung</h4>
+                            <div className="admin-actions">
+                              <ReportActionForm
+                                reportType="review"
+                                reportId={report.id}
+                                serverId={report.server_id}
+                                reviewId={report.review_id}
+                                action="dismiss_review_report"
+                                label="Ablehnen / Kein Problem"
+                              />
+
+                              <ReportActionForm
+                                reportType="review"
+                                reportId={report.id}
+                                serverId={report.server_id}
+                                reviewId={report.review_id}
+                                action="hide_review"
+                                label="Bewertung verstecken"
+                                danger
+                              />
+
+                              {isAdmin && (
+                                <ReportActionForm
+                                  reportType="review"
+                                  reportId={report.id}
+                                  serverId={report.server_id}
+                                  reviewId={report.review_id}
+                                  action="delete_review"
+                                  label="Bewertung löschen"
+                                  danger
+                                />
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </section>
+      )}
 
       <section className="section">
         <div className="section-title">
