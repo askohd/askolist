@@ -1,24 +1,394 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, type CSSProperties, type MouseEvent } from "react";
+import {
+  useMemo,
+  useState,
+  type CSSProperties,
+  type MouseEvent,
+} from "react";
+import { useLanguage } from "@/components/useLanguage";
 
 const MAX_DESCRIPTION_WORDS = 1500;
 
 const SERVER_LANGUAGES = ["Deutsch", "English", "Français", "Italiano", "Polski"];
 
 const PREMIUM_LAYOUTS = [
-  { value: "glow", label: "Glow Classic" },
-  { value: "starborder", label: "Sternen Rand" },
-  { value: "sunset", label: "Sunset Dark" },
-  { value: "aurora", label: "Aurora Flow" },
-  { value: "neon", label: "Neon Pulse" },
-  { value: "galaxy", label: "Galaxy Dust" },
-  { value: "flame", label: "Fire Core" },
-  { value: "ocean", label: "Ocean Wave" },
+  {
+    value: "glow",
+    label: "Glow Classic",
+    emoji: "✨",
+    description: "Sauberer Glow-Effekt mit eigener Farbe.",
+  },
+  {
+    value: "starborder",
+    label: "Star Border",
+    emoji: "⭐",
+    description: "Dunkler Look mit Sternen-Rand.",
+  },
+  {
+    value: "sunset",
+    label: "Sunset Dark",
+    emoji: "🌅",
+    description: "Warmer Sunset-Look für Premium-Karten.",
+  },
+  {
+    value: "aurora",
+    label: "Aurora Flow",
+    emoji: "🌌",
+    description: "Weicher Aurora-Farbverlauf.",
+  },
+  {
+    value: "neon",
+    label: "Neon Pulse",
+    emoji: "💜",
+    description: "Starker Neon-Look mit Pulse-Vibe.",
+  },
+  {
+    value: "galaxy",
+    label: "Galaxy Dust",
+    emoji: "🪐",
+    description: "Galaxy-Design mit dunklem Space-Look.",
+  },
+  {
+    value: "flame",
+    label: "Fire Core",
+    emoji: "🔥",
+    description: "Feuriger Premium-Style.",
+  },
+  {
+    value: "ocean",
+    label: "Ocean Wave",
+    emoji: "🌊",
+    description: "Blauer Ocean-Look mit Wave-Vibe.",
+  },
 ] as const;
 
 type PremiumLayout = (typeof PREMIUM_LAYOUTS)[number]["value"];
+type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
+
+const DASHBOARD_TEXT = {
+  de: {
+    editTitle: "Server bearbeiten",
+    bannerChange: "Server-Banner ändern",
+    logoAuto:
+      "Das Server-Logo wird automatisch vom Discord-Serverprofilbild übernommen.",
+    bannerPositionTitle: "Banner positionieren",
+    bannerPositionText: "Stelle dein Banner direkt rechts in der Vorschau ein.",
+    horizontal: "Links / Rechts",
+    vertical: "Hoch / Runter",
+    zoom: "Zoom",
+    serverName: "Servername",
+    serverNamePlaceholder: "Servername",
+    language: "Sprache",
+    description: "Beschreibung",
+    descriptionPlaceholder: "Beschreibung deines Servers",
+    words: "Wörter",
+    inviteTitle: "Discord Invite aktualisieren",
+    inviteText:
+      "Hier kannst du einen neuen permanenten Discord-Invite eintragen, falls dein alter Link abgelaufen ist.",
+    inviteLabel: "Discord Invite-Link",
+    invitePlaceholder: "https://discord.gg/dein-server",
+    inviteHint:
+      "Tipp: Erstelle auf Discord am besten einen permanenten Invite ohne Ablaufdatum.",
+    premiumTitle: "Premium Design",
+    premiumText:
+      "Wähle Layout, Namenfarbe, Textfarbe und Glow für Premium- oder Partner-Server.",
+    premiumLockedTitle: "Nur für Premium & Partner verfügbar",
+    premiumLockedText:
+      "Werde Premium-Mitglied, um Layouts, Textfarben und Glow zu nutzen.",
+    shop: "Zum Shop",
+    chooseLayout: "Layout auswählen",
+    colors: "Farben",
+    serverNameColor: "Servername-Farbe",
+    textColor: "Textfarbe",
+    glowColor: "Glow-Farbe",
+    glowOnly: "Glow-Farbe ist nur beim Glow Classic Layout sichtbar.",
+    save: "Änderungen speichern",
+    delete: "Server löschen",
+    deleteConfirm:
+      "Willst du diesen Server wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    previewBadge: "Live Vorschau",
+    previewTitle: "Serverlisten-Ansicht",
+    previewText: "Genau so sieht deine Karte später auf der Serverliste aus.",
+    noRatings: "Noch keine Bewertungen",
+    notBumped: "Noch nicht gebumpt",
+    justNow: "Gerade eben",
+    minutesAgo: "vor {value} Min.",
+    hoursAgo: "vor {value} Std.",
+    daysAgoSingular: "vor 1 Tag",
+    daysAgoPlural: "vor {value} Tagen",
+    onlineUnknown: "Online unbekannt",
+    online: "online",
+    categoryFallback: "Community",
+    previewDescription: "Beschreibung deines Servers...",
+    showMore: "Mehr anzeigen",
+    viewServer: "Server ansehen",
+    join: "Beitreten",
+    premiumBadge: "Premium",
+    partnerBadge: "Partner",
+    lockedButton: "Premium Funktion",
+  },
+
+  en: {
+    editTitle: "Edit server",
+    bannerChange: "Change server banner",
+    logoAuto:
+      "The server logo is automatically taken from the Discord server profile picture.",
+    bannerPositionTitle: "Position banner",
+    bannerPositionText: "Adjust your banner directly in the live preview.",
+    horizontal: "Left / Right",
+    vertical: "Up / Down",
+    zoom: "Zoom",
+    serverName: "Server name",
+    serverNamePlaceholder: "Server name",
+    language: "Language",
+    description: "Description",
+    descriptionPlaceholder: "Describe your server",
+    words: "words",
+    inviteTitle: "Update Discord invite",
+    inviteText:
+      "You can enter a new permanent Discord invite here if your old link expired.",
+    inviteLabel: "Discord invite link",
+    invitePlaceholder: "https://discord.gg/your-server",
+    inviteHint:
+      "Tip: Create a permanent Discord invite without an expiration date.",
+    premiumTitle: "Premium Design",
+    premiumText:
+      "Choose layout, name color, text color and glow for premium or partner servers.",
+    premiumLockedTitle: "Only available for Premium & Partner",
+    premiumLockedText:
+      "Become a premium member to use layouts, text colors and glow.",
+    shop: "Go to shop",
+    chooseLayout: "Choose layout",
+    colors: "Colors",
+    serverNameColor: "Server name color",
+    textColor: "Text color",
+    glowColor: "Glow color",
+    glowOnly: "Glow color is only visible in the Glow Classic layout.",
+    save: "Save changes",
+    delete: "Delete server",
+    deleteConfirm:
+      "Do you really want to delete this server? This action cannot be undone.",
+    previewBadge: "Live preview",
+    previewTitle: "Server list view",
+    previewText: "This is how your card will appear in the server list.",
+    noRatings: "No ratings yet",
+    notBumped: "Not bumped yet",
+    justNow: "Just now",
+    minutesAgo: "{value} min. ago",
+    hoursAgo: "{value} hrs. ago",
+    daysAgoSingular: "1 day ago",
+    daysAgoPlural: "{value} days ago",
+    onlineUnknown: "Online unknown",
+    online: "online",
+    categoryFallback: "Community",
+    previewDescription: "Your server description...",
+    showMore: "Show more",
+    viewServer: "View server",
+    join: "Join",
+    premiumBadge: "Premium",
+    partnerBadge: "Partner",
+    lockedButton: "Premium feature",
+  },
+
+  fr: {
+    editTitle: "Modifier le serveur",
+    bannerChange: "Changer la bannière du serveur",
+    logoAuto:
+      "Le logo du serveur est automatiquement repris depuis l’image de profil Discord.",
+    bannerPositionTitle: "Positionner la bannière",
+    bannerPositionText:
+      "Ajuste ta bannière directement dans l’aperçu à droite.",
+    horizontal: "Gauche / Droite",
+    vertical: "Haut / Bas",
+    zoom: "Zoom",
+    serverName: "Nom du serveur",
+    serverNamePlaceholder: "Nom du serveur",
+    language: "Langue",
+    description: "Description",
+    descriptionPlaceholder: "Description de ton serveur",
+    words: "mots",
+    inviteTitle: "Mettre à jour l’invitation Discord",
+    inviteText:
+      "Tu peux entrer ici une nouvelle invitation Discord permanente si l’ancien lien a expiré.",
+    inviteLabel: "Lien d’invitation Discord",
+    invitePlaceholder: "https://discord.gg/ton-serveur",
+    inviteHint:
+      "Astuce : crée une invitation permanente sans date d’expiration sur Discord.",
+    premiumTitle: "Design Premium",
+    premiumText:
+      "Choisis le layout, la couleur du nom, la couleur du texte et le glow pour les serveurs Premium ou Partenaire.",
+    premiumLockedTitle: "Disponible uniquement pour Premium & Partenaire",
+    premiumLockedText:
+      "Deviens membre Premium pour utiliser les layouts, couleurs de texte et glow.",
+    shop: "Aller au shop",
+    chooseLayout: "Choisir un layout",
+    colors: "Couleurs",
+    serverNameColor: "Couleur du nom",
+    textColor: "Couleur du texte",
+    glowColor: "Couleur du glow",
+    glowOnly:
+      "La couleur du glow est visible uniquement avec le layout Glow Classic.",
+    save: "Enregistrer",
+    delete: "Supprimer le serveur",
+    deleteConfirm:
+      "Veux-tu vraiment supprimer ce serveur ? Cette action est irréversible.",
+    previewBadge: "Aperçu live",
+    previewTitle: "Vue liste serveur",
+    previewText:
+      "Voici comment ta carte apparaîtra plus tard dans la liste des serveurs.",
+    noRatings: "Aucune note",
+    notBumped: "Pas encore bumpé",
+    justNow: "À l’instant",
+    minutesAgo: "il y a {value} min.",
+    hoursAgo: "il y a {value} h",
+    daysAgoSingular: "il y a 1 jour",
+    daysAgoPlural: "il y a {value} jours",
+    onlineUnknown: "Online inconnu",
+    online: "en ligne",
+    categoryFallback: "Communauté",
+    previewDescription: "Description de ton serveur...",
+    showMore: "Afficher plus",
+    viewServer: "Voir le serveur",
+    join: "Rejoindre",
+    premiumBadge: "Premium",
+    partnerBadge: "Partenaire",
+    lockedButton: "Fonction Premium",
+  },
+
+  it: {
+    editTitle: "Modifica server",
+    bannerChange: "Cambia banner del server",
+    logoAuto:
+      "Il logo del server viene preso automaticamente dall’immagine profilo del server Discord.",
+    bannerPositionTitle: "Posiziona banner",
+    bannerPositionText: "Regola il banner direttamente nell’anteprima a destra.",
+    horizontal: "Sinistra / Destra",
+    vertical: "Su / Giù",
+    zoom: "Zoom",
+    serverName: "Nome server",
+    serverNamePlaceholder: "Nome server",
+    language: "Lingua",
+    description: "Descrizione",
+    descriptionPlaceholder: "Descrizione del tuo server",
+    words: "parole",
+    inviteTitle: "Aggiorna invito Discord",
+    inviteText:
+      "Qui puoi inserire un nuovo invito Discord permanente se il vecchio link è scaduto.",
+    inviteLabel: "Link invito Discord",
+    invitePlaceholder: "https://discord.gg/tuo-server",
+    inviteHint:
+      "Consiglio: crea su Discord un invito permanente senza scadenza.",
+    premiumTitle: "Design Premium",
+    premiumText:
+      "Scegli layout, colore del nome, colore del testo e glow per server Premium o Partner.",
+    premiumLockedTitle: "Disponibile solo per Premium & Partner",
+    premiumLockedText:
+      "Diventa membro Premium per usare layout, colori del testo e glow.",
+    shop: "Vai allo shop",
+    chooseLayout: "Scegli layout",
+    colors: "Colori",
+    serverNameColor: "Colore nome server",
+    textColor: "Colore testo",
+    glowColor: "Colore glow",
+    glowOnly: "Il colore glow è visibile solo nel layout Glow Classic.",
+    save: "Salva modifiche",
+    delete: "Elimina server",
+    deleteConfirm:
+      "Vuoi davvero eliminare questo server? Questa azione non può essere annullata.",
+    previewBadge: "Anteprima live",
+    previewTitle: "Vista lista server",
+    previewText: "Ecco come apparirà la tua card nella lista server.",
+    noRatings: "Nessuna valutazione",
+    notBumped: "Non ancora bumpato",
+    justNow: "Proprio ora",
+    minutesAgo: "{value} min. fa",
+    hoursAgo: "{value} ore fa",
+    daysAgoSingular: "1 giorno fa",
+    daysAgoPlural: "{value} giorni fa",
+    onlineUnknown: "Online sconosciuto",
+    online: "online",
+    categoryFallback: "Community",
+    previewDescription: "Descrizione del tuo server...",
+    showMore: "Mostra altro",
+    viewServer: "Vedi server",
+    join: "Entra",
+    premiumBadge: "Premium",
+    partnerBadge: "Partner",
+    lockedButton: "Funzione Premium",
+  },
+
+  pl: {
+    editTitle: "Edytuj serwer",
+    bannerChange: "Zmień banner serwera",
+    logoAuto:
+      "Logo serwera jest automatycznie pobierane z ikony profilu serwera Discord.",
+    bannerPositionTitle: "Ustaw banner",
+    bannerPositionText: "Dostosuj banner bezpośrednio w podglądzie po prawej.",
+    horizontal: "Lewo / Prawo",
+    vertical: "Góra / Dół",
+    zoom: "Zoom",
+    serverName: "Nazwa serwera",
+    serverNamePlaceholder: "Nazwa serwera",
+    language: "Język",
+    description: "Opis",
+    descriptionPlaceholder: "Opis twojego serwera",
+    words: "słów",
+    inviteTitle: "Zaktualizuj zaproszenie Discord",
+    inviteText:
+      "Tutaj możesz wpisać nowy stały link zaproszenia Discord, jeśli stary link wygasł.",
+    inviteLabel: "Link zaproszenia Discord",
+    invitePlaceholder: "https://discord.gg/twoj-serwer",
+    inviteHint:
+      "Wskazówka: utwórz na Discordzie stałe zaproszenie bez daty wygaśnięcia.",
+    premiumTitle: "Design Premium",
+    premiumText:
+      "Wybierz layout, kolor nazwy, kolor tekstu i glow dla serwerów Premium lub Partner.",
+    premiumLockedTitle: "Dostępne tylko dla Premium & Partner",
+    premiumLockedText:
+      "Zostań członkiem Premium, aby używać layoutów, kolorów tekstu i glow.",
+    shop: "Do sklepu",
+    chooseLayout: "Wybierz layout",
+    colors: "Kolory",
+    serverNameColor: "Kolor nazwy serwera",
+    textColor: "Kolor tekstu",
+    glowColor: "Kolor glow",
+    glowOnly: "Kolor glow jest widoczny tylko w layoucie Glow Classic.",
+    save: "Zapisz zmiany",
+    delete: "Usuń serwer",
+    deleteConfirm:
+      "Czy na pewno chcesz usunąć ten serwer? Tej akcji nie można cofnąć.",
+    previewBadge: "Podgląd live",
+    previewTitle: "Widok listy serwerów",
+    previewText: "Tak twoja karta będzie wyglądać na liście serwerów.",
+    noRatings: "Brak ocen",
+    notBumped: "Jeszcze nie bumpowano",
+    justNow: "Przed chwilą",
+    minutesAgo: "{value} min. temu",
+    hoursAgo: "{value} godz. temu",
+    daysAgoSingular: "1 dzień temu",
+    daysAgoPlural: "{value} dni temu",
+    onlineUnknown: "Online nieznane",
+    online: "online",
+    categoryFallback: "Społeczność",
+    previewDescription: "Opis twojego serwera...",
+    showMore: "Pokaż więcej",
+    viewServer: "Zobacz serwer",
+    join: "Dołącz",
+    premiumBadge: "Premium",
+    partnerBadge: "Partner",
+    lockedButton: "Funkcja Premium",
+  },
+} as const;
+
+function tr(language: UiLanguage, key: keyof typeof DASHBOARD_TEXT.de) {
+  return DASHBOARD_TEXT[language]?.[key] || DASHBOARD_TEXT.de[key];
+}
+
+function replaceValue(text: string, value: number) {
+  return text.replace("{value}", String(value));
+}
 
 function countWords(text: string) {
   return text.trim().split(/\s+/).filter(Boolean).length;
@@ -28,20 +398,23 @@ function limitWords(text: string, maxWords: number) {
   return text.trim().split(/\s+/).filter(Boolean).slice(0, maxWords).join(" ");
 }
 
-function formatLastBump(lastBump: string | null | undefined) {
-  if (!lastBump) return "Noch nicht gebumpt";
+function formatLastBump(
+  lastBump: string | null | undefined,
+  language: UiLanguage
+) {
+  if (!lastBump) return tr(language, "notBumped");
 
   const diff = Date.now() - new Date(lastBump).getTime();
   const minutes = Math.floor(diff / 1000 / 60);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
-  if (minutes < 1) return "Gerade eben";
-  if (minutes < 60) return `vor ${minutes} Min.`;
-  if (hours < 24) return `vor ${hours} Std.`;
-  if (days === 1) return "vor 1 Tag";
+  if (minutes < 1) return tr(language, "justNow");
+  if (minutes < 60) return replaceValue(tr(language, "minutesAgo"), minutes);
+  if (hours < 24) return replaceValue(tr(language, "hoursAgo"), hours);
+  if (days === 1) return tr(language, "daysAgoSingular");
 
-  return `vor ${days} Tagen`;
+  return replaceValue(tr(language, "daysAgoPlural"), days);
 }
 
 function getOnlineCount(server: any) {
@@ -67,9 +440,9 @@ function getOnlineCount(server: any) {
   return Number(value);
 }
 
-function formatOnlineCount(value: number | null) {
-  if (value === null) return "Online unbekannt";
-  return `${value.toLocaleString("de-DE")} online`;
+function formatOnlineCount(value: number | null, language: UiLanguage) {
+  if (value === null) return tr(language, "onlineUnknown");
+  return `${value.toLocaleString("de-DE")} ${tr(language, "online")}`;
 }
 
 function normalizePremiumLayout(value: unknown): PremiumLayout {
@@ -122,11 +495,20 @@ function getPremiumPreviewStyle(layout: PremiumLayout, glowColor: string) {
 }
 
 export default function ProfileServerEditor({ server }: { server: any }) {
-  const isPremiumOrPartner = Boolean(server.premium_status || server.partner_status);
+  const language = useLanguage() as UiLanguage;
+
+  const isPremiumOrPartner = Boolean(
+    server.premium_status || server.partner_status
+  );
 
   const [lockedNotice, setLockedNotice] = useState(false);
   const [serverName, setServerName] = useState(server.server_name ?? "");
-  const [language, setLanguage] = useState(server.language ?? "Deutsch");
+  const [serverLanguage, setServerLanguage] = useState(
+    server.language ?? "Deutsch"
+  );
+  const [inviteLink, setInviteLink] = useState(
+    server.invite_link || server.inviteLink || ""
+  );
 
   const [bannerPreview, setBannerPreview] = useState<string | null>(
     server.banner_url && server.banner_url.startsWith("http")
@@ -185,9 +567,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
   }
 
   function confirmDelete(event: MouseEvent<HTMLButtonElement>) {
-    const confirmed = window.confirm(
-      "Willst du diesen Server wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden."
-    );
+    const confirmed = window.confirm(tr(language, "deleteConfirm"));
 
     if (!confirmed) {
       event.preventDefault();
@@ -202,14 +582,18 @@ export default function ProfileServerEditor({ server }: { server: any }) {
       className="profile-edit-card"
     >
       <input type="hidden" name="server_id" value={server.id} />
+      <input type="hidden" name="inviteLink" value={inviteLink} />
+      {isPremiumOrPartner && (
+        <input type="hidden" name="premium_layout" value={premiumLayout} />
+      )}
 
-      <h3>Server bearbeiten</h3>
+      <h3>{tr(language, "editTitle")}</h3>
 
       <div className="profile-editor-two-column">
         <section className="profile-editor-controls">
           <div className="profile-upload-grid">
             <label className="field full">
-              <span>Server-Banner ändern</span>
+              <span>{tr(language, "bannerChange")}</span>
               <input
                 type="file"
                 name="banner"
@@ -225,16 +609,16 @@ export default function ProfileServerEditor({ server }: { server: any }) {
             </label>
           </div>
 
-          <small className="form-note">
-            Das Server-Logo wird automatisch vom Discord-Serverprofilbild übernommen.
-          </small>
+          <small className="form-note">{tr(language, "logoAuto")}</small>
 
           <div className="banner-control-card banner-control-top">
-            <h3>Banner positionieren</h3>
-            <p>Stelle dein Banner direkt rechts in der Vorschau ein.</p>
+            <h3>{tr(language, "bannerPositionTitle")}</h3>
+            <p>{tr(language, "bannerPositionText")}</p>
 
             <label className="field">
-              <span>Links / Rechts: {bannerX}%</span>
+              <span>
+                {tr(language, "horizontal")}: {bannerX}%
+              </span>
               <input
                 type="range"
                 name="banner_position_x"
@@ -246,7 +630,9 @@ export default function ProfileServerEditor({ server }: { server: any }) {
             </label>
 
             <label className="field">
-              <span>Hoch / Runter: {bannerY}%</span>
+              <span>
+                {tr(language, "vertical")}: {bannerY}%
+              </span>
               <input
                 type="range"
                 name="banner_position_y"
@@ -258,7 +644,9 @@ export default function ProfileServerEditor({ server }: { server: any }) {
             </label>
 
             <label className="field">
-              <span>Zoom: {bannerZoom}x</span>
+              <span>
+                {tr(language, "zoom")}: {bannerZoom}x
+              </span>
               <input
                 type="range"
                 name="banner_zoom"
@@ -272,22 +660,22 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           </div>
 
           <label className="field">
-            <span>Servername</span>
+            <span>{tr(language, "serverName")}</span>
             <input
               className="input"
               name="server_name"
               value={serverName}
-              placeholder="Servername"
+              placeholder={tr(language, "serverNamePlaceholder")}
               onChange={(event) => setServerName(event.target.value)}
             />
           </label>
 
           <label className="field">
-            <span>Sprache</span>
+            <span>{tr(language, "language")}</span>
             <select
               name="language"
-              value={language}
-              onChange={(event) => setLanguage(event.target.value)}
+              value={serverLanguage}
+              onChange={(event) => setServerLanguage(event.target.value)}
             >
               {SERVER_LANGUAGES.map((item) => (
                 <option key={item} value={item}>
@@ -297,12 +685,88 @@ export default function ProfileServerEditor({ server }: { server: any }) {
             </select>
           </label>
 
+          <div
+            style={{
+              margin: "18px 0",
+              padding: "20px",
+              borderRadius: "24px",
+              background:
+                "linear-gradient(180deg, rgba(38, 31, 62, 0.82), rgba(25, 21, 45, 0.82))",
+              border: "1px solid rgba(116, 223, 255, 0.18)",
+              boxShadow:
+                "0 0 0 1px rgba(255,255,255,0.03) inset, 0 0 28px rgba(116,223,255,0.08)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "14px",
+                marginBottom: "16px",
+              }}
+            >
+              <div
+                style={{
+                  width: "42px",
+                  height: "42px",
+                  borderRadius: "14px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background:
+                    "linear-gradient(135deg, #8b5cf6 0%, #d946ef 50%, #67e8f9 100%)",
+                  boxShadow: "0 0 20px rgba(116,223,255,0.18)",
+                  fontSize: "20px",
+                  flex: "0 0 auto",
+                }}
+              >
+                🔗
+              </div>
+
+              <div>
+                <h3 style={{ margin: 0 }}>{tr(language, "inviteTitle")}</h3>
+                <p
+                  style={{
+                    margin: "8px 0 0",
+                    color: "rgba(246,243,255,0.72)",
+                    lineHeight: 1.55,
+                  }}
+                >
+                  {tr(language, "inviteText")}
+                </p>
+              </div>
+            </div>
+
+            <label className="field full" style={{ margin: 0 }}>
+              <span>{tr(language, "inviteLabel")}</span>
+              <input
+                className="input"
+                type="url"
+                name="invite_link"
+                value={inviteLink}
+                placeholder={tr(language, "invitePlaceholder")}
+                onChange={(event) => setInviteLink(event.target.value)}
+              />
+            </label>
+
+            <small
+              className="form-note"
+              style={{
+                display: "block",
+                marginTop: "10px",
+                color: "rgba(246,243,255,0.64)",
+              }}
+            >
+              {tr(language, "inviteHint")}
+            </small>
+          </div>
+
           <label className="field full">
-            <span>Beschreibung</span>
+            <span>{tr(language, "description")}</span>
             <textarea
               name="description"
               value={description}
-              placeholder="Beschreibung deines Servers"
+              placeholder={tr(language, "descriptionPlaceholder")}
               onChange={(event) => {
                 const value = event.target.value;
 
@@ -315,101 +779,273 @@ export default function ProfileServerEditor({ server }: { server: any }) {
             />
 
             <small className="char-counter">
-              {countWords(description)}/{MAX_DESCRIPTION_WORDS} Wörter
+              {countWords(description)}/{MAX_DESCRIPTION_WORDS}{" "}
+              {tr(language, "words")}
             </small>
           </label>
 
-          <div className="premium-inline-tools">
-            <div className="premium-inline-head">
+          <div
+            className="premium-inline-tools"
+            style={{
+              marginTop: "20px",
+              padding: "22px",
+              borderRadius: "28px",
+              background:
+                "radial-gradient(circle at 0% 0%, rgba(211, 76, 255, 0.18), transparent 35%), linear-gradient(180deg, rgba(30, 25, 55, 0.92), rgba(17, 15, 36, 0.92))",
+              border: "1px solid rgba(202, 115, 255, 0.24)",
+              boxShadow:
+                "0 0 0 1px rgba(255,255,255,0.035) inset, 0 0 34px rgba(139,92,246,0.14)",
+            }}
+          >
+            <div
+              className="premium-inline-head"
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "14px",
+                marginBottom: "18px",
+              }}
+            >
               <button
                 type="button"
                 className="premium-diamond"
                 onClick={showLockedNotice}
-                aria-label="Premium Funktion"
+                aria-label={tr(language, "lockedButton")}
+                style={{
+                  width: "46px",
+                  height: "46px",
+                  borderRadius: "16px",
+                  border: "1px solid rgba(255,255,255,0.14)",
+                  background:
+                    "linear-gradient(135deg, rgba(255,207,64,0.24), rgba(217,70,239,0.22), rgba(103,232,249,0.20))",
+                  color: "#ffffff",
+                  fontSize: "20px",
+                  boxShadow: "0 0 24px rgba(217,70,239,0.18)",
+                  cursor: "pointer",
+                  flex: "0 0 auto",
+                }}
               >
                 ◆
               </button>
 
               <div>
-                <h3>Design Features</h3>
-                <p>Farben, Glow und Layouts für Premium & Partner.</p>
+                <h3 style={{ margin: 0 }}>{tr(language, "premiumTitle")}</h3>
+                <p
+                  style={{
+                    margin: "8px 0 0",
+                    color: "rgba(246,243,255,0.72)",
+                    lineHeight: 1.55,
+                  }}
+                >
+                  {tr(language, "premiumText")}
+                </p>
               </div>
             </div>
 
             {lockedNotice && !isPremiumOrPartner && (
-              <div className="premium-locked-message">
-                <strong>Nur für Premium & Partner verfügbar</strong>
-                <p>
-                  Werde Premium Mitglied, um Layouts, Textfarben und Glow zu nutzen.
-                </p>
+              <div
+                className="premium-locked-message"
+                style={{
+                  marginBottom: "18px",
+                  padding: "16px",
+                  borderRadius: "20px",
+                  background: "rgba(255, 207, 64, 0.09)",
+                  border: "1px solid rgba(255, 207, 64, 0.22)",
+                }}
+              >
+                <strong>{tr(language, "premiumLockedTitle")}</strong>
+                <p>{tr(language, "premiumLockedText")}</p>
                 <Link href="/shop" className="btn">
-                  Zum Shop
+                  {tr(language, "shop")}
                 </Link>
               </div>
             )}
 
-            <label className="field full premium-setting-line">
-              <span>Layout auswählen</span>
-
-              <select
-                name="premium_layout"
-                value={premiumLayout}
-                disabled={!isPremiumOrPartner}
-                onChange={(event) =>
-                  setPremiumLayout(event.target.value as PremiumLayout)
-                }
+            <div style={{ marginBottom: "18px" }}>
+              <span
+                style={{
+                  display: "block",
+                  marginBottom: "10px",
+                  fontSize: "14px",
+                  fontWeight: 950,
+                  color: "#ffffff",
+                }}
               >
-                {PREMIUM_LAYOUTS.map((layout) => (
-                  <option key={layout.value} value={layout.value}>
-                    {layout.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+                {tr(language, "chooseLayout")}
+              </span>
 
-            <div className="premium-color-grid-inline">
-              <label className="premium-color-field">
-                <span>Servername-Farbe</span>
-                <input
-                  type="color"
-                  name="server_name_color"
-                  value={serverNameColor}
-                  disabled={!isPremiumOrPartner}
-                  onChange={(event) => setServerNameColor(event.target.value)}
-                />
-              </label>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+                  gap: "10px",
+                  opacity: isPremiumOrPartner ? 1 : 0.56,
+                }}
+              >
+                {PREMIUM_LAYOUTS.map((layout) => {
+                  const active = premiumLayout === layout.value;
 
-              <label className="premium-color-field">
-                <span>Textfarbe</span>
-                <input
-                  type="color"
-                  name="server_text_color"
-                  value={serverTextColor}
-                  disabled={!isPremiumOrPartner}
-                  onChange={(event) => setServerTextColor(event.target.value)}
-                />
-              </label>
+                  return (
+                    <button
+                      key={layout.value}
+                      type="button"
+                      disabled={!isPremiumOrPartner}
+                      onClick={() => setPremiumLayout(layout.value)}
+                      style={{
+                        minHeight: "82px",
+                        padding: "12px",
+                        borderRadius: "18px",
+                        border: active
+                          ? "1px solid rgba(116,223,255,0.56)"
+                          : "1px solid rgba(255,255,255,0.12)",
+                        background: active
+                          ? "linear-gradient(135deg, rgba(180,76,255,0.28), rgba(116,223,255,0.16))"
+                          : "rgba(255,255,255,0.055)",
+                        color: "#ffffff",
+                        textAlign: "left",
+                        cursor: isPremiumOrPartner ? "pointer" : "not-allowed",
+                        boxShadow: active
+                          ? "0 0 22px rgba(116,223,255,0.16)"
+                          : "none",
+                      }}
+                    >
+                      <strong
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "7px",
+                          fontSize: "13px",
+                          marginBottom: "6px",
+                        }}
+                      >
+                        <span>{layout.emoji}</span>
+                        {layout.label}
+                      </strong>
 
-              {premiumLayout === "glow" ? (
-                <label className="premium-color-field">
-                  <span>Glow-Farbe</span>
+                      <span
+                        style={{
+                          display: "block",
+                          color: "rgba(246,243,255,0.66)",
+                          fontSize: "11px",
+                          lineHeight: 1.35,
+                        }}
+                      >
+                        {layout.description}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div>
+              <span
+                style={{
+                  display: "block",
+                  marginBottom: "10px",
+                  fontSize: "14px",
+                  fontWeight: 950,
+                  color: "#ffffff",
+                }}
+              >
+                {tr(language, "colors")}
+              </span>
+
+              <div
+                className="premium-color-grid-inline"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+                  gap: "12px",
+                }}
+              >
+                <label
+                  className="premium-color-field"
+                  style={{
+                    padding: "14px",
+                    borderRadius: "18px",
+                    background: "rgba(255,255,255,0.055)",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                  }}
+                >
+                  <span>{tr(language, "serverNameColor")}</span>
                   <input
                     type="color"
+                    name="server_name_color"
+                    value={serverNameColor}
+                    disabled={!isPremiumOrPartner}
+                    onChange={(event) => setServerNameColor(event.target.value)}
+                  />
+                  <small>{serverNameColor}</small>
+                </label>
+
+                <label
+                  className="premium-color-field"
+                  style={{
+                    padding: "14px",
+                    borderRadius: "18px",
+                    background: "rgba(255,255,255,0.055)",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                  }}
+                >
+                  <span>{tr(language, "textColor")}</span>
+                  <input
+                    type="color"
+                    name="server_text_color"
+                    value={serverTextColor}
+                    disabled={!isPremiumOrPartner}
+                    onChange={(event) => setServerTextColor(event.target.value)}
+                  />
+                  <small>{serverTextColor}</small>
+                </label>
+
+                {premiumLayout === "glow" ? (
+                  <label
+                    className="premium-color-field"
+                    style={{
+                      padding: "14px",
+                      borderRadius: "18px",
+                      background: "rgba(255,255,255,0.055)",
+                      border: "1px solid rgba(255,255,255,0.10)",
+                    }}
+                  >
+                    <span>{tr(language, "glowColor")}</span>
+                    <input
+                      type="color"
+                      name="premium_glow_color"
+                      value={glowColor}
+                      disabled={!isPremiumOrPartner}
+                      onChange={(event) => setGlowColor(event.target.value)}
+                    />
+                    <small>{glowColor}</small>
+                  </label>
+                ) : (
+                  <input
+                    type="hidden"
                     name="premium_glow_color"
                     value={glowColor}
-                    disabled={!isPremiumOrPartner}
-                    onChange={(event) => setGlowColor(event.target.value)}
                   />
-                </label>
-              ) : (
-                <input type="hidden" name="premium_glow_color" value={glowColor} />
+                )}
+              </div>
+
+              {premiumLayout !== "glow" && (
+                <small
+                  className="form-note"
+                  style={{
+                    display: "block",
+                    marginTop: "10px",
+                    color: "rgba(246,243,255,0.64)",
+                  }}
+                >
+                  {tr(language, "glowOnly")}
+                </small>
               )}
             </div>
           </div>
 
           <div className="profile-editor-actions">
             <button className="btn profile-save-button" type="submit">
-              Änderungen speichern
+              {tr(language, "save")}
             </button>
 
             <button
@@ -419,16 +1055,16 @@ export default function ProfileServerEditor({ server }: { server: any }) {
               formMethod="POST"
               onClick={confirmDelete}
             >
-              Server löschen
+              {tr(language, "delete")}
             </button>
           </div>
         </section>
 
         <aside className="profile-editor-preview">
           <div className="preview-sticky-box">
-            <span className="page-badge">Live Vorschau</span>
-            <h3>Serverlisten-Ansicht</h3>
-            <p>Genau so sieht deine Karte später auf der Serverliste aus.</p>
+            <span className="page-badge">{tr(language, "previewBadge")}</span>
+            <h3>{tr(language, "previewTitle")}</h3>
+            <p>{tr(language, "previewText")}</p>
 
             <article
               className={
@@ -469,7 +1105,9 @@ export default function ProfileServerEditor({ server }: { server: any }) {
                   />
                 )}
 
-                <div className="server-directory-rating">⭐ No ratings</div>
+                <div className="server-directory-rating">
+                  ⭐ {tr(language, "noRatings")}
+                </div>
               </div>
 
               <div className="server-directory-body">
@@ -488,7 +1126,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
                         color: isPremiumOrPartner ? serverNameColor : undefined,
                       }}
                     >
-                      {serverName || "Servername"}
+                      {serverName || tr(language, "serverName")}
                     </h3>
 
                     <p
@@ -496,20 +1134,37 @@ export default function ProfileServerEditor({ server }: { server: any }) {
                         color: isPremiumOrPartner ? serverTextColor : undefined,
                       }}
                     >
-                      {server.category} • {language}
+                      {server.category || tr(language, "categoryFallback")} •{" "}
+                      {serverLanguage}
                     </p>
                   </div>
                 </div>
 
+                {isPremiumOrPartner && (
+                  <div className="hero-premium-badges" style={{ marginBottom: 10 }}>
+                    {server.premium_status && (
+                      <span className="hero-premium-badge premium">
+                        👑 {tr(language, "premiumBadge")}
+                      </span>
+                    )}
+
+                    {server.partner_status && (
+                      <span className="hero-premium-badge partner">
+                        🤝 {tr(language, "partnerBadge")}
+                      </span>
+                    )}
+                  </div>
+                )}
+
                 <div className="premium-server-meta-row">
                   <span className="premium-server-meta-pill online">
                     <span className="premium-online-dot" />
-                    {formatOnlineCount(onlineCount)}
+                    {formatOnlineCount(onlineCount, language)}
                   </span>
 
                   <span className="premium-server-meta-pill bump">
                     <span>⚡</span>
-                    Bump: {formatLastBump(server.last_bump)}
+                    Bump: {formatLastBump(server.last_bump, language)}
                   </span>
                 </div>
 
@@ -529,20 +1184,20 @@ export default function ProfileServerEditor({ server }: { server: any }) {
                     color: isPremiumOrPartner ? serverTextColor : undefined,
                   }}
                 >
-                  {description || "Beschreibung deines Servers..."}
+                  {description || tr(language, "previewDescription")}
                 </div>
 
                 <div className="description-toggle-button fake-preview-toggle">
-                  Mehr anzeigen
+                  {tr(language, "showMore")}
                 </div>
 
                 <div className="server-directory-footer">
                   <button className="btn secondary" type="button">
-                    Server ansehen
+                    {tr(language, "viewServer")}
                   </button>
 
                   <button className="btn" type="button">
-                    Beitreten
+                    {tr(language, "join")}
                   </button>
                 </div>
               </div>
