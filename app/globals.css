@@ -1901,3 +1901,339 @@ select option {
     width: 100%;
   }
 }
+/* =========================================================
+   Premium Layout Effects - Serverliste + Profil Vorschau
+   ========================================================= */
+
+@keyframes askoFireCoreMove {
+  0% {
+    transform: translateX(-8%) translateY(14px) scaleY(0.85);
+    opacity: 0.55;
+    filter: blur(8px);
+  }
+
+  50% {
+    transform: translateX(5%) translateY(-8px) scaleY(1.14);
+    opacity: 0.98;
+    filter: blur(5px);
+  }
+
+  100% {
+    transform: translateX(10%) translateY(10px) scaleY(0.92);
+    opacity: 0.62;
+    filter: blur(8px);
+  }
+}
+
+@keyframes askoFireSparkMove {
+  0% {
+    transform: translateY(32px) scale(0.75);
+    opacity: 0;
+  }
+
+  35% {
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: translateY(-64px) scale(1.15);
+    opacity: 0;
+  }
+}
+
+@keyframes askoOceanWaveMove {
+  0% {
+    transform: translateX(-14%) translateY(8px);
+  }
+
+  50% {
+    transform: translateX(12%) translateY(-6px);
+  }
+
+  100% {
+    transform: translateX(-14%) translateY(8px);
+  }
+}
+
+@keyframes askoOceanLineMove {
+  0% {
+    transform: translateX(-20%) translateY(0);
+    opacity: 0.45;
+  }
+
+  50% {
+    transform: translateX(14%) translateY(-8px);
+    opacity: 0.85;
+  }
+
+  100% {
+    transform: translateX(-20%) translateY(0);
+    opacity: 0.45;
+  }
+}
+
+@keyframes askoNeonScanMove {
+  0% {
+    opacity: 0.18;
+    transform: translateY(-24%);
+  }
+
+  50% {
+    opacity: 0.92;
+    transform: translateY(24%);
+  }
+
+  100% {
+    opacity: 0.18;
+    transform: translateY(-24%);
+  }
+}
+
+@keyframes askoGalaxyStarsMove {
+  0% {
+    transform: translateY(0);
+    opacity: 0.42;
+  }
+
+  50% {
+    opacity: 0.95;
+  }
+
+  100% {
+    transform: translateY(-22px);
+    opacity: 0.45;
+  }
+}
+
+@keyframes askoAuroraMove {
+  0% {
+    transform: translateX(-20%) rotate(-8deg);
+    opacity: 0.42;
+  }
+
+  50% {
+    transform: translateX(12%) rotate(7deg);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: translateX(-20%) rotate(-8deg);
+    opacity: 0.42;
+  }
+}
+
+@keyframes askoStarBorderPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.12) inset,
+      0 0 28px rgba(255,232,150,0.28),
+      0 0 58px rgba(139,92,246,0.20);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.24) inset,
+      0 0 42px rgba(255,232,150,0.70),
+      0 0 82px rgba(139,92,246,0.36);
+  }
+}
+
+.server-directory-card,
+.server-list-live-preview {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.server-directory-card .server-directory-banner,
+.server-directory-card .server-directory-body,
+.server-list-live-preview .server-directory-banner,
+.server-list-live-preview .server-directory-body {
+  position: relative;
+  z-index: 3;
+}
+
+.premium-layout-effect {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.premium-layout-effect::before,
+.premium-layout-effect::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Glow Classic */
+
+.premium-layout-glow .premium-layout-effect::before {
+  inset: -20%;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,0.18), transparent 35%),
+    radial-gradient(circle at 100% 30%, rgba(116,223,255,0.16), transparent 35%);
+  animation: askoAuroraMove 4.6s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+/* Fire Core */
+
+.premium-layout-flame .premium-layout-effect::before {
+  left: -18%;
+  right: -18%;
+  bottom: -34px;
+  height: 126px;
+  background:
+    radial-gradient(circle at 10% 100%, rgba(255, 210, 80, 0.95), transparent 28%),
+    radial-gradient(circle at 28% 92%, rgba(255, 92, 28, 0.95), transparent 30%),
+    radial-gradient(circle at 46% 100%, rgba(255, 230, 92, 0.85), transparent 26%),
+    radial-gradient(circle at 66% 92%, rgba(255, 68, 170, 0.78), transparent 32%),
+    radial-gradient(circle at 84% 100%, rgba(255, 118, 38, 0.92), transparent 30%);
+  animation: askoFireCoreMove 2.1s ease-in-out infinite alternate;
+  mix-blend-mode: screen;
+}
+
+.premium-layout-flame .premium-layout-effect::after {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 58%;
+  background:
+    radial-gradient(circle at 18% 85%, rgba(255, 220, 80, 0.70) 0 2px, transparent 4px),
+    radial-gradient(circle at 42% 78%, rgba(255, 120, 30, 0.75) 0 2px, transparent 4px),
+    radial-gradient(circle at 72% 82%, rgba(255, 72, 160, 0.65) 0 2px, transparent 4px),
+    linear-gradient(180deg, transparent 0%, rgba(255, 89, 26, 0.08) 45%, rgba(255, 53, 110, 0.24) 100%);
+  animation: askoFireSparkMove 2.8s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+/* Ocean Wave */
+
+.premium-layout-ocean .premium-layout-effect::before {
+  left: -35%;
+  right: -35%;
+  bottom: -38px;
+  height: 132px;
+  background:
+    radial-gradient(ellipse at 18% 20%, rgba(120,230,255,0.70), transparent 34%),
+    radial-gradient(ellipse at 42% 5%, rgba(65,255,220,0.50), transparent 30%),
+    radial-gradient(ellipse at 70% 25%, rgba(71,180,255,0.58), transparent 34%);
+  filter: blur(7px);
+  animation: askoOceanWaveMove 2.8s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+.premium-layout-ocean .premium-layout-effect::after {
+  left: -30%;
+  right: -30%;
+  bottom: 8px;
+  height: 70px;
+  background:
+    repeating-radial-gradient(
+      ellipse at 50% 100%,
+      rgba(125, 225, 255, 0.34) 0px,
+      rgba(125, 225, 255, 0.34) 3px,
+      transparent 7px,
+      transparent 18px
+    );
+  opacity: 0.75;
+  filter: blur(2px);
+  animation: askoOceanLineMove 3.6s ease-in-out infinite reverse;
+  mix-blend-mode: screen;
+}
+
+/* Neon Pulse */
+
+.premium-layout-neon .premium-layout-effect::before {
+  inset: -40%;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(116,223,255,0) 42%,
+      rgba(116,223,255,0.46) 50%,
+      rgba(244,76,255,0) 58%,
+      transparent 100%
+    );
+  animation: askoNeonScanMove 2.8s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+.premium-layout-neon .premium-layout-effect::after {
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(116,223,255,0.12) 1px, transparent 1px),
+    linear-gradient(rgba(244,76,255,0.10) 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity: 0.55;
+}
+
+/* Galaxy Dust */
+
+.premium-layout-galaxy .premium-layout-effect::before {
+  inset: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255,255,255,0.95) 0 1px, transparent 2px),
+    radial-gradient(circle at 24% 62%, rgba(255,255,255,0.72) 0 1px, transparent 2px),
+    radial-gradient(circle at 42% 30%, rgba(255,255,255,0.82) 0 1px, transparent 2px),
+    radial-gradient(circle at 74% 22%, rgba(255,255,255,0.95) 0 1px, transparent 2px),
+    radial-gradient(circle at 88% 70%, rgba(255,255,255,0.72) 0 1px, transparent 2px);
+  animation: askoGalaxyStarsMove 3.2s ease-in-out infinite alternate;
+}
+
+/* Aurora Flow */
+
+.premium-layout-aurora .premium-layout-effect::before {
+  left: -40%;
+  top: 18%;
+  width: 180%;
+  height: 44%;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(44,255,157,0.16) 18%,
+      rgba(116,223,255,0.34) 45%,
+      rgba(195,78,255,0.22) 72%,
+      transparent 100%
+    );
+  filter: blur(12px);
+  animation: askoAuroraMove 4.2s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+/* Sunset Dark */
+
+.premium-layout-sunset .premium-layout-effect::before {
+  left: -20%;
+  right: -20%;
+  bottom: -46px;
+  height: 125px;
+  background:
+    radial-gradient(circle at 50% 100%, rgba(255,178,87,0.75), transparent 42%),
+    radial-gradient(circle at 70% 90%, rgba(255,72,160,0.45), transparent 36%);
+  filter: blur(7px);
+  animation: askoFireCoreMove 3.4s ease-in-out infinite alternate;
+  mix-blend-mode: screen;
+}
+
+/* Sternen Rand */
+
+.premium-layout-starborder {
+  animation: askoStarBorderPulse 2.4s ease-in-out infinite;
+}
+
+.premium-layout-starborder .premium-layout-effect::before {
+  inset: 0;
+  background:
+    radial-gradient(circle at 8% 10%, rgba(255,255,255,0.95) 0 1px, transparent 2px),
+    radial-gradient(circle at 92% 14%, rgba(255,255,255,0.85) 0 1px, transparent 2px),
+    radial-gradient(circle at 18% 90%, rgba(255,255,255,0.75) 0 1px, transparent 2px),
+    radial-gradient(circle at 82% 82%, rgba(255,255,255,0.90) 0 1px, transparent 2px);
+  animation: askoGalaxyStarsMove 2.6s ease-in-out infinite alternate;
+}
