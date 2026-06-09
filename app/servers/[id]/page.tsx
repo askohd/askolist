@@ -6,6 +6,16 @@ import { supabaseRequest } from "@/lib/supabase";
 
 const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
 
+const SERVER_REPORT_REASONS = [
+  "Unpassende Inhalte",
+  "Falsche Server-Informationen",
+  "Discord Invite funktioniert nicht",
+  "Spam oder Fake Server",
+  "NSFW ohne Kennzeichnung",
+  "Regelverstoß",
+  "Sonstiges",
+];
+
 function getRatingStats(reviews: any[]) {
   const visibleReviews = reviews.filter(
     (review) => !review.hidden && !review.deleted_by_admin
@@ -1107,6 +1117,126 @@ export default async function ServerDetailPage({
                 style={{
                   padding: "22px",
                   borderRadius: "24px",
+                  background:
+                    "linear-gradient(180deg, rgba(255,88,88,0.10), rgba(80,34,116,0.22))",
+                  border: "1px solid rgba(255,88,88,0.22)",
+                }}
+              >
+                <h3
+                  style={{
+                    margin: "0 0 10px",
+                    fontSize: "20px",
+                    fontWeight: 950,
+                  }}
+                >
+                  Server melden
+                </h3>
+
+                {!session ? (
+                  <div>
+                    <p
+                      style={{
+                        margin: "0 0 14px",
+                        color: "rgba(246,243,255,0.74)",
+                        lineHeight: 1.6,
+                        fontSize: "14px",
+                      }}
+                    >
+                      Logge dich mit Discord ein, um diesen Server zu melden.
+                    </p>
+
+                    <Link
+                      href="/api/auth/signin"
+                      style={{
+                        minHeight: "42px",
+                        padding: "0 15px",
+                        borderRadius: "14px",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#ffffff",
+                        textDecoration: "none",
+                        fontWeight: 950,
+                        background:
+                          "linear-gradient(135deg, #b54cff 0%, #f35acd 45%, #6fddff 100%)",
+                      }}
+                    >
+                      Login zum Melden
+                    </Link>
+                  </div>
+                ) : (
+                  <form
+                    action="/api/servers/report"
+                    method="POST"
+                    style={{
+                      display: "grid",
+                      gap: "12px",
+                    }}
+                  >
+                    <input type="hidden" name="server_id" value={server.id} />
+
+                    <select
+                      name="reason"
+                      style={{
+                        minHeight: "44px",
+                        padding: "0 13px",
+                        borderRadius: "14px",
+                        background: "rgba(255,255,255,0.08)",
+                        border: "1px solid rgba(255,255,255,0.14)",
+                        color: "#ffffff",
+                        fontWeight: 850,
+                        outline: "none",
+                      }}
+                    >
+                      {SERVER_REPORT_REASONS.map((reason) => (
+                        <option key={reason} value={reason}>
+                          {reason}
+                        </option>
+                      ))}
+                    </select>
+
+                    <textarea
+                      name="details"
+                      maxLength={900}
+                      placeholder="Beschreibe kurz, was mit diesem Server nicht stimmt..."
+                      style={{
+                        minHeight: "104px",
+                        width: "100%",
+                        resize: "vertical",
+                        padding: "13px 14px",
+                        borderRadius: "16px",
+                        background: "rgba(255,255,255,0.08)",
+                        border: "1px solid rgba(255,255,255,0.14)",
+                        color: "#ffffff",
+                        outline: "none",
+                        fontWeight: 750,
+                        lineHeight: 1.5,
+                      }}
+                    />
+
+                    <button
+                      type="submit"
+                      style={{
+                        minHeight: "42px",
+                        border: 0,
+                        borderRadius: "14px",
+                        color: "#ffffff",
+                        fontWeight: 950,
+                        cursor: "pointer",
+                        background:
+                          "linear-gradient(135deg, #ff4d6d 0%, #d946ef 50%, #8b5cf6 100%)",
+                      }}
+                    >
+                      Server melden
+                    </button>
+                  </form>
+                )}
+              </div>
+
+              <div
+                style={{
+                  padding: "22px",
+                  borderRadius: "24px",
                   background: "rgba(255,255,255,0.055)",
                   border: "1px solid rgba(255,255,255,0.10)",
                 }}
@@ -1234,8 +1364,8 @@ export default async function ServerDetailPage({
                         lineHeight: 1.5,
                       }}
                     >
-                      Öffentliche Bewertungen können gemeldet und von Admins
-                      entfernt werden.
+                      Öffentliche Bewertungen und Server können gemeldet und von
+                      Staff geprüft werden.
                     </p>
                   </div>
                 </div>
