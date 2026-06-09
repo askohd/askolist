@@ -1,8 +1,136 @@
+"use client";
+
 import Link from "next/link";
+import { useLanguage } from "@/components/useLanguage";
 
 const DISCORD_URL = "https://discord.gg/askocafe";
 
+type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
+
+const SUPPORT_TEXT = {
+  de: {
+    badge: "Support",
+    title: "Brauchst du Hilfe?",
+    subtitle:
+      "Bei Problemen mit Servern, Premium, Freigaben, Bot-Verbindung oder deinem Account helfen wir dir direkt auf unserem Discord.",
+    discordButton: "💬 Support auf Discord öffnen",
+    submitButton: "Server eintragen",
+    serverHelpTitle: "Server Hilfe",
+    serverHelpText:
+      "Probleme beim Server eintragen, Banner hochladen, Bot einladen oder Bumpen.",
+    premiumHelpTitle: "Premium Hilfe",
+    premiumHelpText:
+      "Fragen zu Premium Layouts, Farben, Effekten, Partner Funktionen oder Anzeige auf der Startseite.",
+    accountHelpTitle: "Account Hilfe",
+    accountHelpText:
+      "Probleme beim Login, Discord Account, Server Dashboard oder fehlenden Berechtigungen.",
+    cardCta: "Auf Discord Hilfe bekommen →",
+    fastHelpTitle: "Schnellste Hilfe bekommst du auf Discord",
+    fastHelpText:
+      "Öffne einfach ein Ticket oder schreibe in den Support-Bereich. Unser Team schaut sich dein Problem dort an.",
+    discordBottomButton: "Zum Asko Cafe Discord",
+  },
+
+  en: {
+    badge: "Support",
+    title: "Need help?",
+    subtitle:
+      "If you have problems with servers, premium, approvals, bot connection or your account, we can help you directly on our Discord.",
+    discordButton: "💬 Open support on Discord",
+    submitButton: "Submit server",
+    serverHelpTitle: "Server Help",
+    serverHelpText:
+      "Problems submitting a server, uploading banners, inviting the bot or bumping.",
+    premiumHelpTitle: "Premium Help",
+    premiumHelpText:
+      "Questions about premium layouts, colors, effects, partner features or homepage display.",
+    accountHelpTitle: "Account Help",
+    accountHelpText:
+      "Problems with login, Discord account, server dashboard or missing permissions.",
+    cardCta: "Get help on Discord →",
+    fastHelpTitle: "The fastest help is on Discord",
+    fastHelpText:
+      "Open a ticket or write in the support area. Our team will look into your problem there.",
+    discordBottomButton: "Go to Asko Cafe Discord",
+  },
+
+  fr: {
+    badge: "Support",
+    title: "Besoin d’aide ?",
+    subtitle:
+      "Si tu as des problèmes avec les serveurs, le premium, les validations, la connexion du bot ou ton compte, nous t’aidons directement sur notre Discord.",
+    discordButton: "💬 Ouvrir le support sur Discord",
+    submitButton: "Ajouter un serveur",
+    serverHelpTitle: "Aide serveur",
+    serverHelpText:
+      "Problèmes pour ajouter un serveur, téléverser une bannière, inviter le bot ou bump.",
+    premiumHelpTitle: "Aide Premium",
+    premiumHelpText:
+      "Questions sur les layouts premium, couleurs, effets, fonctions partenaire ou affichage sur la page d’accueil.",
+    accountHelpTitle: "Aide compte",
+    accountHelpText:
+      "Problèmes de connexion, compte Discord, dashboard serveur ou permissions manquantes.",
+    cardCta: "Obtenir de l’aide sur Discord →",
+    fastHelpTitle: "L’aide la plus rapide est sur Discord",
+    fastHelpText:
+      "Ouvre simplement un ticket ou écris dans l’espace support. Notre équipe regardera ton problème.",
+    discordBottomButton: "Aller sur le Discord Asko Cafe",
+  },
+
+  it: {
+    badge: "Supporto",
+    title: "Hai bisogno di aiuto?",
+    subtitle:
+      "Se hai problemi con server, premium, approvazioni, collegamento del bot o account, ti aiutiamo direttamente sul nostro Discord.",
+    discordButton: "💬 Apri il supporto su Discord",
+    submitButton: "Aggiungi server",
+    serverHelpTitle: "Aiuto server",
+    serverHelpText:
+      "Problemi nell’inserire un server, caricare banner, invitare il bot o fare bump.",
+    premiumHelpTitle: "Aiuto Premium",
+    premiumHelpText:
+      "Domande su layout premium, colori, effetti, funzioni partner o visualizzazione in homepage.",
+    accountHelpTitle: "Aiuto account",
+    accountHelpText:
+      "Problemi con login, account Discord, dashboard server o permessi mancanti.",
+    cardCta: "Ricevi aiuto su Discord →",
+    fastHelpTitle: "L’aiuto più veloce è su Discord",
+    fastHelpText:
+      "Apri un ticket o scrivi nell’area supporto. Il nostro team controllerà il tuo problema.",
+    discordBottomButton: "Vai al Discord Asko Cafe",
+  },
+
+  pl: {
+    badge: "Wsparcie",
+    title: "Potrzebujesz pomocy?",
+    subtitle:
+      "Jeśli masz problem z serwerami, premium, zatwierdzeniami, połączeniem bota lub kontem, pomożemy ci bezpośrednio na naszym Discordzie.",
+    discordButton: "💬 Otwórz wsparcie na Discordzie",
+    submitButton: "Dodaj serwer",
+    serverHelpTitle: "Pomoc z serwerem",
+    serverHelpText:
+      "Problemy z dodaniem serwera, przesłaniem bannera, zaproszeniem bota lub bumpowaniem.",
+    premiumHelpTitle: "Pomoc Premium",
+    premiumHelpText:
+      "Pytania o layouty premium, kolory, efekty, funkcje partnera lub wyświetlanie na stronie głównej.",
+    accountHelpTitle: "Pomoc z kontem",
+    accountHelpText:
+      "Problemy z logowaniem, kontem Discord, panelem serwera lub brakującymi uprawnieniami.",
+    cardCta: "Uzyskaj pomoc na Discordzie →",
+    fastHelpTitle: "Najszybsza pomoc jest na Discordzie",
+    fastHelpText:
+      "Otwórz ticket albo napisz w dziale wsparcia. Nasz zespół sprawdzi twój problem.",
+    discordBottomButton: "Przejdź na Discord Asko Cafe",
+  },
+} as const;
+
+function getSupportText(language: UiLanguage, key: keyof typeof SUPPORT_TEXT.de) {
+  return SUPPORT_TEXT[language]?.[key] || SUPPORT_TEXT.de[key];
+}
+
 export default function SupportPage() {
+  const language = useLanguage() as UiLanguage;
+
   return (
     <main
       style={{
@@ -37,7 +165,7 @@ export default function SupportPage() {
               "0 0 24px rgba(92,211,255,0.18), 0 0 42px rgba(192,91,255,0.12)",
           }}
         >
-          Support
+          {getSupportText(language, "badge")}
         </span>
 
         <h1
@@ -49,20 +177,19 @@ export default function SupportPage() {
             fontWeight: 950,
           }}
         >
-          Brauchst du Hilfe?
+          {getSupportText(language, "title")}
         </h1>
 
         <p
           style={{
-            maxWidth: "720px",
+            maxWidth: "760px",
             margin: "22px auto 0",
             color: "rgba(246,243,255,0.82)",
             fontSize: "17px",
             lineHeight: 1.7,
           }}
         >
-          Bei Problemen mit Servern, Premium, Freigaben, Bot-Verbindung oder
-          deinem Account helfen wir dir direkt auf unserem Discord.
+          {getSupportText(language, "subtitle")}
         </p>
 
         <div
@@ -96,7 +223,7 @@ export default function SupportPage() {
                 "0 0 25px rgba(208,85,255,0.34), 0 0 28px rgba(112,221,255,0.18)",
             }}
           >
-            💬 Support auf Discord öffnen
+            {getSupportText(language, "discordButton")}
           </a>
 
           <Link
@@ -117,7 +244,7 @@ export default function SupportPage() {
               border: "1px solid rgba(255,255,255,0.14)",
             }}
           >
-            Server eintragen
+            {getSupportText(language, "submitButton")}
           </Link>
         </div>
       </section>
@@ -133,20 +260,23 @@ export default function SupportPage() {
       >
         <SupportCard
           icon="🚀"
-          title="Server Hilfe"
-          text="Probleme beim Server eintragen, Banner hochladen, Bot einladen oder Bumpen."
+          title={getSupportText(language, "serverHelpTitle")}
+          text={getSupportText(language, "serverHelpText")}
+          cta={getSupportText(language, "cardCta")}
         />
 
         <SupportCard
           icon="👑"
-          title="Premium Hilfe"
-          text="Fragen zu Premium Layouts, Farben, Effekten, Partner Funktionen oder Anzeige auf der Startseite."
+          title={getSupportText(language, "premiumHelpTitle")}
+          text={getSupportText(language, "premiumHelpText")}
+          cta={getSupportText(language, "cardCta")}
         />
 
         <SupportCard
           icon="👤"
-          title="Account Hilfe"
-          text="Probleme beim Login, Discord Account, Server Dashboard oder fehlenden Berechtigungen."
+          title={getSupportText(language, "accountHelpTitle")}
+          text={getSupportText(language, "accountHelpText")}
+          cta={getSupportText(language, "cardCta")}
         />
       </section>
 
@@ -172,7 +302,7 @@ export default function SupportPage() {
             letterSpacing: "-0.035em",
           }}
         >
-          Schnellste Hilfe bekommst du auf Discord
+          {getSupportText(language, "fastHelpTitle")}
         </h2>
 
         <p
@@ -183,8 +313,7 @@ export default function SupportPage() {
             lineHeight: 1.65,
           }}
         >
-          Öffne einfach ein Ticket oder schreibe in den Support-Bereich. Unser
-          Team schaut sich dein Problem dort an.
+          {getSupportText(language, "fastHelpText")}
         </p>
 
         <a
@@ -206,7 +335,7 @@ export default function SupportPage() {
               "linear-gradient(135deg, #f149d1 0%, #a456ff 45%, #75ddff 100%)",
           }}
         >
-          Zum Asko Cafe Discord
+          {getSupportText(language, "discordBottomButton")}
         </a>
       </section>
     </main>
@@ -217,10 +346,12 @@ function SupportCard({
   icon,
   title,
   text,
+  cta,
 }: {
   icon: string;
   title: string;
   text: string;
+  cta: string;
 }) {
   return (
     <a
@@ -292,7 +423,7 @@ function SupportCard({
           fontWeight: 900,
         }}
       >
-        Auf Discord Hilfe bekommen →
+        {cta}
       </span>
     </a>
   );
