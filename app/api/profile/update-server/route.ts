@@ -23,6 +23,8 @@ const ALLOWED_PREMIUM_LAYOUTS = [
   "galaxy",
   "flame",
   "ocean",
+  "minimal",
+  "cyber",
 ];
 
 function limitWords(text: string, maxWords: number) {
@@ -68,8 +70,50 @@ function safeColor(value: string, fallback: string) {
 }
 
 function safePremiumLayout(value: string) {
-  if (ALLOWED_PREMIUM_LAYOUTS.includes(value)) {
-    return value;
+  const cleanValue = value
+    .trim()
+    .toLowerCase()
+    .replace(/_/g, "-")
+    .replace(/\s+/g, "-");
+
+  const layoutAliases: Record<string, string> = {
+    glow: "glow",
+    "glow-core": "glow",
+
+    flame: "flame",
+    fire: "flame",
+    "fire-core": "flame",
+
+    neon: "neon",
+    "neon-pulse": "neon",
+
+    galaxy: "galaxy",
+    "galaxy-dust": "galaxy",
+
+    aurora: "aurora",
+    "aurora-flow": "aurora",
+
+    ocean: "ocean",
+    "ocean-wave": "ocean",
+
+    sunset: "sunset",
+    "sunset-dark": "sunset",
+
+    starborder: "starborder",
+    "star-border": "starborder",
+    "sternen-rand": "starborder",
+
+    minimal: "minimal",
+    "minimal-dark": "minimal",
+
+    cyber: "cyber",
+    "cyber-grid": "cyber",
+  };
+
+  const mappedLayout = layoutAliases[cleanValue] || cleanValue;
+
+  if (ALLOWED_PREMIUM_LAYOUTS.includes(mappedLayout)) {
+    return mappedLayout;
   }
 
   return "glow";
@@ -157,7 +201,7 @@ export async function POST(request: Request) {
     );
 
     const premiumLayout = safePremiumLayout(
-      String(formData.get("premium_layout") ?? "glow").trim()
+      String(formData.get("premium_layout") ?? "glow")
     );
 
     const bannerPositionX = clampNumber(
