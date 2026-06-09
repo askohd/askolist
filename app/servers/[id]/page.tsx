@@ -7,18 +7,22 @@ import { supabaseRequest } from "@/lib/supabase";
 const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
 
 function getRatingStats(reviews: any[]) {
-  if (reviews.length === 0) {
+  const visibleReviews = reviews.filter(
+    (review) => !review.hidden && !review.deleted_by_admin
+  );
+
+  if (visibleReviews.length === 0) {
     return { average: 0, count: 0 };
   }
 
-  const total = reviews.reduce(
+  const total = visibleReviews.reduce(
     (sum, review) => sum + Number(review.rating ?? 0),
     0
   );
 
   return {
-    average: total / reviews.length,
-    count: reviews.length,
+    average: total / visibleReviews.length,
+    count: visibleReviews.length,
   };
 }
 
@@ -56,6 +60,151 @@ function getServerTags(server: any) {
   return [];
 }
 
+function getOnlineCount(server: any) {
+  const value =
+    server.online_count ??
+    server.onlineCount ??
+    server.members_online ??
+    server.online_members ??
+    server.presence_count ??
+    server.discord_online_count ??
+    server.discord_online_members ??
+    null;
+
+  if (value === null || value === undefined || Number.isNaN(Number(value))) {
+    return null;
+  }
+
+  return Number(value);
+}
+
+function getMemberCount(server: any) {
+  const value =
+    server.member_count ??
+    server.memberCount ??
+    server.members_count ??
+    server.guild_member_count ??
+    server.approximate_member_count ??
+    null;
+
+  if (value === null || value === undefined || Number.isNaN(Number(value))) {
+    return null;
+  }
+
+  return Number(value);
+}
+
+function formatOnlineCount(server: any) {
+  const online = getOnlineCount(server);
+
+  if (online === null) {
+    return "Online unbekannt";
+  }
+
+  return `${online.toLocaleString("de-DE")} online`;
+}
+
+function formatMemberCount(server: any) {
+  const members = getMemberCount(server);
+
+  if (members === null) {
+    return "Mitglieder unbekannt";
+  }
+
+  return `${members.toLocaleString("de-DE")} Mitglieder`;
+}
+
+function formatLastBump(lastBump: string | null | undefined) {
+  if (!lastBump) return "Noch nicht gebumpt";
+
+  const diff = Date.now() - new Date(lastBump).getTime();
+  const minutes = Math.floor(diff / 1000 / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (minutes < 1) return "Gerade eben";
+  if (minutes < 60) return `vor ${minutes} Min.`;
+  if (hours < 24) return `vor ${hours} Std.`;
+  if (days === 1) return "vor 1 Tag";
+
+  return `vor ${days} Tagen`;
+}
+
+function getReviewComment(review: any) {
+  return String(
+    review.comment ||
+      review.review_comment ||
+      review.text ||
+      review.message ||
+      ""
+  ).trim();
+}
+
+function getReviewName(review: any) {
+  return (
+    review.discord_username ||
+    review.user_name ||
+    review.username ||
+    review.display_name ||
+    "Discord Nutzer"
+  );
+}
+
+function getReviewDate(review: any) {
+  const dateValue = review.created_at || review.updated_at;
+
+  if (!dateValue) return "";
+
+  return new Date(dateValue).toLocaleDateString("de-DE", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
+
+function getReportedCount(review: any) {
+  const value = review.reported_count ?? review.reports ?? 0;
+
+  if (Number.isNaN(Number(value))) {
+    return 0;
+  }
+
+  return Number(value);
+}
+
+function isAdminUser(user: any) {
+  return Boolean(
+    user?.role === "admin" ||
+      user?.isAdmin ||
+      user?.is_admin ||
+      user?.admin ||
+      user?.staff ||
+      user?.is_staff ||
+      user?.permissions?.includes?.("admin")
+  );
+}
+
+function StarRatingText({ rating }: { rating: number }) {
+  const safeRating = Math.max(0, Math.min(5, Number(rating || 0)));
+
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "3px",
+        color: "#ffe68a",
+        fontWeight: 950,
+      }}
+    >
+      {"★".repeat(safeRating)}
+      <span style={{ color: "rgba(255,255,255,0.28)" }}>
+        {"★".repeat(5 - safeRating)}
+      </span>
+    </span>
+  );
+}
+
 export default async function ServerDetailPage({
   params,
 }: {
@@ -66,6 +215,7 @@ export default async function ServerDetailPage({
   const session = await getServerSession(authOptions);
   const user = session?.user as any;
   const discordUserId = user?.id || user?.discordId;
+  const isAdmin = isAdminUser(user);
 
   const servers = await supabaseRequest(
     `servers?id=eq.${id}&approved=eq.true&status=eq.approved&select=*`
@@ -77,16 +227,19 @@ export default async function ServerDetailPage({
     notFound();
   }
 
-  const reviews = await supabaseRequest(
-    `reviews?server_id=eq.${server.id}&select=*`
+  const reviewsResponse = await supabaseRequest(
+    `reviews?server_id=eq.${server.id}&select=*&order=created_at.desc`
   );
 
-  const ratingStats = getRatingStats(reviews ?? []);
+  const reviews = Array.isArray(reviewsResponse) ? reviewsResponse : [];
+  const visibleReviews = reviews.filter(
+    (review: any) => !review.hidden && !review.deleted_by_admin
+  );
+
+  const ratingStats = getRatingStats(reviews);
 
   const myReview = discordUserId
-    ? (reviews ?? []).find(
-        (review: any) => review.discord_user_id === discordUserId
-      )
+    ? reviews.find((review: any) => review.discord_user_id === discordUserId)
     : null;
 
   let memberEntry = null;
@@ -563,6 +716,19 @@ export default async function ServerDetailPage({
                           <strong>{myReview.rating}/5 Sternen</strong>{" "}
                           bewertet.
                         </p>
+
+                        {getReviewComment(myReview) && (
+                          <p
+                            style={{
+                              margin: "10px 0 0",
+                              color: "rgba(246,243,255,0.72)",
+                              lineHeight: 1.55,
+                              whiteSpace: "pre-wrap",
+                            }}
+                          >
+                            „{getReviewComment(myReview)}“
+                          </p>
+                        )}
                       </div>
                     ) : !canRate ? (
                       <div
@@ -601,10 +767,8 @@ export default async function ServerDetailPage({
                         action="/api/reviews/rate"
                         method="POST"
                         style={{
-                          display: "flex",
-                          alignItems: "center",
+                          display: "grid",
                           gap: "12px",
-                          flexWrap: "wrap",
                         }}
                       >
                         <input
@@ -613,46 +777,299 @@ export default async function ServerDetailPage({
                           value={server.id}
                         />
 
-                        <select
-                          name="rating"
+                        <div
                           style={{
-                            minHeight: "46px",
-                            padding: "0 14px",
-                            borderRadius: "15px",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "12px",
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          <select
+                            name="rating"
+                            style={{
+                              minHeight: "46px",
+                              padding: "0 14px",
+                              borderRadius: "15px",
+                              background: "rgba(255,255,255,0.08)",
+                              border: "1px solid rgba(255,255,255,0.16)",
+                              color: "#ffffff",
+                              fontWeight: 850,
+                              outline: "none",
+                            }}
+                          >
+                            <option value="5">5 Sterne</option>
+                            <option value="4">4 Sterne</option>
+                            <option value="3">3 Sterne</option>
+                            <option value="2">2 Sterne</option>
+                            <option value="1">1 Stern</option>
+                          </select>
+
+                          <button
+                            type="submit"
+                            style={{
+                              minHeight: "46px",
+                              padding: "0 18px",
+                              border: 0,
+                              borderRadius: "15px",
+                              color: "#ffffff",
+                              fontWeight: 950,
+                              cursor: "pointer",
+                              background:
+                                "linear-gradient(135deg, #b54cff 0%, #f35acd 45%, #6fddff 100%)",
+                            }}
+                          >
+                            Bewerten
+                          </button>
+                        </div>
+
+                        <textarea
+                          name="comment"
+                          maxLength={800}
+                          placeholder="Schreibe optional, was dir am Server gefällt oder was verbessert werden könnte..."
+                          style={{
+                            minHeight: "110px",
+                            width: "100%",
+                            resize: "vertical",
+                            padding: "14px 16px",
+                            borderRadius: "18px",
                             background: "rgba(255,255,255,0.08)",
                             border: "1px solid rgba(255,255,255,0.16)",
                             color: "#ffffff",
-                            fontWeight: 850,
                             outline: "none",
+                            fontWeight: 750,
+                            lineHeight: 1.55,
                           }}
-                        >
-                          <option value="5">5 Sterne</option>
-                          <option value="4">4 Sterne</option>
-                          <option value="3">3 Sterne</option>
-                          <option value="2">2 Sterne</option>
-                          <option value="1">1 Stern</option>
-                        </select>
-
-                        <button
-                          type="submit"
-                          style={{
-                            minHeight: "46px",
-                            padding: "0 18px",
-                            border: 0,
-                            borderRadius: "15px",
-                            color: "#ffffff",
-                            fontWeight: 950,
-                            cursor: "pointer",
-                            background:
-                              "linear-gradient(135deg, #b54cff 0%, #f35acd 45%, #6fddff 100%)",
-                          }}
-                        >
-                          Bewerten
-                        </button>
+                        />
                       </form>
                     )}
                   </div>
                 </div>
+              </section>
+
+              <section
+                style={{
+                  marginTop: "24px",
+                  padding: "24px",
+                  borderRadius: "26px",
+                  background: "rgba(255,255,255,0.045)",
+                  border: "1px solid rgba(255,255,255,0.10)",
+                  boxShadow: "0 0 26px rgba(139,92,246,0.10)",
+                }}
+              >
+                <h2
+                  style={{
+                    margin: "0 0 16px",
+                    fontSize: "26px",
+                    fontWeight: 950,
+                    letterSpacing: "-0.035em",
+                  }}
+                >
+                  Bewertungen der Community
+                </h2>
+
+                {visibleReviews.length === 0 ? (
+                  <p
+                    style={{
+                      margin: 0,
+                      color: "rgba(246,243,255,0.72)",
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    Noch keine öffentlichen Bewertungen vorhanden.
+                  </p>
+                ) : (
+                  <div
+                    style={{
+                      display: "grid",
+                      gap: "14px",
+                    }}
+                  >
+                    {visibleReviews.map((review: any) => {
+                      const comment = getReviewComment(review);
+                      const reportedCount = getReportedCount(review);
+                      const isOwnReview =
+                        discordUserId &&
+                        review.discord_user_id === discordUserId;
+
+                      return (
+                        <article
+                          key={review.id}
+                          style={{
+                            padding: "18px",
+                            borderRadius: "20px",
+                            background: "rgba(255,255,255,0.06)",
+                            border: "1px solid rgba(255,255,255,0.10)",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              gap: "12px",
+                              flexWrap: "wrap",
+                            }}
+                          >
+                            <div>
+                              <strong>{getReviewName(review)}</strong>
+
+                              <div
+                                style={{
+                                  marginTop: "6px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "10px",
+                                  flexWrap: "wrap",
+                                }}
+                              >
+                                <StarRatingText
+                                  rating={Number(review.rating ?? 0)}
+                                />
+
+                                {getReviewDate(review) && (
+                                  <span
+                                    style={{
+                                      color: "rgba(246,243,255,0.56)",
+                                      fontSize: "13px",
+                                      fontWeight: 800,
+                                    }}
+                                  >
+                                    {getReviewDate(review)}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+
+                            {reportedCount > 0 && isAdmin && (
+                              <span
+                                style={{
+                                  minHeight: "30px",
+                                  padding: "0 10px",
+                                  borderRadius: "999px",
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  background: "rgba(255,88,88,0.12)",
+                                  border: "1px solid rgba(255,88,88,0.30)",
+                                  color: "#ffb4b4",
+                                  fontSize: "12px",
+                                  fontWeight: 950,
+                                }}
+                              >
+                                {reportedCount} Meldungen
+                              </span>
+                            )}
+                          </div>
+
+                          {comment ? (
+                            <p
+                              style={{
+                                margin: "14px 0 0",
+                                color: "rgba(246,243,255,0.82)",
+                                lineHeight: 1.65,
+                                whiteSpace: "pre-wrap",
+                              }}
+                            >
+                              {comment}
+                            </p>
+                          ) : (
+                            <p
+                              style={{
+                                margin: "14px 0 0",
+                                color: "rgba(246,243,255,0.48)",
+                                lineHeight: 1.65,
+                                fontStyle: "italic",
+                              }}
+                            >
+                              Diese Bewertung enthält keinen Kommentar.
+                            </p>
+                          )}
+
+                          <div
+                            style={{
+                              marginTop: "14px",
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                              flexWrap: "wrap",
+                            }}
+                          >
+                            {session && !isOwnReview && (
+                              <form action="/api/reviews/report" method="POST">
+                                <input
+                                  type="hidden"
+                                  name="review_id"
+                                  value={review.id}
+                                />
+                                <input
+                                  type="hidden"
+                                  name="server_id"
+                                  value={server.id}
+                                />
+                                <input
+                                  type="hidden"
+                                  name="reason"
+                                  value="Unpassende Bewertung"
+                                />
+
+                                <button
+                                  type="submit"
+                                  style={{
+                                    minHeight: "34px",
+                                    padding: "0 12px",
+                                    borderRadius: "999px",
+                                    border:
+                                      "1px solid rgba(255,255,255,0.14)",
+                                    background: "rgba(255,255,255,0.06)",
+                                    color: "rgba(246,243,255,0.82)",
+                                    fontWeight: 850,
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  Bewertung melden
+                                </button>
+                              </form>
+                            )}
+
+                            {isAdmin && (
+                              <form
+                                action="/api/admin/reviews/delete"
+                                method="POST"
+                              >
+                                <input
+                                  type="hidden"
+                                  name="review_id"
+                                  value={review.id}
+                                />
+                                <input
+                                  type="hidden"
+                                  name="server_id"
+                                  value={server.id}
+                                />
+
+                                <button
+                                  type="submit"
+                                  style={{
+                                    minHeight: "34px",
+                                    padding: "0 12px",
+                                    borderRadius: "999px",
+                                    border:
+                                      "1px solid rgba(255,88,88,0.32)",
+                                    background: "rgba(255,88,88,0.10)",
+                                    color: "#ffb4b4",
+                                    fontWeight: 950,
+                                    cursor: "pointer",
+                                  }}
+                                >
+                                  Admin löschen
+                                </button>
+                              </form>
+                            )}
+                          </div>
+                        </article>
+                      );
+                    })}
+                  </div>
+                )}
               </section>
             </div>
 
@@ -705,10 +1122,11 @@ export default async function ServerDetailPage({
                 </h3>
 
                 {[
-                  ["Kategorie", server.category || "Community"],
-                  ["Land", server.country || "International"],
                   ["Sprache", server.language || "Deutsch"],
                   ["Status", server.status || "approved"],
+                  ["Online", formatOnlineCount(server)],
+                  ["Mitglieder", formatMemberCount(server)],
+                  ["Letzter Bump", formatLastBump(server.last_bump)],
                 ].map(([label, value]) => (
                   <div
                     key={label}
@@ -739,24 +1157,88 @@ export default async function ServerDetailPage({
               >
                 <h3
                   style={{
-                    margin: "0 0 10px",
+                    margin: "0 0 14px",
                     fontSize: "20px",
                     fontWeight: 950,
                   }}
                 >
-                  Premium Features
+                  Community Überblick
                 </h3>
 
-                <p
+                <div
                   style={{
-                    margin: 0,
-                    color: "rgba(246,243,255,0.76)",
-                    lineHeight: 1.6,
+                    display: "grid",
+                    gap: "12px",
                   }}
                 >
-                  Premium-Server werden auf der Startseite hervorgehoben und
-                  automatisch in der linken Showcase-Fläche angezeigt.
-                </p>
+                  <div
+                    style={{
+                      padding: "14px",
+                      borderRadius: "18px",
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.10)",
+                    }}
+                  >
+                    <strong>{formatMemberCount(server)}</strong>
+                    <p
+                      style={{
+                        margin: "6px 0 0",
+                        color: "rgba(246,243,255,0.66)",
+                        fontSize: "13px",
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      Aktuelle Servergröße laut Discord-Bot.
+                    </p>
+                  </div>
+
+                  <div
+                    style={{
+                      padding: "14px",
+                      borderRadius: "18px",
+                      background: "rgba(54,255,154,0.08)",
+                      border: "1px solid rgba(54,255,154,0.18)",
+                    }}
+                  >
+                    <strong>{formatOnlineCount(server)}</strong>
+                    <p
+                      style={{
+                        margin: "6px 0 0",
+                        color: "rgba(246,243,255,0.66)",
+                        fontSize: "13px",
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      Online-Anzeige wird automatisch vom Bot aktualisiert.
+                    </p>
+                  </div>
+
+                  <div
+                    style={{
+                      padding: "14px",
+                      borderRadius: "18px",
+                      background: "rgba(255,207,64,0.08)",
+                      border: "1px solid rgba(255,207,64,0.18)",
+                    }}
+                  >
+                    <strong>
+                      {ratingStats.count === 0
+                        ? "Noch keine Bewertungen"
+                        : `${ratingStats.average.toFixed(1)} / 5 Sterne`}
+                    </strong>
+                    <p
+                      style={{
+                        margin: "6px 0 0",
+                        color: "rgba(246,243,255,0.66)",
+                        fontSize: "13px",
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      Öffentliche Bewertungen können gemeldet und von Admins
+                      entfernt werden.
+                    </p>
+                  </div>
+                </div>
               </div>
             </aside>
           </div>
