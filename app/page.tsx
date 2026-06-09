@@ -23,7 +23,7 @@ const HOME_TEXT = {
     cardExtra:
       "Chillige Gaming- und Anime-Community, Support bei Fragen und regelmäßig neue Updates.",
     join: "Discord beitreten",
-    premiumBadge: "Premium Bereich",
+    premiumBadge: "Server Überblick",
     premiumTitle: "Premium Server",
     premiumText:
       "Hier erscheinen Premium- und Partner-Server. Sie werden nach und nach elegant eingeblendet.",
@@ -58,7 +58,7 @@ const HOME_TEXT = {
     cardExtra:
       "Chill gaming and anime community, support for questions and regular new updates.",
     join: "Join Discord",
-    premiumBadge: "Premium Area",
+    premiumBadge: "Server Overview",
     premiumTitle: "Premium Servers",
     premiumText:
       "Premium and partner servers appear here and fade in one after another.",
@@ -93,7 +93,7 @@ const HOME_TEXT = {
     cardExtra:
       "Communauté gaming et anime chill, support pour les questions et mises à jour régulières.",
     join: "Rejoindre Discord",
-    premiumBadge: "Zone Premium",
+    premiumBadge: "Aperçu serveur",
     premiumTitle: "Serveurs Premium",
     premiumText:
       "Les serveurs premium et partenaires apparaissent ici avec une animation élégante.",
@@ -128,7 +128,7 @@ const HOME_TEXT = {
     cardExtra:
       "Community gaming e anime chill, supporto per domande e nuovi aggiornamenti regolari.",
     join: "Entra su Discord",
-    premiumBadge: "Area Premium",
+    premiumBadge: "Panoramica server",
     premiumTitle: "Server Premium",
     premiumText:
       "I server premium e partner vengono mostrati qui con una bella animazione.",
@@ -163,7 +163,7 @@ const HOME_TEXT = {
     cardExtra:
       "Luźna społeczność gaming i anime, pomoc przy pytaniach i regularne aktualizacje.",
     join: "Dołącz do Discorda",
-    premiumBadge: "Strefa Premium",
+    premiumBadge: "Przegląd serwerów",
     premiumTitle: "Serwery Premium",
     premiumText:
       "Tutaj pojawią się serwery premium i partnerskie, pokazujące się jeden po drugim.",
@@ -184,8 +184,103 @@ const HOME_TEXT = {
   },
 } as const;
 
+const HOME_OVERVIEW_TEXT = {
+  de: {
+    overviewTitle: "Zuletzt gebumpte Server",
+    overviewText:
+      "Live-Überblick über Premium- und Partner-Server, sortiert nach dem letzten Bump.",
+    onlineUnknown: "Online unbekannt",
+    membersUnknown: "Mitglieder unbekannt",
+    online: "online",
+    members: "Mitglieder",
+    bump: "Bump",
+    noBump: "Noch nicht gebumpt",
+    justNow: "Gerade eben",
+    minutesAgo: "vor {value} Min.",
+    hoursAgo: "vor {value} Std.",
+    daysAgoSingular: "vor {value} Tag",
+    daysAgoPlural: "vor {value} Tagen",
+  },
+
+  en: {
+    overviewTitle: "Recently bumped servers",
+    overviewText:
+      "Live overview of premium and partner servers, sorted by the latest bump.",
+    onlineUnknown: "Online unknown",
+    membersUnknown: "Members unknown",
+    online: "online",
+    members: "members",
+    bump: "Bump",
+    noBump: "Not bumped yet",
+    justNow: "Just now",
+    minutesAgo: "{value} min. ago",
+    hoursAgo: "{value} hrs. ago",
+    daysAgoSingular: "{value} day ago",
+    daysAgoPlural: "{value} days ago",
+  },
+
+  fr: {
+    overviewTitle: "Serveurs récemment bumpés",
+    overviewText:
+      "Aperçu live des serveurs premium et partenaires, triés par dernier bump.",
+    onlineUnknown: "Online inconnu",
+    membersUnknown: "Membres inconnus",
+    online: "en ligne",
+    members: "membres",
+    bump: "Bump",
+    noBump: "Pas encore bumpé",
+    justNow: "À l'instant",
+    minutesAgo: "il y a {value} min.",
+    hoursAgo: "il y a {value} h",
+    daysAgoSingular: "il y a {value} jour",
+    daysAgoPlural: "il y a {value} jours",
+  },
+
+  it: {
+    overviewTitle: "Server bumpati di recente",
+    overviewText:
+      "Panoramica live dei server premium e partner, ordinati per ultimo bump.",
+    onlineUnknown: "Online sconosciuto",
+    membersUnknown: "Membri sconosciuti",
+    online: "online",
+    members: "membri",
+    bump: "Bump",
+    noBump: "Non ancora bumpato",
+    justNow: "Proprio ora",
+    minutesAgo: "{value} min. fa",
+    hoursAgo: "{value} ore fa",
+    daysAgoSingular: "{value} giorno fa",
+    daysAgoPlural: "{value} giorni fa",
+  },
+
+  pl: {
+    overviewTitle: "Ostatnio bumpowane serwery",
+    overviewText:
+      "Podgląd premium i partnerskich serwerów, posortowany według ostatniego bumpa.",
+    onlineUnknown: "Online nieznane",
+    membersUnknown: "Członkowie nieznani",
+    online: "online",
+    members: "członków",
+    bump: "Bump",
+    noBump: "Jeszcze nie bumpowano",
+    justNow: "Przed chwilą",
+    minutesAgo: "{value} min. temu",
+    hoursAgo: "{value} godz. temu",
+    daysAgoSingular: "{value} dzień temu",
+    daysAgoPlural: "{value} dni temu",
+  },
+} as const;
+
 function t(language: UiLanguage, key: keyof typeof HOME_TEXT.de) {
   return HOME_TEXT[language]?.[key] || HOME_TEXT.de[key];
+}
+
+function ot(language: UiLanguage, key: keyof typeof HOME_OVERVIEW_TEXT.de) {
+  return HOME_OVERVIEW_TEXT[language]?.[key] || HOME_OVERVIEW_TEXT.de[key];
+}
+
+function replaceValue(text: string, value: number) {
+  return text.replace("{value}", String(value));
 }
 
 function shortText(text: string | undefined, maxLength: number) {
@@ -348,6 +443,106 @@ function getServerInvite(serverData: any) {
   return serverData.inviteLink || serverData.invite_link || "/servers";
 }
 
+function getTimeValue(value: string | null | undefined) {
+  if (!value) return 0;
+
+  const time = new Date(value).getTime();
+
+  if (!Number.isFinite(time)) {
+    return 0;
+  }
+
+  return time;
+}
+
+function sortByLastBump(servers: Server[]) {
+  return [...servers].sort((a: any, b: any) => {
+    const aBump = getTimeValue(a.last_bump);
+    const bBump = getTimeValue(b.last_bump);
+
+    if (aBump !== bBump) {
+      return bBump - aBump;
+    }
+
+    return getTimeValue(b.created_at) - getTimeValue(a.created_at);
+  });
+}
+
+function getOnlineCount(serverData: any) {
+  const value =
+    serverData.online_count ??
+    serverData.onlineCount ??
+    serverData.members_online ??
+    serverData.online_members ??
+    serverData.presence_count ??
+    serverData.discord_online_count ??
+    serverData.discord_online_members ??
+    serverData.approximate_presence_count ??
+    serverData.approximate_presence ??
+    null;
+
+  if (value === null || value === undefined || Number.isNaN(Number(value))) {
+    return null;
+  }
+
+  return Number(value);
+}
+
+function getMemberCount(serverData: any) {
+  const value =
+    serverData.member_count ??
+    serverData.memberCount ??
+    serverData.members_count ??
+    serverData.guild_member_count ??
+    serverData.approximate_member_count ??
+    null;
+
+  if (value === null || value === undefined || Number.isNaN(Number(value))) {
+    return null;
+  }
+
+  return Number(value);
+}
+
+function formatOnlineCount(serverData: any, language: UiLanguage) {
+  const onlineCount = getOnlineCount(serverData);
+
+  if (onlineCount === null) {
+    return ot(language, "onlineUnknown");
+  }
+
+  return `${onlineCount.toLocaleString("de-DE")} ${ot(language, "online")}`;
+}
+
+function formatMemberCount(serverData: any, language: UiLanguage) {
+  const memberCount = getMemberCount(serverData);
+
+  if (memberCount === null) {
+    return ot(language, "membersUnknown");
+  }
+
+  return `${memberCount.toLocaleString("de-DE")} ${ot(language, "members")}`;
+}
+
+function formatLastBump(lastBump: string | null | undefined, language: UiLanguage) {
+  if (!lastBump) return ot(language, "noBump");
+
+  const diff = Date.now() - new Date(lastBump).getTime();
+  const minutes = Math.floor(diff / 1000 / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (minutes < 1) return ot(language, "justNow");
+  if (minutes < 60) return replaceValue(ot(language, "minutesAgo"), minutes);
+  if (hours < 24) return replaceValue(ot(language, "hoursAgo"), hours);
+
+  if (days === 1) {
+    return replaceValue(ot(language, "daysAgoSingular"), days);
+  }
+
+  return replaceValue(ot(language, "daysAgoPlural"), days);
+}
+
 function isPremiumServer(serverData: any) {
   return Boolean(serverData.premiumStatus || serverData.premium_status);
 }
@@ -381,11 +576,11 @@ export default function HomePage() {
   }, []);
 
   const premiumGridServers = useMemo(() => {
-    return premiumServers.slice(0, 6);
+    return sortByLastBump(premiumServers).slice(0, 6);
   }, [premiumServers]);
 
   const allShowcaseServers = useMemo(() => {
-    return premiumServers;
+    return sortByLastBump(premiumServers);
   }, [premiumServers]);
 
   const [showcaseStartIndex, setShowcaseStartIndex] = useState(0);
@@ -747,6 +942,89 @@ export default function HomePage() {
           padding: 18px;
         }
 
+        .home-premium-overview-row {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 8px;
+          margin: 14px 0 16px;
+        }
+
+        .home-premium-overview-row.compact {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          margin: 12px 0 2px;
+        }
+
+        .home-premium-overview-pill {
+          min-height: 34px;
+          padding: 0 9px;
+          border-radius: 999px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          min-width: 0;
+          color: rgba(255,255,255,0.92);
+          font-size: 11px;
+          font-weight: 950;
+          line-height: 1;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          background:
+            linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.045));
+          border: 1px solid rgba(255,255,255,0.13);
+          box-shadow:
+            0 10px 24px rgba(0,0,0,0.20),
+            0 0 0 1px rgba(255,255,255,0.035) inset;
+          backdrop-filter: blur(12px);
+        }
+
+        .home-premium-overview-pill span:last-child {
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .home-premium-overview-pill.online {
+          color: #b8ffd8;
+          border-color: rgba(54,255,154,0.25);
+          background:
+            radial-gradient(circle at 0% 0%, rgba(54,255,154,0.18), transparent 44%),
+            rgba(255,255,255,0.06);
+        }
+
+        .home-premium-overview-pill.members {
+          color: #ffe9a6;
+          border-color: rgba(255,220,115,0.25);
+          background:
+            radial-gradient(circle at 0% 0%, rgba(255,220,115,0.16), transparent 44%),
+            rgba(255,255,255,0.06);
+        }
+
+        .home-premium-overview-pill.bump {
+          color: #bdefff;
+          border-color: rgba(116,223,255,0.25);
+          background:
+            radial-gradient(circle at 0% 0%, rgba(116,223,255,0.16), transparent 44%),
+            rgba(255,255,255,0.06);
+        }
+
+        .home-premium-online-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 999px;
+          background: #35ff92;
+          box-shadow: 0 0 12px rgba(53,255,146,0.9);
+          flex: 0 0 auto;
+        }
+
+        @media (max-width: 700px) {
+          .home-premium-overview-row,
+          .home-premium-overview-row.compact {
+            grid-template-columns: 1fr;
+          }
+        }
+
         @media (max-width: 1150px) {
           .hero-premium-showcase {
             display: none;
@@ -887,6 +1165,21 @@ export default function HomePage() {
                         <span>•</span>
                         <span>{serverData.language || "Deutsch"}</span>
                       </div>
+                    </div>
+
+                    <div className="home-premium-overview-row compact">
+                      <span className="home-premium-overview-pill online">
+                        <span className="home-premium-online-dot" />
+                        <span>{formatOnlineCount(serverData, language)}</span>
+                      </span>
+
+                      <span className="home-premium-overview-pill bump">
+                        <span>⚡</span>
+                        <span>
+                          {ot(language, "bump")}:{" "}
+                          {formatLastBump(serverData.last_bump, language)}
+                        </span>
+                      </span>
                     </div>
 
                     <div className="hero-premium-actions">
@@ -1526,7 +1819,7 @@ export default function HomePage() {
               letterSpacing: "-0.04em",
             }}
           >
-            {t(language, "premiumTitle")}
+            {ot(language, "overviewTitle")}
           </h2>
 
           <p
@@ -1536,7 +1829,7 @@ export default function HomePage() {
               lineHeight: 1.65,
             }}
           >
-            {t(language, "premiumText")}
+            {ot(language, "overviewText")}
           </p>
         </div>
 
@@ -1652,6 +1945,26 @@ export default function HomePage() {
                     >
                       {shortText(serverData.description, 110)}
                     </p>
+
+                    <div className="home-premium-overview-row">
+                      <span className="home-premium-overview-pill online">
+                        <span className="home-premium-online-dot" />
+                        <span>{formatOnlineCount(serverData, language)}</span>
+                      </span>
+
+                      <span className="home-premium-overview-pill members">
+                        <span>👥</span>
+                        <span>{formatMemberCount(serverData, language)}</span>
+                      </span>
+
+                      <span className="home-premium-overview-pill bump">
+                        <span>⚡</span>
+                        <span>
+                          {ot(language, "bump")}:{" "}
+                          {formatLastBump(serverData.last_bump, language)}
+                        </span>
+                      </span>
+                    </div>
 
                     <Link
                       href={detailsHref}
