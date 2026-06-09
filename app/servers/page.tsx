@@ -68,7 +68,8 @@ const UI_TEXT = {
   fr: {
     pageBadge: "Asko Cafe Directory",
     title: "Serveurs Discord Asko Cafe",
-    subtitle: "Les serveurs bumpés récemment apparaissent automatiquement en haut.",
+    subtitle:
+      "Les serveurs bumpés récemment apparaissent automatiquement en haut.",
     submitServer: "Ajouter un serveur",
     searchPlaceholder: "Rechercher un serveur...",
     allLanguages: "Toutes les langues",
@@ -97,7 +98,8 @@ const UI_TEXT = {
   it: {
     pageBadge: "Asko Cafe Directory",
     title: "Server Discord Asko Cafe",
-    subtitle: "I server bumpati più di recente vengono mostrati automaticamente in alto.",
+    subtitle:
+      "I server bumpati più di recente vengono mostrati automaticamente in alto.",
     submitServer: "Aggiungi server",
     searchPlaceholder: "Cerca server...",
     allLanguages: "Tutte le lingue",
@@ -126,7 +128,8 @@ const UI_TEXT = {
   pl: {
     pageBadge: "Asko Cafe Directory",
     title: "Serwery Discord Asko Cafe",
-    subtitle: "Ostatnio bumpowane serwery są automatycznie pokazywane na górze.",
+    subtitle:
+      "Ostatnio bumpowane serwery są automatycznie pokazywane na górze.",
     submitServer: "Dodaj serwer",
     searchPlaceholder: "Szukaj serwerów...",
     allLanguages: "Wszystkie języki",
@@ -166,7 +169,9 @@ function normalizeUiLanguage(value: unknown): UiLanguage | null {
 
   if (["de", "de-de", "deutsch", "german"].includes(language)) return "de";
   if (["en", "en-us", "en-gb", "english"].includes(language)) return "en";
-  if (["fr", "fr-fr", "français", "francais", "french"].includes(language)) return "fr";
+  if (["fr", "fr-fr", "français", "francais", "french"].includes(language)) {
+    return "fr";
+  }
   if (["it", "it-it", "italiano", "italian"].includes(language)) return "it";
   if (["pl", "pl-pl", "polski", "polish"].includes(language)) return "pl";
 
@@ -186,6 +191,7 @@ async function getUiLanguage(params: {
     params.locale,
     cookieStore.get("askocafe-language")?.value,
     cookieStore.get("asko-language")?.value,
+    cookieStore.get("asko_language")?.value,
     cookieStore.get("language")?.value,
     cookieStore.get("locale")?.value,
     cookieStore.get("NEXT_LOCALE")?.value,
@@ -272,6 +278,10 @@ function getOnlineCount(server: any) {
     server.discord_online_members,
     server.approximate_presence_count,
     server.approximate_presence,
+    server.onlineCount,
+    server.membersOnline,
+    server.onlineMembers,
+    server.presenceCount,
   ];
 
   const value = possibleValues.find(
@@ -345,7 +355,10 @@ function normalizePremiumLayout(value: unknown) {
   return "glow";
 }
 
-function getPremiumDirectoryStyle(layout: string, glowColor: string): CSSProperties {
+function getPremiumDirectoryStyle(
+  layout: string,
+  glowColor: string
+): CSSProperties {
   const base = {
     "--premium-glow": glowColor,
     position: "relative",
@@ -422,6 +435,53 @@ export default async function ServersPage({
 
   return (
     <main className="container servers-directory-page">
+      <style>{`
+        .server-directory-card .premium-server-meta-row.server-card-top-stats {
+          display: grid !important;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+          align-items: center !important;
+          gap: 8px !important;
+          margin-top: 12px !important;
+          margin-bottom: 10px !important;
+          flex-wrap: nowrap !important;
+        }
+
+        .server-directory-card .premium-server-meta-row.server-card-top-stats .premium-server-meta-pill {
+          width: 100% !important;
+          min-width: 0 !important;
+          min-height: 31px !important;
+          justify-content: center !important;
+          padding: 7px 9px !important;
+          font-size: 11.5px !important;
+          line-height: 1 !important;
+          white-space: nowrap !important;
+          overflow: hidden !important;
+          text-overflow: ellipsis !important;
+        }
+
+        .server-directory-card .premium-server-meta-row.server-card-top-stats .premium-server-meta-pill span:last-child {
+          min-width: 0 !important;
+          overflow: hidden !important;
+          text-overflow: ellipsis !important;
+          white-space: nowrap !important;
+        }
+
+        .server-directory-card .premium-server-meta-row.server-card-top-stats .premium-online-dot {
+          flex: 0 0 auto !important;
+        }
+
+        @media (max-width: 420px) {
+          .server-directory-card .premium-server-meta-row.server-card-top-stats {
+            gap: 6px !important;
+          }
+
+          .server-directory-card .premium-server-meta-row.server-card-top-stats .premium-server-meta-pill {
+            padding: 7px 7px !important;
+            font-size: 10.8px !important;
+          }
+        }
+      `}</style>
+
       <section className="servers-directory-header">
         <div>
           <span className="page-badge">{t(uiLanguage, "pageBadge")}</span>
@@ -490,7 +550,6 @@ export default async function ServersPage({
               server.premium_layout || "glow"
             );
 
-            const premiumColor = rawPremiumColor;
             const descriptionToggleId = `description-${server.id}`;
             const onlineCount = getOnlineCount(server);
 
@@ -515,7 +574,7 @@ export default async function ServersPage({
                     ? ({
                         ...getPremiumDirectoryStyle(
                           premiumLayout,
-                          premiumColor
+                          rawPremiumColor
                         ),
                       } as any)
                     : undefined
@@ -599,16 +658,18 @@ export default async function ServersPage({
                     </div>
                   </div>
 
-                  <div className="premium-server-meta-row">
+                  <div className="premium-server-meta-row server-card-top-stats">
                     <span className="premium-server-meta-pill online">
                       <span className="premium-online-dot" />
-                      {formatOnlineCount(onlineCount, uiLanguage)}
+                      <span>{formatOnlineCount(onlineCount, uiLanguage)}</span>
                     </span>
 
                     <span className="premium-server-meta-pill bump">
                       <span>⚡</span>
-                      {t(uiLanguage, "bump")}:{" "}
-                      {formatLastBump(server.last_bump, uiLanguage)}
+                      <span>
+                        {t(uiLanguage, "bump")}:{" "}
+                        {formatLastBump(server.last_bump, uiLanguage)}
+                      </span>
                     </span>
                   </div>
 
