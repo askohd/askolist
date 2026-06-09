@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, type MouseEvent } from "react";
+import { useMemo, useState, type CSSProperties, type MouseEvent } from "react";
 import { useLanguage } from "@/components/useLanguage";
 
 const MAX_DESCRIPTION_WORDS = 1500;
@@ -9,754 +9,857 @@ const MAX_DESCRIPTION_WORDS = 1500;
 const SERVER_LANGUAGES = ["Deutsch", "English", "Français", "Italiano", "Polski"];
 
 const PREMIUM_LAYOUTS = [
-{ value: "glow", label: "Glow Classic" },
-{ value: "starborder", label: "Sternen Rand" },
-{ value: "sunset", label: "Sunset Dark" },
-{ value: "aurora", label: "Aurora Flow" },
-{ value: "neon", label: "Neon Pulse" },
-{ value: "galaxy", label: "Galaxy Dust" },
-{ value: "flame", label: "Fire Core" },
-{ value: "ocean", label: "Ocean Wave" },
+  { value: "glow", label: "Glow Classic" },
+  { value: "starborder", label: "Sternen Rand" },
+  { value: "sunset", label: "Sunset Dark" },
+  { value: "aurora", label: "Aurora Flow" },
+  { value: "neon", label: "Neon Pulse" },
+  { value: "galaxy", label: "Galaxy Dust" },
+  { value: "flame", label: "Fire Core" },
+  { value: "ocean", label: "Ocean Wave" },
 ] as const;
 
 type PremiumLayout = (typeof PREMIUM_LAYOUTS)[number]["value"];
 type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
 
 const PROFILE_EDITOR_TEXT = {
-de: {
-notBumped: "Noch nicht gebumpt",
-justNow: "Gerade eben",
-minutesAgo: "vor {value} Min.",
-hoursAgo: "vor {value} Std.",
-daysAgoSingular: "vor {value} Tag",
-daysAgoPlural: "vor {value} Tagen",
-deleteConfirm:
-"Willst du diesen Server wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-editServer: "Server bearbeiten",
-changeBanner: "Server-Banner ändern",
-logoNote:
-"Das Server-Logo wird automatisch vom Discord-Serverprofilbild übernommen. Ein manuelles Logo kann hier nicht mehr hochgeladen werden.",
-bannerPosition: "Banner positionieren",
-bannerPositionText: "Stelle dein Banner direkt rechts in der Vorschau ein.",
-leftRight: "Links / Rechts",
-upDown: "Hoch / Runter",
-zoom: "Zoom",
-serverName: "Servername",
-serverNamePlaceholder: "Servername",
-language: "Sprache",
-description: "Beschreibung",
-descriptionPlaceholder: "Beschreibung deines Servers",
-words: "Wörter",
-designFeatures: "Design Features",
-designText: "Farben, Glow und Layouts für Premium & Partner.",
-premiumOnlyTitle: "Nur für Premium & Partner verfügbar",
-premiumOnlyText:
-"Werde Premium Mitglied, um Layouts, Textfarben und Glow zu nutzen.",
-shop: "Zum Shop",
-layout: "Layout auswählen",
-nameColor: "Servername-Farbe",
-textColor: "Textfarbe",
-glowColor: "Glow-Farbe",
-save: "Änderungen speichern",
-deleteServer: "Server löschen",
-livePreview: "Live Vorschau",
-serverListView: "Serverlisten-Ansicht",
-previewText: "Genau so sieht deine Karte später auf der Serverliste aus.",
-noRatings: "No ratings",
-lastBumped: "Zuletzt gebumpt",
-previewDescription: "Beschreibung deines Servers...",
-showMore: "Mehr anzeigen",
-viewServer: "Server ansehen",
-join: "Beitreten",
-},
+  de: {
+    notBumped: "Noch nicht gebumpt",
+    justNow: "Gerade eben",
+    minutesAgo: "vor {value} Min.",
+    hoursAgo: "vor {value} Std.",
+    daysAgoSingular: "vor {value} Tag",
+    daysAgoPlural: "vor {value} Tagen",
+    deleteConfirm:
+      "Willst du diesen Server wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    editServer: "Server bearbeiten",
+    changeBanner: "Server-Banner ändern",
+    logoNote:
+      "Das Server-Logo wird automatisch vom Discord-Serverprofilbild übernommen. Ein manuelles Logo kann hier nicht mehr hochgeladen werden.",
+    bannerPosition: "Banner positionieren",
+    bannerPositionText: "Stelle dein Banner direkt rechts in der Vorschau ein.",
+    leftRight: "Links / Rechts",
+    upDown: "Hoch / Runter",
+    zoom: "Zoom",
+    serverName: "Servername",
+    serverNamePlaceholder: "Servername",
+    language: "Sprache",
+    description: "Beschreibung",
+    descriptionPlaceholder: "Beschreibung deines Servers",
+    words: "Wörter",
+    designFeatures: "Design Features",
+    designText: "Farben, Glow und Layouts für Premium & Partner.",
+    premiumOnlyTitle: "Nur für Premium & Partner verfügbar",
+    premiumOnlyText:
+      "Werde Premium Mitglied, um Layouts, Textfarben und Glow zu nutzen.",
+    shop: "Zum Shop",
+    layout: "Layout auswählen",
+    nameColor: "Servername-Farbe",
+    textColor: "Textfarbe",
+    glowColor: "Glow-Farbe",
+    save: "Änderungen speichern",
+    deleteServer: "Server löschen",
+    livePreview: "Live Vorschau",
+    serverListView: "Serverlisten-Ansicht",
+    previewText: "Genau so sieht deine Karte später auf der Serverliste aus.",
+    noRatings: "No ratings",
+    lastBumped: "Zuletzt gebumpt",
+    previewDescription: "Beschreibung deines Servers...",
+    showMore: "Mehr anzeigen",
+    viewServer: "Server ansehen",
+    join: "Beitreten",
+  },
 
-en: {
-notBumped: "Not bumped yet",
-justNow: "Just now",
-minutesAgo: "{value} min. ago",
-hoursAgo: "{value} hrs. ago",
-daysAgoSingular: "{value} day ago",
-daysAgoPlural: "{value} days ago",
-deleteConfirm:
-"Do you really want to delete this server? This action cannot be undone.",
-editServer: "Edit server",
-changeBanner: "Change server banner",
-logoNote:
-"The server logo is automatically taken from the Discord server icon. Manual logo upload is no longer available here.",
-bannerPosition: "Position banner",
-bannerPositionText: "Adjust your banner directly in the preview on the right.",
-leftRight: "Left / Right",
-upDown: "Up / Down",
-zoom: "Zoom",
-serverName: "Server name",
-serverNamePlaceholder: "Server name",
-language: "Language",
-description: "Description",
-descriptionPlaceholder: "Description of your server",
-words: "words",
-designFeatures: "Design Features",
-designText: "Colors, glow and layouts for Premium & Partner.",
-premiumOnlyTitle: "Only available for Premium & Partner",
-premiumOnlyText:
-"Become a Premium member to use layouts, text colors and glow.",
-shop: "Go to shop",
-layout: "Choose layout",
-nameColor: "Server name color",
-textColor: "Text color",
-glowColor: "Glow color",
-save: "Save changes",
-deleteServer: "Delete server",
-livePreview: "Live preview",
-serverListView: "Server list view",
-previewText: "This is exactly how your card will look in the server list.",
-noRatings: "No ratings",
-lastBumped: "Last bumped",
-previewDescription: "Description of your server...",
-showMore: "Show more",
-viewServer: "View server",
-join: "Join",
-},
+  en: {
+    notBumped: "Not bumped yet",
+    justNow: "Just now",
+    minutesAgo: "{value} min. ago",
+    hoursAgo: "{value} hrs. ago",
+    daysAgoSingular: "{value} day ago",
+    daysAgoPlural: "{value} days ago",
+    deleteConfirm:
+      "Do you really want to delete this server? This action cannot be undone.",
+    editServer: "Edit server",
+    changeBanner: "Change server banner",
+    logoNote:
+      "The server logo is automatically taken from the Discord server icon. Manual logo upload is no longer available here.",
+    bannerPosition: "Position banner",
+    bannerPositionText: "Adjust your banner directly in the preview on the right.",
+    leftRight: "Left / Right",
+    upDown: "Up / Down",
+    zoom: "Zoom",
+    serverName: "Server name",
+    serverNamePlaceholder: "Server name",
+    language: "Language",
+    description: "Description",
+    descriptionPlaceholder: "Description of your server",
+    words: "words",
+    designFeatures: "Design Features",
+    designText: "Colors, glow and layouts for Premium & Partner.",
+    premiumOnlyTitle: "Only available for Premium & Partner",
+    premiumOnlyText:
+      "Become a Premium member to use layouts, text colors and glow.",
+    shop: "Go to shop",
+    layout: "Choose layout",
+    nameColor: "Server name color",
+    textColor: "Text color",
+    glowColor: "Glow color",
+    save: "Save changes",
+    deleteServer: "Delete server",
+    livePreview: "Live preview",
+    serverListView: "Server list view",
+    previewText: "This is exactly how your card will look in the server list.",
+    noRatings: "No ratings",
+    lastBumped: "Last bumped",
+    previewDescription: "Description of your server...",
+    showMore: "Show more",
+    viewServer: "View server",
+    join: "Join",
+  },
 
-fr: {
-notBumped: "Pas encore bumpé",
-justNow: "À l'instant",
-minutesAgo: "il y a {value} min.",
-hoursAgo: "il y a {value} h",
-daysAgoSingular: "il y a {value} jour",
-daysAgoPlural: "il y a {value} jours",
-deleteConfirm:
-"Veux-tu vraiment supprimer ce serveur ? Cette action ne peut pas être annulée.",
-editServer: "Modifier le serveur",
-changeBanner: "Changer la bannière du serveur",
-logoNote:
-"Le logo du serveur est automatiquement repris depuis l'icône du serveur Discord. Le téléchargement manuel d'un logo n'est plus disponible ici.",
-bannerPosition: "Positionner la bannière",
-bannerPositionText: "Ajuste ta bannière directement dans l'aperçu à droite.",
-leftRight: "Gauche / Droite",
-upDown: "Haut / Bas",
-zoom: "Zoom",
-serverName: "Nom du serveur",
-serverNamePlaceholder: "Nom du serveur",
-language: "Langue",
-description: "Description",
-descriptionPlaceholder: "Description de ton serveur",
-words: "mots",
-designFeatures: "Fonctions design",
-designText: "Couleurs, glow et layouts pour Premium & Partenaire.",
-premiumOnlyTitle: "Disponible uniquement pour Premium & Partenaire",
-premiumOnlyText:
-"Deviens membre Premium pour utiliser les layouts, couleurs de texte et glow.",
-shop: "Aller à la boutique",
-layout: "Choisir un layout",
-nameColor: "Couleur du nom",
-textColor: "Couleur du texte",
-glowColor: "Couleur du glow",
-save: "Enregistrer les modifications",
-deleteServer: "Supprimer le serveur",
-livePreview: "Aperçu en direct",
-serverListView: "Vue de la liste des serveurs",
-previewText: "Voici exactement à quoi ressemblera ta carte dans la liste.",
-noRatings: "Aucune note",
-lastBumped: "Dernier bump",
-previewDescription: "Description de ton serveur...",
-showMore: "Afficher plus",
-viewServer: "Voir le serveur",
-join: "Rejoindre",
-},
+  fr: {
+    notBumped: "Pas encore bumpé",
+    justNow: "À l'instant",
+    minutesAgo: "il y a {value} min.",
+    hoursAgo: "il y a {value} h",
+    daysAgoSingular: "il y a {value} jour",
+    daysAgoPlural: "il y a {value} jours",
+    deleteConfirm:
+      "Veux-tu vraiment supprimer ce serveur ? Cette action ne peut pas être annulée.",
+    editServer: "Modifier le serveur",
+    changeBanner: "Changer la bannière du serveur",
+    logoNote:
+      "Le logo du serveur est automatiquement repris depuis l'icône du serveur Discord. Le téléchargement manuel d'un logo n'est plus disponible ici.",
+    bannerPosition: "Positionner la bannière",
+    bannerPositionText: "Ajuste ta bannière directement dans l'aperçu à droite.",
+    leftRight: "Gauche / Droite",
+    upDown: "Haut / Bas",
+    zoom: "Zoom",
+    serverName: "Nom du serveur",
+    serverNamePlaceholder: "Nom du serveur",
+    language: "Langue",
+    description: "Description",
+    descriptionPlaceholder: "Description de ton serveur",
+    words: "mots",
+    designFeatures: "Fonctions design",
+    designText: "Couleurs, glow et layouts pour Premium & Partenaire.",
+    premiumOnlyTitle: "Disponible uniquement pour Premium & Partenaire",
+    premiumOnlyText:
+      "Deviens membre Premium pour utiliser les layouts, couleurs de texte et glow.",
+    shop: "Aller à la boutique",
+    layout: "Choisir un layout",
+    nameColor: "Couleur du nom",
+    textColor: "Couleur du texte",
+    glowColor: "Couleur du glow",
+    save: "Enregistrer les modifications",
+    deleteServer: "Supprimer le serveur",
+    livePreview: "Aperçu en direct",
+    serverListView: "Vue de la liste des serveurs",
+    previewText: "Voici exactement à quoi ressemblera ta carte dans la liste.",
+    noRatings: "Aucune note",
+    lastBumped: "Dernier bump",
+    previewDescription: "Description de ton serveur...",
+    showMore: "Afficher plus",
+    viewServer: "Voir le serveur",
+    join: "Rejoindre",
+  },
 
-it: {
-notBumped: "Non ancora bumpato",
-justNow: "Proprio ora",
-minutesAgo: "{value} min. fa",
-hoursAgo: "{value} ore fa",
-daysAgoSingular: "{value} giorno fa",
-daysAgoPlural: "{value} giorni fa",
-deleteConfirm:
-"Vuoi davvero eliminare questo server? Questa azione non può essere annullata.",
-editServer: "Modifica server",
-changeBanner: "Cambia banner del server",
-logoNote:
-"Il logo del server viene preso automaticamente dall'icona del server Discord. Il caricamento manuale del logo non è più disponibile qui.",
-bannerPosition: "Posiziona banner",
-bannerPositionText: "Regola il banner direttamente nell'anteprima a destra.",
-leftRight: "Sinistra / Destra",
-upDown: "Su / Giù",
-zoom: "Zoom",
-serverName: "Nome server",
-serverNamePlaceholder: "Nome server",
-language: "Lingua",
-description: "Descrizione",
-descriptionPlaceholder: "Descrizione del tuo server",
-words: "parole",
-designFeatures: "Funzioni design",
-designText: "Colori, glow e layout per Premium & Partner.",
-premiumOnlyTitle: "Disponibile solo per Premium & Partner",
-premiumOnlyText:
-"Diventa membro Premium per usare layout, colori del testo e glow.",
-shop: "Vai allo shop",
-layout: "Scegli layout",
-nameColor: "Colore nome server",
-textColor: "Colore testo",
-glowColor: "Colore glow",
-save: "Salva modifiche",
-deleteServer: "Elimina server",
-livePreview: "Anteprima live",
-serverListView: "Vista lista server",
-previewText: "Ecco esattamente come apparirà la tua card nella lista.",
-noRatings: "Nessuna valutazione",
-lastBumped: "Ultimo bump",
-previewDescription: "Descrizione del tuo server...",
-showMore: "Mostra altro",
-viewServer: "Vedi server",
-join: "Entra",
-},
+  it: {
+    notBumped: "Non ancora bumpato",
+    justNow: "Proprio ora",
+    minutesAgo: "{value} min. fa",
+    hoursAgo: "{value} ore fa",
+    daysAgoSingular: "{value} giorno fa",
+    daysAgoPlural: "{value} giorni fa",
+    deleteConfirm:
+      "Vuoi davvero eliminare questo server? Questa azione non può essere annullata.",
+    editServer: "Modifica server",
+    changeBanner: "Cambia banner del server",
+    logoNote:
+      "Il logo del server viene preso automaticamente dall'icona del server Discord. Il caricamento manuale del logo non è più disponibile qui.",
+    bannerPosition: "Posiziona banner",
+    bannerPositionText: "Regola il banner direttamente nell'anteprima a destra.",
+    leftRight: "Sinistra / Destra",
+    upDown: "Su / Giù",
+    zoom: "Zoom",
+    serverName: "Nome server",
+    serverNamePlaceholder: "Nome server",
+    language: "Lingua",
+    description: "Descrizione",
+    descriptionPlaceholder: "Descrizione del tuo server",
+    words: "parole",
+    designFeatures: "Funzioni design",
+    designText: "Colori, glow e layout per Premium & Partner.",
+    premiumOnlyTitle: "Disponibile solo per Premium & Partner",
+    premiumOnlyText:
+      "Diventa membro Premium per usare layout, colori del testo e glow.",
+    shop: "Vai allo shop",
+    layout: "Scegli layout",
+    nameColor: "Colore nome server",
+    textColor: "Colore testo",
+    glowColor: "Colore glow",
+    save: "Salva modifiche",
+    deleteServer: "Elimina server",
+    livePreview: "Anteprima live",
+    serverListView: "Vista lista server",
+    previewText: "Ecco esattamente come apparirà la tua card nella lista.",
+    noRatings: "Nessuna valutazione",
+    lastBumped: "Ultimo bump",
+    previewDescription: "Descrizione del tuo server...",
+    showMore: "Mostra altro",
+    viewServer: "Vedi server",
+    join: "Entra",
+  },
 
-pl: {
-notBumped: "Jeszcze nie bumpowano",
-justNow: "Przed chwilą",
-minutesAgo: "{value} min. temu",
-hoursAgo: "{value} godz. temu",
-daysAgoSingular: "{value} dzień temu",
-daysAgoPlural: "{value} dni temu",
-deleteConfirm:
-"Czy na pewno chcesz usunąć ten serwer? Tej akcji nie można cofnąć.",
-editServer: "Edytuj serwer",
-changeBanner: "Zmień banner serwera",
-logoNote:
-"Logo serwera jest automatycznie pobierane z ikony serwera Discord. Ręczne przesyłanie logo nie jest już tutaj dostępne.",
-bannerPosition: "Ustaw banner",
-bannerPositionText: "Dopasuj banner bezpośrednio w podglądzie po prawej.",
-leftRight: "Lewo / Prawo",
-upDown: "Góra / Dół",
-zoom: "Zoom",
-serverName: "Nazwa serwera",
-serverNamePlaceholder: "Nazwa serwera",
-language: "Język",
-description: "Opis",
-descriptionPlaceholder: "Opis twojego serwera",
-words: "słów",
-designFeatures: "Funkcje designu",
-designText: "Kolory, glow i layouty dla Premium & Partner.",
-premiumOnlyTitle: "Dostępne tylko dla Premium & Partner",
-premiumOnlyText:
-"Zostań członkiem Premium, aby używać layoutów, kolorów tekstu i glow.",
-shop: "Przejdź do sklepu",
-layout: "Wybierz layout",
-nameColor: "Kolor nazwy serwera",
-textColor: "Kolor tekstu",
-glowColor: "Kolor glow",
-save: "Zapisz zmiany",
-deleteServer: "Usuń serwer",
-livePreview: "Podgląd na żywo",
-serverListView: "Widok listy serwerów",
-previewText: "Tak dokładnie będzie wyglądać twoja karta na liście serwerów.",
-noRatings: "Brak ocen",
-lastBumped: "Ostatni bump",
-previewDescription: "Opis twojego serwera...",
-showMore: "Pokaż więcej",
-viewServer: "Zobacz serwer",
-join: "Dołącz",
-},
+  pl: {
+    notBumped: "Jeszcze nie bumpowano",
+    justNow: "Przed chwilą",
+    minutesAgo: "{value} min. temu",
+    hoursAgo: "{value} godz. temu",
+    daysAgoSingular: "{value} dzień temu",
+    daysAgoPlural: "{value} dni temu",
+    deleteConfirm:
+      "Czy na pewno chcesz usunąć ten serwer? Tej akcji nie można cofnąć.",
+    editServer: "Edytuj serwer",
+    changeBanner: "Zmień banner serwera",
+    logoNote:
+      "Logo serwera jest automatycznie pobierane z ikony serwera Discord. Ręczne przesyłanie logo nie jest już tutaj dostępne.",
+    bannerPosition: "Ustaw banner",
+    bannerPositionText: "Dopasuj banner bezpośrednio w podglądzie po prawej.",
+    leftRight: "Lewo / Prawo",
+    upDown: "Góra / Dół",
+    zoom: "Zoom",
+    serverName: "Nazwa serwera",
+    serverNamePlaceholder: "Nazwa serwera",
+    language: "Język",
+    description: "Opis",
+    descriptionPlaceholder: "Opis twojego serwera",
+    words: "słów",
+    designFeatures: "Funkcje designu",
+    designText: "Kolory, glow i layouty dla Premium & Partner.",
+    premiumOnlyTitle: "Dostępne tylko dla Premium & Partner",
+    premiumOnlyText:
+      "Zostań członkiem Premium, aby używać layoutów, kolorów tekstu i glow.",
+    shop: "Przejdź do sklepu",
+    layout: "Wybierz layout",
+    nameColor: "Kolor nazwy serwera",
+    textColor: "Kolor tekstu",
+    glowColor: "Kolor glow",
+    save: "Zapisz zmiany",
+    deleteServer: "Usuń serwer",
+    livePreview: "Podgląd na żywo",
+    serverListView: "Widok listy serwerów",
+    previewText: "Tak dokładnie będzie wyglądać twoja karta na liście serwerów.",
+    noRatings: "Brak ocen",
+    lastBumped: "Ostatni bump",
+    previewDescription: "Opis twojego serwera...",
+    showMore: "Pokaż więcej",
+    viewServer: "Zobacz serwer",
+    join: "Dołącz",
+  },
 } as const;
 
 function countWords(text: string) {
-return text.trim().split(/\s+/).filter(Boolean).length;
+  return text.trim().split(/\s+/).filter(Boolean).length;
 }
 
 function limitWords(text: string, maxWords: number) {
-return text.trim().split(/\s+/).filter(Boolean).slice(0, maxWords).join(" ");
+  return text.trim().split(/\s+/).filter(Boolean).slice(0, maxWords).join(" ");
 }
 
 function tr(language: UiLanguage, key: keyof typeof PROFILE_EDITOR_TEXT.de) {
-return PROFILE_EDITOR_TEXT[language][key] || PROFILE_EDITOR_TEXT.de[key];
+  return PROFILE_EDITOR_TEXT[language][key] || PROFILE_EDITOR_TEXT.de[key];
 }
 
 function replaceValue(text: string, value: number) {
-return text.replace("{value}", String(value));
+  return text.replace("{value}", String(value));
 }
 
 function formatLastBump(lastBump: string | null | undefined, language: UiLanguage) {
-if (!lastBump) return tr(language, "notBumped");
+  if (!lastBump) return tr(language, "notBumped");
 
-const diff = Date.now() - new Date(lastBump).getTime();
-const minutes = Math.floor(diff / 1000 / 60);
-const hours = Math.floor(minutes / 60);
-const days = Math.floor(hours / 24);
+  const diff = Date.now() - new Date(lastBump).getTime();
+  const minutes = Math.floor(diff / 1000 / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
 
-if (minutes < 1) return tr(language, "justNow");
-if (minutes < 60) return replaceValue(tr(language, "minutesAgo"), minutes);
-if (hours < 24) return replaceValue(tr(language, "hoursAgo"), hours);
+  if (minutes < 1) return tr(language, "justNow");
+  if (minutes < 60) return replaceValue(tr(language, "minutesAgo"), minutes);
+  if (hours < 24) return replaceValue(tr(language, "hoursAgo"), hours);
 
-if (days === 1) {
-return replaceValue(tr(language, "daysAgoSingular"), days);
+  if (days === 1) {
+    return replaceValue(tr(language, "daysAgoSingular"), days);
+  }
+
+  return replaceValue(tr(language, "daysAgoPlural"), days);
 }
 
-return replaceValue(tr(language, "daysAgoPlural"), days);
+function getPremiumPreviewStyle(
+  layout: PremiumLayout,
+  glowColor: string
+): CSSProperties {
+  const base: CSSProperties = {
+    position: "relative",
+    overflow: "hidden",
+    borderColor: glowColor,
+    boxShadow: `0 0 42px ${glowColor}aa, 0 0 95px ${glowColor}55`,
+  };
+
+  if (layout === "flame") {
+    return {
+      ...base,
+      background:
+        "radial-gradient(circle at 20% 0%, rgba(255, 186, 73, 0.30), transparent 36%), radial-gradient(circle at 100% 25%, rgba(255, 68, 190, 0.24), transparent 34%), linear-gradient(135deg, #241108 0%, #1a0b23 48%, #101426 100%)",
+      borderColor: "#ff7a18",
+      boxShadow:
+        "0 0 42px rgba(255, 122, 24, 0.74), 0 0 95px rgba(255, 68, 190, 0.34)",
+    };
+  }
+
+  if (layout === "galaxy") {
+    return {
+      ...base,
+      background:
+        "radial-gradient(circle at 18% 18%, rgba(255,255,255,0.28) 0 1px, transparent 2px), radial-gradient(circle at 72% 24%, rgba(255,255,255,0.22) 0 1px, transparent 2px), radial-gradient(circle at 80% 0%, rgba(132, 92, 255, 0.38), transparent 38%), linear-gradient(135deg, #080718 0%, #27104a 52%, #080d24 100%)",
+      borderColor: "#a78bfa",
+      boxShadow:
+        "0 0 42px rgba(167,139,250,0.78), 0 0 95px rgba(116,223,255,0.24)",
+    };
+  }
+
+  if (layout === "neon") {
+    return {
+      ...base,
+      background:
+        "linear-gradient(90deg, rgba(116,223,255,0.10) 1px, transparent 1px), linear-gradient(rgba(244,76,255,0.10) 1px, transparent 1px), radial-gradient(circle at 80% 0%, rgba(116,223,255,0.34), transparent 34%), linear-gradient(135deg, #060b1f 0%, #19072a 100%)",
+      backgroundSize: "24px 24px, 24px 24px, auto, auto",
+      borderColor: "#74dfff",
+      boxShadow:
+        "0 0 42px rgba(116,223,255,0.74), 0 0 95px rgba(244,76,255,0.28)",
+    };
+  }
+
+  if (layout === "aurora") {
+    return {
+      ...base,
+      background:
+        "radial-gradient(circle at 0% 20%, rgba(40,255,160,0.34), transparent 38%), radial-gradient(circle at 100% 15%, rgba(116,223,255,0.30), transparent 34%), radial-gradient(circle at 55% 0%, rgba(195,78,255,0.20), transparent 40%), linear-gradient(135deg, #071a18 0%, #101426 100%)",
+      borderColor: "#2cff9d",
+      boxShadow:
+        "0 0 42px rgba(44,255,157,0.70), 0 0 95px rgba(116,223,255,0.26)",
+    };
+  }
+
+  if (layout === "ocean") {
+    return {
+      ...base,
+      background:
+        "radial-gradient(circle at 0% 20%, rgba(71,180,255,0.32), transparent 38%), radial-gradient(circle at 100% 0%, rgba(65,255,220,0.22), transparent 34%), linear-gradient(135deg, #061728 0%, #081d34 52%, #101426 100%)",
+      borderColor: "#47b4ff",
+      boxShadow:
+        "0 0 42px rgba(71,180,255,0.72), 0 0 95px rgba(65,255,220,0.22)",
+    };
+  }
+
+  if (layout === "sunset") {
+    return {
+      ...base,
+      background:
+        "radial-gradient(circle at 0% 0%, rgba(255,178,87,0.32), transparent 36%), radial-gradient(circle at 100% 20%, rgba(255,72,160,0.28), transparent 36%), linear-gradient(135deg, #231020 0%, #2a1328 52%, #101426 100%)",
+      borderColor: "#ff7ab6",
+      boxShadow:
+        "0 0 42px rgba(255,122,182,0.70), 0 0 95px rgba(255,178,87,0.24)",
+    };
+  }
+
+  if (layout === "starborder") {
+    return {
+      ...base,
+      background:
+        "radial-gradient(circle at 18% 18%, rgba(255,255,255,0.50) 0 1px, transparent 2px), radial-gradient(circle at 70% 16%, rgba(255,255,255,0.36) 0 1px, transparent 2px), radial-gradient(circle at 85% 60%, rgba(255,255,255,0.26) 0 1px, transparent 2px), linear-gradient(135deg, #111125 0%, #1b1436 52%, #101426 100%)",
+      borderColor: "#f8e7a2",
+      boxShadow:
+        "0 0 0 2px rgba(248,231,162,0.46), 0 0 42px rgba(248,231,162,0.44), 0 0 95px rgba(139,92,246,0.26)",
+    };
+  }
+
+  return {
+    ...base,
+    background:
+      "radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.30), transparent 42%), radial-gradient(circle at 100% 20%, rgba(116, 223, 255, 0.16), transparent 36%), linear-gradient(135deg, #151027 0%, #0d1226 100%)",
+  };
 }
 
 export default function ProfileServerEditor({ server }: { server: any }) {
-const uiLanguage = useLanguage() as UiLanguage;
+  const uiLanguage = useLanguage() as UiLanguage;
 
-const isPremiumOrPartner = Boolean(
-server.premium_status || server.partner_status
-);
+  const isPremiumOrPartner = Boolean(
+    server.premium_status || server.partner_status
+  );
 
-const [lockedNotice, setLockedNotice] = useState(false);
-const [serverName, setServerName] = useState(server.server_name ?? "");
-const [language, setLanguage] = useState(server.language ?? "Deutsch");
+  const [lockedNotice, setLockedNotice] = useState(false);
+  const [serverName, setServerName] = useState(server.server_name ?? "");
+  const [language, setLanguage] = useState(server.language ?? "Deutsch");
 
-const [bannerPreview, setBannerPreview] = useState<string | null>(
-server.banner_url && server.banner_url.startsWith("http")
-? server.banner_url
-: null
-);
+  const [bannerPreview, setBannerPreview] = useState<string | null>(
+    server.banner_url && server.banner_url.startsWith("http")
+      ? server.banner_url
+      : null
+  );
 
-const logoPreview = server.discord_server_icon_url?.startsWith?.("http")
-? server.discord_server_icon_url
-: null;
+  const logoPreview = server.discord_server_icon_url?.startsWith?.("http")
+    ? server.discord_server_icon_url
+    : null;
 
-const [description, setDescription] = useState(
-limitWords(String(server.description ?? ""), MAX_DESCRIPTION_WORDS)
-);
+  const [description, setDescription] = useState(
+    limitWords(String(server.description ?? ""), MAX_DESCRIPTION_WORDS)
+  );
 
-const [bannerX, setBannerX] = useState(Number(server.banner_position_x ?? 50));
-const [bannerY, setBannerY] = useState(Number(server.banner_position_y ?? 50));
-const [bannerZoom, setBannerZoom] = useState(Number(server.banner_zoom ?? 1));
+  const [bannerX, setBannerX] = useState(Number(server.banner_position_x ?? 50));
+  const [bannerY, setBannerY] = useState(Number(server.banner_position_y ?? 50));
+  const [bannerZoom, setBannerZoom] = useState(Number(server.banner_zoom ?? 1));
 
-const [glowColor, setGlowColor] = useState(
-server.premium_glow_color ?? "#ff4fd8"
-);
+  const [glowColor, setGlowColor] = useState(
+    server.premium_glow_color ?? "#ff4fd8"
+  );
 
-const [serverNameColor, setServerNameColor] = useState(
-server.server_name_color ?? "#ffffff"
-);
+  const [serverNameColor, setServerNameColor] = useState(
+    server.server_name_color ?? "#ffffff"
+  );
 
-const [serverTextColor, setServerTextColor] = useState(
-server.server_text_color ?? "#ddd9ef"
-);
+  const [serverTextColor, setServerTextColor] = useState(
+    server.server_text_color ?? "#ddd9ef"
+  );
 
-const [premiumLayout, setPremiumLayout] = useState<PremiumLayout>(
-(server.premium_layout as PremiumLayout) ?? "glow"
-);
+  const [premiumLayout, setPremiumLayout] = useState<PremiumLayout>(
+    (server.premium_layout as PremiumLayout) ?? "glow"
+  );
 
-const bannerStyle = useMemo(
-() => ({
-objectPosition: bannerX + "% " + bannerY + "%",
-transform: "scale(" + bannerZoom + ")",
-transformOrigin: bannerX + "% " + bannerY + "%",
-}),
-[bannerX, bannerY, bannerZoom]
-);
+  const bannerStyle = useMemo(
+    () => ({
+      objectPosition: bannerX + "% " + bannerY + "%",
+      transform: "scale(" + bannerZoom + ")",
+      transformOrigin: bannerX + "% " + bannerY + "%",
+    }),
+    [bannerX, bannerY, bannerZoom]
+  );
 
-const tags = Array.isArray(server.tags) ? server.tags.slice(0, 5) : [];
+  const tags = Array.isArray(server.tags) ? server.tags.slice(0, 5) : [];
 
-const cardStyle = isPremiumOrPartner
-? ({
-"--premium-glow": glowColor,
-boxShadow:
-"0 0 42px " + glowColor + "aa, 0 0 95px " + glowColor + "55",
-borderColor: glowColor,
-} as any)
-: undefined;
+  const cardStyle = isPremiumOrPartner
+    ? ({
+        "--premium-glow": glowColor,
+        ...getPremiumPreviewStyle(premiumLayout, glowColor),
+      } as any)
+    : undefined;
 
-function showLockedNotice() {
-if (!isPremiumOrPartner) {
-setLockedNotice(true);
-}
-}
+  function showLockedNotice() {
+    if (!isPremiumOrPartner) {
+      setLockedNotice(true);
+    }
+  }
 
-function confirmDelete(event: MouseEvent<HTMLButtonElement>) {
-const confirmed = window.confirm(tr(uiLanguage, "deleteConfirm"));
+  function confirmDelete(event: MouseEvent<HTMLButtonElement>) {
+    const confirmed = window.confirm(tr(uiLanguage, "deleteConfirm"));
 
-if (!confirmed) {
-  event.preventDefault();
-}
+    if (!confirmed) {
+      event.preventDefault();
+    }
+  }
 
-}
+  return (
+    <form
+      action="/api/profile/update-server"
+      method="POST"
+      encType="multipart/form-data"
+      className="profile-edit-card"
+    >
+      <input type="hidden" name="server_id" value={server.id} />
 
-return ( <form
-   action="/api/profile/update-server"
-   method="POST"
-   encType="multipart/form-data"
-   className="profile-edit-card"
- > <input type="hidden" name="server_id" value={server.id} />
+      <h3>{tr(uiLanguage, "editServer")}</h3>
 
-```
-  <h3>{tr(uiLanguage, "editServer")}</h3>
+      <div className="profile-editor-two-column">
+        <section className="profile-editor-controls">
+          <div className="profile-upload-grid">
+            <label className="field full">
+              <span>{tr(uiLanguage, "changeBanner")}</span>
+              <input
+                type="file"
+                name="banner"
+                accept="image/*"
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
 
-  <div className="profile-editor-two-column">
-    <section className="profile-editor-controls">
-      <div className="profile-upload-grid">
-        <label className="field full">
-          <span>{tr(uiLanguage, "changeBanner")}</span>
-          <input
-            type="file"
-            name="banner"
-            accept="image/*"
-            onChange={(event) => {
-              const file = event.target.files?.[0];
-
-              if (file) {
-                setBannerPreview(URL.createObjectURL(file));
-              }
-            }}
-          />
-        </label>
-      </div>
-
-      <small className="form-note">{tr(uiLanguage, "logoNote")}</small>
-
-      <div className="banner-control-card banner-control-top">
-        <h3>{tr(uiLanguage, "bannerPosition")}</h3>
-        <p>{tr(uiLanguage, "bannerPositionText")}</p>
-
-        <label className="field">
-          <span>
-            {tr(uiLanguage, "leftRight")}: {bannerX}%
-          </span>
-          <input
-            type="range"
-            name="banner_position_x"
-            min="0"
-            max="100"
-            value={bannerX}
-            onChange={(event) => setBannerX(Number(event.target.value))}
-          />
-        </label>
-
-        <label className="field">
-          <span>
-            {tr(uiLanguage, "upDown")}: {bannerY}%
-          </span>
-          <input
-            type="range"
-            name="banner_position_y"
-            min="0"
-            max="100"
-            value={bannerY}
-            onChange={(event) => setBannerY(Number(event.target.value))}
-          />
-        </label>
-
-        <label className="field">
-          <span>
-            {tr(uiLanguage, "zoom")}: {bannerZoom}x
-          </span>
-          <input
-            type="range"
-            name="banner_zoom"
-            min="1"
-            max="2.5"
-            step="0.1"
-            value={bannerZoom}
-            onChange={(event) => setBannerZoom(Number(event.target.value))}
-          />
-        </label>
-      </div>
-
-      <label className="field">
-        <span>{tr(uiLanguage, "serverName")}</span>
-        <input
-          className="input"
-          name="server_name"
-          value={serverName}
-          placeholder={tr(uiLanguage, "serverNamePlaceholder")}
-          onChange={(event) => setServerName(event.target.value)}
-        />
-      </label>
-
-      <label className="field">
-        <span>{tr(uiLanguage, "language")}</span>
-        <select
-          name="language"
-          value={language}
-          onChange={(event) => setLanguage(event.target.value)}
-        >
-          {SERVER_LANGUAGES.map((item) => (
-            <option key={item} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      <label className="field full">
-        <span>{tr(uiLanguage, "description")}</span>
-        <textarea
-          name="description"
-          value={description}
-          placeholder={tr(uiLanguage, "descriptionPlaceholder")}
-          onChange={(event) => {
-            const value = event.target.value;
-
-            if (countWords(value) <= MAX_DESCRIPTION_WORDS) {
-              setDescription(value);
-            } else {
-              setDescription(limitWords(value, MAX_DESCRIPTION_WORDS));
-            }
-          }}
-        />
-
-        <small className="char-counter">
-          {countWords(description)}/{MAX_DESCRIPTION_WORDS}{" "}
-          {tr(uiLanguage, "words")}
-        </small>
-      </label>
-
-      <div className="premium-inline-tools">
-        <div className="premium-inline-head">
-          <button
-            type="button"
-            className="premium-diamond"
-            onClick={showLockedNotice}
-            aria-label="Premium Funktion"
-          >
-            ◆
-          </button>
-
-          <div>
-            <h3>{tr(uiLanguage, "designFeatures")}</h3>
-            <p>{tr(uiLanguage, "designText")}</p>
+                  if (file) {
+                    setBannerPreview(URL.createObjectURL(file));
+                  }
+                }}
+              />
+            </label>
           </div>
-        </div>
 
-        {lockedNotice && !isPremiumOrPartner && (
-          <div className="premium-locked-message">
-            <strong>{tr(uiLanguage, "premiumOnlyTitle")}</strong>
-            <p>{tr(uiLanguage, "premiumOnlyText")}</p>
-            <Link href="/shop" className="btn">
-              {tr(uiLanguage, "shop")}
-            </Link>
+          <small className="form-note">{tr(uiLanguage, "logoNote")}</small>
+
+          <div className="banner-control-card banner-control-top">
+            <h3>{tr(uiLanguage, "bannerPosition")}</h3>
+            <p>{tr(uiLanguage, "bannerPositionText")}</p>
+
+            <label className="field">
+              <span>
+                {tr(uiLanguage, "leftRight")}: {bannerX}%
+              </span>
+              <input
+                type="range"
+                name="banner_position_x"
+                min="0"
+                max="100"
+                value={bannerX}
+                onChange={(event) => setBannerX(Number(event.target.value))}
+              />
+            </label>
+
+            <label className="field">
+              <span>
+                {tr(uiLanguage, "upDown")}: {bannerY}%
+              </span>
+              <input
+                type="range"
+                name="banner_position_y"
+                min="0"
+                max="100"
+                value={bannerY}
+                onChange={(event) => setBannerY(Number(event.target.value))}
+              />
+            </label>
+
+            <label className="field">
+              <span>
+                {tr(uiLanguage, "zoom")}: {bannerZoom}x
+              </span>
+              <input
+                type="range"
+                name="banner_zoom"
+                min="1"
+                max="2.5"
+                step="0.1"
+                value={bannerZoom}
+                onChange={(event) => setBannerZoom(Number(event.target.value))}
+              />
+            </label>
           </div>
-        )}
 
-        <label className="field full premium-setting-line">
-          <span>
-            {tr(uiLanguage, "layout")}{" "}
-            {!isPremiumOrPartner && (
+          <label className="field">
+            <span>{tr(uiLanguage, "serverName")}</span>
+            <input
+              className="input"
+              name="server_name"
+              value={serverName}
+              placeholder={tr(uiLanguage, "serverNamePlaceholder")}
+              onChange={(event) => setServerName(event.target.value)}
+            />
+          </label>
+
+          <label className="field">
+            <span>{tr(uiLanguage, "language")}</span>
+            <select
+              name="language"
+              value={language}
+              onChange={(event) => setLanguage(event.target.value)}
+            >
+              {SERVER_LANGUAGES.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="field full">
+            <span>{tr(uiLanguage, "description")}</span>
+            <textarea
+              name="description"
+              value={description}
+              placeholder={tr(uiLanguage, "descriptionPlaceholder")}
+              onChange={(event) => {
+                const value = event.target.value;
+
+                if (countWords(value) <= MAX_DESCRIPTION_WORDS) {
+                  setDescription(value);
+                } else {
+                  setDescription(limitWords(value, MAX_DESCRIPTION_WORDS));
+                }
+              }}
+            />
+
+            <small className="char-counter">
+              {countWords(description)}/{MAX_DESCRIPTION_WORDS}{" "}
+              {tr(uiLanguage, "words")}
+            </small>
+          </label>
+
+          <div className="premium-inline-tools">
+            <div className="premium-inline-head">
               <button
                 type="button"
-                className="premium-mini-diamond"
+                className="premium-diamond"
                 onClick={showLockedNotice}
+                aria-label="Premium Funktion"
               >
                 ◆
               </button>
-            )}
-          </span>
 
-          <select
-            name="premium_layout"
-            value={premiumLayout}
-            disabled={!isPremiumOrPartner}
-            onChange={(event) =>
-              setPremiumLayout(event.target.value as PremiumLayout)
-            }
-          >
-            {PREMIUM_LAYOUTS.map((layout) => (
-              <option key={layout.value} value={layout.value}>
-                {layout.label}
-              </option>
-            ))}
-          </select>
-        </label>
+              <div>
+                <h3>{tr(uiLanguage, "designFeatures")}</h3>
+                <p>{tr(uiLanguage, "designText")}</p>
+              </div>
+            </div>
 
-        <div className="premium-color-grid-inline">
-          <label className="premium-color-field">
-            <span>
-              {tr(uiLanguage, "nameColor")}{" "}
-              {!isPremiumOrPartner && (
-                <button
-                  type="button"
-                  className="premium-mini-diamond"
-                  onClick={showLockedNotice}
-                >
-                  ◆
-                </button>
-              )}
-            </span>
-            <input
-              type="color"
-              name="server_name_color"
-              value={serverNameColor}
-              disabled={!isPremiumOrPartner}
-              onChange={(event) => setServerNameColor(event.target.value)}
-            />
-          </label>
-
-          <label className="premium-color-field">
-            <span>
-              {tr(uiLanguage, "textColor")}{" "}
-              {!isPremiumOrPartner && (
-                <button
-                  type="button"
-                  className="premium-mini-diamond"
-                  onClick={showLockedNotice}
-                >
-                  ◆
-                </button>
-              )}
-            </span>
-            <input
-              type="color"
-              name="server_text_color"
-              value={serverTextColor}
-              disabled={!isPremiumOrPartner}
-              onChange={(event) => setServerTextColor(event.target.value)}
-            />
-          </label>
-
-          <label className="premium-color-field">
-            <span>
-              {tr(uiLanguage, "glowColor")}{" "}
-              {!isPremiumOrPartner && (
-                <button
-                  type="button"
-                  className="premium-mini-diamond"
-                  onClick={showLockedNotice}
-                >
-                  ◆
-                </button>
-              )}
-            </span>
-            <input
-              type="color"
-              name="premium_glow_color"
-              value={glowColor}
-              disabled={!isPremiumOrPartner}
-              onChange={(event) => setGlowColor(event.target.value)}
-            />
-          </label>
-        </div>
-      </div>
-
-      <div className="profile-editor-actions">
-        <button className="btn profile-save-button" type="submit">
-          {tr(uiLanguage, "save")}
-        </button>
-
-        <button
-          className="btn danger"
-          type="submit"
-          formAction="/api/profile/delete-server"
-          formMethod="POST"
-          onClick={confirmDelete}
-        >
-          {tr(uiLanguage, "deleteServer")}
-        </button>
-      </div>
-    </section>
-
-    <aside className="profile-editor-preview">
-      <div className="preview-sticky-box">
-        <span className="page-badge">{tr(uiLanguage, "livePreview")}</span>
-        <h3>{tr(uiLanguage, "serverListView")}</h3>
-        <p>{tr(uiLanguage, "previewText")}</p>
-
-        <article
-          className={
-            "server-directory-card server-list-live-preview " +
-            (isPremiumOrPartner
-              ? "server-directory-card-premium premium-layout-" +
-                premiumLayout
-              : "")
-          }
-          style={cardStyle}
-        >
-          {isPremiumOrPartner && (
-            <div className="premium-glow-ring" aria-hidden="true" />
-          )}
-
-          <div className="server-directory-banner">
-            {bannerPreview ? (
-              <img
-                src={bannerPreview}
-                alt="Banner preview"
-                style={bannerStyle}
-              />
-            ) : (
-              <div className="server-directory-banner-fallback" />
+            {lockedNotice && !isPremiumOrPartner && (
+              <div className="premium-locked-message">
+                <strong>{tr(uiLanguage, "premiumOnlyTitle")}</strong>
+                <p>{tr(uiLanguage, "premiumOnlyText")}</p>
+                <Link href="/shop" className="btn">
+                  {tr(uiLanguage, "shop")}
+                </Link>
+              </div>
             )}
 
-            <div className="server-directory-rating">
-              ⭐ {tr(uiLanguage, "noRatings")}
+            <label className="field full premium-setting-line">
+              <span>
+                {tr(uiLanguage, "layout")}{" "}
+                {!isPremiumOrPartner && (
+                  <button
+                    type="button"
+                    className="premium-mini-diamond"
+                    onClick={showLockedNotice}
+                  >
+                    ◆
+                  </button>
+                )}
+              </span>
+
+              <select
+                name="premium_layout"
+                value={premiumLayout}
+                disabled={!isPremiumOrPartner}
+                onChange={(event) =>
+                  setPremiumLayout(event.target.value as PremiumLayout)
+                }
+              >
+                {PREMIUM_LAYOUTS.map((layout) => (
+                  <option key={layout.value} value={layout.value}>
+                    {layout.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <div className="premium-color-grid-inline">
+              <label className="premium-color-field">
+                <span>
+                  {tr(uiLanguage, "nameColor")}{" "}
+                  {!isPremiumOrPartner && (
+                    <button
+                      type="button"
+                      className="premium-mini-diamond"
+                      onClick={showLockedNotice}
+                    >
+                      ◆
+                    </button>
+                  )}
+                </span>
+                <input
+                  type="color"
+                  name="server_name_color"
+                  value={serverNameColor}
+                  disabled={!isPremiumOrPartner}
+                  onChange={(event) => setServerNameColor(event.target.value)}
+                />
+              </label>
+
+              <label className="premium-color-field">
+                <span>
+                  {tr(uiLanguage, "textColor")}{" "}
+                  {!isPremiumOrPartner && (
+                    <button
+                      type="button"
+                      className="premium-mini-diamond"
+                      onClick={showLockedNotice}
+                    >
+                      ◆
+                    </button>
+                  )}
+                </span>
+                <input
+                  type="color"
+                  name="server_text_color"
+                  value={serverTextColor}
+                  disabled={!isPremiumOrPartner}
+                  onChange={(event) => setServerTextColor(event.target.value)}
+                />
+              </label>
+
+              <label className="premium-color-field">
+                <span>
+                  {tr(uiLanguage, "glowColor")}{" "}
+                  {!isPremiumOrPartner && (
+                    <button
+                      type="button"
+                      className="premium-mini-diamond"
+                      onClick={showLockedNotice}
+                    >
+                      ◆
+                    </button>
+                  )}
+                </span>
+                <input
+                  type="color"
+                  name="premium_glow_color"
+                  value={glowColor}
+                  disabled={!isPremiumOrPartner}
+                  onChange={(event) => setGlowColor(event.target.value)}
+                />
+              </label>
             </div>
           </div>
 
-          <div className="server-directory-body">
-            <div className="server-directory-top">
-              <div className="server-directory-logo">
-                {logoPreview ? (
-                  <img src={logoPreview} alt="Discord server logo" />
+          <div className="profile-editor-actions">
+            <button className="btn profile-save-button" type="submit">
+              {tr(uiLanguage, "save")}
+            </button>
+
+            <button
+              className="btn danger"
+              type="submit"
+              formAction="/api/profile/delete-server"
+              formMethod="POST"
+              onClick={confirmDelete}
+            >
+              {tr(uiLanguage, "deleteServer")}
+            </button>
+          </div>
+        </section>
+
+        <aside className="profile-editor-preview">
+          <div className="preview-sticky-box">
+            <span className="page-badge">{tr(uiLanguage, "livePreview")}</span>
+            <h3>{tr(uiLanguage, "serverListView")}</h3>
+            <p>{tr(uiLanguage, "previewText")}</p>
+
+            <article
+              className={
+                "server-directory-card server-list-live-preview " +
+                (isPremiumOrPartner
+                  ? "server-directory-card-premium premium-layout-" +
+                    premiumLayout
+                  : "")
+              }
+              style={cardStyle}
+            >
+              {isPremiumOrPartner && (
+                <div className="premium-glow-ring" aria-hidden="true" />
+              )}
+
+              <div className="server-directory-banner">
+                {bannerPreview ? (
+                  <img
+                    src={bannerPreview}
+                    alt="Banner preview"
+                    style={bannerStyle}
+                  />
                 ) : (
-                  <span>{serverName?.slice(0, 1) || "S"}</span>
+                  <div
+                    className="server-directory-banner-fallback"
+                    style={
+                      isPremiumOrPartner
+                        ? {
+                            background:
+                              "linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01))",
+                          }
+                        : undefined
+                    }
+                  />
                 )}
+
+                <div className="server-directory-rating">
+                  ⭐ {tr(uiLanguage, "noRatings")}
+                </div>
               </div>
 
-              <div className="server-directory-title">
-                <h3
-                  style={{
-                    color: isPremiumOrPartner ? serverNameColor : undefined,
-                  }}
-                >
-                  {serverName || tr(uiLanguage, "serverName")}
-                </h3>
+              <div className="server-directory-body">
+                <div className="server-directory-top">
+                  <div className="server-directory-logo">
+                    {logoPreview ? (
+                      <img src={logoPreview} alt="Discord server logo" />
+                    ) : (
+                      <span>{serverName?.slice(0, 1) || "S"}</span>
+                    )}
+                  </div>
 
-                <p
+                  <div className="server-directory-title">
+                    <h3
+                      style={{
+                        color: isPremiumOrPartner ? serverNameColor : undefined,
+                      }}
+                    >
+                      {serverName || tr(uiLanguage, "serverName")}
+                    </h3>
+
+                    <p
+                      style={{
+                        color: isPremiumOrPartner ? serverTextColor : undefined,
+                      }}
+                    >
+                      {server.category} • {language}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="server-directory-status-row">
+                  <span className="server-online-dot" />
+                  <span>
+                    {tr(uiLanguage, "lastBumped")}:{" "}
+                    {formatLastBump(server.last_bump, uiLanguage)}
+                  </span>
+                </div>
+
+                <div className="server-directory-badges">
+                  {server.nsfw && <span className="badge">NSFW</span>}
+
+                  {tags.map((tag: string) => (
+                    <span className="badge" key={tag}>
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+
+                <div
+                  className="server-directory-description live-preview-description"
                   style={{
                     color: isPremiumOrPartner ? serverTextColor : undefined,
                   }}
                 >
-                  {server.category} • {language}
-                </p>
+                  {description || tr(uiLanguage, "previewDescription")}
+                </div>
+
+                <div className="description-toggle-button fake-preview-toggle">
+                  {tr(uiLanguage, "showMore")}
+                </div>
+
+                <div className="server-directory-footer">
+                  <button className="btn secondary" type="button">
+                    {tr(uiLanguage, "viewServer")}
+                  </button>
+
+                  <button className="btn" type="button">
+                    {tr(uiLanguage, "join")}
+                  </button>
+                </div>
               </div>
-            </div>
-
-            <div className="server-directory-status-row">
-              <span className="server-online-dot" />
-              <span>
-                {tr(uiLanguage, "lastBumped")}:{" "}
-                {formatLastBump(server.last_bump, uiLanguage)}
-              </span>
-            </div>
-
-            <div className="server-directory-badges">
-              {server.nsfw && <span className="badge">NSFW</span>}
-
-              {tags.map((tag: string) => (
-                <span className="badge" key={tag}>
-                  #{tag}
-                </span>
-              ))}
-            </div>
-
-            <div
-              className="server-directory-description live-preview-description"
-              style={{
-                color: isPremiumOrPartner ? serverTextColor : undefined,
-              }}
-            >
-              {description || tr(uiLanguage, "previewDescription")}
-            </div>
-
-            <div className="description-toggle-button fake-preview-toggle">
-              {tr(uiLanguage, "showMore")}
-            </div>
-
-            <div className="server-directory-footer">
-              <button className="btn secondary" type="button">
-                {tr(uiLanguage, "viewServer")}
-              </button>
-
-              <button className="btn" type="button">
-                {tr(uiLanguage, "join")}
-              </button>
-            </div>
+            </article>
           </div>
-        </article>
+        </aside>
       </div>
-    </aside>
-  </div>
-</form>
-
-);
+    </form>
+  );
 }
