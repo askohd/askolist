@@ -249,12 +249,48 @@ function getServerBanner(serverData: any) {
 }
 
 function getPremiumLayout(serverData: any) {
-  const layout =
-    serverData.premium_layout ||
-    serverData.premiumLayout ||
-    "glow";
+  const rawLayout = String(
+    serverData.premium_layout || serverData.premiumLayout || "glow"
+  )
+    .trim()
+    .toLowerCase()
+    .replace(/_/g, "-")
+    .replace(/\s+/g, "-");
 
-  if (["glow", "flame", "cyber", "minimal"].includes(layout)) {
+  const aliases: Record<string, string> = {
+    glow: "glow",
+    starborder: "starborder",
+    "star-border": "starborder",
+    "sternen-rand": "starborder",
+    sunset: "sunset",
+    "sunset-dark": "sunset",
+    aurora: "aurora",
+    "aurora-flow": "aurora",
+    neon: "neon",
+    "neon-pulse": "neon",
+    galaxy: "galaxy",
+    "galaxy-dust": "galaxy",
+    flame: "flame",
+    fire: "flame",
+    "fire-core": "flame",
+    ocean: "ocean",
+    "ocean-wave": "ocean",
+  };
+
+  const layout = aliases[rawLayout] || rawLayout;
+
+  if (
+    [
+      "glow",
+      "starborder",
+      "sunset",
+      "aurora",
+      "neon",
+      "galaxy",
+      "flame",
+      "ocean",
+    ].includes(layout)
+  ) {
     return layout;
   }
 
@@ -267,6 +303,32 @@ function getPremiumGlowColor(serverData: any) {
     serverData.premiumGlowColor ||
     "#8b5cf6"
   );
+}
+
+function getPremiumCardStyle(serverData: any) {
+  const premiumLayout = getPremiumLayout(serverData);
+  const premiumGlowColor = getPremiumGlowColor(serverData);
+
+  const base = {
+    "--premium-glow": premiumGlowColor,
+    position: "relative",
+    isolation: "isolate",
+    overflow: "hidden",
+  } as any;
+
+  if (premiumLayout === "glow") {
+    return {
+      ...base,
+      borderColor: `${premiumGlowColor}88`,
+      boxShadow: `
+        0 0 0 1px rgba(255, 255, 255, 0.025) inset,
+        0 0 30px ${premiumGlowColor}55,
+        0 0 48px rgba(112, 219, 255, 0.14)
+      `,
+    };
+  }
+
+  return base;
 }
 
 function getServerIcon(serverData: any) {
@@ -435,11 +497,10 @@ export default function HomePage() {
           letter-spacing: -0.04em;
         }
 
-        .hero-premium-card {
+        .hero-premium-card,
+        .home-premium-grid-card {
           position: relative;
-          min-height: 252px;
           overflow: hidden;
-          border-radius: 26px;
           text-decoration: none;
           color: #fff;
           isolation: isolate;
@@ -449,25 +510,51 @@ export default function HomePage() {
             0 0 0 1px rgba(255, 255, 255, 0.025) inset,
             0 0 26px rgba(180, 90, 255, 0.22),
             0 0 34px rgba(112, 219, 255, 0.12);
+        }
+
+        .hero-premium-card {
+          min-height: 252px;
+          border-radius: 26px;
           opacity: 0;
           animation: premiumServerFadeIn 0.75s ease forwards;
+        }
+
+        .home-premium-grid-card {
+          border-radius: 24px;
+          animation: premiumServerFadeIn 0.75s ease forwards;
+        }
+
+        .hero-premium-card .premium-layout-effect,
+        .home-premium-grid-card .premium-layout-effect {
+          position: absolute !important;
+          inset: 0 !important;
+          z-index: 2 !important;
+          pointer-events: none !important;
+          border-radius: inherit !important;
+          overflow: hidden !important;
+        }
+
+        .hero-premium-card-bg,
+        .home-premium-grid-banner img {
+          position: relative;
+          z-index: 1;
         }
 
         .hero-premium-card-bg {
           position: absolute;
           inset: 0;
-          z-index: -2;
           width: 100%;
           height: 100%;
           object-fit: cover;
           opacity: 1;
-          filter: brightness(0.74) saturate(1.18);
+          filter: brightness(0.64) saturate(1.14);
         }
 
-        .hero-premium-card-fallback-bg {
+        .hero-premium-card-fallback-bg,
+        .home-premium-grid-fallback-bg {
           position: absolute;
           inset: 0;
-          z-index: -2;
+          z-index: 1;
           width: 100%;
           height: 100%;
           background:
@@ -476,51 +563,29 @@ export default function HomePage() {
             linear-gradient(135deg, rgba(19, 15, 42, 1), rgba(12, 17, 36, 1));
         }
 
-        .premium-layout-glow .hero-premium-card-fallback-bg {
-          background:
-            radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.30), transparent 42%),
-            radial-gradient(circle at 100% 20%, rgba(116, 223, 255, 0.16), transparent 36%),
-            linear-gradient(135deg, #151027 0%, #0d1226 100%);
-        }
-
-        .premium-layout-flame .hero-premium-card-fallback-bg {
-          background:
-            radial-gradient(circle at 20% 0%, rgba(255, 186, 73, 0.24), transparent 36%),
-            radial-gradient(circle at 100% 25%, rgba(255, 68, 190, 0.18), transparent 34%),
-            linear-gradient(135deg, #21120a 0%, #1a0b23 48%, #0d1226 100%);
-        }
-
-        .premium-layout-cyber .hero-premium-card-fallback-bg {
-          background:
-            linear-gradient(90deg, rgba(116, 223, 255, 0.08) 1px, transparent 1px),
-            linear-gradient(rgba(201, 77, 255, 0.08) 1px, transparent 1px),
-            radial-gradient(circle at 80% 0%, rgba(116, 223, 255, 0.24), transparent 34%),
-            linear-gradient(135deg, #080d1f 0%, #160726 100%);
-          background-size: 26px 26px, 26px 26px, auto, auto;
-        }
-
-        .premium-layout-minimal .hero-premium-card-fallback-bg {
-          background: linear-gradient(135deg, #141126 0%, #0d1226 100%);
-        }
-
-        .hero-premium-card-overlay {
+        .hero-premium-card-overlay,
+        .home-premium-grid-overlay {
           position: absolute;
           inset: 0;
-          z-index: -1;
+          z-index: 3;
           background:
             linear-gradient(
               180deg,
-              rgba(8, 8, 22, 0.28) 0%,
-              rgba(9, 9, 24, 0.58) 40%,
-              rgba(11, 13, 28, 0.92) 100%
+              rgba(8, 8, 22, 0.22) 0%,
+              rgba(9, 9, 24, 0.54) 40%,
+              rgba(11, 13, 28, 0.90) 100%
             ),
-            radial-gradient(circle at 100% 0%, rgba(105, 217, 255, 0.18), transparent 34%),
-            radial-gradient(circle at 0% 100%, rgba(218, 77, 255, 0.18), transparent 36%);
+            radial-gradient(circle at 100% 0%, rgba(105, 217, 255, 0.14), transparent 34%),
+            radial-gradient(circle at 0% 100%, rgba(218, 77, 255, 0.14), transparent 36%);
+        }
+
+        .hero-premium-card-content,
+        .home-premium-grid-content {
+          position: relative;
+          z-index: 7;
         }
 
         .hero-premium-card-content {
-          position: relative;
-          z-index: 2;
           min-height: 252px;
           padding: 16px;
           display: flex;
@@ -663,6 +728,25 @@ export default function HomePage() {
           backdrop-filter: blur(12px);
         }
 
+        .home-premium-grid-banner {
+          position: relative;
+          height: 130px;
+          overflow: hidden;
+          z-index: 1;
+        }
+
+        .home-premium-grid-banner img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          filter: brightness(0.72) saturate(1.12);
+        }
+
+        .home-premium-grid-content {
+          padding: 18px;
+        }
+
         @media (max-width: 1150px) {
           .hero-premium-showcase {
             display: none;
@@ -724,22 +808,16 @@ export default function HomePage() {
               const premium = isPremiumServer(serverData);
               const partner = isPartnerServer(serverData);
               const premiumLayout = getPremiumLayout(serverData);
-              const premiumGlowColor = getPremiumGlowColor(serverData);
               const externalInvite =
                 typeof invite === "string" && invite.startsWith("http");
 
               return (
                 <article
                   key={serverData.id || serverName}
-                  className={`hero-premium-card premium-layout-${premiumLayout}`}
+                  className={`hero-premium-card server-directory-card-premium premium-layout-${premiumLayout}`}
                   style={{
+                    ...getPremiumCardStyle(serverData),
                     animationDelay: `${index * 0.18}s`,
-                    borderColor: `${premiumGlowColor}66`,
-                    boxShadow: `
-                      0 0 0 1px rgba(255, 255, 255, 0.025) inset,
-                      0 0 26px ${premiumGlowColor}44,
-                      0 0 42px rgba(112, 219, 255, 0.12)
-                    `,
                   }}
                 >
                   {banner ? (
@@ -762,6 +840,8 @@ export default function HomePage() {
                   )}
 
                   <div className="hero-premium-card-overlay" />
+
+                  <div className="premium-layout-effect" aria-hidden="true" />
 
                   <div className="hero-premium-card-content">
                     <div className="hero-premium-card-top">
@@ -1495,27 +1575,23 @@ export default function HomePage() {
               const banner = getServerBanner(serverData);
               const icon = getServerIcon(serverData);
               const detailsHref = getServerDetailsHref(serverData);
+              const premiumLayout = getPremiumLayout(serverData);
 
               return (
                 <article
                   key={serverData.id || serverName}
+                  className={`home-premium-grid-card server-directory-card-premium premium-layout-${premiumLayout}`}
                   style={{
-                    overflow: "hidden",
-                    borderRadius: "24px",
-                    background: "rgba(255,255,255,0.055)",
-                    border: "1px solid rgba(255,255,255,0.1)",
+                    ...getPremiumCardStyle(serverData),
                     animationDelay: `${index * 0.15}s`,
                   }}
                 >
-                  <div style={{ height: "130px", overflow: "hidden" }}>
+                  <div className="home-premium-grid-banner">
                     {banner ? (
                       <img
                         src={banner}
                         alt={serverName}
                         style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
                           objectPosition: `${serverData.banner_position_x ?? 50}% ${
                             serverData.banner_position_y ?? 50
                           }%`,
@@ -1526,18 +1602,15 @@ export default function HomePage() {
                         }}
                       />
                     ) : (
-                      <div
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          background:
-                            "radial-gradient(circle at 20% 10%, rgba(201,77,255,0.20), transparent 34%), radial-gradient(circle at 85% 18%, rgba(116,223,255,0.16), transparent 32%), linear-gradient(135deg, #13102a, #0d1226)",
-                        }}
-                      />
+                      <div className="home-premium-grid-fallback-bg" />
                     )}
                   </div>
 
-                  <div style={{ padding: "18px" }}>
+                  <div className="home-premium-grid-overlay" />
+
+                  <div className="premium-layout-effect" aria-hidden="true" />
+
+                  <div className="home-premium-grid-content">
                     <div
                       style={{
                         display: "flex",
