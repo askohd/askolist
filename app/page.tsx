@@ -24,12 +24,9 @@ const HOME_TEXT = {
       "Chillige Gaming- und Anime-Community, Support bei Fragen und regelmäßig neue Updates.",
     join: "Discord beitreten",
     premiumBadge: "Server Überblick",
-    premiumTitle: "Premium Server",
-    premiumText:
-      "Hier erscheinen Premium- und Partner-Server. Sie werden nach und nach elegant eingeblendet.",
-    noPremiumTitle: "Noch keine Premium Server",
+    noPremiumTitle: "Noch keine Server",
     noPremiumText:
-      "Sobald Premium- oder Partner-Server vorhanden sind, werden sie hier automatisch angezeigt.",
+      "Sobald freigegebene Server vorhanden sind, werden sie hier automatisch angezeigt.",
     community: "Community",
     support: "Support",
     language: "Sprache",
@@ -37,7 +34,6 @@ const HOME_TEXT = {
     features: "Features",
     recommendedTitle: "Empfohlene Server",
     premiumPartner: "Premium & Partner",
-    open: "Öffnen",
     featured: "Featured",
     viewServer: "Server ansehen",
     joinServer: "Discord beitreten",
@@ -59,12 +55,9 @@ const HOME_TEXT = {
       "Chill gaming and anime community, support for questions and regular new updates.",
     join: "Join Discord",
     premiumBadge: "Server Overview",
-    premiumTitle: "Premium Servers",
-    premiumText:
-      "Premium and partner servers appear here and fade in one after another.",
-    noPremiumTitle: "No premium servers yet",
+    noPremiumTitle: "No servers yet",
     noPremiumText:
-      "As soon as premium or partner servers exist, they will appear here automatically.",
+      "As soon as approved servers exist, they will appear here automatically.",
     community: "Community",
     support: "Support",
     language: "Language",
@@ -72,7 +65,6 @@ const HOME_TEXT = {
     features: "Features",
     recommendedTitle: "Recommended Servers",
     premiumPartner: "Premium & Partner",
-    open: "Open",
     featured: "Featured",
     viewServer: "View server",
     joinServer: "Join Discord",
@@ -94,12 +86,9 @@ const HOME_TEXT = {
       "Communauté gaming et anime chill, support pour les questions et mises à jour régulières.",
     join: "Rejoindre Discord",
     premiumBadge: "Aperçu serveur",
-    premiumTitle: "Serveurs Premium",
-    premiumText:
-      "Les serveurs premium et partenaires apparaissent ici avec une animation élégante.",
-    noPremiumTitle: "Aucun serveur premium",
+    noPremiumTitle: "Aucun serveur",
     noPremiumText:
-      "Dès qu'il y aura des serveurs premium ou partenaires, ils seront affichés ici automatiquement.",
+      "Dès qu'il y aura des serveurs approuvés, ils seront affichés ici automatiquement.",
     community: "Communauté",
     support: "Support",
     language: "Langue",
@@ -107,7 +96,6 @@ const HOME_TEXT = {
     features: "Fonctions",
     recommendedTitle: "Serveurs recommandés",
     premiumPartner: "Premium & Partenaire",
-    open: "Ouvrir",
     featured: "Featured",
     viewServer: "Voir le serveur",
     joinServer: "Rejoindre Discord",
@@ -129,12 +117,9 @@ const HOME_TEXT = {
       "Community gaming e anime chill, supporto per domande e nuovi aggiornamenti regolari.",
     join: "Entra su Discord",
     premiumBadge: "Panoramica server",
-    premiumTitle: "Server Premium",
-    premiumText:
-      "I server premium e partner vengono mostrati qui con una bella animazione.",
-    noPremiumTitle: "Nessun server premium",
+    noPremiumTitle: "Nessun server",
     noPremiumText:
-      "Appena ci saranno server premium o partner, appariranno qui automaticamente.",
+      "Appena ci saranno server approvati, appariranno qui automaticamente.",
     community: "Community",
     support: "Supporto",
     language: "Lingua",
@@ -142,7 +127,6 @@ const HOME_TEXT = {
     features: "Funzioni",
     recommendedTitle: "Server consigliati",
     premiumPartner: "Premium & Partner",
-    open: "Apri",
     featured: "Featured",
     viewServer: "Vedi server",
     joinServer: "Entra su Discord",
@@ -164,12 +148,9 @@ const HOME_TEXT = {
       "Luźna społeczność gaming i anime, pomoc przy pytaniach i regularne aktualizacje.",
     join: "Dołącz do Discorda",
     premiumBadge: "Przegląd serwerów",
-    premiumTitle: "Serwery Premium",
-    premiumText:
-      "Tutaj pojawią się serwery premium i partnerskie, pokazujące się jeden po drugim.",
-    noPremiumTitle: "Brak serwerów premium",
+    noPremiumTitle: "Brak serwerów",
     noPremiumText:
-      "Gdy pojawią się serwery premium lub partnerskie, będą tutaj automatycznie wyświetlane.",
+      "Gdy pojawią się zatwierdzone serwery, będą tutaj automatycznie wyświetlane.",
     community: "Społeczność",
     support: "Support",
     language: "Język",
@@ -177,7 +158,6 @@ const HOME_TEXT = {
     features: "Funkcje",
     recommendedTitle: "Polecane serwery",
     premiumPartner: "Premium & Partner",
-    open: "Otwórz",
     featured: "Featured",
     viewServer: "Zobacz serwer",
     joinServer: "Dołącz do Discorda",
@@ -188,7 +168,7 @@ const HOME_OVERVIEW_TEXT = {
   de: {
     overviewTitle: "Zuletzt gebumpte Server",
     overviewText:
-      "Live-Überblick über Premium- und Partner-Server, sortiert nach dem letzten Bump.",
+      "Live-Überblick über alle freigegebenen Server, sortiert nach dem letzten Bump.",
     onlineUnknown: "Online unbekannt",
     membersUnknown: "Mitglieder unbekannt",
     online: "online",
@@ -205,7 +185,7 @@ const HOME_OVERVIEW_TEXT = {
   en: {
     overviewTitle: "Recently bumped servers",
     overviewText:
-      "Live overview of premium and partner servers, sorted by the latest bump.",
+      "Live overview of all approved servers, sorted by the latest bump.",
     onlineUnknown: "Online unknown",
     membersUnknown: "Members unknown",
     online: "online",
@@ -222,7 +202,7 @@ const HOME_OVERVIEW_TEXT = {
   fr: {
     overviewTitle: "Serveurs récemment bumpés",
     overviewText:
-      "Aperçu live des serveurs premium et partenaires, triés par dernier bump.",
+      "Aperçu live de tous les serveurs approuvés, triés par dernier bump.",
     onlineUnknown: "Online inconnu",
     membersUnknown: "Membres inconnus",
     online: "en ligne",
@@ -239,7 +219,7 @@ const HOME_OVERVIEW_TEXT = {
   it: {
     overviewTitle: "Server bumpati di recente",
     overviewText:
-      "Panoramica live dei server premium e partner, ordinati per ultimo bump.",
+      "Panoramica live di tutti i server approvati, ordinati per ultimo bump.",
     onlineUnknown: "Online sconosciuto",
     membersUnknown: "Membri sconosciuti",
     online: "online",
@@ -256,7 +236,7 @@ const HOME_OVERVIEW_TEXT = {
   pl: {
     overviewTitle: "Ostatnio bumpowane serwery",
     overviewText:
-      "Podgląd premium i partnerskich serwerów, posortowany według ostatniego bumpa.",
+      "Podgląd wszystkich zatwierdzonych serwerów, posortowany według ostatniego bumpa.",
     onlineUnknown: "Online nieznane",
     membersUnknown: "Członkowie nieznani",
     online: "online",
@@ -286,7 +266,6 @@ function replaceValue(text: string, value: number) {
 function shortText(text: string | undefined, maxLength: number) {
   if (!text) return "";
   if (text.length <= maxLength) return text;
-
   return text.slice(0, maxLength).trim() + "…";
 }
 
@@ -320,12 +299,7 @@ function getServerId(serverData: any) {
 
 function getServerDetailsHref(serverData: any) {
   const serverId = getServerId(serverData);
-
-  if (!serverId) {
-    return "/servers";
-  }
-
-  return `/servers/${serverId}`;
+  return serverId ? `/servers/${serverId}` : "/servers";
 }
 
 function getServerName(serverData: any) {
@@ -424,6 +398,18 @@ function getPremiumCardStyle(serverData: any) {
   }
 
   return base;
+}
+
+function getNormalCardStyle() {
+  return {
+    "--premium-glow": "#8b5cf6",
+    position: "relative",
+    isolation: "isolate",
+    overflow: "hidden",
+    borderColor: "rgba(139, 92, 246, 0.62)",
+    boxShadow:
+      "0 0 0 1px rgba(255,255,255,0.025) inset, 0 0 26px rgba(139,92,246,0.18), 0 0 34px rgba(112,219,255,0.10)",
+  } as any;
 }
 
 function getServerIcon(serverData: any) {
@@ -551,33 +537,51 @@ function isPartnerServer(serverData: any) {
   return Boolean(serverData.partnerStatus || serverData.partner_status);
 }
 
+function isPremiumOrPartner(serverData: any) {
+  return isPremiumServer(serverData) || isPartnerServer(serverData);
+}
+
 export default function HomePage() {
   const language = useLanguage() as UiLanguage;
 
   const [premiumServers, setPremiumServers] = useState<Server[]>([]);
+  const [overviewServers, setOverviewServers] = useState<Server[]>([]);
 
   useEffect(() => {
-    async function loadPremiumServers() {
+    async function loadHomeData() {
       try {
-        const response = await fetch("/api/premium-servers", {
-          cache: "no-store",
-        });
+        const [premiumResponse, overviewResponse] = await Promise.all([
+          fetch("/api/premium-servers", {
+            cache: "no-store",
+          }),
+          fetch("/api/home-servers", {
+            cache: "no-store",
+          }),
+        ]);
 
-        const data = await response.json();
+        const premiumData = premiumResponse.ok
+          ? await premiumResponse.json()
+          : { servers: [] };
 
-        setPremiumServers(data.servers || []);
+        const overviewData = overviewResponse.ok
+          ? await overviewResponse.json()
+          : { servers: premiumData.servers || [] };
+
+        setPremiumServers(premiumData.servers || []);
+        setOverviewServers(overviewData.servers || premiumData.servers || []);
       } catch (error) {
-        console.error("Could not load premium servers:", error);
+        console.error("Could not load home servers:", error);
         setPremiumServers([]);
+        setOverviewServers([]);
       }
     }
 
-    loadPremiumServers();
+    loadHomeData();
   }, []);
 
   const premiumGridServers = useMemo(() => {
-    return sortByLastBump(premiumServers).slice(0, 6);
-  }, [premiumServers]);
+    return sortByLastBump(overviewServers).slice(0, 6);
+  }, [overviewServers]);
 
   const allShowcaseServers = useMemo(() => {
     return sortByLastBump(premiumServers);
@@ -1868,16 +1872,30 @@ export default function HomePage() {
               const banner = getServerBanner(serverData);
               const icon = getServerIcon(serverData);
               const detailsHref = getServerDetailsHref(serverData);
-              const premiumLayout = getPremiumLayout(serverData);
+              const premiumOrPartner = isPremiumOrPartner(serverData);
+              const premiumLayout = premiumOrPartner
+                ? getPremiumLayout(serverData)
+                : "glow";
 
               return (
                 <article
                   key={serverData.id || serverName}
-                  className={`home-premium-grid-card server-directory-card-premium premium-layout-${premiumLayout}`}
-                  style={{
-                    ...getPremiumCardStyle(serverData),
-                    animationDelay: `${index * 0.15}s`,
-                  }}
+                  className={`home-premium-grid-card ${
+                    premiumOrPartner
+                      ? `server-directory-card-premium premium-layout-${premiumLayout}`
+                      : "server-directory-card-premium premium-layout-glow"
+                  }`}
+                  style={
+                    premiumOrPartner
+                      ? {
+                          ...getPremiumCardStyle(serverData),
+                          animationDelay: `${index * 0.15}s`,
+                        }
+                      : {
+                          ...getNormalCardStyle(),
+                          animationDelay: `${index * 0.15}s`,
+                        }
+                  }
                 >
                   <div className="home-premium-grid-banner">
                     {banner ? (
@@ -1901,7 +1919,9 @@ export default function HomePage() {
 
                   <div className="home-premium-grid-overlay" />
 
-                  <div className="premium-layout-effect" aria-hidden="true" />
+                  {premiumOrPartner && (
+                    <div className="premium-layout-effect" aria-hidden="true" />
+                  )}
 
                   <div className="home-premium-grid-content">
                     <div
