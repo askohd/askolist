@@ -1,6 +1,72 @@
 import { getCurrentStaff, canModerateServers } from "@/lib/admin";
 import { supabaseRequest } from "@/lib/supabase";
 
+type PageSearchParams = Record<string, string | string[] | undefined>;
+
+function getSearchValue(searchParams: PageSearchParams, key: string) {
+  const value = searchParams[key];
+
+  if (Array.isArray(value)) {
+    return value[0] || "";
+  }
+
+  return value || "";
+}
+
+function getAdminNotice(searchParams: PageSearchParams) {
+  if (getSearchValue(searchParams, "report_done") === "1") {
+    return "Meldung wurde als erledigt markiert.";
+  }
+
+  if (getSearchValue(searchParams, "report_dismissed") === "1") {
+    return "Meldung wurde abgelehnt.";
+  }
+
+  if (getSearchValue(searchParams, "server_locked") === "1") {
+    return "Server wurde gesperrt.";
+  }
+
+  if (getSearchValue(searchParams, "server_banned") === "1") {
+    return "Server wurde gebannt.";
+  }
+
+  if (getSearchValue(searchParams, "server_deleted") === "1") {
+    return "Server wurde gelöscht.";
+  }
+
+  if (getSearchValue(searchParams, "bump_ban_3d") === "1") {
+    return "Bump-Sperre für 3 Tage wurde verhängt.";
+  }
+
+  if (getSearchValue(searchParams, "bump_ban_7d") === "1") {
+    return "Bump-Sperre für 7 Tage wurde verhängt.";
+  }
+
+  if (getSearchValue(searchParams, "bump_ban_removed") === "1") {
+    return "Bump-Sperre wurde entfernt.";
+  }
+
+  if (getSearchValue(searchParams, "review_hidden") === "1") {
+    return "Bewertung wurde versteckt.";
+  }
+
+  if (getSearchValue(searchParams, "review_deleted") === "1") {
+    return "Bewertung wurde gelöscht.";
+  }
+
+  if (getSearchValue(searchParams, "review_report_dismissed") === "1") {
+    return "Bewertungs-Meldung wurde abgelehnt.";
+  }
+
+  const error = getSearchValue(searchParams, "error");
+
+  if (error) {
+    return `Fehler: ${error}`;
+  }
+
+  return "";
+}
+
 function formatDate(value: string | null) {
   if (!value) return "Not set";
   return new Date(value).toLocaleString("de-DE");
@@ -102,7 +168,14 @@ function ReportActionForm({
   );
 }
 
-export default async function AdminPage() {
+export default async function AdminPage({
+  searchParams,
+}: {
+  searchParams?: Promise<PageSearchParams>;
+}) {
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const adminNotice = getAdminNotice(resolvedSearchParams);
+
   const staff = await getCurrentStaff();
 
   if (!staff) {
@@ -206,6 +279,13 @@ export default async function AdminPage() {
           <strong>{staff.role}</strong>
         </p>
       </section>
+
+      {adminNotice && (
+        <section className="profile-card">
+          <span className="page-badge">Info</span>
+          <h3>{adminNotice}</h3>
+        </section>
+      )}
 
       {canModerate && (
         <section className="section">
@@ -323,14 +403,40 @@ export default async function AdminPage() {
                               />
 
                               {server?.id && (
-                                <ReportActionForm
-                                  reportType="server"
-                                  reportId={String(report.id)}
-                                  serverId={String(server.id)}
-                                  action="lock_reported_server"
-                                  label="Server sperren"
-                                  danger
-                                />
+                                <>
+                                  <ReportActionForm
+                                    reportType="server"
+                                    reportId={String(report.id)}
+                                    serverId={String(server.id)}
+                                    action="lock_reported_server"
+                                    label="Server sperren"
+                                    danger
+                                  />
+
+                                  <ReportActionForm
+                                    reportType="server"
+                                    reportId={String(report.id)}
+                                    serverId={String(server.id)}
+                                    action="bump_ban_3d_reported_server"
+                                    label="Bump-Sperre 3 Tage"
+                                  />
+
+                                  <ReportActionForm
+                                    reportType="server"
+                                    reportId={String(report.id)}
+                                    serverId={String(server.id)}
+                                    action="bump_ban_7d_reported_server"
+                                    label="Bump-Sperre 7 Tage"
+                                  />
+
+                                  <ReportActionForm
+                                    reportType="server"
+                                    reportId={String(report.id)}
+                                    serverId={String(server.id)}
+                                    action="remove_bump_ban_reported_server"
+                                    label="Bump-Sperre entfernen"
+                                  />
+                                </>
                               )}
 
                               {isAdmin && server?.id && (
