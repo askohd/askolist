@@ -120,65 +120,76 @@ export default async function AdminPage() {
   const canModerate = canModerateServers(staff.role);
   const isAdmin = staff.role === "admin";
 
-  const servers = await supabaseRequest(
+  const serversResponse = await supabaseRequest(
     "servers?select=*&order=created_at.desc"
   );
+
+  const servers: any[] = Array.isArray(serversResponse)
+    ? serversResponse
+    : [];
 
   let serverReports: any[] = [];
   let reviewReports: any[] = [];
   let reportedReviews: any[] = [];
 
   try {
-    serverReports =
-      (await supabaseRequest(
-        "server_reports?select=*&order=created_at.desc"
-      )) ?? [];
+    const serverReportsResponse = await supabaseRequest(
+      "server_reports?select=*&order=created_at.desc"
+    );
+
+    serverReports = Array.isArray(serverReportsResponse)
+      ? serverReportsResponse
+      : [];
   } catch (error) {
     console.error("Could not load server reports:", error);
   }
 
   try {
-    reviewReports =
-      (await supabaseRequest(
-        "review_reports?select=*&order=created_at.desc"
-      )) ?? [];
+    const reviewReportsResponse = await supabaseRequest(
+      "review_reports?select=*&order=created_at.desc"
+    );
+
+    reviewReports = Array.isArray(reviewReportsResponse)
+      ? reviewReportsResponse
+      : [];
   } catch (error) {
     console.error("Could not load review reports:", error);
   }
 
   const reviewIds = Array.from(
     new Set(
-      reviewReports
-        .map((report: any) => report.review_id)
-        .filter(Boolean)
+      reviewReports.map((report: any) => report.review_id).filter(Boolean)
     )
   );
 
   if (reviewIds.length > 0) {
     try {
-      reportedReviews =
-        (await supabaseRequest(
-          `reviews?id=in.(${reviewIds.join(",")})&select=*`
-        )) ?? [];
+      const reportedReviewsResponse = await supabaseRequest(
+        `reviews?id=in.(${reviewIds.join(",")})&select=*`
+      );
+
+      reportedReviews = Array.isArray(reportedReviewsResponse)
+        ? reportedReviewsResponse
+        : [];
     } catch (error) {
       console.error("Could not load reported reviews:", error);
     }
   }
 
-  const serverById = new Map(
-    (servers ?? []).map((server: any) => [server.id, server])
+  const serverById = new Map<string, any>(
+    servers.map((server: any) => [String(server.id), server])
   );
 
-  const reviewById = new Map(
-    (reportedReviews ?? []).map((review: any) => [review.id, review])
+  const reviewById = new Map<string, any>(
+    reportedReviews.map((review: any) => [String(review.id), review])
   );
 
   const openServerReports = serverReports.filter(
-    (report) => (report.status || "open") === "open"
+    (report: any) => (report.status || "open") === "open"
   );
 
   const openReviewReports = reviewReports.filter(
-    (report) => (report.status || "open") === "open"
+    (report: any) => (report.status || "open") === "open"
   );
 
   return (
@@ -213,7 +224,7 @@ export default async function AdminPage() {
           ) : (
             <div className="admin-server-list">
               {serverReports.map((report: any) => {
-                const server = serverById.get(report.server_id);
+                const server = serverById.get(String(report.server_id || ""));
                 const status = report.status || "open";
 
                 return (
@@ -272,6 +283,7 @@ export default async function AdminPage() {
                               className="admin-link-btn"
                               href={`/servers/${server.id}`}
                               target="_blank"
+                              rel="noreferrer"
                             >
                               Server ansehen
                             </a>
@@ -282,6 +294,7 @@ export default async function AdminPage() {
                               className="admin-link-btn"
                               href={server.invite_link}
                               target="_blank"
+                              rel="noreferrer"
                             >
                               Discord Invite öffnen
                             </a>
@@ -294,16 +307,16 @@ export default async function AdminPage() {
                             <div className="admin-actions">
                               <ReportActionForm
                                 reportType="server"
-                                reportId={report.id}
-                                serverId={report.server_id}
+                                reportId={String(report.id)}
+                                serverId={String(report.server_id || "")}
                                 action="dismiss_server_report"
                                 label="Ablehnen / Kein Problem"
                               />
 
                               <ReportActionForm
                                 reportType="server"
-                                reportId={report.id}
-                                serverId={report.server_id}
+                                reportId={String(report.id)}
+                                serverId={String(report.server_id || "")}
                                 action="mark_server_report_done"
                                 label="Als erledigt markieren"
                                 primary
@@ -312,8 +325,8 @@ export default async function AdminPage() {
                               {server?.id && (
                                 <ReportActionForm
                                   reportType="server"
-                                  reportId={report.id}
-                                  serverId={server.id}
+                                  reportId={String(report.id)}
+                                  serverId={String(server.id)}
                                   action="lock_reported_server"
                                   label="Server sperren"
                                   danger
@@ -324,8 +337,8 @@ export default async function AdminPage() {
                                 <>
                                   <ReportActionForm
                                     reportType="server"
-                                    reportId={report.id}
-                                    serverId={server.id}
+                                    reportId={String(report.id)}
+                                    serverId={String(server.id)}
                                     action="ban_reported_server"
                                     label="Server bannen"
                                     danger
@@ -333,8 +346,8 @@ export default async function AdminPage() {
 
                                   <ReportActionForm
                                     reportType="server"
-                                    reportId={report.id}
-                                    serverId={server.id}
+                                    reportId={String(report.id)}
+                                    serverId={String(server.id)}
                                     action="delete_reported_server"
                                     label="Server löschen"
                                     danger
@@ -351,8 +364,8 @@ export default async function AdminPage() {
               })}
 
               {reviewReports.map((report: any) => {
-                const review = reviewById.get(report.review_id);
-                const server = serverById.get(report.server_id);
+                const review = reviewById.get(String(report.review_id || ""));
+                const server = serverById.get(String(report.server_id || ""));
                 const status = report.status || "open";
 
                 return (
@@ -390,18 +403,10 @@ export default async function AdminPage() {
                         </p>
 
                         <div className="admin-meta-grid">
-                          <span>
-                            Bewertung von: {getReviewAuthor(review)}
-                          </span>
-                          <span>
-                            Sterne: {review?.rating ?? "?"}/5
-                          </span>
-                          <span>
-                            Review-ID: {report.review_id}
-                          </span>
-                          <span>
-                            Server-ID: {report.server_id}
-                          </span>
+                          <span>Bewertung von: {getReviewAuthor(review)}</span>
+                          <span>Sterne: {review?.rating ?? "?"}/5</span>
+                          <span>Review-ID: {report.review_id}</span>
+                          <span>Server-ID: {report.server_id}</span>
                         </div>
 
                         <p className="admin-description">
@@ -426,6 +431,7 @@ export default async function AdminPage() {
                               className="admin-link-btn"
                               href={`/servers/${server.id}`}
                               target="_blank"
+                              rel="noreferrer"
                             >
                               Server ansehen
                             </a>
@@ -438,18 +444,18 @@ export default async function AdminPage() {
                             <div className="admin-actions">
                               <ReportActionForm
                                 reportType="review"
-                                reportId={report.id}
-                                serverId={report.server_id}
-                                reviewId={report.review_id}
+                                reportId={String(report.id)}
+                                serverId={String(report.server_id || "")}
+                                reviewId={String(report.review_id || "")}
                                 action="dismiss_review_report"
                                 label="Ablehnen / Kein Problem"
                               />
 
                               <ReportActionForm
                                 reportType="review"
-                                reportId={report.id}
-                                serverId={report.server_id}
-                                reviewId={report.review_id}
+                                reportId={String(report.id)}
+                                serverId={String(report.server_id || "")}
+                                reviewId={String(report.review_id || "")}
                                 action="hide_review"
                                 label="Bewertung verstecken"
                                 danger
@@ -458,9 +464,9 @@ export default async function AdminPage() {
                               {isAdmin && (
                                 <ReportActionForm
                                   reportType="review"
-                                  reportId={report.id}
-                                  serverId={report.server_id}
-                                  reviewId={report.review_id}
+                                  reportId={String(report.id)}
+                                  serverId={String(report.server_id || "")}
+                                  reviewId={String(report.review_id || "")}
                                   action="delete_review"
                                   label="Bewertung löschen"
                                   danger
@@ -559,6 +565,7 @@ export default async function AdminPage() {
                           className="admin-link-btn"
                           href={server.invite_link}
                           target="_blank"
+                          rel="noreferrer"
                         >
                           Open Discord Invite
                         </a>
@@ -568,13 +575,13 @@ export default async function AdminPage() {
                         <h4>Review</h4>
                         <div className="admin-actions">
                           <ActionForm
-                            serverId={server.id}
+                            serverId={String(server.id)}
                             action="approve"
                             label="Approve"
                             primary
                           />
                           <ActionForm
-                            serverId={server.id}
+                            serverId={String(server.id)}
                             action="reject"
                             label="Reject"
                             danger
@@ -586,12 +593,12 @@ export default async function AdminPage() {
                         <h4>Bump Moderation</h4>
                         <div className="admin-actions">
                           <ActionForm
-                            serverId={server.id}
+                            serverId={String(server.id)}
                             action="bump_ban_3d"
                             label="Bump Ban 3 Days"
                           />
                           <ActionForm
-                            serverId={server.id}
+                            serverId={String(server.id)}
                             action="remove_bump_ban"
                             label="Remove Bump Ban"
                           />
@@ -603,48 +610,48 @@ export default async function AdminPage() {
                           <h4>Admin Actions</h4>
                           <div className="admin-actions">
                             <ActionForm
-                              serverId={server.id}
+                              serverId={String(server.id)}
                               action="premium_7d"
                               label="Premium 7 Days"
                             />
                             <ActionForm
-                              serverId={server.id}
+                              serverId={String(server.id)}
                               action="remove_premium"
                               label="Remove Premium"
                             />
                             <ActionForm
-                              serverId={server.id}
+                              serverId={String(server.id)}
                               action="partner_7d"
                               label="Partner 7 Days"
                             />
                             <ActionForm
-                              serverId={server.id}
+                              serverId={String(server.id)}
                               action="remove_partner"
                               label="Remove Partner"
                             />
                             <ActionForm
-                              serverId={server.id}
+                              serverId={String(server.id)}
                               action="lock"
                               label="Lock"
                             />
                             <ActionForm
-                              serverId={server.id}
+                              serverId={String(server.id)}
                               action="unlock"
                               label="Unlock"
                             />
                             <ActionForm
-                              serverId={server.id}
+                              serverId={String(server.id)}
                               action="ban"
                               label="Ban"
                               danger
                             />
                             <ActionForm
-                              serverId={server.id}
+                              serverId={String(server.id)}
                               action="unban"
                               label="Unban"
                             />
                             <ActionForm
-                              serverId={server.id}
+                              serverId={String(server.id)}
                               action="delete"
                               label="Delete"
                               danger
