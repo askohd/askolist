@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useMemo, useState, type CSSProperties, type MouseEvent } from "react";
-import { useLanguage } from "@/components/useLanguage";
 
 const MAX_DESCRIPTION_WORDS = 1500;
 
@@ -20,244 +19,6 @@ const PREMIUM_LAYOUTS = [
 ] as const;
 
 type PremiumLayout = (typeof PREMIUM_LAYOUTS)[number]["value"];
-type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
-
-const PROFILE_EDITOR_TEXT = {
-  de: {
-    notBumped: "Noch nicht gebumpt",
-    justNow: "Gerade eben",
-    minutesAgo: "vor {value} Min.",
-    hoursAgo: "vor {value} Std.",
-    daysAgoSingular: "vor {value} Tag",
-    daysAgoPlural: "vor {value} Tagen",
-    deleteConfirm:
-      "Willst du diesen Server wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-    editServer: "Server bearbeiten",
-    changeBanner: "Server-Banner ändern",
-    logoNote:
-      "Das Server-Logo wird automatisch vom Discord-Serverprofilbild übernommen. Ein manuelles Logo kann hier nicht mehr hochgeladen werden.",
-    bannerPosition: "Banner positionieren",
-    bannerPositionText: "Stelle dein Banner direkt rechts in der Vorschau ein.",
-    leftRight: "Links / Rechts",
-    upDown: "Hoch / Runter",
-    zoom: "Zoom",
-    serverName: "Servername",
-    serverNamePlaceholder: "Servername",
-    language: "Sprache",
-    description: "Beschreibung",
-    descriptionPlaceholder: "Beschreibung deines Servers",
-    words: "Wörter",
-    designFeatures: "Design Features",
-    designText: "Farben, Glow und Layouts für Premium & Partner.",
-    premiumOnlyTitle: "Nur für Premium & Partner verfügbar",
-    premiumOnlyText:
-      "Werde Premium Mitglied, um Layouts, Textfarben und Glow zu nutzen.",
-    shop: "Zum Shop",
-    layout: "Layout auswählen",
-    nameColor: "Servername-Farbe",
-    textColor: "Textfarbe",
-    glowColor: "Glow-Farbe",
-    save: "Änderungen speichern",
-    deleteServer: "Server löschen",
-    livePreview: "Live Vorschau",
-    serverListView: "Serverlisten-Ansicht",
-    previewText: "Genau so sieht deine Karte später auf der Serverliste aus.",
-    noRatings: "No ratings",
-    lastBumped: "Zuletzt gebumpt",
-    previewDescription: "Beschreibung deines Servers...",
-    showMore: "Mehr anzeigen",
-    viewServer: "Server ansehen",
-    join: "Beitreten",
-  },
-
-  en: {
-    notBumped: "Not bumped yet",
-    justNow: "Just now",
-    minutesAgo: "{value} min. ago",
-    hoursAgo: "{value} hrs. ago",
-    daysAgoSingular: "{value} day ago",
-    daysAgoPlural: "{value} days ago",
-    deleteConfirm:
-      "Do you really want to delete this server? This action cannot be undone.",
-    editServer: "Edit server",
-    changeBanner: "Change server banner",
-    logoNote:
-      "The server logo is automatically taken from the Discord server icon. Manual logo upload is no longer available here.",
-    bannerPosition: "Position banner",
-    bannerPositionText: "Adjust your banner directly in the preview on the right.",
-    leftRight: "Left / Right",
-    upDown: "Up / Down",
-    zoom: "Zoom",
-    serverName: "Server name",
-    serverNamePlaceholder: "Server name",
-    language: "Language",
-    description: "Description",
-    descriptionPlaceholder: "Description of your server",
-    words: "words",
-    designFeatures: "Design Features",
-    designText: "Colors, glow and layouts for Premium & Partner.",
-    premiumOnlyTitle: "Only available for Premium & Partner",
-    premiumOnlyText:
-      "Become a Premium member to use layouts, text colors and glow.",
-    shop: "Go to shop",
-    layout: "Choose layout",
-    nameColor: "Server name color",
-    textColor: "Text color",
-    glowColor: "Glow color",
-    save: "Save changes",
-    deleteServer: "Delete server",
-    livePreview: "Live preview",
-    serverListView: "Server list view",
-    previewText: "This is exactly how your card will look in the server list.",
-    noRatings: "No ratings",
-    lastBumped: "Last bumped",
-    previewDescription: "Description of your server...",
-    showMore: "Show more",
-    viewServer: "View server",
-    join: "Join",
-  },
-
-  fr: {
-    notBumped: "Pas encore bumpé",
-    justNow: "À l'instant",
-    minutesAgo: "il y a {value} min.",
-    hoursAgo: "il y a {value} h",
-    daysAgoSingular: "il y a {value} jour",
-    daysAgoPlural: "il y a {value} jours",
-    deleteConfirm:
-      "Veux-tu vraiment supprimer ce serveur ? Cette action ne peut pas être annulée.",
-    editServer: "Modifier le serveur",
-    changeBanner: "Changer la bannière du serveur",
-    logoNote:
-      "Le logo du serveur est automatiquement repris depuis l'icône du serveur Discord. Le téléchargement manuel d'un logo n'est plus disponible ici.",
-    bannerPosition: "Positionner la bannière",
-    bannerPositionText: "Ajuste ta bannière directement dans l'aperçu à droite.",
-    leftRight: "Gauche / Droite",
-    upDown: "Haut / Bas",
-    zoom: "Zoom",
-    serverName: "Nom du serveur",
-    serverNamePlaceholder: "Nom du serveur",
-    language: "Langue",
-    description: "Description",
-    descriptionPlaceholder: "Description de ton serveur",
-    words: "mots",
-    designFeatures: "Fonctions design",
-    designText: "Couleurs, glow et layouts pour Premium & Partenaire.",
-    premiumOnlyTitle: "Disponible uniquement pour Premium & Partenaire",
-    premiumOnlyText:
-      "Deviens membre Premium pour utiliser les layouts, couleurs de texte et glow.",
-    shop: "Aller à la boutique",
-    layout: "Choisir un layout",
-    nameColor: "Couleur du nom",
-    textColor: "Couleur du texte",
-    glowColor: "Couleur du glow",
-    save: "Enregistrer les modifications",
-    deleteServer: "Supprimer le serveur",
-    livePreview: "Aperçu en direct",
-    serverListView: "Vue de la liste des serveurs",
-    previewText: "Voici exactement à quoi ressemblera ta carte dans la liste.",
-    noRatings: "Aucune note",
-    lastBumped: "Dernier bump",
-    previewDescription: "Description de ton serveur...",
-    showMore: "Afficher plus",
-    viewServer: "Voir le serveur",
-    join: "Rejoindre",
-  },
-
-  it: {
-    notBumped: "Non ancora bumpato",
-    justNow: "Proprio ora",
-    minutesAgo: "{value} min. fa",
-    hoursAgo: "{value} ore fa",
-    daysAgoSingular: "{value} giorno fa",
-    daysAgoPlural: "{value} giorni fa",
-    deleteConfirm:
-      "Vuoi davvero eliminare questo server? Questa azione non può essere annullata.",
-    editServer: "Modifica server",
-    changeBanner: "Cambia banner del server",
-    logoNote:
-      "Il logo del server viene preso automaticamente dall'icona del server Discord. Il caricamento manuale del logo non è più disponibile qui.",
-    bannerPosition: "Posiziona banner",
-    bannerPositionText: "Regola il banner direttamente nell'anteprima a destra.",
-    leftRight: "Sinistra / Destra",
-    upDown: "Su / Giù",
-    zoom: "Zoom",
-    serverName: "Nome server",
-    serverNamePlaceholder: "Nome server",
-    language: "Lingua",
-    description: "Descrizione",
-    descriptionPlaceholder: "Descrizione del tuo server",
-    words: "parole",
-    designFeatures: "Funzioni design",
-    designText: "Colori, glow e layout per Premium & Partner.",
-    premiumOnlyTitle: "Disponibile solo per Premium & Partner",
-    premiumOnlyText:
-      "Diventa membro Premium per usare layout, colori del testo e glow.",
-    shop: "Vai allo shop",
-    layout: "Scegli layout",
-    nameColor: "Colore nome server",
-    textColor: "Colore testo",
-    glowColor: "Colore glow",
-    save: "Salva modifiche",
-    deleteServer: "Elimina server",
-    livePreview: "Anteprima live",
-    serverListView: "Vista lista server",
-    previewText: "Ecco esattamente come apparirà la tua card nella lista.",
-    noRatings: "Nessuna valutazione",
-    lastBumped: "Ultimo bump",
-    previewDescription: "Descrizione del tuo server...",
-    showMore: "Mostra altro",
-    viewServer: "Vedi server",
-    join: "Entra",
-  },
-
-  pl: {
-    notBumped: "Jeszcze nie bumpowano",
-    justNow: "Przed chwilą",
-    minutesAgo: "{value} min. temu",
-    hoursAgo: "{value} godz. temu",
-    daysAgoSingular: "{value} dzień temu",
-    daysAgoPlural: "{value} dni temu",
-    deleteConfirm:
-      "Czy na pewno chcesz usunąć ten serwer? Tej akcji nie można cofnąć.",
-    editServer: "Edytuj serwer",
-    changeBanner: "Zmień banner serwera",
-    logoNote:
-      "Logo serwera jest automatycznie pobierane z ikony serwera Discord. Ręczne przesyłanie logo nie jest już tutaj dostępne.",
-    bannerPosition: "Ustaw banner",
-    bannerPositionText: "Dopasuj banner bezpośrednio w podglądzie po prawej.",
-    leftRight: "Lewo / Prawo",
-    upDown: "Góra / Dół",
-    zoom: "Zoom",
-    serverName: "Nazwa serwera",
-    serverNamePlaceholder: "Nazwa serwera",
-    language: "Język",
-    description: "Opis",
-    descriptionPlaceholder: "Opis twojego serwera",
-    words: "słów",
-    designFeatures: "Funkcje designu",
-    designText: "Kolory, glow i layouty dla Premium & Partner.",
-    premiumOnlyTitle: "Dostępne tylko dla Premium & Partner",
-    premiumOnlyText:
-      "Zostań członkiem Premium, aby używać layoutów, kolorów tekstu i glow.",
-    shop: "Przejdź do sklepu",
-    layout: "Wybierz layout",
-    nameColor: "Kolor nazwy serwera",
-    textColor: "Kolor tekstu",
-    glowColor: "Kolor glow",
-    save: "Zapisz zmiany",
-    deleteServer: "Usuń serwer",
-    livePreview: "Podgląd na żywo",
-    serverListView: "Widok listy serwerów",
-    previewText: "Tak dokładnie będzie wyglądać twoja karta na liście serwerów.",
-    noRatings: "Brak ocen",
-    lastBumped: "Ostatni bump",
-    previewDescription: "Opis twojego serwera...",
-    showMore: "Pokaż więcej",
-    viewServer: "Zobacz serwer",
-    join: "Dołącz",
-  },
-} as const;
 
 function countWords(text: string) {
   return text.trim().split(/\s+/).filter(Boolean).length;
@@ -267,31 +28,20 @@ function limitWords(text: string, maxWords: number) {
   return text.trim().split(/\s+/).filter(Boolean).slice(0, maxWords).join(" ");
 }
 
-function tr(language: UiLanguage, key: keyof typeof PROFILE_EDITOR_TEXT.de) {
-  return PROFILE_EDITOR_TEXT[language][key] || PROFILE_EDITOR_TEXT.de[key];
-}
-
-function replaceValue(text: string, value: number) {
-  return text.replace("{value}", String(value));
-}
-
-function formatLastBump(lastBump: string | null | undefined, language: UiLanguage) {
-  if (!lastBump) return tr(language, "notBumped");
+function formatLastBump(lastBump: string | null | undefined) {
+  if (!lastBump) return "Noch nicht gebumpt";
 
   const diff = Date.now() - new Date(lastBump).getTime();
   const minutes = Math.floor(diff / 1000 / 60);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
-  if (minutes < 1) return tr(language, "justNow");
-  if (minutes < 60) return replaceValue(tr(language, "minutesAgo"), minutes);
-  if (hours < 24) return replaceValue(tr(language, "hoursAgo"), hours);
+  if (minutes < 1) return "Gerade eben";
+  if (minutes < 60) return `vor ${minutes} Min.`;
+  if (hours < 24) return `vor ${hours} Std.`;
+  if (days === 1) return "vor 1 Tag";
 
-  if (days === 1) {
-    return replaceValue(tr(language, "daysAgoSingular"), days);
-  }
-
-  return replaceValue(tr(language, "daysAgoPlural"), days);
+  return `vor ${days} Tagen`;
 }
 
 function getPremiumPreviewStyle(
@@ -300,6 +50,7 @@ function getPremiumPreviewStyle(
 ): CSSProperties {
   const base: CSSProperties = {
     position: "relative",
+    isolation: "isolate",
     overflow: "hidden",
     borderColor: glowColor,
     boxShadow: `0 0 42px ${glowColor}aa, 0 0 95px ${glowColor}55`,
@@ -309,10 +60,10 @@ function getPremiumPreviewStyle(
     return {
       ...base,
       background:
-        "radial-gradient(circle at 20% 0%, rgba(255, 186, 73, 0.30), transparent 36%), radial-gradient(circle at 100% 25%, rgba(255, 68, 190, 0.24), transparent 34%), linear-gradient(135deg, #241108 0%, #1a0b23 48%, #101426 100%)",
+        "radial-gradient(circle at 20% 0%, rgba(255,186,73,0.30), transparent 36%), radial-gradient(circle at 100% 25%, rgba(255,68,190,0.24), transparent 34%), linear-gradient(135deg, #241108 0%, #1a0b23 48%, #101426 100%)",
       borderColor: "#ff7a18",
       boxShadow:
-        "0 0 42px rgba(255, 122, 24, 0.74), 0 0 95px rgba(255, 68, 190, 0.34)",
+        "0 0 42px rgba(255,122,24,0.74), 0 0 95px rgba(255,68,190,0.34)",
     };
   }
 
@@ -320,7 +71,7 @@ function getPremiumPreviewStyle(
     return {
       ...base,
       background:
-        "radial-gradient(circle at 18% 18%, rgba(255,255,255,0.28) 0 1px, transparent 2px), radial-gradient(circle at 72% 24%, rgba(255,255,255,0.22) 0 1px, transparent 2px), radial-gradient(circle at 80% 0%, rgba(132, 92, 255, 0.38), transparent 38%), linear-gradient(135deg, #080718 0%, #27104a 52%, #080d24 100%)",
+        "radial-gradient(circle at 18% 18%, rgba(255,255,255,0.28) 0 1px, transparent 2px), radial-gradient(circle at 72% 24%, rgba(255,255,255,0.22) 0 1px, transparent 2px), radial-gradient(circle at 80% 0%, rgba(132,92,255,0.38), transparent 38%), linear-gradient(135deg, #080718 0%, #27104a 52%, #080d24 100%)",
       borderColor: "#a78bfa",
       boxShadow:
         "0 0 42px rgba(167,139,250,0.78), 0 0 95px rgba(116,223,255,0.24)",
@@ -386,13 +137,11 @@ function getPremiumPreviewStyle(
   return {
     ...base,
     background:
-      "radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.30), transparent 42%), radial-gradient(circle at 100% 20%, rgba(116, 223, 255, 0.16), transparent 36%), linear-gradient(135deg, #151027 0%, #0d1226 100%)",
+      "radial-gradient(circle at 50% 0%, rgba(139,92,246,0.30), transparent 42%), radial-gradient(circle at 100% 20%, rgba(116,223,255,0.16), transparent 36%), linear-gradient(135deg, #151027 0%, #0d1226 100%)",
   };
 }
 
 export default function ProfileServerEditor({ server }: { server: any }) {
-  const uiLanguage = useLanguage() as UiLanguage;
-
   const isPremiumOrPartner = Boolean(
     server.premium_status || server.partner_status
   );
@@ -437,9 +186,9 @@ export default function ProfileServerEditor({ server }: { server: any }) {
 
   const bannerStyle = useMemo(
     () => ({
-      objectPosition: bannerX + "% " + bannerY + "%",
-      transform: "scale(" + bannerZoom + ")",
-      transformOrigin: bannerX + "% " + bannerY + "%",
+      objectPosition: `${bannerX}% ${bannerY}%`,
+      transform: `scale(${bannerZoom})`,
+      transformOrigin: `${bannerX}% ${bannerY}%`,
     }),
     [bannerX, bannerY, bannerZoom]
   );
@@ -460,7 +209,9 @@ export default function ProfileServerEditor({ server }: { server: any }) {
   }
 
   function confirmDelete(event: MouseEvent<HTMLButtonElement>) {
-    const confirmed = window.confirm(tr(uiLanguage, "deleteConfirm"));
+    const confirmed = window.confirm(
+      "Willst du diesen Server wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+    );
 
     if (!confirmed) {
       event.preventDefault();
@@ -476,13 +227,278 @@ export default function ProfileServerEditor({ server }: { server: any }) {
     >
       <input type="hidden" name="server_id" value={server.id} />
 
-      <h3>{tr(uiLanguage, "editServer")}</h3>
+      <style>{`
+        @keyframes fireCoreMove {
+          0% {
+            transform: translateX(-8%) translateY(12px) scaleY(0.88);
+            opacity: 0.55;
+            filter: blur(8px);
+          }
+
+          50% {
+            transform: translateX(5%) translateY(-6px) scaleY(1.12);
+            opacity: 0.98;
+            filter: blur(5px);
+          }
+
+          100% {
+            transform: translateX(10%) translateY(8px) scaleY(0.92);
+            opacity: 0.62;
+            filter: blur(8px);
+          }
+        }
+
+        @keyframes fireSparkMove {
+          0% {
+            transform: translateY(28px) scale(0.8);
+            opacity: 0;
+          }
+
+          40% {
+            opacity: 0.9;
+          }
+
+          100% {
+            transform: translateY(-58px) scale(1.15);
+            opacity: 0;
+          }
+        }
+
+        @keyframes neonPulseMove {
+          0% {
+            opacity: 0.25;
+            transform: translateY(-24%);
+          }
+
+          50% {
+            opacity: 0.92;
+            transform: translateY(22%);
+          }
+
+          100% {
+            opacity: 0.25;
+            transform: translateY(-24%);
+          }
+        }
+
+        @keyframes galaxyStarsMove {
+          0% {
+            transform: translateY(0);
+            opacity: 0.45;
+          }
+
+          50% {
+            opacity: 0.95;
+          }
+
+          100% {
+            transform: translateY(-18px);
+            opacity: 0.45;
+          }
+        }
+
+        @keyframes auroraMove {
+          0% {
+            transform: translateX(-18%) rotate(-8deg);
+            opacity: 0.45;
+          }
+
+          50% {
+            transform: translateX(12%) rotate(7deg);
+            opacity: 0.9;
+          }
+
+          100% {
+            transform: translateX(-18%) rotate(-8deg);
+            opacity: 0.45;
+          }
+        }
+
+        @keyframes oceanWaveMove {
+          0% {
+            transform: translateX(-12%) translateY(8px);
+          }
+
+          50% {
+            transform: translateX(10%) translateY(-5px);
+          }
+
+          100% {
+            transform: translateX(-12%) translateY(8px);
+          }
+        }
+
+        @keyframes starBorderPulse {
+          0%, 100% {
+            box-shadow:
+              0 0 0 1px rgba(255,255,255,0.12) inset,
+              0 0 28px rgba(255,232,150,0.28),
+              0 0 58px rgba(139,92,246,0.20);
+          }
+
+          50% {
+            box-shadow:
+              0 0 0 1px rgba(255,255,255,0.24) inset,
+              0 0 42px rgba(255,232,150,0.70),
+              0 0 82px rgba(139,92,246,0.36);
+          }
+        }
+
+        .server-list-live-preview {
+          position: relative;
+          isolation: isolate;
+          overflow: hidden;
+        }
+
+        .server-list-live-preview .server-directory-banner,
+        .server-list-live-preview .server-directory-body {
+          position: relative;
+          z-index: 3;
+        }
+
+        .premium-layout-effect {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          z-index: 2;
+          overflow: hidden;
+          border-radius: inherit;
+        }
+
+        .premium-layout-effect::before,
+        .premium-layout-effect::after {
+          content: "";
+          position: absolute;
+          pointer-events: none;
+        }
+
+        .premium-layout-flame .premium-layout-effect::before {
+          left: -18%;
+          right: -18%;
+          bottom: -34px;
+          height: 122px;
+          background:
+            radial-gradient(circle at 10% 100%, rgba(255, 210, 80, 0.95), transparent 28%),
+            radial-gradient(circle at 28% 92%, rgba(255, 92, 28, 0.95), transparent 30%),
+            radial-gradient(circle at 46% 100%, rgba(255, 230, 92, 0.85), transparent 26%),
+            radial-gradient(circle at 66% 92%, rgba(255, 68, 170, 0.78), transparent 32%),
+            radial-gradient(circle at 84% 100%, rgba(255, 118, 38, 0.92), transparent 30%);
+          animation: fireCoreMove 2.1s ease-in-out infinite alternate;
+          mix-blend-mode: screen;
+        }
+
+        .premium-layout-flame .premium-layout-effect::after {
+          left: 0;
+          right: 0;
+          bottom: 0;
+          height: 58%;
+          background:
+            radial-gradient(circle at 18% 85%, rgba(255, 220, 80, 0.70) 0 2px, transparent 4px),
+            radial-gradient(circle at 42% 78%, rgba(255, 120, 30, 0.75) 0 2px, transparent 4px),
+            radial-gradient(circle at 72% 82%, rgba(255, 72, 160, 0.65) 0 2px, transparent 4px),
+            linear-gradient(180deg, transparent 0%, rgba(255, 89, 26, 0.08) 45%, rgba(255, 53, 110, 0.24) 100%);
+          animation: fireSparkMove 2.8s ease-in-out infinite;
+          mix-blend-mode: screen;
+        }
+
+        .premium-layout-neon .premium-layout-effect::before {
+          inset: -40%;
+          background:
+            linear-gradient(90deg, transparent 0%, rgba(116,223,255,0.0) 42%, rgba(116,223,255,0.45) 50%, rgba(244,76,255,0.0) 58%, transparent 100%);
+          animation: neonPulseMove 2.8s ease-in-out infinite;
+          mix-blend-mode: screen;
+        }
+
+        .premium-layout-neon .premium-layout-effect::after {
+          inset: 0;
+          background:
+            linear-gradient(90deg, rgba(116,223,255,0.12) 1px, transparent 1px),
+            linear-gradient(rgba(244,76,255,0.10) 1px, transparent 1px);
+          background-size: 22px 22px;
+          opacity: 0.55;
+        }
+
+        .premium-layout-galaxy .premium-layout-effect::before {
+          inset: 0;
+          background:
+            radial-gradient(circle at 12% 18%, rgba(255,255,255,0.9) 0 1px, transparent 2px),
+            radial-gradient(circle at 24% 62%, rgba(255,255,255,0.7) 0 1px, transparent 2px),
+            radial-gradient(circle at 42% 30%, rgba(255,255,255,0.8) 0 1px, transparent 2px),
+            radial-gradient(circle at 74% 22%, rgba(255,255,255,0.9) 0 1px, transparent 2px),
+            radial-gradient(circle at 88% 70%, rgba(255,255,255,0.7) 0 1px, transparent 2px);
+          animation: galaxyStarsMove 3.2s ease-in-out infinite alternate;
+        }
+
+        .premium-layout-aurora .premium-layout-effect::before {
+          left: -40%;
+          top: 18%;
+          width: 180%;
+          height: 44%;
+          background:
+            linear-gradient(90deg, transparent 0%, rgba(44,255,157,0.16) 18%, rgba(116,223,255,0.34) 45%, rgba(195,78,255,0.22) 72%, transparent 100%);
+          filter: blur(12px);
+          animation: auroraMove 4.2s ease-in-out infinite;
+          mix-blend-mode: screen;
+        }
+
+        .premium-layout-ocean .premium-layout-effect::before {
+          left: -22%;
+          right: -22%;
+          bottom: -32px;
+          height: 105px;
+          background:
+            radial-gradient(circle at 18% 0%, rgba(92,210,255,0.55), transparent 34%),
+            radial-gradient(circle at 42% 0%, rgba(65,255,220,0.42), transparent 32%),
+            radial-gradient(circle at 70% 0%, rgba(71,180,255,0.50), transparent 34%);
+          filter: blur(6px);
+          animation: oceanWaveMove 3s ease-in-out infinite;
+          mix-blend-mode: screen;
+        }
+
+        .premium-layout-sunset .premium-layout-effect::before {
+          left: -20%;
+          right: -20%;
+          bottom: -46px;
+          height: 125px;
+          background:
+            radial-gradient(circle at 50% 100%, rgba(255,178,87,0.75), transparent 42%),
+            radial-gradient(circle at 70% 90%, rgba(255,72,160,0.45), transparent 36%);
+          filter: blur(7px);
+          animation: fireCoreMove 3.4s ease-in-out infinite alternate;
+          mix-blend-mode: screen;
+        }
+
+        .premium-layout-starborder {
+          animation: starBorderPulse 2.4s ease-in-out infinite;
+        }
+
+        .premium-layout-starborder .premium-layout-effect::before {
+          inset: 0;
+          background:
+            radial-gradient(circle at 8% 10%, rgba(255,255,255,0.95) 0 1px, transparent 2px),
+            radial-gradient(circle at 92% 14%, rgba(255,255,255,0.85) 0 1px, transparent 2px),
+            radial-gradient(circle at 18% 90%, rgba(255,255,255,0.75) 0 1px, transparent 2px),
+            radial-gradient(circle at 82% 82%, rgba(255,255,255,0.90) 0 1px, transparent 2px);
+          animation: galaxyStarsMove 2.6s ease-in-out infinite alternate;
+        }
+
+        .premium-layout-glow .premium-layout-effect::before {
+          inset: -20%;
+          background:
+            radial-gradient(circle at 50% 0%, rgba(255,255,255,0.18), transparent 35%),
+            radial-gradient(circle at 100% 30%, rgba(116,223,255,0.16), transparent 35%);
+          animation: auroraMove 4.6s ease-in-out infinite;
+          mix-blend-mode: screen;
+        }
+      `}</style>
+
+      <h3>Server bearbeiten</h3>
 
       <div className="profile-editor-two-column">
         <section className="profile-editor-controls">
           <div className="profile-upload-grid">
             <label className="field full">
-              <span>{tr(uiLanguage, "changeBanner")}</span>
+              <span>Server-Banner ändern</span>
               <input
                 type="file"
                 name="banner"
@@ -498,16 +514,16 @@ export default function ProfileServerEditor({ server }: { server: any }) {
             </label>
           </div>
 
-          <small className="form-note">{tr(uiLanguage, "logoNote")}</small>
+          <small className="form-note">
+            Das Server-Logo wird automatisch vom Discord-Serverprofilbild übernommen.
+          </small>
 
           <div className="banner-control-card banner-control-top">
-            <h3>{tr(uiLanguage, "bannerPosition")}</h3>
-            <p>{tr(uiLanguage, "bannerPositionText")}</p>
+            <h3>Banner positionieren</h3>
+            <p>Stelle dein Banner direkt rechts in der Vorschau ein.</p>
 
             <label className="field">
-              <span>
-                {tr(uiLanguage, "leftRight")}: {bannerX}%
-              </span>
+              <span>Links / Rechts: {bannerX}%</span>
               <input
                 type="range"
                 name="banner_position_x"
@@ -519,9 +535,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
             </label>
 
             <label className="field">
-              <span>
-                {tr(uiLanguage, "upDown")}: {bannerY}%
-              </span>
+              <span>Hoch / Runter: {bannerY}%</span>
               <input
                 type="range"
                 name="banner_position_y"
@@ -533,9 +547,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
             </label>
 
             <label className="field">
-              <span>
-                {tr(uiLanguage, "zoom")}: {bannerZoom}x
-              </span>
+              <span>Zoom: {bannerZoom}x</span>
               <input
                 type="range"
                 name="banner_zoom"
@@ -549,18 +561,18 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           </div>
 
           <label className="field">
-            <span>{tr(uiLanguage, "serverName")}</span>
+            <span>Servername</span>
             <input
               className="input"
               name="server_name"
               value={serverName}
-              placeholder={tr(uiLanguage, "serverNamePlaceholder")}
+              placeholder="Servername"
               onChange={(event) => setServerName(event.target.value)}
             />
           </label>
 
           <label className="field">
-            <span>{tr(uiLanguage, "language")}</span>
+            <span>Sprache</span>
             <select
               name="language"
               value={language}
@@ -575,11 +587,11 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           </label>
 
           <label className="field full">
-            <span>{tr(uiLanguage, "description")}</span>
+            <span>Beschreibung</span>
             <textarea
               name="description"
               value={description}
-              placeholder={tr(uiLanguage, "descriptionPlaceholder")}
+              placeholder="Beschreibung deines Servers"
               onChange={(event) => {
                 const value = event.target.value;
 
@@ -592,8 +604,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
             />
 
             <small className="char-counter">
-              {countWords(description)}/{MAX_DESCRIPTION_WORDS}{" "}
-              {tr(uiLanguage, "words")}
+              {countWords(description)}/{MAX_DESCRIPTION_WORDS} Wörter
             </small>
           </label>
 
@@ -609,34 +620,25 @@ export default function ProfileServerEditor({ server }: { server: any }) {
               </button>
 
               <div>
-                <h3>{tr(uiLanguage, "designFeatures")}</h3>
-                <p>{tr(uiLanguage, "designText")}</p>
+                <h3>Design Features</h3>
+                <p>Farben, Glow und Layouts für Premium & Partner.</p>
               </div>
             </div>
 
             {lockedNotice && !isPremiumOrPartner && (
               <div className="premium-locked-message">
-                <strong>{tr(uiLanguage, "premiumOnlyTitle")}</strong>
-                <p>{tr(uiLanguage, "premiumOnlyText")}</p>
+                <strong>Nur für Premium & Partner verfügbar</strong>
+                <p>
+                  Werde Premium Mitglied, um Layouts, Textfarben und Glow zu nutzen.
+                </p>
                 <Link href="/shop" className="btn">
-                  {tr(uiLanguage, "shop")}
+                  Zum Shop
                 </Link>
               </div>
             )}
 
             <label className="field full premium-setting-line">
-              <span>
-                {tr(uiLanguage, "layout")}{" "}
-                {!isPremiumOrPartner && (
-                  <button
-                    type="button"
-                    className="premium-mini-diamond"
-                    onClick={showLockedNotice}
-                  >
-                    ◆
-                  </button>
-                )}
-              </span>
+              <span>Layout auswählen</span>
 
               <select
                 name="premium_layout"
@@ -656,18 +658,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
 
             <div className="premium-color-grid-inline">
               <label className="premium-color-field">
-                <span>
-                  {tr(uiLanguage, "nameColor")}{" "}
-                  {!isPremiumOrPartner && (
-                    <button
-                      type="button"
-                      className="premium-mini-diamond"
-                      onClick={showLockedNotice}
-                    >
-                      ◆
-                    </button>
-                  )}
-                </span>
+                <span>Servername-Farbe</span>
                 <input
                   type="color"
                   name="server_name_color"
@@ -678,18 +669,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
               </label>
 
               <label className="premium-color-field">
-                <span>
-                  {tr(uiLanguage, "textColor")}{" "}
-                  {!isPremiumOrPartner && (
-                    <button
-                      type="button"
-                      className="premium-mini-diamond"
-                      onClick={showLockedNotice}
-                    >
-                      ◆
-                    </button>
-                  )}
-                </span>
+                <span>Textfarbe</span>
                 <input
                   type="color"
                   name="server_text_color"
@@ -700,18 +680,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
               </label>
 
               <label className="premium-color-field">
-                <span>
-                  {tr(uiLanguage, "glowColor")}{" "}
-                  {!isPremiumOrPartner && (
-                    <button
-                      type="button"
-                      className="premium-mini-diamond"
-                      onClick={showLockedNotice}
-                    >
-                      ◆
-                    </button>
-                  )}
-                </span>
+                <span>Glow-Farbe</span>
                 <input
                   type="color"
                   name="premium_glow_color"
@@ -725,7 +694,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
 
           <div className="profile-editor-actions">
             <button className="btn profile-save-button" type="submit">
-              {tr(uiLanguage, "save")}
+              Änderungen speichern
             </button>
 
             <button
@@ -735,16 +704,16 @@ export default function ProfileServerEditor({ server }: { server: any }) {
               formMethod="POST"
               onClick={confirmDelete}
             >
-              {tr(uiLanguage, "deleteServer")}
+              Server löschen
             </button>
           </div>
         </section>
 
         <aside className="profile-editor-preview">
           <div className="preview-sticky-box">
-            <span className="page-badge">{tr(uiLanguage, "livePreview")}</span>
-            <h3>{tr(uiLanguage, "serverListView")}</h3>
-            <p>{tr(uiLanguage, "previewText")}</p>
+            <span className="page-badge">Live Vorschau</span>
+            <h3>Serverlisten-Ansicht</h3>
+            <p>Genau so sieht deine Karte später auf der Serverliste aus.</p>
 
             <article
               className={
@@ -758,6 +727,10 @@ export default function ProfileServerEditor({ server }: { server: any }) {
             >
               {isPremiumOrPartner && (
                 <div className="premium-glow-ring" aria-hidden="true" />
+              )}
+
+              {isPremiumOrPartner && (
+                <div className="premium-layout-effect" aria-hidden="true" />
               )}
 
               <div className="server-directory-banner">
@@ -782,7 +755,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
                 )}
 
                 <div className="server-directory-rating">
-                  ⭐ {tr(uiLanguage, "noRatings")}
+                  ⭐ No ratings
                 </div>
               </div>
 
@@ -802,7 +775,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
                         color: isPremiumOrPartner ? serverNameColor : undefined,
                       }}
                     >
-                      {serverName || tr(uiLanguage, "serverName")}
+                      {serverName || "Servername"}
                     </h3>
 
                     <p
@@ -818,8 +791,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
                 <div className="server-directory-status-row">
                   <span className="server-online-dot" />
                   <span>
-                    {tr(uiLanguage, "lastBumped")}:{" "}
-                    {formatLastBump(server.last_bump, uiLanguage)}
+                    Zuletzt gebumpt: {formatLastBump(server.last_bump)}
                   </span>
                 </div>
 
@@ -839,20 +811,20 @@ export default function ProfileServerEditor({ server }: { server: any }) {
                     color: isPremiumOrPartner ? serverTextColor : undefined,
                   }}
                 >
-                  {description || tr(uiLanguage, "previewDescription")}
+                  {description || "Beschreibung deines Servers..."}
                 </div>
 
                 <div className="description-toggle-button fake-preview-toggle">
-                  {tr(uiLanguage, "showMore")}
+                  Mehr anzeigen
                 </div>
 
                 <div className="server-directory-footer">
                   <button className="btn secondary" type="button">
-                    {tr(uiLanguage, "viewServer")}
+                    Server ansehen
                   </button>
 
                   <button className="btn" type="button">
-                    {tr(uiLanguage, "join")}
+                    Beitreten
                   </button>
                 </div>
               </div>
