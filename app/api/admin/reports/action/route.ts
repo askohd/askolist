@@ -16,6 +16,40 @@ function getStaffName(staff: any) {
   return staff?.username || staff?.name || staff?.email || "Staff";
 }
 
+function addDays(days: number) {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  return date.toISOString();
+}
+
+async function updateServerReport(reportId: string, data: Record<string, any>) {
+  return supabaseRequest(`server_reports?id=eq.${reportId}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+async function updateReviewReport(reportId: string, data: Record<string, any>) {
+  return supabaseRequest(`review_reports?id=eq.${reportId}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+async function updateServer(serverId: string, data: Record<string, any>) {
+  return supabaseRequest(`servers?id=eq.${serverId}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+async function updateReview(reviewId: string, data: Record<string, any>) {
+  return supabaseRequest(`reviews?id=eq.${reviewId}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
 export async function POST(request: Request) {
   try {
     const staff = await getCurrentStaff();
@@ -24,7 +58,10 @@ export async function POST(request: Request) {
       return redirectToAdmin(request, "error=no_access");
     }
 
-    const isAdmin = staff.role === "admin";
+    const isAdmin =
+      staff.role === "admin" ||
+      staff.role === "owner" ||
+      staff.role === "administrator";
 
     const formData = await request.formData();
 
@@ -50,26 +87,20 @@ export async function POST(request: Request) {
 
     if (reportType === "server") {
       if (action === "dismiss_server_report") {
-        await supabaseRequest(`server_reports?id=eq.${reportId}`, {
-          method: "PATCH",
-          body: JSON.stringify({
-            ...handledData,
-            status: "dismissed",
-            action_taken: "Server-Meldung abgelehnt",
-          }),
+        await updateServerReport(reportId, {
+          ...handledData,
+          status: "dismissed",
+          action_taken: "Server-Meldung abgelehnt",
         });
 
         return redirectToAdmin(request, "report_dismissed=1");
       }
 
       if (action === "mark_server_report_done") {
-        await supabaseRequest(`server_reports?id=eq.${reportId}`, {
-          method: "PATCH",
-          body: JSON.stringify({
-            ...handledData,
-            status: "resolved",
-            action_taken: "Server-Meldung erledigt",
-          }),
+        await updateServerReport(reportId, {
+          ...handledData,
+          status: "resolved",
+          action_taken: "Server-Meldung erledigt",
         });
 
         return redirectToAdmin(request, "report_done=1");
@@ -80,21 +111,15 @@ export async function POST(request: Request) {
           return redirectToAdmin(request, "error=no_server");
         }
 
-        await supabaseRequest(`servers?id=eq.${serverId}`, {
-          method: "PATCH",
-          body: JSON.stringify({
-            status: "locked",
-            locked: true,
-          }),
+        await updateServer(serverId, {
+          status: "locked",
+          approved: false,
         });
 
-        await supabaseRequest(`server_reports?id=eq.${reportId}`, {
-          method: "PATCH",
-          body: JSON.stringify({
-            ...handledData,
-            status: "resolved",
-            action_taken: "Server gesperrt",
-          }),
+        await updateServerReport(reportId, {
+          ...handledData,
+          status: "resolved",
+          action_taken: "Server gesperrt",
         });
 
         return redirectToAdmin(request, "server_locked=1");
@@ -109,25 +134,72 @@ export async function POST(request: Request) {
           return redirectToAdmin(request, "error=no_server");
         }
 
-        await supabaseRequest(`servers?id=eq.${serverId}`, {
-          method: "PATCH",
-          body: JSON.stringify({
-            status: "banned",
-            banned: true,
-            approved: false,
-          }),
+        await updateServer(serverId, {
+          status: "banned",
+          approved: false,
         });
 
-        await supabaseRequest(`server_reports?id=eq.${reportId}`, {
-          method: "PATCH",
-          body: JSON.stringify({
-            ...handledData,
-            status: "resolved",
-            action_taken: "Server gebannt",
-          }),
+        await updateServerReport(reportId, {
+          ...handledData,
+          status: "resolved",
+          action_taken: "Server gebannt",
         });
 
         return redirectToAdmin(request, "server_banned=1");
+      }
+
+      if (action === "bump_ban_3d_reported_server") {
+        if (!serverId) {
+          return redirectToAdmin(request, "error=no_server");
+        }
+
+        await updateServer(serverId, {
+          bump_banned_until: addDays(3),
+        });
+
+        await updateServerReport(reportId, {
+          ...handledData,
+          status: "resolved",
+          action_taken: "Bump-Sperre 3 Tage verhängt",
+        });
+
+        return redirectToAdmin(request, "bump_ban_3d=1");
+      }
+
+      if (action === "bump_ban_7d_reported_server") {
+        if (!serverId) {
+          return redirectToAdmin(request, "error=no_server");
+        }
+
+        await updateServer(serverId, {
+          bump_banned_until: addDays(7),
+        });
+
+        await updateServerReport(reportId, {
+          ...handledData,
+          status: "resolved",
+          action_taken: "Bump-Sperre 7 Tage verhängt",
+        });
+
+        return redirectToAdmin(request, "bump_ban_7d=1");
+      }
+
+      if (action === "remove_bump_ban_reported_server") {
+        if (!serverId) {
+          return redirectToAdmin(request, "error=no_server");
+        }
+
+        await updateServer(serverId, {
+          bump_banned_until: null,
+        });
+
+        await updateServerReport(reportId, {
+          ...handledData,
+          status: "resolved",
+          action_taken: "Bump-Sperre entfernt",
+        });
+
+        return redirectToAdmin(request, "bump_ban_removed=1");
       }
 
       if (action === "delete_reported_server") {
@@ -139,13 +211,10 @@ export async function POST(request: Request) {
           return redirectToAdmin(request, "error=no_server");
         }
 
-        await supabaseRequest(`server_reports?id=eq.${reportId}`, {
-          method: "PATCH",
-          body: JSON.stringify({
-            ...handledData,
-            status: "resolved",
-            action_taken: "Server gelöscht",
-          }),
+        await updateServerReport(reportId, {
+          ...handledData,
+          status: "resolved",
+          action_taken: "Server gelöscht",
         });
 
         await supabaseRequest(`servers?id=eq.${serverId}`, {
@@ -160,13 +229,10 @@ export async function POST(request: Request) {
 
     if (reportType === "review") {
       if (action === "dismiss_review_report") {
-        await supabaseRequest(`review_reports?id=eq.${reportId}`, {
-          method: "PATCH",
-          body: JSON.stringify({
-            ...handledData,
-            status: "dismissed",
-            action_taken: "Bewertungs-Meldung abgelehnt",
-          }),
+        await updateReviewReport(reportId, {
+          ...handledData,
+          status: "dismissed",
+          action_taken: "Bewertungs-Meldung abgelehnt",
         });
 
         return redirectToAdmin(request, "review_report_dismissed=1");
@@ -177,25 +243,19 @@ export async function POST(request: Request) {
           return redirectToAdmin(request, "error=no_review");
         }
 
-        await supabaseRequest(`reviews?id=eq.${reviewId}`, {
-          method: "PATCH",
-          body: JSON.stringify({
-            hidden: true,
-            moderation_status: "hidden",
-            moderation_note: "Durch Staff nach Meldung versteckt",
-            handled_by_discord_user_id: getStaffId(staff),
-            handled_at: now,
-            updated_at: now,
-          }),
+        await updateReview(reviewId, {
+          hidden: true,
+          moderation_status: "hidden",
+          moderation_note: "Durch Staff nach Meldung versteckt",
+          handled_by_discord_user_id: getStaffId(staff),
+          handled_at: now,
+          updated_at: now,
         });
 
-        await supabaseRequest(`review_reports?id=eq.${reportId}`, {
-          method: "PATCH",
-          body: JSON.stringify({
-            ...handledData,
-            status: "resolved",
-            action_taken: "Bewertung versteckt",
-          }),
+        await updateReviewReport(reportId, {
+          ...handledData,
+          status: "resolved",
+          action_taken: "Bewertung versteckt",
         });
 
         return redirectToAdmin(request, "review_hidden=1");
@@ -210,26 +270,20 @@ export async function POST(request: Request) {
           return redirectToAdmin(request, "error=no_review");
         }
 
-        await supabaseRequest(`reviews?id=eq.${reviewId}`, {
-          method: "PATCH",
-          body: JSON.stringify({
-            hidden: true,
-            deleted_by_admin: true,
-            moderation_status: "deleted",
-            moderation_note: "Durch Admin nach Meldung gelöscht",
-            handled_by_discord_user_id: getStaffId(staff),
-            handled_at: now,
-            updated_at: now,
-          }),
+        await updateReview(reviewId, {
+          hidden: true,
+          deleted_by_admin: true,
+          moderation_status: "deleted",
+          moderation_note: "Durch Admin nach Meldung gelöscht",
+          handled_by_discord_user_id: getStaffId(staff),
+          handled_at: now,
+          updated_at: now,
         });
 
-        await supabaseRequest(`review_reports?id=eq.${reportId}`, {
-          method: "PATCH",
-          body: JSON.stringify({
-            ...handledData,
-            status: "resolved",
-            action_taken: "Bewertung gelöscht",
-          }),
+        await updateReviewReport(reportId, {
+          ...handledData,
+          status: "resolved",
+          action_taken: "Bewertung gelöscht",
         });
 
         return redirectToAdmin(request, "review_deleted=1");
