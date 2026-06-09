@@ -244,9 +244,28 @@ function getServerBanner(serverData: any) {
     serverData.bump_banner_url ||
     serverData.bumpBannerUrl ||
     serverData.banner ||
-    serverData.premium_banner_url ||
-    serverData.premiumBannerUrl ||
-    "/asko-cafe-banner.png"
+    ""
+  );
+}
+
+function getPremiumLayout(serverData: any) {
+  const layout =
+    serverData.premium_layout ||
+    serverData.premiumLayout ||
+    "glow";
+
+  if (["glow", "flame", "cyber", "minimal"].includes(layout)) {
+    return layout;
+  }
+
+  return "glow";
+}
+
+function getPremiumGlowColor(serverData: any) {
+  return (
+    serverData.premium_glow_color ||
+    serverData.premiumGlowColor ||
+    "#8b5cf6"
   );
 }
 
@@ -443,6 +462,45 @@ export default function HomePage() {
           object-fit: cover;
           opacity: 1;
           filter: brightness(0.74) saturate(1.18);
+        }
+
+        .hero-premium-card-fallback-bg {
+          position: absolute;
+          inset: 0;
+          z-index: -2;
+          width: 100%;
+          height: 100%;
+          background:
+            radial-gradient(circle at 20% 10%, rgba(201, 77, 255, 0.20), transparent 34%),
+            radial-gradient(circle at 85% 18%, rgba(116, 223, 255, 0.16), transparent 32%),
+            linear-gradient(135deg, rgba(19, 15, 42, 1), rgba(12, 17, 36, 1));
+        }
+
+        .premium-layout-glow .hero-premium-card-fallback-bg {
+          background:
+            radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.30), transparent 42%),
+            radial-gradient(circle at 100% 20%, rgba(116, 223, 255, 0.16), transparent 36%),
+            linear-gradient(135deg, #151027 0%, #0d1226 100%);
+        }
+
+        .premium-layout-flame .hero-premium-card-fallback-bg {
+          background:
+            radial-gradient(circle at 20% 0%, rgba(255, 186, 73, 0.24), transparent 36%),
+            radial-gradient(circle at 100% 25%, rgba(255, 68, 190, 0.18), transparent 34%),
+            linear-gradient(135deg, #21120a 0%, #1a0b23 48%, #0d1226 100%);
+        }
+
+        .premium-layout-cyber .hero-premium-card-fallback-bg {
+          background:
+            linear-gradient(90deg, rgba(116, 223, 255, 0.08) 1px, transparent 1px),
+            linear-gradient(rgba(201, 77, 255, 0.08) 1px, transparent 1px),
+            radial-gradient(circle at 80% 0%, rgba(116, 223, 255, 0.24), transparent 34%),
+            linear-gradient(135deg, #080d1f 0%, #160726 100%);
+          background-size: 26px 26px, 26px 26px, auto, auto;
+        }
+
+        .premium-layout-minimal .hero-premium-card-fallback-bg {
+          background: linear-gradient(135deg, #141126 0%, #0d1226 100%);
         }
 
         .hero-premium-card-overlay {
@@ -665,31 +723,43 @@ export default function HomePage() {
               const detailsHref = getServerDetailsHref(serverData);
               const premium = isPremiumServer(serverData);
               const partner = isPartnerServer(serverData);
+              const premiumLayout = getPremiumLayout(serverData);
+              const premiumGlowColor = getPremiumGlowColor(serverData);
               const externalInvite =
                 typeof invite === "string" && invite.startsWith("http");
 
               return (
                 <article
                   key={serverData.id || serverName}
-                  className="hero-premium-card"
+                  className={`hero-premium-card premium-layout-${premiumLayout}`}
                   style={{
                     animationDelay: `${index * 0.18}s`,
+                    borderColor: `${premiumGlowColor}66`,
+                    boxShadow: `
+                      0 0 0 1px rgba(255, 255, 255, 0.025) inset,
+                      0 0 26px ${premiumGlowColor}44,
+                      0 0 42px rgba(112, 219, 255, 0.12)
+                    `,
                   }}
                 >
-                  <img
-                    className="hero-premium-card-bg"
-                    src={banner}
-                    alt={serverName}
-                    style={{
-                      objectPosition: `${serverData.banner_position_x ?? 50}% ${
-                        serverData.banner_position_y ?? 50
-                      }%`,
-                      transform: `scale(${serverData.banner_zoom ?? 1})`,
-                      transformOrigin: `${serverData.banner_position_x ?? 50}% ${
-                        serverData.banner_position_y ?? 50
-                      }%`,
-                    }}
-                  />
+                  {banner ? (
+                    <img
+                      className="hero-premium-card-bg"
+                      src={banner}
+                      alt={serverName}
+                      style={{
+                        objectPosition: `${serverData.banner_position_x ?? 50}% ${
+                          serverData.banner_position_y ?? 50
+                        }%`,
+                        transform: `scale(${serverData.banner_zoom ?? 1})`,
+                        transformOrigin: `${serverData.banner_position_x ?? 50}% ${
+                          serverData.banner_position_y ?? 50
+                        }%`,
+                      }}
+                    />
+                  ) : (
+                    <div className="hero-premium-card-fallback-bg" />
+                  )}
 
                   <div className="hero-premium-card-overlay" />
 
@@ -1438,22 +1508,33 @@ export default function HomePage() {
                   }}
                 >
                   <div style={{ height: "130px", overflow: "hidden" }}>
-                    <img
-                      src={banner}
-                      alt={serverName}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        objectPosition: `${serverData.banner_position_x ?? 50}% ${
-                          serverData.banner_position_y ?? 50
-                        }%`,
-                        transform: `scale(${serverData.banner_zoom ?? 1})`,
-                        transformOrigin: `${serverData.banner_position_x ?? 50}% ${
-                          serverData.banner_position_y ?? 50
-                        }%`,
-                      }}
-                    />
+                    {banner ? (
+                      <img
+                        src={banner}
+                        alt={serverName}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          objectPosition: `${serverData.banner_position_x ?? 50}% ${
+                            serverData.banner_position_y ?? 50
+                          }%`,
+                          transform: `scale(${serverData.banner_zoom ?? 1})`,
+                          transformOrigin: `${serverData.banner_position_x ?? 50}% ${
+                            serverData.banner_position_y ?? 50
+                          }%`,
+                        }}
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          background:
+                            "radial-gradient(circle at 20% 10%, rgba(201,77,255,0.20), transparent 34%), radial-gradient(circle at 85% 18%, rgba(116,223,255,0.16), transparent 32%), linear-gradient(135deg, #13102a, #0d1226)",
+                        }}
+                      />
+                    )}
                   </div>
 
                   <div style={{ padding: "18px" }}>
