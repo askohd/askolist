@@ -5,6 +5,72 @@ import { supabaseRequest } from "@/lib/supabase";
 import { languages } from "@/lib/demoData";
 
 type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
+type ServerLanguage = "Deutsch" | "English" | "Français" | "Italiano" | "Polski";
+
+const LANGUAGE_SEARCH_ALIASES: Record<ServerLanguage, string[]> = {
+  Deutsch: [
+    "deutsch",
+    "deutsche",
+    "deutscher",
+    "deutschland",
+    "german",
+    "germany",
+    "de",
+    "allemand",
+    "tedesco",
+    "tedesca",
+    "niemiecki",
+    "niemcy",
+  ],
+  English: [
+    "english",
+    "englisch",
+    "england",
+    "usa",
+    "america",
+    "american",
+    "us",
+    "uk",
+    "gb",
+    "anglais",
+    "inglese",
+    "angielski",
+  ],
+  Français: [
+    "français",
+    "francais",
+    "französisch",
+    "franzoesisch",
+    "frankreich",
+    "french",
+    "france",
+    "fr",
+    "francese",
+    "francuski",
+  ],
+  Italiano: [
+    "italiano",
+    "italienisch",
+    "italien",
+    "italy",
+    "italian",
+    "it",
+    "italie",
+    "wloski",
+    "wlochy",
+    "włochy",
+  ],
+  Polski: [
+    "polski",
+    "polnisch",
+    "polen",
+    "poland",
+    "polish",
+    "pl",
+    "pologne",
+    "polonia",
+  ],
+};
 
 const UI_TEXT = {
   de: {
@@ -164,6 +230,61 @@ function replaceValue(text: string, value: number) {
   return text.replace("{value}", String(value));
 }
 
+function normalizeSearchText(value: unknown) {
+  return String(value ?? "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ");
+}
+
+function normalize(value: unknown) {
+  return normalizeSearchText(value);
+}
+
+function getLanguageSearchResult(value: string): {
+  language: ServerLanguage | "";
+  query: string;
+} {
+  const normalizedValue = normalizeSearchText(value);
+
+  if (!normalizedValue) {
+    return {
+      language: "",
+      query: "",
+    };
+  }
+
+  const tokens = normalizedValue
+    .split(/[\s,.;:|/#\-]+/g)
+    .map((token) => token.trim())
+    .filter(Boolean);
+
+  for (const [language, aliases] of Object.entries(LANGUAGE_SEARCH_ALIASES)) {
+    const normalizedAliases = aliases.map(normalizeSearchText);
+
+    const exactMatch = normalizedAliases.includes(normalizedValue);
+    const tokenMatch = tokens.some((token) => normalizedAliases.includes(token));
+
+    if (exactMatch || tokenMatch) {
+      const cleanedTokens = exactMatch
+        ? []
+        : tokens.filter((token) => !normalizedAliases.includes(token));
+
+      return {
+        language: language as ServerLanguage,
+        query: cleanedTokens.join(" "),
+      };
+    }
+  }
+
+  return {
+    language: "",
+    query: normalizedValue,
+  };
+}
+
 function normalizeUiLanguage(value: unknown): UiLanguage | null {
   const language = String(value ?? "").trim().toLowerCase();
 
@@ -304,10 +425,6 @@ function formatOnlineCount(value: number | null, language: UiLanguage) {
   )}`;
 }
 
-function normalize(value: unknown) {
-  return String(value ?? "").toLowerCase();
-}
-
 function normalizePremiumLayout(value: unknown) {
   const layout = String(value ?? "glow")
     .trim()
@@ -390,9 +507,24 @@ export default async function ServersPage({
   }>;
 }) {
   const params = (await searchParams) ?? {};
-  const query = String(params.q ?? "").trim().toLowerCase();
-  const selectedLanguage = String(params.language ?? "").trim();
+
+  const rawQuery = String(params.q ?? "").trim();
+  const selectedLanguageFromUrl = String(params.language ?? "").trim();
   const selectedTag = String(params.tag ?? "").trim();
+
+  const languageSearchResult = getLanguageSearchResult(rawQuery);
+
+  const selectedLanguage =
+    selectedLanguageFromUrl || languageSearchResult.language;
+
+  const query = selectedLanguageFromUrl
+    ? normalize(rawQuery)
+    : languageSearchResult.query;
+
+  const searchInputValue = selectedLanguageFromUrl
+    ? rawQuery
+    : languageSearchResult.query;
+
   const uiLanguage = await getUiLanguage(params);
 
   const data = await supabaseRequest(
@@ -498,7 +630,7 @@ export default async function ServersPage({
         <input
           className="input"
           name="q"
-          defaultValue={query}
+          defaultValue={searchInputValue}
           placeholder={t(uiLanguage, "searchPlaceholder")}
         />
 
@@ -524,7 +656,7 @@ export default async function ServersPage({
           {t(uiLanguage, "search")}
         </button>
 
-        {(query || selectedLanguage || selectedTag) && (
+        {(rawQuery || selectedLanguage || selectedTag) && (
           <Link className="btn secondary" href="/servers">
             {t(uiLanguage, "reset")}
           </Link>
