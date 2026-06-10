@@ -76,12 +76,23 @@ const NAV_LINKS = [
   { href: "/info", icon: "ℹ️", key: "info" },
 ] as const;
 
+function normalizeLanguage(language: unknown): UiLanguage {
+  const value = String(language ?? "").toLowerCase();
+
+  if (value === "en") return "en";
+  if (value === "fr") return "fr";
+  if (value === "it") return "it";
+  if (value === "pl") return "pl";
+
+  return "de";
+}
+
 function t(language: UiLanguage, key: keyof typeof HEADER_TEXT.de) {
   return HEADER_TEXT[language]?.[key] || HEADER_TEXT.de[key];
 }
 
 export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
-  const language = useLanguage() as UiLanguage;
+  const language = normalizeLanguage(useLanguage());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   function closeMobileMenu() {
@@ -104,7 +115,10 @@ export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
           <span>Asko Cafe</span>
         </Link>
 
-        <nav className="nav-links desktop-nav-links" aria-label="Hauptnavigation">
+        <nav
+          className="nav-links desktop-nav-links"
+          aria-label="Hauptnavigation"
+        >
           {NAV_LINKS.map((item) => (
             <Link key={item.href} href={item.href}>
               <span className="nav-link-icon">{item.icon}</span>
@@ -132,7 +146,9 @@ export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
 
             <span className="mobile-brand-text">
               <span className="mobile-brand-title">Asko Cafe</span>
-              <span className="mobile-brand-subtitle">{t(language, "subtitle")}</span>
+              <span className="mobile-brand-subtitle">
+                {t(language, "subtitle")}
+              </span>
             </span>
           </Link>
 
@@ -164,6 +180,7 @@ export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
               type="button"
               aria-label={t(language, "menu")}
               aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-menu-panel"
               onClick={() => setMobileMenuOpen((current) => !current)}
             >
               <span>{mobileMenuOpen ? "×" : "≡"}</span>
@@ -179,7 +196,10 @@ export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
         onClick={closeMobileMenu}
       />
 
-      <div className={`mobile-menu-panel ${mobileMenuOpen ? "open" : ""}`}>
+      <div
+        id="mobile-menu-panel"
+        className={`mobile-menu-panel ${mobileMenuOpen ? "open" : ""}`}
+      >
         <div className="mobile-menu-head">
           <div>
             <strong>Asko Cafe</strong>
@@ -196,7 +216,10 @@ export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
           </button>
         </div>
 
-        <nav className="nav-links mobile-menu-links" aria-label="Mobile Navigation">
+        <nav
+          className="nav-links mobile-menu-links"
+          aria-label="Mobile Navigation"
+        >
           {NAV_LINKS.map((item) => (
             <Link key={item.href} href={item.href} onClick={closeMobileMenu}>
               <span className="nav-link-icon">{item.icon}</span>
