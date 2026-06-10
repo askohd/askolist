@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import LoginButton from "./LoginButton";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useLanguage } from "@/components/useLanguage";
@@ -16,6 +17,9 @@ const HEADER_TEXT = {
     shop: "Shop",
     support: "Support",
     info: "Info",
+    menu: "Menü",
+    close: "Schließen",
+    subtitle: "Discord Server Network",
   },
   en: {
     home: "Home",
@@ -24,6 +28,9 @@ const HEADER_TEXT = {
     shop: "Shop",
     support: "Support",
     info: "Info",
+    menu: "Menu",
+    close: "Close",
+    subtitle: "Discord Server Network",
   },
   fr: {
     home: "Accueil",
@@ -32,6 +39,9 @@ const HEADER_TEXT = {
     shop: "Boutique",
     support: "Support",
     info: "Info",
+    menu: "Menu",
+    close: "Fermer",
+    subtitle: "Réseau de serveurs Discord",
   },
   it: {
     home: "Home",
@@ -40,6 +50,9 @@ const HEADER_TEXT = {
     shop: "Shop",
     support: "Supporto",
     info: "Info",
+    menu: "Menu",
+    close: "Chiudi",
+    subtitle: "Network server Discord",
   },
   pl: {
     home: "Start",
@@ -48,8 +61,20 @@ const HEADER_TEXT = {
     shop: "Sklep",
     support: "Pomoc",
     info: "Info",
+    menu: "Menu",
+    close: "Zamknij",
+    subtitle: "Sieć serwerów Discord",
   },
 } as const;
+
+const NAV_LINKS = [
+  { href: "/", icon: "🏠", key: "home" },
+  { href: "/servers", icon: "📋", key: "servers" },
+  { href: "/submit", icon: "🚀", key: "submit" },
+  { href: "/shop", icon: "🛒", key: "shop" },
+  { href: "/support", icon: "💬", key: "support" },
+  { href: "/info", icon: "ℹ️", key: "info" },
+] as const;
 
 function t(language: UiLanguage, key: keyof typeof HEADER_TEXT.de) {
   return HEADER_TEXT[language]?.[key] || HEADER_TEXT.de[key];
@@ -57,6 +82,11 @@ function t(language: UiLanguage, key: keyof typeof HEADER_TEXT.de) {
 
 export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
   const language = useLanguage() as UiLanguage;
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  function closeMobileMenu() {
+    setMobileMenuOpen(false);
+  }
 
   return (
     <header className="nav">
@@ -74,39 +104,108 @@ export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
           <span>Asko Cafe</span>
         </Link>
 
-        <nav className="nav-links" aria-label="Hauptnavigation">
-          <Link href="/">
-            <span className="nav-link-icon">🏠</span>
-            {t(language, "home")}
-          </Link>
-
-          <Link href="/servers">
-            <span className="nav-link-icon">📋</span>
-            {t(language, "servers")}
-          </Link>
-
-          <Link href="/submit">
-            <span className="nav-link-icon">🚀</span>
-            {t(language, "submit")}
-          </Link>
-
-          <Link href="/shop">
-            <span className="nav-link-icon">🛒</span>
-            {t(language, "shop")}
-          </Link>
-
-          <Link href="/support">
-            <span className="nav-link-icon">💬</span>
-            {t(language, "support")}
-          </Link>
-
-          <Link href="/info">
-            <span className="nav-link-icon">ℹ️</span>
-            {t(language, "info")}
-          </Link>
+        <nav className="nav-links desktop-nav-links" aria-label="Hauptnavigation">
+          {NAV_LINKS.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <span className="nav-link-icon">{item.icon}</span>
+              {t(language, item.key)}
+            </Link>
+          ))}
         </nav>
 
-        <div className="nav-right-actions">
+        <div className="nav-right-actions desktop-nav-actions">
+          <LanguageSwitcher />
+          <LoginButton isAdmin={isAdmin} />
+        </div>
+
+        <div className="mobile-nav-shell">
+          <Link className="mobile-brand" href="/" onClick={closeMobileMenu}>
+            <span className="logo-mark">
+              <Image
+                src="/logo.png"
+                alt="Asko Cafe Logo"
+                width={52}
+                height={52}
+                priority
+              />
+            </span>
+
+            <span className="mobile-brand-text">
+              <span className="mobile-brand-title">Asko Cafe</span>
+              <span className="mobile-brand-subtitle">{t(language, "subtitle")}</span>
+            </span>
+          </Link>
+
+          <div className="mobile-icon-dock" aria-label="Mobile Navigation">
+            <Link
+              className="mobile-icon-link"
+              href="/"
+              aria-label={t(language, "home")}
+              onClick={closeMobileMenu}
+            >
+              🏠
+            </Link>
+
+            <Link
+              className="mobile-icon-link"
+              href="/servers"
+              aria-label={t(language, "servers")}
+              onClick={closeMobileMenu}
+            >
+              📋
+            </Link>
+
+            <div className="mobile-language-wrap">
+              <LanguageSwitcher />
+            </div>
+
+            <button
+              className="mobile-menu-toggle"
+              type="button"
+              aria-label={t(language, "menu")}
+              aria-expanded={mobileMenuOpen}
+              onClick={() => setMobileMenuOpen((current) => !current)}
+            >
+              <span>{mobileMenuOpen ? "×" : "≡"}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button
+        className={`mobile-menu-backdrop ${mobileMenuOpen ? "open" : ""}`}
+        type="button"
+        aria-label={t(language, "close")}
+        onClick={closeMobileMenu}
+      />
+
+      <div className={`mobile-menu-panel ${mobileMenuOpen ? "open" : ""}`}>
+        <div className="mobile-menu-head">
+          <div>
+            <strong>Asko Cafe</strong>
+            <span>{t(language, "menu")}</span>
+          </div>
+
+          <button
+            className="mobile-menu-close"
+            type="button"
+            aria-label={t(language, "close")}
+            onClick={closeMobileMenu}
+          >
+            ×
+          </button>
+        </div>
+
+        <nav className="nav-links mobile-menu-links" aria-label="Mobile Navigation">
+          {NAV_LINKS.map((item) => (
+            <Link key={item.href} href={item.href} onClick={closeMobileMenu}>
+              <span className="nav-link-icon">{item.icon}</span>
+              {t(language, item.key)}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="nav-right-actions mobile-menu-actions">
           <LanguageSwitcher />
           <LoginButton isAdmin={isAdmin} />
         </div>
