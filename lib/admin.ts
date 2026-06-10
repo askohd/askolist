@@ -136,6 +136,15 @@ export async function getCurrentStaff(): Promise<CurrentStaff | null> {
   return null;
 }
 
+/**
+ * Alte Header-Kompatibilität:
+ * Header.tsx importiert noch getCurrentAdmin.
+ * Diese Funktion gibt alle Staff-Rollen zurück: owner, admin, supporter.
+ */
+export async function getCurrentAdmin(): Promise<CurrentStaff | null> {
+  return getCurrentStaff();
+}
+
 export function canApproveServers(role?: string | null) {
   const normalizedRole = normalizeRole(role);
 
