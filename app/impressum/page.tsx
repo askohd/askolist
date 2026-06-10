@@ -4,13 +4,13 @@ export default function ImpressumPage() {
       <section className="legal-card">
         <h1>Impressum</h1>
 
-        <p>
-          Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG)
+        <p className="legal-small">
+          Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG).
         </p>
 
         <h2>Diensteanbieter</h2>
         <p>
-          <strong>[Vollständiger Name oder Unternehmensname]</strong>
+          <strong>[Dein vollständiger Name]</strong>
           <br />
           [Straße und Hausnummer]
           <br />
@@ -19,74 +19,89 @@ export default function ImpressumPage() {
           Deutschland
         </p>
 
-        <h2>Kontakt</h2>
+        <h2>Verantwortlich für den Inhalt</h2>
         <p>
-          E-Mail: [deine-e-mail@example.com]
-          <br />
-          Discord Support:{" "}
-          <a
-            href="https://discord.gg/askocafe"
-            target="_blank"
-            rel="noreferrer"
-          >
-            https://discord.gg/askocafe
-          </a>
+          Verantwortlich für eigene Inhalte auf dieser Website ist der oben
+          genannte Diensteanbieter.
         </p>
 
-        <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+        <h2>Projektbeschreibung</h2>
         <p>
-          <strong>[Vollständiger Name]</strong>
-          <br />
-          [Straße und Hausnummer]
-          <br />
-          [PLZ] [Ort]
-        </p>
-
-        <h2>Plattformbeschreibung</h2>
-        <p>
-          Asko Cafe ist eine Online-Plattform zur Darstellung, Verwaltung und
-          Bewerbung von Discord-Servern. Nutzer können Server einreichen,
-          Serverprofile aufrufen, Bewertungen abgeben, Meldungen senden und
-          gegebenenfalls Zusatzfunktionen wie Premium- oder Partner-Features
+          Asko Cafe ist eine Plattform zur Eintragung, Darstellung, Suche,
+          Bewertung und Moderation von Discord-Servern. Nutzer können Server
+          einreichen, Serverinformationen pflegen, Bewertungen abgeben, Inhalte
+          melden und – sofern freigeschaltet – Premium- oder Partner-Funktionen
           nutzen.
         </p>
 
-        <h2>Haftung für Inhalte</h2>
+        <h2>Haftung für eigene Inhalte</h2>
         <p>
           Die Inhalte dieser Website werden mit größtmöglicher Sorgfalt erstellt.
-          Dennoch wird keine Gewähr für die Richtigkeit, Vollständigkeit und
-          Aktualität der bereitgestellten Inhalte übernommen. Als Diensteanbieter
-          bin ich nach den allgemeinen Gesetzen für eigene Inhalte auf diesen
-          Seiten verantwortlich. Ich bin jedoch nicht verpflichtet, übermittelte
-          oder gespeicherte fremde Informationen dauerhaft zu überwachen oder nach
-          Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
-          Verpflichtungen zur Entfernung oder Sperrung der Nutzung von
-          Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt.
+          Eine Gewähr für Richtigkeit, Vollständigkeit und Aktualität der Inhalte
+          wird jedoch nicht übernommen. Als Diensteanbieter bin ich für eigene
+          Inhalte nach den allgemeinen gesetzlichen Vorschriften verantwortlich.
         </p>
 
-        <h2>Haftung für Links</h2>
+        <h2>Haftung für fremde Inhalte und Nutzerinhalte</h2>
         <p>
-          Diese Website enthält Links zu externen Websites Dritter, auf deren
-          Inhalte ich keinen Einfluss habe. Deshalb kann ich für diese fremden
-          Inhalte keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten
-          ist stets der jeweilige Anbieter oder Betreiber der Seiten
-          verantwortlich. Bei Bekanntwerden von Rechtsverletzungen werden derartige
-          Links umgehend entfernt.
+          Auf Asko Cafe können Inhalte von Nutzern erscheinen, insbesondere
+          Servernamen, Beschreibungen, Banner, Tags, Bewertungen, Meldungen und
+          sonstige Angaben zu Discord-Servern. Für diese von Nutzern
+          bereitgestellten Inhalte sind grundsätzlich die jeweiligen Nutzer oder
+          Serverbetreiber verantwortlich.
+        </p>
+        <p>
+          Eine dauerhafte inhaltliche Vorabkontrolle sämtlicher Nutzerinhalte
+          findet nicht statt. Bei Bekanntwerden konkreter Rechtsverletzungen oder
+          Regelverstöße werden die betreffenden Inhalte geprüft und, soweit
+          erforderlich, entfernt, gesperrt oder anderweitig moderiert.
+        </p>
+
+        <h2>Haftung für externe Links</h2>
+        <p>
+          Diese Website enthält Links zu externen Websites und Discord-Servern.
+          Auf deren Inhalte habe ich keinen unmittelbaren Einfluss. Für Inhalte,
+          Regeln, Moderation, Verfügbarkeit und Rechtmäßigkeit externer Angebote
+          sind ausschließlich die jeweiligen Betreiber verantwortlich. Bei
+          Bekanntwerden konkreter Rechtsverletzungen werden entsprechende Links
+          geprüft und gegebenenfalls entfernt.
         </p>
 
         <h2>Urheberrecht</h2>
         <p>
-          Die durch den Seitenbetreiber erstellten Inhalte und Werke auf dieser
-          Website unterliegen dem deutschen Urheberrecht. Beiträge Dritter werden
-          als solche gekennzeichnet, soweit dies möglich ist. Die Vervielfältigung,
-          Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der
-          Grenzen des Urheberrechts bedürfen der vorherigen schriftlichen
-          Zustimmung des jeweiligen Rechteinhabers.
+          Eigene Inhalte dieser Website unterliegen dem deutschen Urheberrecht.
+          Beiträge Dritter werden als solche behandelt. Nutzer versichern, dass
+          sie über die notwendigen Rechte an von ihnen hochgeladenen oder
+          eingereichten Inhalten verfügen oder zur Nutzung berechtigt sind.
         </p>
 
-        <div className="legal-note">
-          Bitte ersetze die Platzhalter unbedingt durch deine echten Daten. Ein
-          Impressum mit falschen oder unvollständigen Angaben schützt dich nicht.
+        <h2>Hinweis zu Discord</h2>
+        <p>
+          Asko Cafe ist kein offizielles Angebot von Discord Inc. Discord,
+          Discord-Server, Discord-Accounts und Discord-Invite-Links unterliegen
+          den jeweiligen Bedingungen und Regeln von Discord.
+        </p>
+
+        <div className="legal-contact-box">
+          <h2>Kontakt und Support</h2>
+          <p>
+            Bei rechtlichen Anfragen, Support-Fällen, Löschanfragen,
+            Datenschutzfragen oder Meldungen erreichst du Asko Cafe über:
+          </p>
+
+          <p>
+            E-Mail:{" "}
+            <a href="mailto:dcaskocafe@gmail.com">dcaskocafe@gmail.com</a>
+            <br />
+            Discord-Ticketsystem:{" "}
+            <a
+              href="https://discord.gg/asko"
+              target="_blank"
+              rel="noreferrer"
+            >
+              https://discord.gg/asko
+            </a>
+          </p>
         </div>
       </section>
     </main>
