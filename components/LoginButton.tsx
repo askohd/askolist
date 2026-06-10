@@ -15,12 +15,15 @@ const USER_MENU_TEXT = {
     shop: "Premium",
     admin: "Admin",
     logout: "Abmelden",
+    legalTitle: "Kurz bestätigen",
     legalPrefix: "Ich akzeptiere die",
     terms: "Nutzungsbedingungen",
     legalAnd: "und die",
     privacy: "Datenschutzerklärung",
     legalSuffix: "von Asko Cafe.",
-    legalRequired: "Bitte zuerst bestätigen.",
+    legalRequired: "Bitte zuerst das Kästchen aktivieren.",
+    continueLogin: "Mit Discord einloggen",
+    cancel: "Abbrechen",
   },
   en: {
     login: "Login",
@@ -29,12 +32,15 @@ const USER_MENU_TEXT = {
     shop: "Premium",
     admin: "Admin",
     logout: "Logout",
+    legalTitle: "Quick confirmation",
     legalPrefix: "I accept the",
     terms: "Terms of Use",
     legalAnd: "and the",
     privacy: "Privacy Policy",
     legalSuffix: "of Asko Cafe.",
-    legalRequired: "Please accept first.",
+    legalRequired: "Please check the box first.",
+    continueLogin: "Login with Discord",
+    cancel: "Cancel",
   },
   fr: {
     login: "Connexion",
@@ -43,12 +49,15 @@ const USER_MENU_TEXT = {
     shop: "Premium",
     admin: "Admin",
     logout: "Déconnexion",
+    legalTitle: "Confirmation rapide",
     legalPrefix: "J'accepte les",
     terms: "conditions d’utilisation",
     legalAnd: "et la",
     privacy: "politique de confidentialité",
     legalSuffix: "d’Asko Cafe.",
-    legalRequired: "Veuillez d'abord accepter.",
+    legalRequired: "Veuillez d'abord cocher la case.",
+    continueLogin: "Se connecter avec Discord",
+    cancel: "Annuler",
   },
   it: {
     login: "Login",
@@ -57,12 +66,15 @@ const USER_MENU_TEXT = {
     shop: "Premium",
     admin: "Admin",
     logout: "Logout",
+    legalTitle: "Conferma rapida",
     legalPrefix: "Accetto le",
     terms: "condizioni d’uso",
     legalAnd: "e la",
     privacy: "privacy policy",
     legalSuffix: "di Asko Cafe.",
-    legalRequired: "Accetta prima.",
+    legalRequired: "Seleziona prima la casella.",
+    continueLogin: "Accedi con Discord",
+    cancel: "Annulla",
   },
   pl: {
     login: "Login",
@@ -71,12 +83,15 @@ const USER_MENU_TEXT = {
     shop: "Premium",
     admin: "Admin",
     logout: "Wyloguj",
+    legalTitle: "Krótko potwierdź",
     legalPrefix: "Akceptuję",
     terms: "warunki korzystania",
     legalAnd: "oraz",
     privacy: "politykę prywatności",
     legalSuffix: "Asko Cafe.",
-    legalRequired: "Najpierw zaakceptuj.",
+    legalRequired: "Najpierw zaznacz pole.",
+    continueLogin: "Zaloguj przez Discord",
+    cancel: "Anuluj",
   },
 } as const;
 
@@ -98,7 +113,9 @@ function t(language: UiLanguage, key: keyof typeof USER_MENU_TEXT.de) {
 export default function LoginButton({ isAdmin }: { isAdmin?: boolean }) {
   const { data: session, status } = useSession();
   const language = normalizeLanguage(useLanguage());
+
   const [open, setOpen] = useState(false);
+  const [legalPromptOpen, setLegalPromptOpen] = useState(false);
   const [legalAccepted, setLegalAccepted] = useState(false);
 
   if (status === "loading") {
@@ -107,29 +124,53 @@ export default function LoginButton({ isAdmin }: { isAdmin?: boolean }) {
 
   if (!session?.user) {
     return (
-      <div className="login-legal-box">
+      <div className="login-legal-wrapper">
         <style>{`
-          .login-legal-box {
+          .login-legal-wrapper {
             position: relative;
-            display: grid;
-            gap: 9px;
-            min-width: 190px;
+            display: inline-flex;
+            align-items: center;
+          }
+
+          .login-legal-popup {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            z-index: 9999;
+            width: min(330px, calc(100vw - 28px));
+            padding: 16px;
+            border-radius: 22px;
+            background:
+              radial-gradient(circle at top left, rgba(181, 76, 255, 0.20), transparent 42%),
+              rgba(13, 13, 30, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow:
+              0 24px 70px rgba(0, 0, 0, 0.55),
+              0 0 34px rgba(139, 92, 246, 0.16);
+            backdrop-filter: blur(18px);
+          }
+
+          .login-legal-popup h3 {
+            margin: 0 0 10px;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 950;
           }
 
           .login-legal-row {
             display: flex;
             align-items: flex-start;
-            gap: 8px;
+            gap: 9px;
             color: rgba(236, 240, 255, 0.78);
-            font-size: 0.78rem;
-            line-height: 1.35;
+            font-size: 0.84rem;
+            line-height: 1.45;
             font-weight: 750;
           }
 
           .login-legal-row input {
-            width: 15px;
-            height: 15px;
-            margin-top: 1px;
+            width: 16px;
+            height: 16px;
+            margin-top: 2px;
             flex: 0 0 auto;
             accent-color: #8b5cf6;
           }
@@ -144,12 +185,21 @@ export default function LoginButton({ isAdmin }: { isAdmin?: boolean }) {
             color: #ffffff;
           }
 
-          .login-legal-button {
-            width: 100%;
+          .login-legal-actions {
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
           }
 
-          .login-legal-button.disabled,
-          .login-legal-button:disabled {
+          .login-legal-actions .btn {
+            width: 100%;
+            min-height: 42px;
+            padding: 0 14px;
+            border-radius: 14px;
+          }
+
+          .login-legal-disabled {
             opacity: 0.45;
             cursor: not-allowed;
             filter: grayscale(0.25);
@@ -157,60 +207,88 @@ export default function LoginButton({ isAdmin }: { isAdmin?: boolean }) {
           }
 
           .login-legal-hint {
-            margin: 0;
-            color: rgba(255, 220, 140, 0.76);
-            font-size: 0.74rem;
-            line-height: 1.3;
+            margin: 2px 0 0;
+            color: rgba(255, 220, 140, 0.78);
+            font-size: 0.76rem;
+            line-height: 1.35;
           }
 
           @media (max-width: 768px) {
-            .login-legal-box {
-              min-width: 0;
-              width: 100%;
-            }
-
-            .login-legal-row {
-              font-size: 0.82rem;
+            .login-legal-popup {
+              position: fixed;
+              top: 104px;
+              left: 14px;
+              right: 14px;
+              width: auto;
             }
           }
         `}</style>
 
-        <label className="login-legal-row">
-          <input
-            type="checkbox"
-            checked={legalAccepted}
-            onChange={(event) => setLegalAccepted(event.target.checked)}
-          />
+        <button
+          className="btn secondary"
+          type="button"
+          onClick={() => setLegalPromptOpen((current) => !current)}
+        >
+          {t(language, "login")}
+        </button>
 
-          <span>
-            {t(language, "legalPrefix")}{" "}
-            <Link href="/nutzungsbedingungen" target="_blank">
-              {t(language, "terms")}
-            </Link>{" "}
-            {t(language, "legalAnd")}{" "}
-            <Link href="/datenschutz" target="_blank">
-              {t(language, "privacy")}
-            </Link>{" "}
-            {t(language, "legalSuffix")}
-          </span>
-        </label>
+        {legalPromptOpen && (
+          <div className="login-legal-popup">
+            <h3>{t(language, "legalTitle")}</h3>
 
-        {legalAccepted ? (
-          <Link className="btn secondary login-legal-button" href="/api/auth/signin">
-            {t(language, "login")}
-          </Link>
-        ) : (
-          <>
-            <button
-              className="btn secondary login-legal-button disabled"
-              type="button"
-              disabled
-            >
-              {t(language, "login")}
-            </button>
+            <label className="login-legal-row">
+              <input
+                type="checkbox"
+                checked={legalAccepted}
+                onChange={(event) => setLegalAccepted(event.target.checked)}
+              />
 
-            <p className="login-legal-hint">{t(language, "legalRequired")}</p>
-          </>
+              <span>
+                {t(language, "legalPrefix")}{" "}
+                <Link href="/nutzungsbedingungen" target="_blank">
+                  {t(language, "terms")}
+                </Link>{" "}
+                {t(language, "legalAnd")}{" "}
+                <Link href="/datenschutz" target="_blank">
+                  {t(language, "privacy")}
+                </Link>{" "}
+                {t(language, "legalSuffix")}
+              </span>
+            </label>
+
+            <div className="login-legal-actions">
+              {legalAccepted ? (
+                <Link className="btn" href="/api/auth/signin">
+                  {t(language, "continueLogin")}
+                </Link>
+              ) : (
+                <>
+                  <button
+                    className="btn login-legal-disabled"
+                    type="button"
+                    disabled
+                  >
+                    {t(language, "continueLogin")}
+                  </button>
+
+                  <p className="login-legal-hint">
+                    {t(language, "legalRequired")}
+                  </p>
+                </>
+              )}
+
+              <button
+                className="btn secondary"
+                type="button"
+                onClick={() => {
+                  setLegalPromptOpen(false);
+                  setLegalAccepted(false);
+                }}
+              >
+                {t(language, "cancel")}
+              </button>
+            </div>
+          </div>
         )}
       </div>
     );
