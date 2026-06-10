@@ -1,9 +1,4 @@
-import {
-  getCurrentStaff,
-  canModerateServers,
-  canApproveServers,
-  canManageStaff,
-} from "@/lib/admin";
+import { getCurrentStaff } from "@/lib/admin";
 import { supabaseRequest } from "@/lib/supabase";
 import type { ReactNode } from "react";
 
@@ -25,6 +20,45 @@ const STAFF_LANGUAGE_OPTIONS = [
   "Italiano",
   "Polski",
 ];
+
+const OWNER_DISCORD_ID = "779668785216880683";
+const OWNER_USERNAME = "asko_pizza";
+
+function normalizeStaffRole(role: unknown) {
+  const value = String(role ?? "").trim().toLowerCase();
+
+  if (value === "owner") return "owner";
+  if (value === "admin" || value === "administrator") return "admin";
+  if (value === "supporter") return "supporter";
+
+  return "";
+}
+
+function canApproveServers(role: unknown) {
+  const normalizedRole = normalizeStaffRole(role);
+
+  return (
+    normalizedRole === "owner" ||
+    normalizedRole === "admin" ||
+    normalizedRole === "supporter"
+  );
+}
+
+function canModerateServers(role: unknown) {
+  const normalizedRole = normalizeStaffRole(role);
+
+  return normalizedRole === "owner" || normalizedRole === "admin";
+}
+
+function canManageStaffLocal(staff: any) {
+  if (!staff) return false;
+
+  return (
+    normalizeStaffRole(staff.role) === "owner" ||
+    String(staff.discord_user_id || "").trim() === OWNER_DISCORD_ID ||
+    String(staff.username || "").trim().toLowerCase() === OWNER_USERNAME
+  );
+}
 
 function getSearchValue(searchParams: PageSearchParams, key: string) {
   const value = searchParams[key];
@@ -492,7 +526,7 @@ function AdminSection({
 export default async function AdminPage({
   searchParams,
 }: {
-  searchParams?: Promise<PageSearchParams>;
+  searchParams?: PageSearchParams | Promise<PageSearchParams>;
 }) {
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const adminNotice = getAdminNotice(resolvedSearchParams);
@@ -515,7 +549,7 @@ export default async function AdminPage({
   const canApprove = canApproveServers(staff.role);
   const canModerate = canModerateServers(staff.role);
   const isAdmin = canModerate;
-  const isOwner = canManageStaff(staff);
+  const isOwner = canManageStaffLocal(staff);
 
   let currentStaffProfile: any = null;
 
