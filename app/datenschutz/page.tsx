@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const RESPONSIBLE_NAME = "Tim Buschmann";
 const RESPONSIBLE_STREET = "Schlosstraße 1";
-const RESPONSIBLE_CITY = "[PLZ] Eutin";
+const RESPONSIBLE_CITY = "23701 Eutin";
 const RESPONSIBLE_COUNTRY = "Deutschland";
 const SUPPORT_EMAIL = "dcaskocafe@gmail.com";
 const DISCORD_INVITE_URL = "https://discord.gg/askocafe";
