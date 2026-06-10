@@ -485,11 +485,7 @@ export default async function AdminPage({
 
   const canApprove = canApproveServers(staff.role);
   const canModerate = canModerateServers(staff.role);
-  const isAdmin =
-    staff.role === "admin" ||
-    staff.role === "owner" ||
-    staff.role === "administrator";
-
+  const isAdmin = canModerate;
   const isOwner = canManageStaff(staff);
 
   let staffMembers: any[] = [];
