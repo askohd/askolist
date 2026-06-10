@@ -1,9 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/components/useLanguage";
 
 type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
+
+const DISCORD_INVITE_URL = "https://discord.gg/askocafe";
+const SUPPORT_EMAIL = "dcaskocafe@gmail.com";
 
 const FOOTER_TEXT = {
   de: {
@@ -22,6 +26,7 @@ const FOOTER_TEXT = {
     privacy: "Datenschutzerklärung",
     terms: "Nutzungsbedingungen",
     supportText: "Support über Discord-Ticket oder E-Mail",
+    discord: "Discord",
     rights: "Alle Rechte vorbehalten.",
   },
   en: {
@@ -40,6 +45,7 @@ const FOOTER_TEXT = {
     privacy: "Privacy Policy",
     terms: "Terms of Use",
     supportText: "Support via Discord ticket or email",
+    discord: "Discord",
     rights: "All rights reserved.",
   },
   fr: {
@@ -58,6 +64,7 @@ const FOOTER_TEXT = {
     privacy: "Confidentialité",
     terms: "Conditions d’utilisation",
     supportText: "Support via ticket Discord ou e-mail",
+    discord: "Discord",
     rights: "Tous droits réservés.",
   },
   it: {
@@ -76,6 +83,7 @@ const FOOTER_TEXT = {
     privacy: "Privacy",
     terms: "Condizioni d’uso",
     supportText: "Supporto tramite ticket Discord o e-mail",
+    discord: "Discord",
     rights: "Tutti i diritti riservati.",
   },
   pl: {
@@ -94,26 +102,43 @@ const FOOTER_TEXT = {
     privacy: "Polityka prywatności",
     terms: "Warunki korzystania",
     supportText: "Support przez ticket Discord lub e-mail",
+    discord: "Discord",
     rights: "Wszelkie prawa zastrzeżone.",
   },
 } as const;
+
+function normalizeLanguage(language: unknown): UiLanguage {
+  const value = String(language ?? "").toLowerCase();
+
+  if (value === "en") return "en";
+  if (value === "fr") return "fr";
+  if (value === "it") return "it";
+  if (value === "pl") return "pl";
+
+  return "de";
+}
 
 function tx(language: UiLanguage, key: keyof typeof FOOTER_TEXT.de) {
   return FOOTER_TEXT[language]?.[key] || FOOTER_TEXT.de[key];
 }
 
 export default function SiteFooter() {
-  const language = useLanguage() as UiLanguage;
+  const language = normalizeLanguage(useLanguage());
 
   return (
     <footer className="site-footer-v2">
       <div className="site-footer-v2-glow" />
 
       <div className="container site-footer-v2-inner">
-        <div className="site-footer-v2-card">
+        <section className="site-footer-v2-card" aria-label="Asko Cafe">
           <div className="site-footer-v2-brand">
             <Link href="/" className="site-footer-v2-logo" aria-label="Asko Cafe">
-              <span>☕</span>
+              <Image
+                src="/logo.png"
+                alt="Asko Cafe Logo"
+                width={42}
+                height={42}
+              />
             </Link>
 
             <div>
@@ -123,9 +148,9 @@ export default function SiteFooter() {
           </div>
 
           <p className="site-footer-v2-text">{tx(language, "brandText")}</p>
-        </div>
+        </section>
 
-        <div className="site-footer-v2-column">
+        <nav className="site-footer-v2-column" aria-label={tx(language, "platform")}>
           <span>{tx(language, "platform")}</span>
 
           <Link href="/servers">{tx(language, "serverList")}</Link>
@@ -133,26 +158,28 @@ export default function SiteFooter() {
           <Link href="/shop">{tx(language, "premium")}</Link>
           <Link href="/support">{tx(language, "support")}</Link>
           <Link href="/info">{tx(language, "info")}</Link>
-        </div>
+        </nav>
 
-        <div className="site-footer-v2-column">
+        <nav className="site-footer-v2-column" aria-label={tx(language, "legal")}>
           <span>{tx(language, "legal")}</span>
 
           <Link href="/impressum">{tx(language, "imprint")}</Link>
           <Link href="/datenschutz">{tx(language, "privacy")}</Link>
           <Link href="/nutzungsbedingungen">{tx(language, "terms")}</Link>
-        </div>
+        </nav>
       </div>
 
       <div className="container site-footer-v2-bottom">
-        <p>© 2026 Asko Cafe · {tx(language, "rights")}</p>
+        <p>
+          © 2026 Asko Cafe · {tx(language, "rights")}
+        </p>
 
         <p>
           {tx(language, "supportText")}:{" "}
-          <a href="https://discord.gg/asko" target="_blank" rel="noreferrer">
-            Discord
+          <a href={DISCORD_INVITE_URL} target="_blank" rel="noreferrer">
+            {tx(language, "discord")}
           </a>{" "}
-          · <a href="mailto:dcaskocafe@gmail.com">dcaskocafe@gmail.com</a>
+          · <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
         </p>
       </div>
     </footer>
