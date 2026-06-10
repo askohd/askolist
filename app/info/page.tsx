@@ -5,6 +5,8 @@ import { supabaseRequest } from "@/lib/supabase";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+const DISCORD_INVITE_URL = "https://discord.gg/askocafe";
+
 type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
 type InfoCard = readonly [string, string, string];
 
@@ -970,7 +972,7 @@ export default async function InfoPage() {
               </Link>
 
               <a
-                href="https://discord.gg/asko"
+                href={DISCORD_INVITE_URL}
                 target="_blank"
                 rel="noreferrer"
                 className="btn secondary"
@@ -1046,7 +1048,7 @@ export default async function InfoPage() {
           <p>{text.eventsText}</p>
           <div className="info-v4-actions">
             <a
-              href="https://discord.gg/asko"
+              href={DISCORD_INVITE_URL}
               target="_blank"
               rel="noreferrer"
               className="btn"
