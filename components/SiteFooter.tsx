@@ -6,62 +6,78 @@ export default function SiteFooter() {
       <div className="container site-footer-inner">
         <div className="site-footer-top">
           <div className="site-footer-brand">
-            <div className="site-footer-badge">Asko Cafe</div>
+            <div className="site-footer-logo-row">
+              <span className="site-footer-logo">☕</span>
+              <div>
+                <strong>Asko Cafe</strong>
+                <p>Discord Server Directory</p>
+              </div>
+            </div>
+
             <p className="site-footer-text">
-              Discord-Server entdecken, verwalten und hervorheben – mit Fokus auf
-              Community, Übersicht und Sicherheit.
+              Finde neue Discord-Communitys, trage deinen eigenen Server ein und
+              nutze Premium-Features für mehr Sichtbarkeit.
             </p>
           </div>
 
-          <div className="site-footer-nav-group">
-            <span className="site-footer-heading">Bereiche</span>
-            <div className="site-footer-links">
-              <Link href="/shop" className="site-footer-link">
-                Premium
-              </Link>
-              <Link href="/submit" className="site-footer-link">
-                Server hinzufügen
-              </Link>
-              <a
-                href="https://discord.gg/askocafe"
-                target="_blank"
-                rel="noreferrer"
-                className="site-footer-link"
-              >
-                Support Discord
-              </a>
-            </div>
-          </div>
+          <nav className="site-footer-column" aria-label="Plattform">
+            <span className="site-footer-heading">Plattform</span>
 
-          <div className="site-footer-nav-group">
+            <Link href="/servers" className="site-footer-link">
+              Serverliste
+            </Link>
+
+            <Link href="/submit" className="site-footer-link">
+              Server eintragen
+            </Link>
+
+            <Link href="/shop" className="site-footer-link">
+              Premium
+            </Link>
+
+            <Link href="/support" className="site-footer-link">
+              Support
+            </Link>
+          </nav>
+
+          <nav className="site-footer-column" aria-label="Rechtliches">
             <span className="site-footer-heading">Rechtliches</span>
-            <div className="site-footer-links">
-              <Link href="/impressum" className="site-footer-link">
-                Impressum
-              </Link>
-              <Link href="/datenschutz" className="site-footer-link">
-                Datenschutzerklärung
-              </Link>
-              <Link href="/nutzungsbedingungen" className="site-footer-link">
-                Nutzungsbedingungen
-              </Link>
-            </div>
-          </div>
+
+            <Link href="/impressum" className="site-footer-link">
+              Impressum
+            </Link>
+
+            <Link href="/datenschutz" className="site-footer-link">
+              Datenschutzerklärung
+            </Link>
+
+            <Link href="/nutzungsbedingungen" className="site-footer-link">
+              Nutzungsbedingungen
+            </Link>
+          </nav>
         </div>
 
         <div className="site-footer-bottom">
-          <p>© 2026 Asko Cafe. Alle Rechte vorbehalten.</p>
-          <p className="site-footer-bottom-note">
-            Bei Fragen oder Problemen:{" "}
+          <span>© 2026 Asko Cafe</span>
+
+          <span>
+            Support über{" "}
             <a
-              href="https://discord.gg/askocafe"
+              href="https://discord.gg/asko"
               target="_blank"
               rel="noreferrer"
               className="site-footer-link muted"
             >
-              Support auf Discord
+              Discord-Ticket
+            </a>{" "}
+            oder{" "}
+            <a
+              href="mailto:dcaskocafe@gmail.com"
+              className="site-footer-link muted"
+            >
+              E-Mail
             </a>
-          </p>
+          </span>
         </div>
       </div>
     </footer>
