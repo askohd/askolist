@@ -183,10 +183,7 @@ export async function POST(request: Request) {
       return redirectToAdmin(request, "error=no_access");
     }
 
-    const isAdmin =
-      staff.role === "admin" ||
-      staff.role === "owner" ||
-      staff.role === "administrator";
+    const isAdmin = staff.role === "admin" || staff.role === "owner";
 
     const formData = await request.formData();
 
