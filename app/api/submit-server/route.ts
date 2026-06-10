@@ -5,9 +5,6 @@ import { supabaseRequest } from "@/lib/supabase";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
 const MAX_DESCRIPTION_WORDS = 1500;
-const TERMS supabaseAdmin } from "@/lib/supabase-admin";
-
-const MAX_DESCRIPTION_WORDS = 1500;
 const TERMS_VERSION = "2026-06-10";
 const PRIVACY_VERSION = "2026-06-10";
 
