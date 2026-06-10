@@ -47,7 +47,7 @@ const SUBMIT_TEXT = {
       "Du musst die Nutzungsbedingungen und Datenschutzerklärung akzeptieren, bevor du fortfahren kannst.",
 
     approvalTitle: "So funktioniert die Freigabe",
-    step1 Nutzungsbedingungen und Datenschutzerklärung akzeptieren, bevor du fortfahrenTitle: "Server eintragen",
+    step1Title: "Server eintragen",
     step1Text: "Trage deinen Server ohne Server-ID und ohne Logo-Upload ein.",
     step2Title: "Bot einladen",
     step2Text: "Nach dem Eintragen öffnet sich automatisch die Bot-Einladung.",
