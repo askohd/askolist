@@ -18,6 +18,7 @@ const HOME_TEXT = {
     search: "Suchen",
     discover: "Server entdecken",
     submit: "Server eintragen",
+    myServer: "Mein Server",
     cardBadge: "Offizieller Discord",
     cardTitle: "Asko Cafe",
     cardText:
@@ -52,6 +53,7 @@ const HOME_TEXT = {
     search: "Search",
     discover: "Discover servers",
     submit: "Submit server",
+    myServer: "My Server",
     cardBadge: "Official Discord",
     cardTitle: "Asko Cafe",
     cardText:
@@ -86,6 +88,7 @@ const HOME_TEXT = {
     search: "Rechercher",
     discover: "Découvrir les serveurs",
     submit: "Ajouter un serveur",
+    myServer: "Mon serveur",
     cardBadge: "Discord officiel",
     cardTitle: "Asko Cafe",
     cardText:
@@ -120,6 +123,7 @@ const HOME_TEXT = {
     search: "Cerca",
     discover: "Scopri server",
     submit: "Aggiungi server",
+    myServer: "Il mio server",
     cardBadge: "Discord ufficiale",
     cardTitle: "Asko Cafe",
     cardText:
@@ -154,6 +158,7 @@ const HOME_TEXT = {
     search: "Szukaj",
     discover: "Odkryj serwery",
     submit: "Dodaj serwer",
+    myServer: "Mój serwer",
     cardBadge: "Oficjalny Discord",
     cardTitle: "Asko Cafe",
     cardText:
@@ -292,7 +297,7 @@ function GermanyFlag({ small = false }: { small?: boolean }) {
         width: small ? "30px" : "34px",
         height: small ? "22px" : "24px",
         borderRadius: "999px",
-        overflow: "hidden",
+        overflowX: "hidden",
         display: "inline-flex",
         flexDirection: "column",
         flexShrink: 0,
@@ -705,6 +710,7 @@ export default function HomePage() {
 
   return (
     <main
+      className="home-page"
       style={{
         minHeight: "100vh",
         background:
@@ -1120,9 +1126,135 @@ export default function HomePage() {
             margin: 44px auto 0 !important;
           }
         }
+
+
+        @media (max-width: 768px) {
+          .home-page {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+          }
+
+          .home-hero-section {
+            min-height: auto !important;
+            padding: 34px 14px 36px !important;
+            display: block !important;
+            align-items: stretch !important;
+          }
+
+          .home-hero-shell {
+            min-height: 0 !important;
+            max-width: 100% !important;
+          }
+
+          .home-hero-center {
+            max-width: 100% !important;
+            text-align: center !important;
+          }
+
+          .home-hero-center > span {
+            max-width: 100% !important;
+            margin-bottom: 22px !important;
+            padding: 10px 16px !important;
+            font-size: 13px !important;
+          }
+
+          .home-hero-center h1 {
+            font-size: clamp(42px, 13vw, 58px) !important;
+            line-height: 0.94 !important;
+            letter-spacing: -0.06em !important;
+          }
+
+          .home-hero-center p {
+            max-width: 100% !important;
+            margin-top: 18px !important;
+            font-size: 15px !important;
+            line-height: 1.55 !important;
+          }
+
+          .home-search-form {
+            max-width: 100% !important;
+            margin-top: 24px !important;
+            padding: 8px !important;
+            border-radius: 22px !important;
+            display: grid !important;
+            grid-template-columns: minmax(0, 1fr) auto !important;
+            gap: 8px !important;
+          }
+
+          .home-search-input {
+            height: 48px !important;
+            padding: 0 14px !important;
+            font-size: 14px !important;
+          }
+
+          .home-search-button {
+            height: 48px !important;
+            padding: 0 18px !important;
+            min-width: 92px !important;
+            font-size: 14px !important;
+          }
+
+          .home-hero-actions {
+            width: 100% !important;
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 10px !important;
+            margin-top: 18px !important;
+          }
+
+          .home-hero-actions a {
+            width: 100% !important;
+            min-width: 0 !important;
+          }
+
+          .right-discord-card {
+            position: relative !important;
+            right: auto !important;
+            top: auto !important;
+            transform: none !important;
+            width: 100% !important;
+            max-width: 390px !important;
+            margin: 30px auto 0 !important;
+          }
+
+          .right-discord-card article {
+            width: 100% !important;
+            max-width: 100% !important;
+            border-radius: 28px !important;
+          }
+
+          .home-page > section:last-child {
+            padding: 34px 14px 64px !important;
+          }
+
+          .home-premium-grid-card {
+            border-radius: 22px !important;
+          }
+        }
+
+        @media (max-width: 420px) {
+          .home-hero-section {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+          }
+
+          .home-search-form {
+            grid-template-columns: 1fr !important;
+          }
+
+          .home-search-button {
+            width: 100% !important;
+          }
+
+          .home-hero-center h1 {
+            font-size: clamp(40px, 14vw, 52px) !important;
+          }
+        }
       `}</style>
 
       <section
+        className="home-hero-section"
         style={{
           position: "relative",
           minHeight: "calc(100vh - 80px)",
@@ -1352,6 +1484,7 @@ export default function HomePage() {
         </aside>
 
         <div
+          className="home-hero-shell"
           style={{
             position: "relative",
             zIndex: 2,
@@ -1362,6 +1495,7 @@ export default function HomePage() {
           }}
         >
           <div
+            className="home-hero-center"
             style={{
               width: "100%",
               maxWidth: "720px",
@@ -1448,6 +1582,7 @@ export default function HomePage() {
 
             <form
               action="/servers"
+              className="home-search-form"
               style={{
                 width: "100%",
                 maxWidth: "610px",
@@ -1464,6 +1599,7 @@ export default function HomePage() {
               }}
             >
               <input
+                className="home-search-input"
                 type="text"
                 name="q"
                 placeholder={t(language, "searchPlaceholder")}
@@ -1483,6 +1619,7 @@ export default function HomePage() {
               />
 
               <button
+                className="home-search-button"
                 type="submit"
                 style={{
                   height: "52px",
@@ -1504,6 +1641,7 @@ export default function HomePage() {
             </form>
 
             <div
+              className="home-hero-actions"
               style={{
                 display: "flex",
                 justifyContent: "center",
@@ -1553,6 +1691,28 @@ export default function HomePage() {
                 }}
               >
                 {t(language, "submit")}
+              </Link>
+
+              <Link
+                href="/profile"
+                style={{
+                  minHeight: "48px",
+                  minWidth: "180px",
+                  padding: "0 24px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "16px",
+                  background:
+                    "linear-gradient(135deg, rgba(42,31,83,0.86), rgba(24,72,105,0.72))",
+                  border: "1px solid rgba(116,223,255,0.26)",
+                  color: "#ffffff",
+                  fontWeight: 900,
+                  textDecoration: "none",
+                  boxShadow: "0 0 22px rgba(116,223,255,0.14)",
+                }}
+              >
+                {t(language, "myServer")}
               </Link>
             </div>
           </div>
