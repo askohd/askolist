@@ -1,5 +1,6 @@
-import { getCurrentStaff, canModerateServers } from "@/lib/admin";
+import { getCurrentStaff, canModerateServers, canApproveServers } from "@/lib/admin";
 import { supabaseRequest } from "@/lib/supabase";
+import type { ReactNode } from "react";
 
 type PageSearchParams = Record<string, string | string[] | undefined>;
 
@@ -23,6 +24,14 @@ function getSearchValue(searchParams: PageSearchParams, key: string) {
 }
 
 function getAdminNotice(searchParams: PageSearchParams) {
+  if (getSearchValue(searchParams, "approved") === "1") {
+    return "Server wurde angenommen.";
+  }
+
+  if (getSearchValue(searchParams, "rejected") === "1") {
+    return "Server wurde abgelehnt.";
+  }
+
   if (getSearchValue(searchParams, "report_done") === "1") {
     return "Meldung wurde als erledigt markiert.";
   }
@@ -93,6 +102,11 @@ function formatDate(value: string | null | undefined) {
   return new Date(value).toLocaleString("de-DE");
 }
 
+function getTimeValue(value: string | null | undefined) {
+  if (!value) return 0;
+  return new Date(value).getTime();
+}
+
 function isBumpBanned(server: any) {
   if (!server.bump_banned_until) return false;
   return new Date(server.bump_banned_until).getTime() > Date.now();
@@ -134,7 +148,96 @@ function getStatusClass(server: any) {
   if (server.status === "banned") return "status-pill danger";
   if (server.status === "locked") return "status-pill warning";
   if (server.status === "approved") return "status-pill approved";
+  if (server.status === "rejected") return "status-pill not-approved";
   return `status-pill ${server.status || "pending"}`;
+}
+
+function isPendingApplication(server: any) {
+  const status = String(server.status || "pending").toLowerCase();
+
+  if (server.approved) return false;
+
+  return !["approved", "rejected", "locked", "banned"].includes(status);
+}
+
+function isRejectedApplication(server: any) {
+  return String(server.status || "").toLowerCase() === "rejected";
+}
+
+function isAcceptedApplication(server: any) {
+  return Boolean(server.approved) || String(server.status || "").toLowerCase() === "approved";
+}
+
+function isManagedServer(server: any) {
+  if (isPendingApplication(server)) return false;
+  if (isRejectedApplication(server)) return false;
+  return true;
+}
+
+function matchesServerSearch(server: any, query: string) {
+  const search = query.trim().toLowerCase();
+
+  if (!search) return true;
+
+  const text = [
+    server.server_name,
+    server.description,
+    server.category,
+    server.language,
+    server.country,
+    server.id,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  return text.includes(search);
+}
+
+function getHistoryStatus(server: any) {
+  if (isAcceptedApplication(server)) return "accepted";
+  if (isRejectedApplication(server)) return "rejected";
+  return "";
+}
+
+function getHistoryLabel(server: any) {
+  const status = getHistoryStatus(server);
+
+  if (status === "accepted") return "Angenommen";
+  if (status === "rejected") return "Abgelehnt";
+
+  return "Unbekannt";
+}
+
+function getHistoryColor(server: any) {
+  const status = getHistoryStatus(server);
+
+  if (status === "accepted") {
+    return {
+      background: "rgba(34, 197, 94, 0.16)",
+      border: "1px solid rgba(34, 197, 94, 0.34)",
+      color: "#7CFFB2",
+    };
+  }
+
+  if (status === "rejected") {
+    return {
+      background: "rgba(255, 61, 113, 0.16)",
+      border: "1px solid rgba(255, 61, 113, 0.34)",
+      color: "#FF8AAA",
+    };
+  }
+
+  return {};
+}
+
+function getModeratorName(server: any) {
+  return (
+    server.moderation_by_username ||
+    server.moderated_by_username ||
+    server.moderated_by ||
+    "Unbekannt"
+  );
 }
 
 function DurationSelect({ defaultValue = "3" }: { defaultValue?: string }) {
@@ -327,7 +430,7 @@ function AdminSection({
 }: {
   title: string;
   meta?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <section className="section">
@@ -348,6 +451,7 @@ export default async function AdminPage({
 }) {
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const adminNotice = getAdminNotice(resolvedSearchParams);
+  const adminSearch = getSearchValue(resolvedSearchParams, "admin_q");
 
   const staff = await getCurrentStaff();
 
@@ -363,8 +467,12 @@ export default async function AdminPage({
     );
   }
 
+  const canApprove = canApproveServers(staff.role);
   const canModerate = canModerateServers(staff.role);
-  const isAdmin = staff.role === "admin";
+  const isAdmin =
+    staff.role === "admin" ||
+    staff.role === "owner" ||
+    staff.role === "administrator";
 
   const serversResponse = await supabaseRequest(
     "servers?select=*&order=created_at.desc"
@@ -429,6 +537,20 @@ export default async function AdminPage({
   const reviewById = new Map<string, any>(
     reportedReviews.map((review: any) => [String(review.id), review])
   );
+
+  const pendingApplications = servers.filter(isPendingApplication);
+
+  const applicationHistory = servers
+    .filter((server: any) => isAcceptedApplication(server) || isRejectedApplication(server))
+    .sort((a: any, b: any) => {
+      const aTime = getTimeValue(a.moderated_at || a.moderation_created_at || a.created_at);
+      const bTime = getTimeValue(b.moderated_at || b.moderation_created_at || b.created_at);
+      return bTime - aTime;
+    });
+
+  const managedServers = servers
+    .filter(isManagedServer)
+    .filter((server: any) => matchesServerSearch(server, adminSearch));
 
   const openServerReports = serverReports.filter(
     (report: any) => (report.status || "open") === "open"
@@ -539,6 +661,60 @@ export default async function AdminPage({
           color: rgba(246,243,255,0.84);
           line-height: 1.55;
         }
+
+        .admin-search-form {
+          display: grid;
+          grid-template-columns: minmax(220px, 1fr) auto auto;
+          gap: 12px;
+          margin-bottom: 18px;
+        }
+
+        .admin-history-list {
+          display: grid;
+          gap: 12px;
+        }
+
+        .admin-history-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 14px;
+          padding: 16px;
+          border-radius: 18px;
+          background: rgba(255,255,255,0.055);
+          border: 1px solid rgba(255,255,255,0.10);
+        }
+
+        .admin-history-item h3 {
+          margin: 0 0 5px;
+        }
+
+        .admin-history-item p {
+          margin: 0;
+          color: rgba(246,243,255,0.72);
+        }
+
+        .admin-history-badge {
+          min-height: 34px;
+          padding: 0 14px;
+          border-radius: 999px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 950;
+          white-space: nowrap;
+        }
+
+        @media (max-width: 720px) {
+          .admin-search-form {
+            grid-template-columns: 1fr;
+          }
+
+          .admin-history-item {
+            align-items: flex-start;
+            flex-direction: column;
+          }
+        }
       `}</style>
 
       <section className="profile-header-card">
@@ -553,15 +729,28 @@ export default async function AdminPage({
           <strong>{staff.role}</strong>
         </p>
 
+        {!isAdmin && (
+          <div className="admin-warning-box" style={{ marginTop: 16 }}>
+            Supporter können Server-Bewerbungen annehmen oder ablehnen. Server
+            bestrafen, bannen, sperren, Premium vergeben und Bump-Sperren dürfen
+            nur Admins.
+          </div>
+        )}
+
         <div className="admin-dashboard-grid">
+          <div className="admin-stat-card">
+            <strong>{pendingApplications.length}</strong>
+            <span>Offene Bewerbungen</span>
+          </div>
+
           <div className="admin-stat-card">
             <strong>{openServerReports.length + openReviewReports.length}</strong>
             <span>Offene Meldungen</span>
           </div>
 
           <div className="admin-stat-card">
-            <strong>{servers.length}</strong>
-            <span>Server insgesamt</span>
+            <strong>{managedServers.length}</strong>
+            <span>Admin Serverliste</span>
           </div>
 
           <div className="admin-stat-card">
@@ -581,10 +770,10 @@ export default async function AdminPage({
         </div>
 
         <div className="admin-section-tabs">
+          <a href="#applications">Bewerbungen</a>
           <a href="#reports">Meldungen</a>
-          <a href="#servers">Server Moderation</a>
-          <a href="#premium">Premium & Partner</a>
-          <a href="#bump">Bump-Sperren</a>
+          <a href="#servers">Serverliste</a>
+          <a href="#history">History</a>
         </div>
       </section>
 
@@ -594,6 +783,96 @@ export default async function AdminPage({
           <h3>{adminNotice}</h3>
         </section>
       )}
+
+      <AdminSection
+        title="Server-Bewerbungen"
+        meta={`${pendingApplications.length} offen`}
+      >
+        <div id="applications" />
+
+        {pendingApplications.length === 0 ? (
+          <div className="card empty">
+            <h3>Keine offenen Bewerbungen</h3>
+            <p>Neue Server-Bewerbungen erscheinen hier.</p>
+          </div>
+        ) : (
+          <div className="admin-server-list">
+            {pendingApplications.map((server: any) => (
+              <article className="admin-server-card" key={server.id}>
+                <div className="admin-server-main">
+                  <div className="admin-avatar">
+                    {server.server_name?.slice(0, 1) ?? "S"}
+                  </div>
+
+                  <div className="admin-server-content">
+                    <div className="admin-server-heading">
+                      <div>
+                        <h3>{server.server_name}</h3>
+                        <p>
+                          {server.category} • {server.country} • {server.language}
+                        </p>
+                      </div>
+
+                      <div className="admin-status-group">
+                        <span className="status-pill pending">Bewerbung offen</span>
+                      </div>
+                    </div>
+
+                    <p className="admin-description">{server.description}</p>
+
+                    <div className="admin-meta-grid">
+                      <span>Server-ID: {server.id}</span>
+                      <span>NSFW: {server.nsfw ? "Ja" : "Nein"}</span>
+                      <span>Eingereicht: {formatDate(server.created_at)}</span>
+                      <span>Status: {server.status || "pending"}</span>
+                    </div>
+
+                    <div className="admin-link-row">
+                      {server.invite_link && (
+                        <a
+                          className="admin-link-btn"
+                          href={server.invite_link}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Discord Invite öffnen
+                        </a>
+                      )}
+                    </div>
+
+                    {canApprove ? (
+                      <div className="admin-action-section">
+                        <h4>Bewerbung entscheiden</h4>
+                        <div className="admin-actions">
+                          <ServerActionForm
+                            serverId={String(server.id)}
+                            action="approve"
+                            label="Annehmen"
+                            primary
+                          />
+
+                          <ServerActionForm
+                            serverId={String(server.id)}
+                            action="reject"
+                            label="Ablehnen"
+                            danger
+                            requireReason
+                            reasonPlaceholder="Warum wird die Bewerbung abgelehnt?"
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="admin-warning-box">
+                        Du hast keine Berechtigung, Bewerbungen zu entscheiden.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </AdminSection>
 
       {canModerate && (
         <AdminSection
@@ -675,91 +954,88 @@ export default async function AdminPage({
                           )}
                         </div>
 
-                        <div className="admin-warning-box">
-                          Bei Server-Sperre, Ban oder Bump-Sperre ist ein Grund
-                          Pflicht. Der Server-Besitzer soll danach automatisch eine
-                          Nachricht erhalten.
-                        </div>
+                        {isAdmin ? (
+                          <div className="admin-action-section">
+                            <h4>Admin Entscheidung</h4>
+                            <div className="admin-actions">
+                              <ReportActionForm
+                                reportType="server"
+                                reportId={String(report.id)}
+                                serverId={String(report.server_id || "")}
+                                action="dismiss_server_report"
+                                label="Ablehnen / Kein Problem"
+                              />
 
-                        <div className="admin-action-section">
-                          <h4>Entscheidung</h4>
-                          <div className="admin-actions">
-                            <ReportActionForm
-                              reportType="server"
-                              reportId={String(report.id)}
-                              serverId={String(report.server_id || "")}
-                              action="dismiss_server_report"
-                              label="Ablehnen / Kein Problem"
-                            />
+                              <ReportActionForm
+                                reportType="server"
+                                reportId={String(report.id)}
+                                serverId={String(report.server_id || "")}
+                                action="mark_server_report_done"
+                                label="Als erledigt markieren"
+                                primary
+                              />
 
-                            <ReportActionForm
-                              reportType="server"
-                              reportId={String(report.id)}
-                              serverId={String(report.server_id || "")}
-                              action="mark_server_report_done"
-                              label="Als erledigt markieren"
-                              primary
-                            />
+                              {server?.id && (
+                                <>
+                                  <ReportActionForm
+                                    reportType="server"
+                                    reportId={String(report.id)}
+                                    serverId={String(server.id)}
+                                    action="lock_reported_server"
+                                    label="Server sperren"
+                                    danger
+                                    requireReason
+                                    showDuration
+                                    defaultDuration="7"
+                                    reasonPlaceholder="Warum wird der Server gesperrt?"
+                                  />
 
-                            {server?.id && (
-                              <>
-                                <ReportActionForm
-                                  reportType="server"
-                                  reportId={String(report.id)}
-                                  serverId={String(server.id)}
-                                  action="lock_reported_server"
-                                  label="Server sperren"
-                                  danger
-                                  requireReason
-                                  showDuration
-                                  defaultDuration="7"
-                                  reasonPlaceholder="Warum wird der Server gesperrt?"
-                                />
+                                  <ReportActionForm
+                                    reportType="server"
+                                    reportId={String(report.id)}
+                                    serverId={String(server.id)}
+                                    action="bump_ban_reported_server"
+                                    label="Bump-Sperre verhängen"
+                                    danger
+                                    requireReason
+                                    showDuration
+                                    defaultDuration="3"
+                                    reasonPlaceholder="Warum bekommt der Server eine Bump-Sperre?"
+                                  />
 
-                                <ReportActionForm
-                                  reportType="server"
-                                  reportId={String(report.id)}
-                                  serverId={String(server.id)}
-                                  action="bump_ban_reported_server"
-                                  label="Bump-Sperre verhängen"
-                                  danger
-                                  requireReason
-                                  showDuration
-                                  defaultDuration="3"
-                                  reasonPlaceholder="Warum bekommt der Server eine Bump-Sperre?"
-                                />
-                              </>
-                            )}
+                                  <ReportActionForm
+                                    reportType="server"
+                                    reportId={String(report.id)}
+                                    serverId={String(server.id)}
+                                    action="ban_reported_server"
+                                    label="Server bannen"
+                                    danger
+                                    requireReason
+                                    showDuration
+                                    defaultDuration="30"
+                                    reasonPlaceholder="Warum wird der Server gebannt?"
+                                  />
 
-                            {isAdmin && server?.id && (
-                              <>
-                                <ReportActionForm
-                                  reportType="server"
-                                  reportId={String(report.id)}
-                                  serverId={String(server.id)}
-                                  action="ban_reported_server"
-                                  label="Server bannen"
-                                  danger
-                                  requireReason
-                                  showDuration
-                                  defaultDuration="30"
-                                  reasonPlaceholder="Warum wird der Server gebannt?"
-                                />
-
-                                <ReportActionForm
-                                  reportType="server"
-                                  reportId={String(report.id)}
-                                  serverId={String(server.id)}
-                                  action="delete_reported_server"
-                                  label="Server löschen"
-                                  danger
-                                  requireReason
-                                  reasonPlaceholder="Warum wird der Server gelöscht?"
-                                />
-                              </>
-                            )}
+                                  <ReportActionForm
+                                    reportType="server"
+                                    reportId={String(report.id)}
+                                    serverId={String(server.id)}
+                                    action="delete_reported_server"
+                                    label="Server löschen"
+                                    danger
+                                    requireReason
+                                    reasonPlaceholder="Warum wird der Server gelöscht?"
+                                  />
+                                </>
+                              )}
+                            </div>
                           </div>
-                        </div>
+                        ) : (
+                          <div className="admin-warning-box">
+                            Supporter können Meldungen sehen, aber keine Server
+                            bestrafen. Strafen dürfen nur Admins.
+                          </div>
+                        )}
                       </div>
                     </div>
                   </article>
@@ -829,31 +1105,31 @@ export default async function AdminPage({
                           )}
                         </div>
 
-                        <div className="admin-action-section">
-                          <h4>Entscheidung</h4>
-                          <div className="admin-actions">
-                            <ReportActionForm
-                              reportType="review"
-                              reportId={String(report.id)}
-                              serverId={String(report.server_id || "")}
-                              reviewId={String(report.review_id || "")}
-                              action="dismiss_review_report"
-                              label="Ablehnen / Kein Problem"
-                            />
+                        {isAdmin ? (
+                          <div className="admin-action-section">
+                            <h4>Admin Entscheidung</h4>
+                            <div className="admin-actions">
+                              <ReportActionForm
+                                reportType="review"
+                                reportId={String(report.id)}
+                                serverId={String(report.server_id || "")}
+                                reviewId={String(report.review_id || "")}
+                                action="dismiss_review_report"
+                                label="Ablehnen / Kein Problem"
+                              />
 
-                            <ReportActionForm
-                              reportType="review"
-                              reportId={String(report.id)}
-                              serverId={String(report.server_id || "")}
-                              reviewId={String(report.review_id || "")}
-                              action="hide_review"
-                              label="Bewertung verstecken"
-                              danger
-                              requireReason
-                              reasonPlaceholder="Warum wird die Bewertung versteckt?"
-                            />
+                              <ReportActionForm
+                                reportType="review"
+                                reportId={String(report.id)}
+                                serverId={String(report.server_id || "")}
+                                reviewId={String(report.review_id || "")}
+                                action="hide_review"
+                                label="Bewertung verstecken"
+                                danger
+                                requireReason
+                                reasonPlaceholder="Warum wird die Bewertung versteckt?"
+                              />
 
-                            {isAdmin && (
                               <ReportActionForm
                                 reportType="review"
                                 reportId={String(report.id)}
@@ -865,9 +1141,14 @@ export default async function AdminPage({
                                 requireReason
                                 reasonPlaceholder="Warum wird die Bewertung gelöscht?"
                               />
-                            )}
+                            </div>
                           </div>
-                        </div>
+                        ) : (
+                          <div className="admin-warning-box">
+                            Supporter können Bewertungs-Meldungen sehen, aber
+                            keine Bewertungen löschen oder verstecken.
+                          </div>
+                        )}
                       </div>
                     </div>
                   </article>
@@ -878,17 +1159,39 @@ export default async function AdminPage({
         </AdminSection>
       )}
 
-      <AdminSection title="Server Moderation" meta={`${servers.length} Server`}>
+      <AdminSection
+        title="Admin Serverliste"
+        meta={`${managedServers.length} Server`}
+      >
         <div id="servers" />
 
-        {servers.length === 0 ? (
+        <form className="admin-search-form" action="/admin">
+          <input
+            className="input"
+            name="admin_q"
+            defaultValue={adminSearch}
+            placeholder="Server suchen..."
+          />
+
+          <button className="btn" type="submit">
+            Suchen
+          </button>
+
+          {adminSearch && (
+            <a className="btn secondary" href="/admin#servers">
+              Zurücksetzen
+            </a>
+          )}
+        </form>
+
+        {managedServers.length === 0 ? (
           <div className="card empty">
-            <h3>No servers yet</h3>
-            <p>Submitted servers will appear here.</p>
+            <h3>Keine Server gefunden</h3>
+            <p>Für diese Suche gibt es keinen passenden Server.</p>
           </div>
         ) : (
           <div className="admin-server-list">
-            {servers.map((server: any) => {
+            {managedServers.map((server: any) => {
               const bumpBanned = isBumpBanned(server);
 
               return (
@@ -929,9 +1232,9 @@ export default async function AdminPage({
 
                       <div className="admin-meta-grid">
                         <span>Bumps: {server.bumps ?? 0}</span>
-                        <span>NSFW: {server.nsfw ? "Yes" : "No"}</span>
+                        <span>NSFW: {server.nsfw ? "Ja" : "Nein"}</span>
                         <span>
-                          Bump ban:{" "}
+                          Bump-Sperre:{" "}
                           {bumpBanned
                             ? `bis ${formatDate(server.bump_banned_until)}`
                             : "Nein"}
@@ -975,54 +1278,33 @@ export default async function AdminPage({
                         </a>
                       </div>
 
-                      <div className="admin-action-section">
-                        <h4>Review</h4>
-                        <div className="admin-actions">
-                          <ServerActionForm
-                            serverId={String(server.id)}
-                            action="approve"
-                            label="Approve"
-                            primary
-                          />
-
-                          <ServerActionForm
-                            serverId={String(server.id)}
-                            action="reject"
-                            label="Reject"
-                            danger
-                            requireReason
-                            reasonPlaceholder="Warum wird der Server abgelehnt?"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="admin-action-section" id="bump">
-                        <h4>Bump Moderation</h4>
-                        <div className="admin-actions">
-                          <ServerActionForm
-                            serverId={String(server.id)}
-                            action="bump_ban"
-                            label="Bump-Sperre verhängen"
-                            danger
-                            requireReason
-                            showDuration
-                            defaultDuration="3"
-                            reasonPlaceholder="Warum bekommt der Server eine Bump-Sperre?"
-                          />
-
-                          <ServerActionForm
-                            serverId={String(server.id)}
-                            action="remove_bump_ban"
-                            label="Bump-Sperre entfernen"
-                            requireReason
-                            reasonPlaceholder="Warum wird die Bump-Sperre entfernt?"
-                          />
-                        </div>
-                      </div>
-
-                      {isAdmin && (
+                      {isAdmin ? (
                         <>
-                          <div className="admin-action-section" id="premium">
+                          <div className="admin-action-section">
+                            <h4>Bump Moderation</h4>
+                            <div className="admin-actions">
+                              <ServerActionForm
+                                serverId={String(server.id)}
+                                action="bump_ban"
+                                label="Bump-Sperre verhängen"
+                                danger
+                                requireReason
+                                showDuration
+                                defaultDuration="3"
+                                reasonPlaceholder="Warum bekommt der Server eine Bump-Sperre?"
+                              />
+
+                              <ServerActionForm
+                                serverId={String(server.id)}
+                                action="remove_bump_ban"
+                                label="Bump-Sperre entfernen"
+                                requireReason
+                                reasonPlaceholder="Warum wird die Bump-Sperre entfernt?"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="admin-action-section">
                             <h4>Premium & Partner</h4>
                             <div className="admin-actions">
                               <ServerActionForm
@@ -1109,12 +1391,62 @@ export default async function AdminPage({
                             </div>
                           </div>
                         </>
+                      ) : (
+                        <div className="admin-warning-box">
+                          Supporter können diese Liste einsehen. Strafen,
+                          Premium, Partner und Bump-Sperren sind nur für Admins.
+                        </div>
                       )}
                     </div>
                   </div>
                 </article>
               );
             })}
+          </div>
+        )}
+      </AdminSection>
+
+      <AdminSection
+        title="Bewerbungs-History"
+        meta={`${applicationHistory.length} Einträge`}
+      >
+        <div id="history" />
+
+        {applicationHistory.length === 0 ? (
+          <div className="card empty">
+            <h3>Keine History vorhanden</h3>
+            <p>Angenommene und abgelehnte Bewerbungen erscheinen hier.</p>
+          </div>
+        ) : (
+          <div className="admin-history-list">
+            {applicationHistory.slice(0, 40).map((server: any) => (
+              <div className="admin-history-item" key={`history-${server.id}`}>
+                <div>
+                  <h3>{server.server_name}</h3>
+                  <p>
+                    {server.category} • {server.language} •{" "}
+                    {formatDate(server.moderated_at || server.moderation_created_at || server.created_at)}
+                  </p>
+
+                  <p>
+                    Bearbeitet von: <strong>{getModeratorName(server)}</strong>
+                  </p>
+
+                  {server.moderation_reason && (
+                    <p>
+                      Grund: <strong>{server.moderation_reason}</strong>
+                    </p>
+                  )}
+                </div>
+
+                <span
+                  className="admin-history-badge"
+                  style={getHistoryColor(server)}
+                >
+                  {getHistoryLabel(server)}
+                </span>
+              </div>
+            ))}
           </div>
         )}
       </AdminSection>
