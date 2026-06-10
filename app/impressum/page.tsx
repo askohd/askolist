@@ -23,20 +23,7 @@ export default function ImpressumPage() {
           padding: clamp(28px, 5vw, 54px);
           border-radius: 34px;
           background:
-            radial-gradient(circle at 0% 0%, rgba(181, 76, 255, 0.22), transparentstyle>{`
-        .legal-shell {
-          width: min(1120px, calc(100% - 32px));
-          margin: 0 auto;
-          padding: 72px 0 90px;
-        }
-
-        .legal-hero {
-          position: relative;
-          overflow: hidden;
-          padding: clamp(28px, 5vw, 54px);
-          border-radius: 34px;
-          background:
-            radial-gradient 35%),
+            radial-gradient(circle at 0% 0%, rgba(181, 76, 255, 0.22), transparent 35%),
             radial-gradient(circle at 100% 0%, rgba(116, 223, 255, 0.14), transparent 34%),
             linear-gradient(135deg, rgba(18, 16, 42, 0.98), rgba(9, 10, 26, 0.98));
           border: 1px solid rgba(170, 120, 255, 0.22);
@@ -109,12 +96,6 @@ export default function ImpressumPage() {
           letter-spacing: -0.04em;
         }
 
-        .legal-card h3 {
-          margin: 26px 0 10px;
-          color: #ffffff;
-          font-size: 1.15rem;
-        }
-
         .legal-card p,
         .legal-card li,
         .legal-side-card p {
@@ -124,11 +105,6 @@ export default function ImpressumPage() {
 
         .legal-card p {
           margin: 0 0 14px;
-        }
-
-        .legal-card ul {
-          margin: 10px 0 18px;
-          padding-left: 22px;
         }
 
         .legal-contact-box {
@@ -168,16 +144,6 @@ export default function ImpressumPage() {
         .legal-button:hover {
           color: #ffffff;
           border-color: rgba(157, 234, 255, 0.28);
-        }
-
-        .legal-note {
-          margin-top: 22px;
-          padding: 16px;
-          border-radius: 18px;
-          color: #ffe9a6;
-          background: rgba(255, 207, 64, 0.08);
-          border: 1px solid rgba(255, 207, 64, 0.20);
-          line-height: 1.65;
         }
 
         @media (max-width: 900px) {
@@ -257,14 +223,14 @@ export default function ImpressumPage() {
           <p>
             Auf Asko Cafe können Inhalte von Nutzern erscheinen, insbesondere
             Servernamen, Beschreibungen, Banner, Logos, Tags, Bewertungen,
-            Meldungen und sonstige Angaben zu Discord-Servern. Für diese
-            Inhalte ist grundsätzlich der jeweilige Nutzer beziehungsweise
-            Serverbetreiber verantwortlich.
+            Meldungen und sonstige Angaben zu Discord-Servern. Für diese Inhalte
+            ist grundsätzlich der jeweilige Nutzer beziehungsweise Serverbetreiber
+            verantwortlich.
           </p>
 
           <p>
-            Eine dauerhafte inhaltliche Vorabkontrolle aller Nutzerinhalte
-            findet nicht statt. Bei konkreten Hinweisen auf rechtswidrige,
+            Eine dauerhafte inhaltliche Vorabkontrolle aller Nutzerinhalte findet
+            nicht statt. Bei konkreten Hinweisen auf rechtswidrige,
             missbräuchliche oder regelwidrige Inhalte werden diese geprüft und
             gegebenenfalls entfernt, gesperrt oder eingeschränkt.
           </p>
