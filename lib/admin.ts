@@ -17,13 +17,14 @@ function clean(value: unknown) {
   return String(value ?? "").trim();
 }
 
-function normalizeRole(value: unknown): StaffRole {
+function normalizeRole(value: unknown): StaffRole | null {
   const role = clean(value).toLowerCase();
 
   if (role === "owner") return "owner";
   if (role === "admin" || role === "administrator") return "admin";
+  if (role === "supporter") return "supporter";
 
-  return "supporter";
+  return null;
 }
 
 function getSessionDiscordId(user: any) {
@@ -107,20 +108,28 @@ export async function getCurrentStaff(): Promise<CurrentStaff | null> {
   const staffById = await findStaffByDiscordId(discordUserId);
 
   if (staffById) {
+    const role = normalizeRole(staffById.role);
+
+    if (!role) return null;
+
     return {
       discord_user_id: clean(staffById.discord_user_id || discordUserId),
       username: clean(staffById.discord_username || username),
-      role: normalizeRole(staffById.role),
+      role,
     };
   }
 
   const staffByName = await findStaffByUsername(username);
 
   if (staffByName) {
+    const role = normalizeRole(staffByName.role);
+
+    if (!role) return null;
+
     return {
       discord_user_id: clean(staffByName.discord_user_id || discordUserId),
       username: clean(staffByName.discord_username || username),
-      role: normalizeRole(staffByName.role),
+      role,
     };
   }
 
@@ -130,19 +139,23 @@ export async function getCurrentStaff(): Promise<CurrentStaff | null> {
 export function canApproveServers(role?: string | null) {
   const normalizedRole = normalizeRole(role);
 
-  return ["owner", "admin", "supporter"].includes(normalizedRole);
+  return (
+    normalizedRole === "owner" ||
+    normalizedRole === "admin" ||
+    normalizedRole === "supporter"
+  );
 }
 
 export function canModerateServers(role?: string | null) {
   const normalizedRole = normalizeRole(role);
 
-  return ["owner", "admin"].includes(normalizedRole);
+  return normalizedRole === "owner" || normalizedRole === "admin";
 }
 
 export function canBumpBanServers(role?: string | null) {
   const normalizedRole = normalizeRole(role);
 
-  return ["owner", "admin"].includes(normalizedRole);
+  return normalizedRole === "owner" || normalizedRole === "admin";
 }
 
 export function canManageStaff(staff?: CurrentStaff | null) {
