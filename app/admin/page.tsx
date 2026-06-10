@@ -18,6 +18,14 @@ const DURATION_OPTIONS = [
   { value: "permanent", label: "Permanent" },
 ];
 
+const STAFF_LANGUAGE_OPTIONS = [
+  "Deutsch",
+  "English",
+  "Français",
+  "Italiano",
+  "Polski",
+];
+
 function getSearchValue(searchParams: PageSearchParams, key: string) {
   const value = searchParams[key];
 
@@ -43,6 +51,10 @@ function getAdminNotice(searchParams: PageSearchParams) {
 
   if (getSearchValue(searchParams, "staff_removed") === "1") {
     return "Teammitglied wurde entfernt.";
+  }
+
+  if (getSearchValue(searchParams, "profile_saved") === "1") {
+    return "Dein Admin-Profil wurde gespeichert.";
   }
 
   if (getSearchValue(searchParams, "report_done") === "1") {
@@ -254,6 +266,23 @@ function getModeratorName(server: any) {
     server.moderated_by ||
     "Unbekannt"
   );
+}
+
+function getStaffLanguage(member: any) {
+  return (
+    member?.staff_language ||
+    member?.language ||
+    member?.preferred_language ||
+    "Deutsch"
+  );
+}
+
+function getStaffAvatar(member: any) {
+  return String(member?.avatar_url || "").trim();
+}
+
+function getProfileDiscordName(staff: any, profile: any) {
+  return profile?.discord_username || staff?.username || "Staff";
 }
 
 function DurationSelect({ defaultValue = "3" }: { defaultValue?: string }) {
@@ -487,6 +516,44 @@ export default async function AdminPage({
   const canModerate = canModerateServers(staff.role);
   const isAdmin = canModerate;
   const isOwner = canManageStaff(staff);
+
+  let currentStaffProfile: any = null;
+
+  try {
+    const staffByIdResponse = staff.discord_user_id
+      ? await supabaseRequest(
+          `staff_members?discord_user_id=eq.${encodeURIComponent(
+            staff.discord_user_id
+          )}&select=*&limit=1`
+        )
+      : [];
+
+    const staffById = Array.isArray(staffByIdResponse)
+      ? staffByIdResponse[0]
+      : null;
+
+    if (staffById) {
+      currentStaffProfile = staffById;
+    }
+
+    if (!currentStaffProfile && staff.username) {
+      const staffByNameResponse = await supabaseRequest(
+        `staff_members?discord_username=ilike.${encodeURIComponent(
+          staff.username
+        )}&select=*&limit=1`
+      );
+
+      const staffByName = Array.isArray(staffByNameResponse)
+        ? staffByNameResponse[0]
+        : null;
+
+      if (staffByName) {
+        currentStaffProfile = staffByName;
+      }
+    }
+  } catch (error) {
+    console.error("Could not load current staff profile:", error);
+  }
 
   let staffMembers: any[] = [];
 
@@ -742,6 +809,48 @@ export default async function AdminPage({
           white-space: nowrap;
         }
 
+        .admin-profile-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 12px;
+          margin-top: 16px;
+        }
+
+        .admin-profile-preview {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          padding: 16px;
+          border-radius: 20px;
+          background: rgba(255,255,255,0.055);
+          border: 1px solid rgba(255,255,255,0.10);
+        }
+
+        .admin-staff-avatar {
+          width: 52px;
+          height: 52px;
+          border-radius: 18px;
+          overflow: hidden;
+          display: grid;
+          place-items: center;
+          flex: 0 0 auto;
+          background: linear-gradient(135deg, rgba(181,76,255,0.32), rgba(116,223,255,0.18));
+          border: 1px solid rgba(255,255,255,0.14);
+        }
+
+        .admin-staff-avatar img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .admin-staff-language {
+          margin-top: 5px;
+          color: rgba(246,243,255,0.72);
+          font-size: 13px;
+          font-weight: 800;
+        }
+
         @media (max-width: 720px) {
           .admin-search-form {
             grid-template-columns: 1fr;
@@ -831,6 +940,66 @@ export default async function AdminPage({
         </section>
       )}
 
+      <AdminSection title="Mein Admin-Profil" meta="Sprache & Profilbild">
+        <div className="admin-profile-preview">
+          <div className="admin-staff-avatar">
+            {getStaffAvatar(currentStaffProfile) ? (
+              <img
+                src={getStaffAvatar(currentStaffProfile)}
+                alt={getProfileDiscordName(staff, currentStaffProfile)}
+              />
+            ) : (
+              <span>{staff.role === "owner" ? "👑" : isAdmin ? "🛡️" : "💬"}</span>
+            )}
+          </div>
+
+          <div>
+            <strong>{getProfileDiscordName(staff, currentStaffProfile)}</strong>
+            <div className="admin-staff-language">
+              Sprache: {getStaffLanguage(currentStaffProfile)}
+            </div>
+          </div>
+        </div>
+
+        <form
+          action="/api/admin/profile"
+          method="POST"
+          className="admin-inline-form"
+          style={{ marginTop: 16, maxWidth: 760 }}
+        >
+          <div className="admin-profile-grid">
+            <label className="field">
+              <span>Support-Sprache</span>
+              <select
+                name="staff_language"
+                defaultValue={getStaffLanguage(currentStaffProfile)}
+                required
+              >
+                {STAFF_LANGUAGE_OPTIONS.map((languageOption) => (
+                  <option key={languageOption} value={languageOption}>
+                    {languageOption}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="field">
+              <span>Discord Profilbild URL optional</span>
+              <input
+                className="input"
+                name="avatar_url"
+                defaultValue={getStaffAvatar(currentStaffProfile)}
+                placeholder="https://cdn.discordapp.com/..."
+              />
+            </label>
+          </div>
+
+          <button className="admin-action-btn primary" type="submit">
+            Profil speichern
+          </button>
+        </form>
+      </AdminSection>
+
       {isOwner && (
         <AdminSection
           title="Team verwalten"
@@ -880,6 +1049,26 @@ export default async function AdminPage({
               </select>
             </label>
 
+            <label className="field">
+              <span>Support-Sprache</span>
+              <select name="staff_language" defaultValue="Deutsch" required>
+                {STAFF_LANGUAGE_OPTIONS.map((languageOption) => (
+                  <option key={languageOption} value={languageOption}>
+                    {languageOption}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="field">
+              <span>Discord Profilbild URL optional</span>
+              <input
+                className="input"
+                name="avatar_url"
+                placeholder="https://cdn.discordapp.com/..."
+              />
+            </label>
+
             <button className="admin-action-btn primary" type="submit">
               Speichern
             </button>
@@ -894,12 +1083,28 @@ export default async function AdminPage({
             ) : (
               staffMembers.map((member: any) => (
                 <div className="admin-history-item" key={member.id}>
-                  <div>
-                    <h3>{member.discord_username}</h3>
-                    <p>
-                      Discord ID: {member.discord_user_id || "Nicht gesetzt"} ·
-                      Erstellt: {formatDate(member.created_at)}
-                    </p>
+                  <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                    <div className="admin-staff-avatar">
+                      {getStaffAvatar(member) ? (
+                        <img
+                          src={getStaffAvatar(member)}
+                          alt={member.discord_username || "Teammitglied"}
+                        />
+                      ) : (
+                        <span>{member.role === "owner" ? "👑" : member.role === "admin" ? "🛡️" : "💬"}</span>
+                      )}
+                    </div>
+
+                    <div>
+                      <h3>{member.discord_username}</h3>
+                      <p>
+                        Discord ID: {member.discord_user_id || "Nicht gesetzt"} ·
+                        Erstellt: {formatDate(member.created_at)}
+                      </p>
+                      <div className="admin-staff-language">
+                        Sprache: {getStaffLanguage(member)}
+                      </div>
+                    </div>
                   </div>
 
                   <div
