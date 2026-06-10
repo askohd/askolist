@@ -2026,3 +2026,172 @@ select option {
     grid-template-columns: 1fr;
   }
 }
+/* =========================================================
+   Footer Mobile Fix - Asko Cafe
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .site-footer-v2 {
+    margin-top: 58px !important;
+    overflow: hidden !important;
+  }
+
+  .site-footer-v2-inner {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 28px 14px 18px !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .site-footer-v2-card,
+  .site-footer-v2-column {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 18px !important;
+    border-radius: 22px !important;
+  }
+
+  .site-footer-v2-brand {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+
+  .site-footer-v2-logo {
+    width: 46px !important;
+    height: 46px !important;
+    border-radius: 16px !important;
+    flex: 0 0 auto !important;
+  }
+
+  .site-footer-v2-brand strong {
+    font-size: 1.05rem !important;
+    line-height: 1.15 !important;
+  }
+
+  .site-footer-v2-brand small {
+    font-size: 0.82rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .site-footer-v2-text {
+    margin-top: 16px !important;
+    max-width: 100% !important;
+    font-size: 0.95rem !important;
+    line-height: 1.65 !important;
+    color: rgba(235, 241, 255, 0.72) !important;
+  }
+
+  .site-footer-v2-column {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 9px !important;
+    background: rgba(255, 255, 255, 0.038) !important;
+  }
+
+  .site-footer-v2-column span {
+    display: block !important;
+    margin: 0 0 4px !important;
+    color: #ffffff !important;
+    font-size: 0.96rem !important;
+    font-weight: 950 !important;
+  }
+
+  .site-footer-v2-column a {
+    width: 100% !important;
+    min-height: 42px !important;
+    padding: 0 13px !important;
+    border-radius: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    color: rgba(235, 241, 255, 0.78) !important;
+    background: rgba(255, 255, 255, 0.055) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    text-decoration: none !important;
+    line-height: 1.2 !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .site-footer-v2-column a:hover {
+    color: #ffffff !important;
+    transform: none !important;
+  }
+
+  .site-footer-v2-bottom {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px 14px 24px !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    font-size: 0.9rem !important;
+    line-height: 1.55 !important;
+    color: rgba(235, 241, 255, 0.58) !important;
+  }
+
+  .site-footer-v2-bottom p {
+    margin: 0 !important;
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .site-footer-v2-bottom a {
+    color: #9deaff !important;
+    text-decoration: none !important;
+  }
+}
+
+/* Fallback, falls bei dir noch der alte Footer aktiv ist */
+@media (max-width: 768px) {
+  .site-footer,
+  .footer {
+    margin-top: 58px !important;
+    overflow: hidden !important;
+  }
+
+  .site-footer-inner,
+  .footer .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .site-footer-top {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .site-footer-column,
+  .site-footer-nav-group,
+  .site-footer-links {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 9px !important;
+  }
+
+  .site-footer-link,
+  .site-footer-links a,
+  .site-footer-column a {
+    width: 100% !important;
+    min-height: 42px !important;
+    padding: 0 13px !important;
+    border-radius: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    background: rgba(255, 255, 255, 0.055) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .site-footer-bottom {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    text-align: left !important;
+  }
+}
