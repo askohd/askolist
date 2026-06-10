@@ -114,26 +114,6 @@ export default function NutzungsbedingungenPage() {
           padding-left: 22px;
         }
 
-        .legal-check {
-          margin: 18px 0 26px;
-          padding: 18px;
-          border-radius: 22px;
-          color: rgba(236, 240, 255, 0.84);
-          background: rgba(34, 197, 94, 0.08);
-          border: 1px solid rgba(34, 197, 94, 0.20);
-          line-height: 1.7;
-        }
-
-        .legal-warning {
-          margin: 18px 0 26px;
-          padding: 18px;
-          border-radius: 22px;
-          color: #ffe9a6;
-          background: rgba(255, 207, 64, 0.08);
-          border: 1px solid rgba(255, 207, 64, 0.20);
-          line-height: 1.7;
-        }
-
         .legal-link-list {
           display: grid;
           gap: 10px;
@@ -184,13 +164,6 @@ export default function NutzungsbedingungenPage() {
 
       <div className="legal-grid">
         <article className="legal-card">
-          <div className="legal-check">
-            Später sollte beim Login beziehungsweise spätestens beim Einreichen
-            eines Servers eine Checkbox eingebaut werden: „Ich akzeptiere die
-            Nutzungsbedingungen und die Datenschutzerklärung.“ Zusätzlich sollte
-            gespeichert werden, wann und welche Version bestätigt wurde.
-          </div>
-
           <h2>1. Anbieter</h2>
           <p>
             Anbieter der Plattform Asko Cafe ist der im Impressum genannte
@@ -359,13 +332,6 @@ export default function NutzungsbedingungenPage() {
             Es gilt das Recht der Bundesrepublik Deutschland, soweit dem keine
             zwingenden Verbraucherschutzvorschriften entgegenstehen.
           </p>
-
-          <div className="legal-warning">
-            Diese Bedingungen sind deutlich vollständiger als vorher. Als nächster
-            technischer Schritt sollte im Server-Eintragen-Formular eine
-            Pflicht-Checkbox eingebaut werden, damit Nutzer die
-            Nutzungsbedingungen und Datenschutzerklärung aktiv bestätigen.
-          </div>
         </article>
 
         <aside className="legal-side-card">
