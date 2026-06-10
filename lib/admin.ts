@@ -48,40 +48,49 @@ function getSessionUsername(user: any) {
 }
 
 function isOwnerIdentity(discordUserId: string, username: string) {
+  const cleanDiscordUserId = clean(discordUserId);
+  const cleanUsername = clean(username).toLowerCase();
+
   return (
-    discordUserId === OWNER_DISCORD_ID ||
-    username.toLowerCase() === OWNER_USERNAME
+    cleanDiscordUserId === OWNER_DISCORD_ID ||
+    cleanUsername === OWNER_USERNAME
   );
 }
 
 async function findStaffByDiscordId(discordUserId: string) {
-  if (!discordUserId) return null;
+  const cleanDiscordUserId = clean(discordUserId);
+
+  if (!cleanDiscordUserId) return null;
 
   try {
     const rows = await supabaseRequest(
       `staff_members?discord_user_id=eq.${encodeURIComponent(
-        discordUserId
-      )}&select=*`
+        cleanDiscordUserId
+      )}&select=*&limit=1`
     );
 
     return Array.isArray(rows) ? rows[0] : null;
-  } catch {
+  } catch (error) {
+    console.error("Could not find staff by Discord ID:", error);
     return null;
   }
 }
 
 async function findStaffByUsername(username: string) {
-  if (!username) return null;
+  const cleanUsername = clean(username);
+
+  if (!cleanUsername) return null;
 
   try {
     const rows = await supabaseRequest(
       `staff_members?discord_username=ilike.${encodeURIComponent(
-        username
-      )}&select=*`
+        cleanUsername
+      )}&select=*&limit=1`
     );
 
     return Array.isArray(rows) ? rows[0] : null;
-  } catch {
+  } catch (error) {
+    console.error("Could not find staff by username:", error);
     return null;
   }
 }
@@ -138,7 +147,7 @@ export async function getCurrentStaff(): Promise<CurrentStaff | null> {
 
 /**
  * Alte Header-Kompatibilität:
- * Header.tsx importiert noch getCurrentAdmin.
+ * Header.tsx kann noch getCurrentAdmin importieren.
  * Diese Funktion gibt alle Staff-Rollen zurück: owner, admin, supporter.
  */
 export async function getCurrentAdmin(): Promise<CurrentStaff | null> {
@@ -170,9 +179,12 @@ export function canBumpBanServers(role?: string | null) {
 export function canManageStaff(staff?: CurrentStaff | null) {
   if (!staff) return false;
 
+  const discordUserId = clean(staff.discord_user_id);
+  const username = clean(staff.username).toLowerCase();
+
   return (
     staff.role === "owner" ||
-    staff.discord_user_id === OWNER_DISCORD_ID ||
-    staff.username.toLowerCase() === OWNER_USERNAME
+    discordUserId === OWNER_DISCORD_ID ||
+    username === OWNER_USERNAME
   );
 }
