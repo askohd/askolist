@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function DatenschutzPage() {
   return (
     <main className="legal-page">
@@ -5,146 +7,152 @@ export default function DatenschutzPage() {
         <h1>Datenschutzerklärung</h1>
 
         <p>
-          Diese Datenschutzerklärung informiert dich über Art, Umfang und Zweck der
-          Verarbeitung personenbezogener Daten auf dieser Website.
+          Diese Datenschutzerklärung informiert darüber, welche personenbezogenen
+          Daten bei der Nutzung von Asko Cafe verarbeitet werden, zu welchen
+          Zwecken dies geschieht und welche Rechte betroffene Personen haben.
         </p>
 
         <h2>1. Verantwortlicher</h2>
         <p>
-          <strong>[Vollständiger Name oder Unternehmensname]</strong>
-          <br />
-          [Straße und Hausnummer]
-          <br />
-          [PLZ] [Ort]
-          <br />
-          Deutschland
-          <br />
-          E-Mail: [deine-e-mail@example.com]
+          Verantwortlicher im Sinne der Datenschutz-Grundverordnung ist der
+          Betreiber von Asko Cafe. Die vollständigen Anbieter- und Kontaktdaten
+          findest du im <Link href="/impressum">Impressum</Link>.
         </p>
 
-        <h2>2. Allgemeine Hinweise zur Datenverarbeitung</h2>
+        <h2>2. Kontakt für Datenschutzfragen</h2>
         <p>
-          Personenbezogene Daten werden nur verarbeitet, soweit dies gesetzlich
-          erlaubt ist oder du eingewilligt hast. Die Verarbeitung erfolgt
-          insbesondere zur Bereitstellung dieser Website, zur Verwaltung von
-          Discord-Servereinträgen, zur Bearbeitung von Bewertungen und Meldungen,
-          zur Authentifizierung von Nutzern sowie zur technischen Sicherheit und
-          Stabilität des Angebots.
+          Datenschutzanfragen, Auskunftsanfragen, Löschanfragen oder sonstige
+          Anliegen können per E-Mail an{" "}
+          <a href="mailto:dcaskocafe@gmail.com">dcaskocafe@gmail.com</a> oder
+          über das Discord-Ticketsystem gestellt werden.
         </p>
 
-        <h2>3. Rechtsgrundlagen der Verarbeitung</h2>
+        <h2>3. Allgemeine Datenverarbeitung</h2>
+        <p>
+          Personenbezogene Daten werden verarbeitet, soweit dies zur
+          Bereitstellung der Website, zur Nutzung der Plattformfunktionen, zur
+          Verwaltung von Discord-Servereinträgen, zur Durchführung von Login- und
+          Sicherheitsfunktionen, zur Moderation, zur Bearbeitung von Meldungen
+          oder zur Erfüllung gesetzlicher Pflichten erforderlich ist.
+        </p>
+
+        <h2>4. Rechtsgrundlagen</h2>
+        <p>
+          Die Verarbeitung personenbezogener Daten erfolgt je nach Funktion auf
+          Grundlage folgender Rechtsgrundlagen:
+        </p>
         <ul>
           <li>Art. 6 Abs. 1 lit. a DSGVO – Einwilligung</li>
-          <li>Art. 6 Abs. 1 lit. b DSGVO – Vertrag / vorvertragliche Maßnahmen</li>
-          <li>Art. 6 Abs. 1 lit. c DSGVO – rechtliche Verpflichtung</li>
-          <li>Art. 6 Abs. 1 lit. f DSGVO – berechtigtes Interesse</li>
+          <li>
+            Art. 6 Abs. 1 lit. b DSGVO – Vertragserfüllung oder vorvertragliche
+            Maßnahmen
+          </li>
+          <li>
+            Art. 6 Abs. 1 lit. c DSGVO – Erfüllung rechtlicher Verpflichtungen
+          </li>
+          <li>
+            Art. 6 Abs. 1 lit. f DSGVO – berechtigte Interessen, insbesondere
+            Sicherheit, Missbrauchsvermeidung, Moderation und stabiler Betrieb
+          </li>
         </ul>
 
-        <h2>4. Hosting und technische Bereitstellung</h2>
+        <h2>5. Hosting und technische Zugriffsdaten</h2>
         <p>
-          Diese Website wird technisch bereitgestellt über Hosting- und
-          Infrastruktur-Dienstleister. Dabei können insbesondere
-          Verbindungsdaten, IP-Adressen, Zeitstempel, Browserinformationen,
-          angeforderte Seiten, Referrer und System-Logdaten verarbeitet werden,
-          soweit dies für den sicheren Betrieb der Website erforderlich ist.
-        </p>
-        <p>
-          Wenn du Vercel, Supabase oder vergleichbare Dienste nutzt, müssen diese
-          Anbieter hier konkret benannt werden.
+          Beim Aufruf der Website werden technisch notwendige Daten verarbeitet,
+          damit die Website ausgeliefert und sicher betrieben werden kann. Dazu
+          können insbesondere IP-Adresse, Datum und Uhrzeit des Zugriffs,
+          Browserinformationen, Referrer, angeforderte Seiten, Systemdaten und
+          Logdaten gehören.
         </p>
 
-        <h2>5. Zugriffsdaten / Server-Logfiles</h2>
+        <h2>6. Discord-Login und Nutzerkonto</h2>
         <p>
-          Beim Aufruf dieser Website können automatisiert technische
-          Zugriffsdaten verarbeitet werden. Dazu gehören insbesondere:
+          Soweit eine Anmeldung über Discord angeboten wird, werden die von
+          Discord bereitgestellten Daten verarbeitet, soweit dies für Login,
+          Account-Zuordnung und Plattformfunktionen erforderlich ist. Dazu können
+          Discord-ID, Benutzername, Avatar, öffentliche Profildaten und weitere
+          für die Authentifizierung notwendige Daten gehören.
+        </p>
+        <p>
+          Mit der Registrierung oder Anmeldung auf Asko Cafe akzeptiert der Nutzer
+          die Nutzungsbedingungen in ihrer jeweils gültigen Fassung.
+        </p>
+
+        <h2>7. Servereinträge</h2>
+        <p>
+          Wenn ein Discord-Server eingetragen oder bearbeitet wird, können
+          insbesondere folgende Daten verarbeitet werden:
         </p>
         <ul>
-          <li>IP-Adresse</li>
-          <li>Datum und Uhrzeit des Zugriffs</li>
-          <li>aufgerufene URL / Datei</li>
-          <li>übertragene Datenmenge</li>
-          <li>Browsertyp und Browserversion</li>
-          <li>Betriebssystem</li>
-          <li>Referrer-URL</li>
-        </ul>
-        <p>
-          Die Verarbeitung erfolgt zur Gewährleistung von Sicherheit, Stabilität,
-          Fehleranalyse und Missbrauchsabwehr.
-        </p>
-
-        <h2>6. Registrierung / Login über Discord</h2>
-        <p>
-          Soweit auf dieser Website ein Login über Discord angeboten wird,
-          verarbeite ich die von Discord übermittelten Daten, soweit dies für die
-          Anmeldung und die Bereitstellung deines Nutzerkontos erforderlich ist.
-          Dazu können insbesondere Discord-ID, Benutzername, Avatar und weitere
-          Kontoinformationen gehören, die für die Authentifizierung und
-          Zuordnung des Nutzerkontos notwendig sind.
-        </p>
-
-        <h2>7. Nutzung der Plattformfunktionen</h2>
-        <p>
-          Bei Nutzung der Plattform können insbesondere folgende Daten verarbeitet
-          werden:
-        </p>
-        <ul>
-          <li>Serverdaten, die von Nutzern eingereicht oder bearbeitet werden</li>
-          <li>Invite-Links und Serverbeschreibungen</li>
-          <li>hochgeladene Banner oder Logos</li>
-          <li>Bewertungen, Kommentare und Meldungen</li>
-          <li>Moderations- und Bearbeitungsdaten im Admin- oder Supportbereich</li>
-          <li>Mitgliederzahlen, Online-Zahlen und Bump-Informationen</li>
+          <li>Servername</li>
+          <li>Serverbeschreibung</li>
+          <li>Kategorie, Sprache, Land und Tags</li>
+          <li>Discord-Invite-Link</li>
+          <li>Banner, Logo oder Serverbild</li>
+          <li>NSFW-Angabe</li>
+          <li>Premium- oder Partner-Status</li>
+          <li>Bump-Zeitpunkte und Bump-Sperren</li>
+          <li>Moderationsstatus, Gründe und Bearbeiter</li>
         </ul>
 
-        <h2>8. Bewertungen und Kommentare</h2>
+        <h2>8. Bewertungen, Kommentare und Meldungen</h2>
         <p>
-          Wenn du eine Bewertung oder einen Kommentar abgibst, werden die von dir
-          übermittelten Inhalte sowie zugehörige Zuordnungsdaten verarbeitet.
-          Bewertungen können öffentlich angezeigt werden. Ich behalte mir vor,
-          rechtswidrige, beleidigende, offensichtlich falsche, spamartige oder
-          anderweitig unzulässige Inhalte zu prüfen, einzuschränken, auszublenden
-          oder zu löschen.
+          Nutzer können Bewertungen, Kommentare und Meldungen abgeben. Dabei
+          können Discord-ID, Nutzername, Bewertung, Kommentartext, Meldegrund,
+          gemeldeter Server, gemeldete Bewertung, Zeitstempel und
+          Moderationsentscheidungen verarbeitet werden.
         </p>
 
-        <h2>9. Meldungen von Servern oder Bewertungen</h2>
+        <h2>9. Moderation und Sicherheit</h2>
         <p>
-          Wenn du Inhalte meldest, werden die übermittelten Angaben und
-          Begründungen verarbeitet, um Missbrauch, Regelverstöße oder
-          Rechtsverletzungen zu prüfen und gegebenenfalls zu bearbeiten. Diese
-          Daten können von Admins oder Supportern eingesehen und moderiert werden.
+          Zur Sicherheit der Plattform und zur Durchsetzung von Regeln können
+          Inhalte geprüft, Server gesperrt, gebannt, entfernt, Bewertungen
+          versteckt oder gelöscht und Bump-Sperren verhängt werden. Dabei werden
+          Moderationsgründe, Zeitpunkte, Dauer und verantwortliche Staff-Accounts
+          gespeichert.
         </p>
 
-        <h2>10. Cookies, Local Storage und ähnliche Technologien</h2>
+        <h2>10. Benachrichtigungen</h2>
         <p>
-          Diese Website kann technisch notwendige Speichertechnologien verwenden,
-          etwa für Login-Status, Spracheinstellungen oder Sicherheitsfunktionen.
-          Sofern nicht notwendige Cookies oder ähnliche Technologien eingesetzt
-          werden, erfolgt dies nur auf Grundlage einer entsprechenden Einwilligung,
-          soweit gesetzlich erforderlich.
-        </p>
-        <p>
-          Wenn deine Sprachwahl im Browser gespeichert wird, kann dies
-          beispielsweise über Local Storage erfolgen.
+          Nutzer können Benachrichtigungen erhalten, etwa wenn ein Server
+          angenommen, abgelehnt, gesperrt, gebannt, gelöscht, Premium aktiviert,
+          Partner aktiviert oder eine Bewertung moderiert wurde.
         </p>
 
-        <h2>11. Empfänger personenbezogener Daten</h2>
+        <h2>11. Cookies, Local Storage und ähnliche Technologien</h2>
         <p>
-          Daten können an technische Dienstleister und Auftragsverarbeiter
-          übermittelt werden, soweit dies zur Bereitstellung und zum Betrieb der
-          Plattform erforderlich ist. Hierzu können insbesondere Hosting-,
-          Datenbank-, Authentifizierungs- und Infrastruktur-Anbieter gehören.
+          Asko Cafe kann technisch notwendige Cookies, Local Storage oder ähnliche
+          Technologien verwenden, zum Beispiel für Login-Sitzungen,
+          Spracheinstellungen, Sicherheitsfunktionen oder die Bereitstellung
+          ausdrücklich gewünschter Funktionen.
+        </p>
+        <p>
+          Soweit nicht notwendige Cookies oder vergleichbare Technologien
+          eingesetzt werden, erfolgt dies nur auf Grundlage einer Einwilligung,
+          sofern eine solche gesetzlich erforderlich ist.
         </p>
 
-        <h2>12. Speicherdauer</h2>
+        <h2>12. Empfänger und technische Dienstleister</h2>
+        <p>
+          Zur Bereitstellung der Plattform können technische Dienstleister
+          eingesetzt werden, insbesondere für Hosting, Datenbank,
+          Authentifizierung, Speicherung, Sicherheit und Infrastruktur. Dazu
+          können insbesondere Vercel, Supabase, Discord OAuth und NextAuth
+          gehören, sofern diese Dienste tatsächlich eingesetzt werden.
+        </p>
+
+        <h2>13. Speicherdauer</h2>
         <p>
           Personenbezogene Daten werden nur so lange gespeichert, wie dies für die
-          jeweiligen Zwecke erforderlich ist oder gesetzliche
-          Aufbewahrungspflichten bestehen. Danach werden die Daten gelöscht oder
-          eingeschränkt verarbeitet, sofern keine weitere Rechtsgrundlage besteht.
+          jeweiligen Zwecke erforderlich ist. Servereinträge, Bewertungen,
+          Meldungen und Moderationsdaten können gespeichert bleiben, solange dies
+          zur Plattformverwaltung, Missbrauchsvermeidung, Nachvollziehbarkeit von
+          Moderationsentscheidungen oder zur Erfüllung gesetzlicher Pflichten
+          erforderlich ist.
         </p>
 
-        <h2>13. Deine Rechte</h2>
-        <p>Du hast nach Maßgabe der DSGVO insbesondere folgende Rechte:</p>
+        <h2>14. Rechte betroffener Personen</h2>
+        <p>Betroffene Personen haben nach Maßgabe der DSGVO insbesondere:</p>
         <ul>
           <li>Recht auf Auskunft</li>
           <li>Recht auf Berichtigung</li>
@@ -156,28 +164,20 @@ export default function DatenschutzPage() {
           <li>Recht auf Beschwerde bei einer Datenschutzaufsichtsbehörde</li>
         </ul>
 
-        <h2>14. Datensicherheit</h2>
+        <h2>15. Datensicherheit</h2>
         <p>
           Es werden angemessene technische und organisatorische Maßnahmen
-          getroffen, um personenbezogene Daten gegen Verlust, Missbrauch,
-          unberechtigten Zugriff, unbefugte Offenlegung und unzulässige
-          Veränderung zu schützen. Dennoch kann eine vollständige Sicherheit bei
-          der Datenübertragung im Internet nicht garantiert werden.
+          getroffen, um Daten vor Verlust, Missbrauch, unberechtigtem Zugriff,
+          unbefugter Offenlegung und Veränderung zu schützen. Eine vollständig
+          risikofreie Datenübertragung im Internet kann jedoch nicht garantiert
+          werden.
         </p>
 
-        <h2>15. Änderungen dieser Datenschutzerklärung</h2>
+        <h2>16. Änderungen dieser Datenschutzerklärung</h2>
         <p>
-          Ich behalte mir vor, diese Datenschutzerklärung anzupassen, wenn dies
-          aufgrund technischer Änderungen, rechtlicher Anforderungen oder
-          Änderungen des Angebots erforderlich wird.
+          Diese Datenschutzerklärung kann angepasst werden, wenn sich technische,
+          rechtliche oder organisatorische Umstände ändern.
         </p>
-
-        <div className="legal-note">
-          Sehr wichtig: Ergänze hier später deine echten Dienstleister, z. B.
-          Vercel, Supabase, Discord OAuth, E-Mail-Anbieter, Analytics oder
-          Cookie-Tools. Die Datenschutzerklärung muss zu deiner echten Technik
-          passen.
-        </div>
       </section>
     </main>
   );
