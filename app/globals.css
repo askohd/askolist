@@ -2195,3 +2195,288 @@ select option {
     text-align: left !important;
   }
 }
+/* =========================================================
+   Asko Cafe Footer Fix - Desktop + Mobile
+   ========================================================= */
+
+.site-footer-v2 {
+  position: relative !important;
+  margin-top: 90px !important;
+  overflow: hidden !important;
+  border-top: 1px solid rgba(145, 112, 255, 0.18) !important;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(196, 77, 255, 0.18), transparent 34%),
+    radial-gradient(circle at 82% 0%, rgba(96, 211, 255, 0.13), transparent 34%),
+    linear-gradient(180deg, rgba(9, 10, 24, 0.98), rgba(5, 6, 16, 0.99)) !important;
+}
+
+.site-footer-v2-glow {
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.03), transparent 30%, rgba(255,255,255,0.03)),
+    radial-gradient(circle at 20% 0%, rgba(181, 76, 255, 0.16), transparent 36%),
+    radial-gradient(circle at 80% 0%, rgba(116, 223, 255, 0.10), transparent 36%) !important;
+}
+
+.site-footer-v2-inner {
+  position: relative !important;
+  z-index: 1 !important;
+  width: min(1180px, calc(100% - 32px)) !important;
+  margin: 0 auto !important;
+  padding: 44px 0 28px !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.35fr) minmax(190px, 0.7fr) minmax(230px, 0.8fr) !important;
+  gap: 28px !important;
+  align-items: stretch !important;
+}
+
+.site-footer-v2-card,
+.site-footer-v2-column {
+  border-radius: 26px !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  box-shadow: 0 0 34px rgba(111, 93, 255, 0.10) !important;
+}
+
+.site-footer-v2-card {
+  padding: 24px !important;
+  background:
+    radial-gradient(circle at top left, rgba(181, 76, 255, 0.18), transparent 42%),
+    rgba(255, 255, 255, 0.045) !important;
+}
+
+.site-footer-v2-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+}
+
+.site-footer-v2-logo {
+  width: 50px !important;
+  height: 50px !important;
+  flex: 0 0 auto !important;
+  border-radius: 18px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  background:
+    linear-gradient(135deg, rgba(181, 76, 255, 0.35), rgba(116, 223, 255, 0.18)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 0 28px rgba(179, 82, 255, 0.18) !important;
+}
+
+.site-footer-v2-logo span {
+  font-size: 22px !important;
+}
+
+.site-footer-v2-brand strong {
+  display: block !important;
+  color: #ffffff !important;
+  font-weight: 950 !important;
+  font-size: 1.14rem !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.site-footer-v2-brand small {
+  display: block !important;
+  margin-top: 4px !important;
+  color: rgba(235, 241, 255, 0.54) !important;
+  font-size: 0.88rem !important;
+  line-height: 1.25 !important;
+}
+
+.site-footer-v2-text {
+  max-width: 560px !important;
+  margin: 18px 0 0 !important;
+  color: rgba(235, 241, 255, 0.70) !important;
+  line-height: 1.75 !important;
+  font-size: 0.98rem !important;
+}
+
+.site-footer-v2-column {
+  padding: 22px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 11px !important;
+}
+
+.site-footer-v2-column span {
+  display: block !important;
+  color: #ffffff !important;
+  font-weight: 950 !important;
+  margin-bottom: 4px !important;
+  font-size: 1rem !important;
+}
+
+.site-footer-v2-column a {
+  width: fit-content !important;
+  color: rgba(235, 241, 255, 0.68) !important;
+  text-decoration: none !important;
+  line-height: 1.35 !important;
+  transition: color 0.18s ease, transform 0.18s ease !important;
+}
+
+.site-footer-v2-column a:hover {
+  color: #ffffff !important;
+  transform: translateX(3px) !important;
+}
+
+.site-footer-v2-bottom {
+  position: relative !important;
+  z-index: 1 !important;
+  width: min(1180px, calc(100% - 32px)) !important;
+  margin: 0 auto !important;
+  padding: 18px 0 26px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.075) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  gap: 18px !important;
+  flex-wrap: wrap !important;
+  color: rgba(235, 241, 255, 0.50) !important;
+  font-size: 0.9rem !important;
+  line-height: 1.55 !important;
+}
+
+.site-footer-v2-bottom p {
+  margin: 0 !important;
+}
+
+.site-footer-v2-bottom a {
+  color: rgba(157, 234, 255, 0.78) !important;
+  text-decoration: none !important;
+}
+
+.site-footer-v2-bottom a:hover {
+  color: #ffffff !important;
+}
+
+/* Fallback für alten Footer, falls noch alte Klassen aktiv sind */
+.site-footer,
+.footer {
+  margin-top: 90px !important;
+  overflow: hidden !important;
+  border-top: 1px solid rgba(145, 112, 255, 0.18) !important;
+  background:
+    radial-gradient(circle at 16% 0%, rgba(196, 77, 255, 0.14), transparent 34%),
+    radial-gradient(circle at 82% 0%, rgba(96, 211, 255, 0.10), transparent 34%),
+    rgba(7, 8, 20, 0.98) !important;
+}
+
+.site-footer-inner {
+  width: min(1180px, calc(100% - 32px)) !important;
+  margin: 0 auto !important;
+  padding: 38px 0 24px !important;
+}
+
+.site-footer-top {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.35fr) minmax(180px, 0.65fr) minmax(220px, 0.75fr) !important;
+  gap: 28px !important;
+}
+
+.site-footer-column,
+.site-footer-nav-group,
+.site-footer-links {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+.site-footer-link,
+.site-footer-links a,
+.site-footer-column a {
+  color: rgba(235, 241, 255, 0.72) !important;
+  text-decoration: none !important;
+  line-height: 1.35 !important;
+}
+
+.site-footer-link:hover,
+.site-footer-links a:hover,
+.site-footer-column a:hover {
+  color: #ffffff !important;
+}
+
+.site-footer-bottom {
+  margin-top: 26px !important;
+  padding-top: 18px !important;
+  border-top: 1px solid rgba(255,255,255,0.08) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 18px !important;
+  flex-wrap: wrap !important;
+}
+
+/* Mobile Footer */
+@media (max-width: 768px) {
+  .site-footer-v2 {
+    margin-top: 58px !important;
+  }
+
+  .site-footer-v2-inner {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 28px 14px 18px !important;
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .site-footer-v2-card,
+  .site-footer-v2-column {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 18px !important;
+    border-radius: 22px !important;
+  }
+
+  .site-footer-v2-column {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 9px !important;
+  }
+
+  .site-footer-v2-column a {
+    width: 100% !important;
+    min-height: 42px !important;
+    padding: 0 13px !important;
+    border-radius: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    background: rgba(255, 255, 255, 0.055) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .site-footer-v2-column a:hover {
+    transform: none !important;
+  }
+
+  .site-footer-v2-bottom {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px 14px 24px !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .site-footer-v2-bottom p {
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .site-footer-top {
+    grid-template-columns: 1fr !important;
+  }
+
+  .site-footer-bottom {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+}
