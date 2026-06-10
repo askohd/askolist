@@ -1,8 +1,8 @@
 import HeaderClient from "./HeaderClient";
-import { getCurrentAdmin } from "@/lib/admin";
+import { getCurrentStaff } from "@/lib/admin";
 
 export default async function Header() {
-  const admin = await getCurrentAdmin();
+  const staff = await getCurrentStaff();
 
-  return <HeaderClient isAdmin={Boolean(admin)} />;
+  return <HeaderClient isAdmin={Boolean(staff)} />;
 }
