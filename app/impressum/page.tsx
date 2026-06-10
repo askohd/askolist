@@ -23,7 +23,20 @@ export default function ImpressumPage() {
           padding: clamp(28px, 5vw, 54px);
           border-radius: 34px;
           background:
-            radial-gradient(circle at 0% 0%, rgba(181, 76, 255, 0.22), transparent 35%),
+            radial-gradient(circle at 0% 0%, rgba(181, 76, 255, 0.22), transparentstyle>{`
+        .legal-shell {
+          width: min(1120px, calc(100% - 32px));
+          margin: 0 auto;
+          padding: 72px 0 90px;
+        }
+
+        .legal-hero {
+          position: relative;
+          overflow: hidden;
+          padding: clamp(28px, 5vw, 54px);
+          border-radius: 34px;
+          background:
+            radial-gradient 35%),
             radial-gradient(circle at 100% 0%, rgba(116, 223, 255, 0.14), transparent 34%),
             linear-gradient(135deg, rgba(18, 16, 42, 0.98), rgba(9, 10, 26, 0.98));
           border: 1px solid rgba(170, 120, 255, 0.22);
@@ -248,6 +261,7 @@ export default function ImpressumPage() {
             Inhalte ist grundsätzlich der jeweilige Nutzer beziehungsweise
             Serverbetreiber verantwortlich.
           </p>
+
           <p>
             Eine dauerhafte inhaltliche Vorabkontrolle aller Nutzerinhalte
             findet nicht statt. Bei konkreten Hinweisen auf rechtswidrige,
@@ -287,6 +301,7 @@ export default function ImpressumPage() {
             Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle
             teilzunehmen.
           </p>
+        </article>
 
         <aside className="legal-side-card">
           <h2>Rechtliches</h2>
