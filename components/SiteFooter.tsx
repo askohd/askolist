@@ -1,84 +1,159 @@
+"use client";
+
 import Link from "next/link";
+import { useLanguage } from "@/components/useLanguage";
+
+type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
+
+const FOOTER_TEXT = {
+  de: {
+    brandTitle: "Asko Cafe",
+    brandSub: "Discord Server Directory",
+    brandText:
+      "Finde neue Discord-Communitys, trage deinen eigenen Server ein und nutze Premium-Features für mehr Sichtbarkeit.",
+    platform: "Plattform",
+    serverList: "Serverliste",
+    submit: "Server eintragen",
+    premium: "Premium",
+    support: "Support",
+    info: "Info",
+    legal: "Rechtliches",
+    imprint: "Impressum",
+    privacy: "Datenschutzerklärung",
+    terms: "Nutzungsbedingungen",
+    supportText: "Support über Discord-Ticket oder E-Mail",
+    rights: "Alle Rechte vorbehalten.",
+  },
+  en: {
+    brandTitle: "Asko Cafe",
+    brandSub: "Discord Server Directory",
+    brandText:
+      "Discover new Discord communities, submit your own server and use premium features for more visibility.",
+    platform: "Platform",
+    serverList: "Server list",
+    submit: "Submit server",
+    premium: "Premium",
+    support: "Support",
+    info: "Info",
+    legal: "Legal",
+    imprint: "Imprint",
+    privacy: "Privacy Policy",
+    terms: "Terms of Use",
+    supportText: "Support via Discord ticket or email",
+    rights: "All rights reserved.",
+  },
+  fr: {
+    brandTitle: "Asko Cafe",
+    brandSub: "Annuaire de serveurs Discord",
+    brandText:
+      "Découvre de nouvelles communautés Discord, ajoute ton serveur et utilise les fonctions Premium pour plus de visibilité.",
+    platform: "Plateforme",
+    serverList: "Liste des serveurs",
+    submit: "Ajouter un serveur",
+    premium: "Premium",
+    support: "Support",
+    info: "Info",
+    legal: "Légal",
+    imprint: "Mentions légales",
+    privacy: "Confidentialité",
+    terms: "Conditions d’utilisation",
+    supportText: "Support via ticket Discord ou e-mail",
+    rights: "Tous droits réservés.",
+  },
+  it: {
+    brandTitle: "Asko Cafe",
+    brandSub: "Directory server Discord",
+    brandText:
+      "Scopri nuove community Discord, aggiungi il tuo server e usa le funzioni Premium per maggiore visibilità.",
+    platform: "Piattaforma",
+    serverList: "Lista server",
+    submit: "Aggiungi server",
+    premium: "Premium",
+    support: "Supporto",
+    info: "Info",
+    legal: "Legale",
+    imprint: "Impressum",
+    privacy: "Privacy",
+    terms: "Condizioni d’uso",
+    supportText: "Supporto tramite ticket Discord o e-mail",
+    rights: "Tutti i diritti riservati.",
+  },
+  pl: {
+    brandTitle: "Asko Cafe",
+    brandSub: "Katalog serwerów Discord",
+    brandText:
+      "Odkrywaj nowe społeczności Discord, dodaj własny serwer i korzystaj z funkcji Premium dla lepszej widoczności.",
+    platform: "Platforma",
+    serverList: "Lista serwerów",
+    submit: "Dodaj serwer",
+    premium: "Premium",
+    support: "Support",
+    info: "Info",
+    legal: "Prawne",
+    imprint: "Impressum",
+    privacy: "Polityka prywatności",
+    terms: "Warunki korzystania",
+    supportText: "Support przez ticket Discord lub e-mail",
+    rights: "Wszelkie prawa zastrzeżone.",
+  },
+} as const;
+
+function tx(language: UiLanguage, key: keyof typeof FOOTER_TEXT.de) {
+  return FOOTER_TEXT[language]?.[key] || FOOTER_TEXT.de[key];
+}
 
 export default function SiteFooter() {
-  return (
-    <footer className="site-footer">
-      <div className="container site-footer-inner">
-        <div className="site-footer-top">
-          <div className="site-footer-brand">
-            <div className="site-footer-logo-row">
-              <span className="site-footer-logo">☕</span>
-              <div>
-                <strong>Asko Cafe</strong>
-                <p>Discord Server Directory</p>
-              </div>
-            </div>
+  const language = useLanguage() as UiLanguage;
 
-            <p className="site-footer-text">
-              Finde neue Discord-Communitys, trage deinen eigenen Server ein und
-              nutze Premium-Features für mehr Sichtbarkeit.
-            </p>
+  return (
+    <footer className="site-footer-v2">
+      <div className="site-footer-v2-glow" />
+
+      <div className="container site-footer-v2-inner">
+        <div className="site-footer-v2-card">
+          <div className="site-footer-v2-brand">
+            <Link href="/" className="site-footer-v2-logo" aria-label="Asko Cafe">
+              <span>☕</span>
+            </Link>
+
+            <div>
+              <strong>{tx(language, "brandTitle")}</strong>
+              <small>{tx(language, "brandSub")}</small>
+            </div>
           </div>
 
-          <nav className="site-footer-column" aria-label="Plattform">
-            <span className="site-footer-heading">Plattform</span>
-
-            <Link href="/servers" className="site-footer-link">
-              Serverliste
-            </Link>
-
-            <Link href="/submit" className="site-footer-link">
-              Server eintragen
-            </Link>
-
-            <Link href="/shop" className="site-footer-link">
-              Premium
-            </Link>
-
-            <Link href="/support" className="site-footer-link">
-              Support
-            </Link>
-          </nav>
-
-          <nav className="site-footer-column" aria-label="Rechtliches">
-            <span className="site-footer-heading">Rechtliches</span>
-
-            <Link href="/impressum" className="site-footer-link">
-              Impressum
-            </Link>
-
-            <Link href="/datenschutz" className="site-footer-link">
-              Datenschutzerklärung
-            </Link>
-
-            <Link href="/nutzungsbedingungen" className="site-footer-link">
-              Nutzungsbedingungen
-            </Link>
-          </nav>
+          <p className="site-footer-v2-text">{tx(language, "brandText")}</p>
         </div>
 
-        <div className="site-footer-bottom">
-          <span>© 2026 Asko Cafe</span>
+        <div className="site-footer-v2-column">
+          <span>{tx(language, "platform")}</span>
 
-          <span>
-            Support über{" "}
-            <a
-              href="https://discord.gg/asko"
-              target="_blank"
-              rel="noreferrer"
-              className="site-footer-link muted"
-            >
-              Discord-Ticket
-            </a>{" "}
-            oder{" "}
-            <a
-              href="mailto:dcaskocafe@gmail.com"
-              className="site-footer-link muted"
-            >
-              E-Mail
-            </a>
-          </span>
+          <Link href="/servers">{tx(language, "serverList")}</Link>
+          <Link href="/submit">{tx(language, "submit")}</Link>
+          <Link href="/shop">{tx(language, "premium")}</Link>
+          <Link href="/support">{tx(language, "support")}</Link>
+          <Link href="/info">{tx(language, "info")}</Link>
         </div>
+
+        <div className="site-footer-v2-column">
+          <span>{tx(language, "legal")}</span>
+
+          <Link href="/impressum">{tx(language, "imprint")}</Link>
+          <Link href="/datenschutz">{tx(language, "privacy")}</Link>
+          <Link href="/nutzungsbedingungen">{tx(language, "terms")}</Link>
+        </div>
+      </div>
+
+      <div className="container site-footer-v2-bottom">
+        <p>© 2026 Asko Cafe · {tx(language, "rights")}</p>
+
+        <p>
+          {tx(language, "supportText")}:{" "}
+          <a href="https://discord.gg/asko" target="_blank" rel="noreferrer">
+            Discord
+          </a>{" "}
+          · <a href="mailto:dcaskocafe@gmail.com">dcaskocafe@gmail.com</a>
+        </p>
       </div>
     </footer>
   );
