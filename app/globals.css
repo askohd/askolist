@@ -2615,3 +2615,21 @@ select option {
   line-height: 1;
   flex-shrink: 0;
 }
+.site-footer-link {
+  color: rgba(235, 241, 255, 0.72);
+  text-decoration: none;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+
+.site-footer-link:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.site-footer-link.muted {
+  color: rgba(235, 241, 255, 0.48);
+}
+
+.site-footer-link.muted:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
