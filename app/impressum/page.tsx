@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const OWNER_NAME = "Tim Buschmann";
 const OWNER_STREET = "Schlosstraße 1";
-const OWNER_CITY = "[PLZ] Eutin";
+const OWNER_CITY = "23701 Eutin";
 const OWNER_COUNTRY = "Deutschland";
 const SUPPORT_EMAIL = "dcaskocafe@gmail.com";
 const DISCORD_INVITE_URL = "https://discord.gg/askocafe";
@@ -287,12 +287,6 @@ export default function ImpressumPage() {
             Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle
             teilzunehmen.
           </p>
-
-          <div className="legal-note">
-            Hinweis: Ergänze bitte noch deine vollständige Postleitzahl. Ohne
-            vollständige ladungsfähige Anschrift ist das Impressum nicht fertig.
-          </div>
-        </article>
 
         <aside className="legal-side-card">
           <h2>Rechtliches</h2>
