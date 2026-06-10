@@ -107,7 +107,7 @@ function normalizeLanguage(language: unknown): UiLanguage {
 }
 
 function t(language: UiLanguage, key: keyof typeof USER_MENU_TEXT.de) {
-  return USER_MENU_TEXT[language]?.[key] || USER_MENU_TEXT.de[key];
+  return USER_MENU_TEXT[language][key] || USER_MENU_TEXT.de[key];
 }
 
 export default function LoginButton({ isAdmin }: { isAdmin?: boolean }) {
