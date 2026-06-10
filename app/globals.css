@@ -3506,3 +3506,214 @@ select option {
     grid-template-columns: 1fr;
   }
 }
+@media (max-width: 768px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .nav-inner {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 14px;
+  }
+
+  .logo {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo span:last-child {
+    font-size: 24px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .logo-mark img {
+    width: 46px !important;
+    height: 46px !important;
+  }
+
+  .nav-links {
+    grid-column: 1 / -1;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding-top: 8px;
+  }
+
+  .nav-links a {
+    width: 100%;
+    min-height: 38px;
+    padding: 8px 10px;
+    border-radius: 14px;
+    justify-content: flex-start;
+    font-size: 14px;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: rgba(255, 255, 255, 0.045);
+  }
+
+  .nav-right-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .language-switcher,
+  .language-switcher-button {
+    max-width: 52px;
+  }
+
+  main {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  section,
+  article,
+  form,
+  .card,
+  .profile-card,
+  .profile-header-card,
+  .server-detail-card,
+  .admin-server-card,
+  .shop-card,
+  .info-v4-hero,
+  .info-v4-wide-card {
+    max-width: 100%;
+  }
+
+  h1 {
+    font-size: clamp(2.3rem, 12vw, 3.8rem) !important;
+    line-height: 0.95 !important;
+    letter-spacing: -0.055em !important;
+  }
+
+  h2 {
+    font-size: clamp(1.7rem, 8vw, 2.5rem) !important;
+    line-height: 1.05 !important;
+  }
+
+  p {
+    overflow-wrap: anywhere;
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    max-width: 100%;
+  }
+
+  .btn,
+  .admin-action-btn,
+  .admin-link-btn {
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .hero,
+  .hero-section,
+  .submit-hero,
+  .shop-hero,
+  .info-v4-hero {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+    border-radius: 26px !important;
+  }
+
+  .hero-grid,
+  .hero-layout,
+  .submit-layout,
+  .shop-layout,
+  .server-detail-layout,
+  .info-v4-hero-grid,
+  .info-v4-wide-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+  }
+
+  .admin-inline-form,
+  .admin-search-form {
+    grid-template-columns: 1fr !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .server-report-box,
+  .review-box,
+  .server-info-box,
+  .shop-card,
+  .premium-card {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .nav-inner {
+    padding: 10px 12px;
+  }
+
+  .logo span:last-child {
+    font-size: 22px;
+  }
+
+  .nav-links {
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  .nav-link-icon {
+    display: none;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
