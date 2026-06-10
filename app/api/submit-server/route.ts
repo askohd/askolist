@@ -5,6 +5,11 @@ import { supabaseRequest } from "@/lib/supabase";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
 const MAX_DESCRIPTION_WORDS = 1500;
+const TERMS supabaseAdmin } from "@/lib/supabase-admin";
+
+const MAX_DESCRIPTION_WORDS = 1500;
+const TERMS_VERSION = "2026-06-10";
+const PRIVACY_VERSION = "2026-06-10";
 
 function limitWords(text: string, maxWords: number) {
   const cleanText = text.trim();
@@ -76,6 +81,40 @@ function extractInviteCode(inviteLink: string) {
   }
 
   return null;
+}
+
+function getUserDiscordId(user: any) {
+  return String(
+    user?.discordId ||
+      user?.discord_id ||
+      user?.discord_user_id ||
+      user?.id ||
+      ""
+  ).trim();
+}
+
+function getUserDiscordName(user: any) {
+  return String(
+    user?.username ||
+      user?.global_name ||
+      user?.name ||
+      user?.email ||
+      ""
+  ).trim();
+}
+
+function getLegalAcceptance(formData: FormData) {
+  return String(formData.get("legal_acceptance_submit") ?? "") === "accepted";
+}
+
+function getVersionFromForm(
+  formData: FormData,
+  fieldName: string,
+  fallback: string
+) {
+  const value = String(formData.get(fieldName) ?? "").trim();
+
+  return value || fallback;
 }
 
 async function getDiscordGuildFromInvite(inviteLink: string) {
@@ -173,6 +212,36 @@ async function uploadPublicFile(
   return data.publicUrl;
 }
 
+async function saveLegalAcceptanceLog({
+  discordUserId,
+  discordUsername,
+  type,
+  termsVersion,
+  privacyVersion,
+}: {
+  discordUserId: string;
+  discordUsername: string;
+  type: string;
+  termsVersion: string;
+  privacyVersion: string;
+}) {
+  try {
+    await supabaseRequest("legal_acceptances", {
+      method: "POST",
+      body: JSON.stringify({
+        discord_user_id: discordUserId,
+        discord_username: discordUsername || null,
+        type,
+        terms_version: termsVersion,
+        privacy_version: privacyVersion,
+        accepted_at: new Date().toISOString(),
+      }),
+    });
+  } catch (error) {
+    console.error("Could not save legal acceptance log:", error);
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
@@ -181,14 +250,34 @@ export async function POST(request: Request) {
       return redirectToSubmit(request, "error=login");
     }
 
-    const ownerDiscordUserId =
-      (session.user as any).discordId || (session.user as any).id;
+    const ownerDiscordUserId = getUserDiscordId(session.user);
+    const ownerDiscordUsername = getUserDiscordName(session.user);
 
     if (!ownerDiscordUserId) {
       return redirectToSubmit(request, "error=user");
     }
 
     const formData = await request.formData();
+
+    const legalAccepted = getLegalAcceptance(formData);
+
+    if (!legalAccepted) {
+      return redirectToSubmit(request, "error=legal_required");
+    }
+
+    const acceptedTermsVersion = getVersionFromForm(
+      formData,
+      "accepted_terms_version",
+      TERMS_VERSION
+    );
+
+    const acceptedPrivacyVersion = getVersionFromForm(
+      formData,
+      "accepted_privacy_version",
+      PRIVACY_VERSION
+    );
+
+    const acceptedAt = new Date().toISOString();
 
     const serverName = String(formData.get("server_name") ?? "").trim();
 
@@ -231,6 +320,14 @@ export async function POST(request: Request) {
 
     const tags = cleanTags(tagsText);
 
+    await saveLegalAcceptanceLog({
+      discordUserId: ownerDiscordUserId,
+      discordUsername: ownerDiscordUsername,
+      type: "server_submit",
+      termsVersion: acceptedTermsVersion,
+      privacyVersion: acceptedPrivacyVersion,
+    });
+
     await supabaseRequest("servers", {
       method: "POST",
       body: JSON.stringify({
@@ -243,8 +340,6 @@ export async function POST(request: Request) {
         description,
         invite_link: inviteLink,
 
-        // Wichtig:
-        // Das Logo kommt jetzt automatisch vom Discord-Server.
         logo_url: discordGuild?.iconUrl || null,
         discord_server_icon_url: discordGuild?.iconUrl || null,
 
@@ -254,6 +349,14 @@ export async function POST(request: Request) {
         language,
         tags,
         nsfw,
+
+        accepted_terms: true,
+        accepted_terms_at: acceptedAt,
+        accepted_terms_version: acceptedTermsVersion,
+        accepted_privacy: true,
+        accepted_privacy_at: acceptedAt,
+        accepted_privacy_version: acceptedPrivacyVersion,
+
         approved: false,
         status: "pending",
         bumps: 0,
