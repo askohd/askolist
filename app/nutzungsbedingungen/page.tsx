@@ -5,561 +5,640 @@ import { useLanguage } from "@/components/useLanguage";
 
 type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
 
-const TERMS_TEXT = {
+const PRIVACY_TEXT = {
   de: {
-    badge: "Regeln",
-    title: "Nutzungsbedingungen",
+tsx
+"use client";
+
+import Link from "next/link";
+import { useLanguage } from "@/components/useLanguage";
+
+type UiLanguage = "de" | "    badge: "Datenschutz",
+    title: "Datenschutzerklärung",
     intro:
-      "Diese Nutzungsbedingungen regeln die Nutzung von Asko Cafe. Mit der Registrierung, Anmeldung oder weiteren Nutzung der Website akzeptiert der Nutzer diese Nutzungsbedingungen in ihrer jeweils gültigen Fassung.",
+      "Diese Datenschutzerklärung informiert darüber, welche personenbezogenen Daten bei der Nutzung von Asko Cafe verarbeitet werden, zu welchen Zwecken dies geschieht und welche Rechte betroffene Personen haben.",
     legalNote:
-      "Die deutsche Fassung dieser Nutzungsbedingungen ist rechtlich maßgeblich. Übersetzungen dienen nur der besseren Verständlichkeit.",
-    providerTitle: "1. Anbieter",
-    providerText: "Anbieter und Kontaktmöglichkeiten ergeben sich aus dem Impressum.",
-    platformTitle: "2. Gegenstand der Plattform",
-    platformText:
-      "Asko Cafe ist eine Plattform zur Darstellung, Suche, Eintragung, Verwaltung, Bewertung und Moderation von Discord-Servern. Nutzer können Server einreichen, Serverprofile pflegen, Bewertungen abgeben, Meldungen einreichen und – sofern freigeschaltet – Premium- oder Partner-Funktionen nutzen.",
-    registrationTitle: "3. Registrierung und Anmeldung",
-    registrationText:
-      "Bestimmte Funktionen setzen eine Registrierung oder Anmeldung voraus, insbesondere über Discord. Mit Registrierung oder Login bestätigt der Nutzer, diese Nutzungsbedingungen gelesen zu haben und ihnen zuzustimmen.",
-    dutiesTitle: "4. Pflichten der Nutzer",
-    dutiesText:
-      "Nutzer sind verpflichtet, wahrheitsgemäße Angaben zu machen, keine fremden Rechte zu verletzen und keine Inhalte einzustellen, die gegen Gesetze, Discord-Regeln, Rechte Dritter oder diese Nutzungsbedingungen verstoßen.",
-    responsibilityTitle: "5. Verantwortung für Serverinhalte",
-    responsibilityText:
-      "Für Inhalte, Regeln, Verhalten, Moderation und Rechtmäßigkeit eines eingetragenen Discord-Servers ist der jeweilige Serverbetreiber verantwortlich. Asko Cafe stellt lediglich eine Plattform zur Darstellung und Auffindbarkeit bereit.",
-    forbiddenTitle: "6. Verbotene Inhalte und Handlungen",
-    forbiddenIntro: "Untersagt sind insbesondere:",
-    forbiddenItems: [
-      "rechtswidrige Inhalte",
-      "Hassrede, Drohungen, Beleidigungen oder Diskriminierung",
-      "Spam, Scam, Phishing, Malware oder Betrugsversuche",
-      "extremistische oder gewaltverherrlichende Inhalte",
-      "sexuelle Inhalte ohne korrekte NSFW-Kennzeichnung",
-      "Fake-Server, irreführende Angaben oder ablaufende Fake-Invites",
-      "Missbrauch von Bewertungen, Meldungen oder Bump-Funktionen",
-      "Umgehung von Sperren, Bans oder Moderationsmaßnahmen",
-      "Verletzungen von Urheber-, Marken-, Persönlichkeits- oder Datenschutzrechten",
-    ],
-    serverEntriesTitle: "7. Servereinträge",
-    serverEntriesText:
-      "Servereinträge müssen korrekt und aktuell sein. Dazu gehören insbesondere Servername, Beschreibung, Kategorie, Sprache, Tags, NSFW-Angabe und Discord-Invite-Link. Der Serverbetreiber ist dafür verantwortlich, dass der Invite-Link funktionsfähig ist und keine rechtswidrigen oder irreführenden Inhalte beworben werden.",
-    reviewsTitle: "8. Bewertungen und Meldungen",
-    reviewsText:
-      "Bewertungen müssen sachlich, fair und wahrheitsgemäß sein. Fake-Bewertungen, Beleidigungen, Spam oder Missbrauch des Meldesystems sind untersagt. Meldungen dürfen nur für echte Regelverstöße oder berechtigte Anliegen genutzt werden.",
-    bumpTitle: "9. Bump-System",
-    bumpText:
-      "Das Bump-System darf nicht missbraucht werden. Automatisierter Missbrauch, Manipulationen, Spam oder Umgehungsversuche können zu Bump-Sperren, Einschränkungen oder weiteren Moderationsmaßnahmen führen.",
-    premiumTitle: "10. Premium- und Partner-Funktionen",
-    premiumText1:
-      "Premium- und Partner-Funktionen können besondere Designs, Startseiten-Anzeigen, bessere Sichtbarkeit, verkürzte Bump-Zeiten oder andere Vorteile enthalten. Es besteht kein Anspruch auf bestimmte Reichweite, Mitgliederzahlen, Platzierungen oder wirtschaftlichen Erfolg.",
-    premiumText2:
-      "Solange der Shop nicht verfügbar ist, besteht kein Anspruch auf Kauf, Aktivierung oder dauerhafte Verfügbarkeit von Premium-Funktionen.",
-    moderationTitle: "11. Moderationsrechte",
-    moderationIntro:
-      "Asko Cafe kann Servereinträge, Bewertungen, Meldungen und sonstige Inhalte prüfen und bei Verstößen Maßnahmen ergreifen. Dazu gehören insbesondere:",
-    moderationItems: [
-      "Annahme oder Ablehnung von Serverbewerbungen",
-      "Bearbeitung oder Entfernung von Servereinträgen",
-      "Verstecken oder Löschen von Bewertungen",
-      "Bump-Sperren",
-      "temporäre oder dauerhafte Sperrung eines Servers",
-      "Ban oder Löschung eines Servereintrags",
-      "Entzug von Premium- oder Partner-Status",
-      "Weitergabe an zuständige Stellen, soweit rechtlich erforderlich",
-    ],
-    noClaimTitle: "12. Kein Anspruch auf Veröffentlichung",
-    noClaimText:
-      "Es besteht kein Anspruch darauf, dass eingereichte Server, Bewertungen oder sonstige Inhalte veröffentlicht, freigeschaltet oder dauerhaft angezeigt werden. Asko Cafe kann Inhalte aus Sicherheits-, Qualitäts-, Moderations- oder Rechtsgründen ablehnen, entfernen oder einschränken.",
-    availabilityTitle: "13. Verfügbarkeit",
-    availabilityText:
-      "Es besteht kein Anspruch auf ununterbrochene Verfügbarkeit der Website oder einzelner Funktionen. Wartungen, Updates, technische Störungen, externe Ausfälle oder Sicherheitsmaßnahmen können die Nutzung einschränken.",
-    liabilityTitle: "14. Haftung",
-    liabilityText1:
-      "Asko Cafe haftet unbeschränkt bei Vorsatz und grober Fahrlässigkeit sowie bei Schäden aus der Verletzung des Lebens, des Körpers oder der Gesundheit. Bei leichter Fahrlässigkeit wird nur bei Verletzung wesentlicher Vertragspflichten gehaftet und nur in Höhe des vorhersehbaren, vertragstypischen Schadens. Eine weitergehende Haftung ist ausgeschlossen, soweit gesetzlich zulässig.",
-    liabilityText2:
-      "Für von Nutzern eingestellte Inhalte, externe Discord-Server, Discord-Invite-Links und externe Websites übernimmt Asko Cafe keine inhaltliche Verantwortung, solange keine konkrete Kenntnis von Rechtsverstößen besteht.",
-    indemnityTitle: "15. Freistellung",
-    indemnityText:
-      "Nutzer stellen Asko Cafe von Ansprüchen Dritter frei, die aufgrund von rechtswidrigen, falschen oder vertragswidrigen Inhalten oder Handlungen des Nutzers entstehen, soweit der Nutzer den Verstoß zu vertreten hat. Dies umfasst auch angemessene Kosten der Rechtsverteidigung.",
-    changesTitle: "16. Änderungen der Nutzungsbedingungen",
-    changesText:
-      "Asko Cafe kann diese Nutzungsbedingungen mit Wirkung für die Zukunft ändern, wenn technische, rechtliche oder organisatorische Gründe dies erforderlich machen. Die jeweils aktuelle Fassung ist auf dieser Seite abrufbar.",
-    contactTitle: "17. Kontakt",
+      "Die deutsche Fassung dieser Datenschutzerklärung ist rechtlich maßgeblich. Übersetzungen dienen nur der besseren Verständlichkeit.",
+
+    controllerTitle: "1. Verantwortlicher",
+    controllerText:
+      "Verantwortlicher im Sinne der Datenschutz-Grundverordnung ist der Betreiber von Asko Cafe. Die vollständigen Anbieter- und Kontaktdaten findest du im Impressum.",
+
+    contactTitle: "2. Kontakt für Datenschutzfragen",
     contactText:
-      "Bei Fragen zu diesen Nutzungsbedingungen, Sperren, Meldungen oder rechtlichen Anliegen kann Asko Cafe über das Discord-Ticketsystem oder per E-Mail kontaktiert werden.",
-    lawTitle: "18. Anwendbares Recht",
-    lawText:
-      "Es gilt das Recht der Bundesrepublik Deutschland, soweit dem keine zwingenden Verbraucherschutzvorschriften entgegenstehen.",
-    severabilityTitle: "19. Salvatorische Klausel",
-    severabilityText:
-      "Sollte eine Bestimmung dieser Nutzungsbedingungen ganz oder teilweise unwirksam sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.",
+      "Datenschutzanfragen, Auskunftsanfragen, Löschanfragen oder sonstige Anliegen können per E-Mail oder über das Discord-Ticketsystem gestellt werden.",
+
+    generalTitle: "3. Allgemeine Datenverarbeitung",
+    generalText:
+      "Personenbezogene Daten werden verarbeitet, soweit dies zur Bereitstellung der Website, zur Nutzung der Plattformfunktionen, zur Verwaltung von Discord-Servereinträgen, zur Durchführung von Login- und Sicherheitsfunktionen, zur Moderation, zur Bearbeitung von Meldungen oder zur Erfüllung gesetzlicher Pflichten erforderlich ist.",
+
+    legalBasisTitle: "4. Rechtsgrundlagen",
+    legalBasisIntro:
+      "Die Verarbeitung personenbezogener Daten erfolgt je nach Funktion auf Grundlage folgender Rechtsgrundlagen:",
+    legalBasisItems: [
+      "Art. 6 Abs. 1 lit. a DSGVO – Einwilligung",
+      "Art. 6 Abs. 1 lit. b DSGVO – Vertragserfüllung oder vorvertragliche Maßnahmen",
+      "Art. 6 Abs. 1 lit. c DSGVO – Erfüllung rechtlicher Verpflichtungen",
+      "Art. 6 Abs. 1 lit. f DSGVO – berechtigte Interessen, insbesondere Sicherheit, Missbrauchsvermeidung, Moderation und stabiler Betrieb",
+    ],
+
+    hostingTitle: "5. Hosting und technische Zugriffsdaten",
+    hostingText:
+      "Beim Aufruf der Website werden technisch notwendige Daten verarbeitet, damit die Website ausgeliefert und sicher betrieben werden kann. Dazu können insbesondere IP-Adresse, Datum und Uhrzeit des Zugriffs, Browserinformationen, Referrer, angeforderte Seiten, Systemdaten und Logdaten gehören.",
+
+    discordTitle: "6. Discord-Login und Nutzerkonto",
+    discordText1:
+      "Soweit eine Anmeldung über Discord angeboten wird, werden die von Discord bereitgestellten Daten verarbeitet, soweit dies für Login, Account-Zuordnung und Plattformfunktionen erforderlich ist. Dazu können Discord-ID, Benutzername, Avatar, öffentliche Profildaten und weitere für die Authentifizierung notwendige Daten gehören.",
+    discordText2:
+      "Mit der Registrierung oder Anmeldung auf Asko Cafe akzeptiert der Nutzer die Nutzungsbedingungen in ihrer jeweils gültigen Fassung.",
+
+    serverTitle: "7. Servereinträge",
+    serverIntro:
+      "Wenn ein Discord-Server eingetragen oder bearbeitet wird, können insbesondere folgende Daten verarbeitet werden:",
+    serverItems: [
+      "Servername",
+      "Serverbeschreibung",
+      "Kategorie, Sprache, Land und Tags",
+      "Discord-Invite-Link",
+      "Banner, Logo oder Serverbild",
+      "NSFW-Angabe",
+      "Premium- oder Partner-Status",
+      "Bump-Zeitpunkte und Bump-Sperren",
+      "Moderationsstatus, Gründe und Bearbeiter",
+    ],
+
+    reviewTitle: "8. Bewertungen, Kommentare und Meldungen",
+    reviewText:
+      "Nutzer können Bewertungen, Kommentare und Meldungen abgeben. Dabei können Discord-ID, Nutzername, Bewertung, Kommentartext, Meldegrund, gemeldeter Server, gemeldete Bewertung, Zeitstempel und Moderationsentscheidungen verarbeitet werden.",
+
+    moderationTitle: "9. Moderation und Sicherheit",
+    moderationText:
+      "Zur Sicherheit der Plattform und zur Durchsetzung von Regeln können Inhalte geprüft, Server gesperrt, gebannt, entfernt, Bewertungen versteckt oder gelöscht und Bump-Sperren verhängt werden. Dabei werden Moderationsgründe, Zeitpunkte, Dauer und verantwortliche Staff-Accounts gespeichert.",
+
+    notificationsTitle: "10. Benachrichtigungen",
+    notificationsText:
+      "Nutzer können Benachrichtigungen erhalten, etwa wenn ein Server angenommen, abgelehnt, gesperrt, gebannt, gelöscht, Premium aktiviert, Partner aktiviert oder eine Bewertung moderiert wurde.",
+
+    storageTitle: "11. Cookies, Local Storage und ähnliche Technologien",
+    storageText1:
+      "Asko Cafe kann technisch notwendige Cookies, Local Storage oder ähnliche Technologien verwenden, zum Beispiel für Login-Sitzungen, Spracheinstellungen, Sicherheitsfunktionen oder die Bereitstellung ausdrücklich gewünschter Funktionen.",
+    storageText2:
+      "Soweit nicht notwendige Cookies oder vergleichbare Technologien eingesetzt werden, erfolgt dies nur auf Grundlage einer Einwilligung, sofern eine solche gesetzlich erforderlich ist.",
+
+    recipientsTitle: "12. Empfänger und technische Dienstleister",
+    recipientsText:
+      "Zur Bereitstellung der Plattform können technische Dienstleister eingesetzt werden, insbesondere für Hosting, Datenbank, Authentifizierung, Speicherung, Sicherheit und Infrastruktur. Dazu können insbesondere Vercel, Supabase, Discord OAuth und NextAuth gehören, sofern diese Dienste tatsächlich eingesetzt werden.",
+
+    durationTitle: "13. Speicherdauer",
+    durationText:
+      "Personenbezogene Daten werden nur so lange gespeichert, wie dies für die jeweiligen Zwecke erforderlich ist. Servereinträge, Bewertungen, Meldungen und Moderationsdaten können gespeichert bleiben, solange dies zur Plattformverwaltung, Missbrauchsvermeidung, Nachvollziehbarkeit von Moderationsentscheidungen oder zur Erfüllung gesetzlicher Pflichten erforderlich ist.",
+
+    rightsTitle: "14. Rechte betroffener Personen",
+    rightsIntro: "Betroffene Personen haben nach Maßgabe der DSGVO insbesondere:",
+    rightsItems: [
+      "Recht auf Auskunft",
+      "Recht auf Berichtigung",
+      "Recht auf Löschung",
+      "Recht auf Einschränkung der Verarbeitung",
+      "Recht auf Datenübertragbarkeit",
+      "Recht auf Widerspruch",
+      "Recht auf Widerruf erteilter Einwilligungen",
+      "Recht auf Beschwerde bei einer Datenschutzaufsichtsbehörde",
+    ],
+
+    securityTitle: "15. Datensicherheit",
+    securityText:
+      "Es werden angemessene technische und organisatorische Maßnahmen getroffen, um Daten vor Verlust, Missbrauch, unberechtigtem Zugriff, unbefugter Offenlegung und Veränderung zu schützen. Eine vollständig risikofreie Datenübertragung im Internet kann jedoch nicht garantiert werden.",
+
+    changesTitle: "16. Änderungen dieser Datenschutzerklärung",
+    changesText:
+      "Diese Datenschutzerklärung kann angepasst werden, wenn sich technische, rechtliche oder organisatorische Umstände ändern.",
+
     imprint: "Impressum",
     discordTicket: "Discord-Ticketsystem",
   },
 
   en: {
-    badge: "Rules",
-    title: "Terms of Use",
+    badge: "Privacy",
+    title: "Privacy Policy",
     intro:
-      "These Terms of Use govern the use of Asko Cafe. By registering, logging in or continuing to use the website, the user accepts these Terms of Use in their current version.",
+      "This Privacy Policy explains which personal data is processed when using Asko Cafe, for what purposes this happens and what rights data subjects have.",
     legalNote:
-      "The German version of these Terms of Use is legally authoritative. Translations are provided for convenience only.",
-    providerTitle: "1. Provider",
-    providerText: "Provider and contact details are available in the imprint.",
-    platformTitle: "2. Purpose of the platform",
-    platformText:
-      "Asko Cafe is a platform for displaying, searching, submitting, managing, reviewing and moderating Discord servers. Users may submit servers, maintain server profiles, submit reviews, send reports and, where enabled, use premium or partner features.",
-    registrationTitle: "3. Registration and login",
-    registrationText:
-      "Certain features require registration or login, especially via Discord. By registering or logging in, the user confirms that they have read and accepted these Terms of Use.",
-    dutiesTitle: "4. User obligations",
-    dutiesText:
-      "Users must provide truthful information, respect third-party rights and must not submit content that violates laws, Discord rules, third-party rights or these Terms of Use.",
-    responsibilityTitle: "5. Responsibility for server content",
-    responsibilityText:
-      "The respective server operator is responsible for the content, rules, behavior, moderation and legality of a listed Discord server. Asko Cafe only provides a platform for display and discoverability.",
-    forbiddenTitle: "6. Prohibited content and actions",
-    forbiddenIntro: "In particular, the following are prohibited:",
-    forbiddenItems: [
-      "illegal content",
-      "hate speech, threats, insults or discrimination",
-      "spam, scam, phishing, malware or fraud attempts",
-      "extremist or glorifying violence content",
-      "sexual content without correct NSFW labeling",
-      "fake servers, misleading information or fake expiring invites",
-      "abuse of reviews, reports or bump functions",
-      "circumvention of locks, bans or moderation measures",
-      "violations of copyright, trademark, personality or data protection rights",
-    ],
-    serverEntriesTitle: "7. Server entries",
-    serverEntriesText:
-      "Server entries must be correct and up to date. This includes server name, description, category, language, tags, NSFW status and Discord invite link. The server operator is responsible for ensuring that the invite link works and that no illegal or misleading content is promoted.",
-    reviewsTitle: "8. Reviews and reports",
-    reviewsText:
-      "Reviews must be factual, fair and truthful. Fake reviews, insults, spam or abuse of the reporting system are prohibited. Reports may only be used for genuine rule violations or justified concerns.",
-    bumpTitle: "9. Bump system",
-    bumpText:
-      "The bump system must not be abused. Automated abuse, manipulation, spam or circumvention attempts may result in bump bans, restrictions or further moderation measures.",
-    premiumTitle: "10. Premium and partner features",
-    premiumText1:
-      "Premium and partner features may include special designs, homepage placement, better visibility, shorter bump times or other benefits. There is no entitlement to a specific reach, member count, placement or commercial success.",
-    premiumText2:
-      "As long as the shop is unavailable, there is no entitlement to purchase, activation or permanent availability of premium features.",
-    moderationTitle: "11. Moderation rights",
-    moderationIntro:
-      "Asko Cafe may review server entries, reviews, reports and other content and take measures in case of violations. These include in particular:",
-    moderationItems: [
-      "approval or rejection of server applications",
-      "editing or removal of server entries",
-      "hiding or deleting reviews",
-      "bump bans",
-      "temporary or permanent locking of a server",
-      "ban or deletion of a server entry",
-      "removal of premium or partner status",
-      "forwarding to competent authorities where legally required",
-    ],
-    noClaimTitle: "12. No entitlement to publication",
-    noClaimText:
-      "There is no entitlement for submitted servers, reviews or other content to be published, approved or permanently displayed. Asko Cafe may reject, remove or restrict content for security, quality, moderation or legal reasons.",
-    availabilityTitle: "13. Availability",
-    availabilityText:
-      "There is no entitlement to uninterrupted availability of the website or individual functions. Maintenance, updates, technical issues, external outages or security measures may restrict use.",
-    liabilityTitle: "14. Liability",
-    liabilityText1:
-      "Asko Cafe is fully liable for intent and gross negligence as well as for damages resulting from injury to life, body or health. In cases of slight negligence, liability exists only for breach of essential contractual obligations and is limited to the foreseeable, typical damage. Further liability is excluded to the extent permitted by law.",
-    liabilityText2:
-      "Asko Cafe assumes no responsibility for user-generated content, external Discord servers, Discord invite links and external websites as long as there is no concrete knowledge of legal violations.",
-    indemnityTitle: "15. Indemnification",
-    indemnityText:
-      "Users indemnify Asko Cafe against third-party claims arising from illegal, false or contract-violating content or actions by the user, to the extent the user is responsible for the violation. This also includes reasonable legal defense costs.",
-    changesTitle: "16. Changes to the Terms of Use",
-    changesText:
-      "Asko Cafe may amend these Terms of Use with future effect where technical, legal or organizational reasons require this. The current version is available on this page.",
-    contactTitle: "17. Contact",
+      "The German version of this Privacy Policy is legally authoritative. Translations are provided for better understanding only.",
+
+    controllerTitle: "1. Controller",
+    controllerText:
+      "The controller within the meaning of the General Data Protection Regulation is the operator of Asko Cafe. Full provider and contact details can be found in the imprint.",
+
+    contactTitle: "2. Contact for privacy matters",
     contactText:
-      "For questions about these Terms of Use, locks, reports or legal matters, Asko Cafe can be contacted via the Discord ticket system or by email.",
-    lawTitle: "18. Applicable law",
-    lawText:
-      "The law of the Federal Republic of Germany applies unless mandatory consumer protection provisions conflict with it.",
-    severabilityTitle: "19. Severability clause",
-    severabilityText:
-      "If any provision of these Terms of Use is or becomes invalid in whole or in part, the validity of the remaining provisions remains unaffected.",
+      "Privacy requests, access requests, deletion requests or other concerns can be submitted by email or through the Discord ticket system.",
+
+    generalTitle: "3. General data processing",
+    generalText:
+      "Personal data is processed where necessary to provide the website, use platform functions, manage Discord server entries, perform login and security functions, moderate content, handle reports or comply with legal obligations.",
+
+    legalBasisTitle: "4. Legal bases",
+    legalBasisIntro:
+      "Depending on the function, personal data is processed on the following legal bases:",
+    legalBasisItems: [
+      "Art. 6(1)(a) GDPR – consent",
+      "Art. 6(1)(b) GDPR – performance of a contract or pre-contractual measures",
+      "Art. 6(1)(c) GDPR – compliance with legal obligations",
+      "Art. 6(1)(f) GDPR – legitimate interests, especially security, abuse prevention, moderation and stable operation",
+    ],
+
+    hostingTitle: "5. Hosting and technical access data",
+    hostingText:
+      "When the website is accessed, technically necessary data is processed so that the website can be delivered and operated securely. This may include IP address, date and time of access, browser information, referrer, requested pages, system data and log data.",
+
+    discordTitle: "6. Discord login and user account",
+    discordText1:
+      "Where login via Discord is offered, data provided by Discord is processed to the extent required for login, account assignment and platform functions. This may include Discord ID, username, avatar, public profile data and other data necessary for authentication.",
+    discordText2:
+      "By registering or logging into Asko Cafe, the user accepts the Terms of Use in their current version.",
+
+    serverTitle: "7. Server entries",
+    serverIntro:
+      "When a Discord server is submitted or edited, the following data in particular may be processed:",
+    serverItems: [
+      "server name",
+      "server description",
+      "category, language, country and tags",
+      "Discord invite link",
+      "banner, logo or server image",
+      "NSFW status",
+      "premium or partner status",
+      "bump timestamps and bump bans",
+      "moderation status, reasons and moderators",
+    ],
+
+    reviewTitle: "8. Reviews, comments and reports",
+    reviewText:
+      "Users may submit reviews, comments and reports. In this context, Discord ID, username, rating, comment text, report reason, reported server, reported review, timestamps and moderation decisions may be processed.",
+
+    moderationTitle: "9. Moderation and security",
+    moderationText:
+      "For platform security and rule enforcement, content may be reviewed, servers may be locked, banned or removed, reviews may be hidden or deleted and bump bans may be imposed. Moderation reasons, timestamps, duration and responsible staff accounts are stored.",
+
+    notificationsTitle: "10. Notifications",
+    notificationsText:
+      "Users may receive notifications, for example when a server has been approved, rejected, locked, banned, deleted, premium activated, partner activated or a review moderated.",
+
+    storageTitle: "11. Cookies, local storage and similar technologies",
+    storageText1:
+      "Asko Cafe may use technically necessary cookies, local storage or similar technologies, for example for login sessions, language settings, security functions or requested functions.",
+    storageText2:
+      "Where non-essential cookies or comparable technologies are used, this is done only on the basis of consent where legally required.",
+
+    recipientsTitle: "12. Recipients and technical service providers",
+    recipientsText:
+      "Technical service providers may be used to provide the platform, especially for hosting, database, authentication, storage, security and infrastructure. This may include Vercel, Supabase, Discord OAuth and NextAuth if these services are actually used.",
+
+    durationTitle: "13. Storage period",
+    durationText:
+      "Personal data is stored only as long as necessary for the respective purposes. Server entries, reviews, reports and moderation data may be stored as long as required for platform management, abuse prevention, traceability of moderation decisions or compliance with legal obligations.",
+
+    rightsTitle: "14. Rights of data subjects",
+    rightsIntro: "Data subjects have, in particular, the following rights under the GDPR:",
+    rightsItems: [
+      "right of access",
+      "right to rectification",
+      "right to erasure",
+      "right to restriction of processing",
+      "right to data portability",
+      "right to object",
+      "right to withdraw consent",
+      "right to lodge a complaint with a data protection supervisory authority",
+    ],
+
+    securityTitle: "15. Data security",
+    securityText:
+      "Appropriate technical and organizational measures are taken to protect data against loss, misuse, unauthorized access, unauthorized disclosure and alteration. However, completely risk-free data transmission over the internet cannot be guaranteed.",
+
+    changesTitle: "16. Changes to this Privacy Policy",
+    changesText:
+      "This Privacy Policy may be updated if technical, legal or organizational circumstances change.",
+
     imprint: "Imprint",
     discordTicket: "Discord ticket system",
   },
 
   fr: {
-    badge: "Règles",
-    title: "Conditions d’utilisation",
+    badge: "Confidentialité",
+    title: "Politique de confidentialité",
     intro:
-      "Ces conditions d’utilisation régissent l’utilisation d’Asko Cafe. En s’inscrivant, en se connectant ou en continuant à utiliser le site, l’utilisateur accepte ces conditions dans leur version actuelle.",
+      "Cette politique de confidentialité explique quelles données personnelles sont traitées lors de l’utilisation d’Asko Cafe, à quelles fins et quels droits possèdent les personnes concernées.",
     legalNote:
-      "La version allemande de ces conditions d’utilisation fait foi juridiquement. Les traductions servent uniquement à une meilleure compréhension.",
-    providerTitle: "1. Fournisseur",
-    providerText: "Les informations du fournisseur et les moyens de contact se trouvent dans les mentions légales.",
-    platformTitle: "2. Objet de la plateforme",
-    platformText:
-      "Asko Cafe est une plateforme permettant d’afficher, rechercher, soumettre, gérer, évaluer et modérer des serveurs Discord. Les utilisateurs peuvent soumettre des serveurs, gérer des profils, publier des avis, envoyer des signalements et, si activé, utiliser des fonctions Premium ou Partenaire.",
-    registrationTitle: "3. Inscription et connexion",
-    registrationText:
-      "Certaines fonctions nécessitent une inscription ou une connexion, notamment via Discord. En s’inscrivant ou en se connectant, l’utilisateur confirme avoir lu et accepté ces conditions.",
-    dutiesTitle: "4. Obligations des utilisateurs",
-    dutiesText:
-      "Les utilisateurs doivent fournir des informations véridiques, respecter les droits de tiers et ne pas publier de contenus contraires à la loi, aux règles de Discord, aux droits de tiers ou aux présentes conditions.",
-    responsibilityTitle: "5. Responsabilité des contenus des serveurs",
-    responsibilityText:
-      "L’exploitant du serveur concerné est responsable des contenus, règles, comportements, modération et légalité d’un serveur Discord listé. Asko Cafe fournit uniquement une plateforme d’affichage et de recherche.",
-    forbiddenTitle: "6. Contenus et actions interdits",
-    forbiddenIntro: "Sont notamment interdits :",
-    forbiddenItems: [
-      "les contenus illégaux",
-      "discours haineux, menaces, insultes ou discrimination",
-      "spam, arnaques, phishing, malware ou tentatives de fraude",
-      "contenus extrémistes ou glorifiant la violence",
-      "contenus sexuels sans marquage NSFW correct",
-      "faux serveurs, informations trompeuses ou faux liens d’invitation expirables",
-      "abus des avis, signalements ou fonctions bump",
-      "contournement des blocages, bans ou mesures de modération",
-      "atteintes aux droits d’auteur, marques, personnalité ou protection des données",
-    ],
-    serverEntriesTitle: "7. Entrées de serveurs",
-    serverEntriesText:
-      "Les entrées de serveurs doivent être correctes et à jour. Cela inclut le nom, la description, la catégorie, la langue, les tags, l’indication NSFW et le lien d’invitation Discord. L’exploitant du serveur est responsable du bon fonctionnement du lien et de l’absence de contenu illégal ou trompeur.",
-    reviewsTitle: "8. Avis et signalements",
-    reviewsText:
-      "Les avis doivent être factuels, équitables et véridiques. Les faux avis, insultes, spams ou abus du système de signalement sont interdits. Les signalements ne doivent être utilisés que pour de réelles violations ou demandes justifiées.",
-    bumpTitle: "9. Système de bump",
-    bumpText:
-      "Le système de bump ne doit pas être abusé. L’abus automatisé, la manipulation, le spam ou les tentatives de contournement peuvent entraîner des blocages de bump, restrictions ou autres mesures de modération.",
-    premiumTitle: "10. Fonctions Premium et Partenaire",
-    premiumText1:
-      "Les fonctions Premium et Partenaire peuvent inclure des designs spéciaux, une mise en avant sur la page d’accueil, une meilleure visibilité, des temps de bump réduits ou d’autres avantages. Aucun droit à une portée, un nombre de membres, un placement ou un succès économique déterminé n’existe.",
-    premiumText2:
-      "Tant que la boutique n’est pas disponible, aucun droit à l’achat, l’activation ou la disponibilité permanente de fonctions Premium n’existe.",
-    moderationTitle: "11. Droits de modération",
-    moderationIntro:
-      "Asko Cafe peut vérifier les entrées de serveurs, avis, signalements et autres contenus et prendre des mesures en cas de violation. Cela comprend notamment :",
-    moderationItems: [
-      "acceptation ou refus des candidatures de serveurs",
-      "modification ou suppression d’entrées de serveurs",
-      "masquage ou suppression d’avis",
-      "blocages de bump",
-      "blocage temporaire ou permanent d’un serveur",
-      "ban ou suppression d’une entrée de serveur",
-      "retrait du statut Premium ou Partenaire",
-      "transmission aux autorités compétentes si légalement nécessaire",
-    ],
-    noClaimTitle: "12. Aucun droit à la publication",
-    noClaimText:
-      "Il n’existe aucun droit à ce que des serveurs, avis ou autres contenus soumis soient publiés, approuvés ou affichés durablement. Asko Cafe peut refuser, supprimer ou restreindre des contenus pour des raisons de sécurité, qualité, modération ou droit.",
-    availabilityTitle: "13. Disponibilité",
-    availabilityText:
-      "Il n’existe aucun droit à une disponibilité ininterrompue du site ou de certaines fonctions. Maintenance, mises à jour, problèmes techniques, pannes externes ou mesures de sécurité peuvent limiter l’utilisation.",
-    liabilityTitle: "14. Responsabilité",
-    liabilityText1:
-      "Asko Cafe est pleinement responsable en cas d’intention ou de négligence grave ainsi qu’en cas d’atteinte à la vie, au corps ou à la santé. En cas de négligence légère, la responsabilité n’existe qu’en cas de violation d’obligations contractuelles essentielles et est limitée au dommage prévisible et typique. Toute responsabilité supplémentaire est exclue dans la mesure permise par la loi.",
-    liabilityText2:
-      "Asko Cafe n’assume aucune responsabilité de contenu pour les contenus utilisateurs, serveurs Discord externes, liens d’invitation Discord et sites externes tant qu’aucune connaissance concrète de violation juridique n’existe.",
-    indemnityTitle: "15. Indemnisation",
-    indemnityText:
-      "Les utilisateurs indemnisent Asko Cafe contre les réclamations de tiers résultant de contenus ou actions illégaux, faux ou contraires au contrat, dans la mesure où l’utilisateur est responsable de la violation. Cela inclut les frais raisonnables de défense juridique.",
-    changesTitle: "16. Modifications des conditions",
-    changesText:
-      "Asko Cafe peut modifier ces conditions avec effet futur si des raisons techniques, juridiques ou organisationnelles l’exigent. La version actuelle est disponible sur cette page.",
-    contactTitle: "17. Contact",
+      "La version allemande de cette politique de confidentialité fait foi juridiquement. Les traductions servent uniquement à une meilleure compréhension.",
+
+    controllerTitle: "1. Responsable du traitement",
+    controllerText:
+      "Le responsable au sens du RGPD est l’exploitant d’Asko Cafe. Les informations complètes du fournisseur et les coordonnées se trouvent dans les mentions légales.",
+
+    contactTitle: "2. Contact pour les questions de confidentialité",
     contactText:
-      "Pour toute question concernant ces conditions, blocages, signalements ou sujets juridiques, Asko Cafe peut être contacté via le système de tickets Discord ou par e-mail.",
-    lawTitle: "18. Droit applicable",
-    lawText:
-      "Le droit de la République fédérale d’Allemagne s’applique, sauf dispositions impératives de protection des consommateurs contraires.",
-    severabilityTitle: "19. Clause de sauvegarde",
-    severabilityText:
-      "Si une disposition de ces conditions est ou devient invalide en tout ou partie, la validité des autres dispositions reste inchangée.",
+      "Les demandes relatives à la confidentialité, à l’accès, à la suppression ou autres peuvent être envoyées par e-mail ou via le système de tickets Discord.",
+
+    generalTitle: "3. Traitement général des données",
+    generalText:
+      "Les données personnelles sont traitées lorsque cela est nécessaire pour fournir le site, utiliser les fonctions de la plateforme, gérer les entrées de serveurs Discord, assurer la connexion et la sécurité, modérer les contenus, traiter les signalements ou respecter des obligations légales.",
+
+    legalBasisTitle: "4. Bases juridiques",
+    legalBasisIntro:
+      "Selon la fonction, les données personnelles sont traitées sur les bases juridiques suivantes :",
+    legalBasisItems: [
+      "Art. 6(1)(a) RGPD – consentement",
+      "Art. 6(1)(b) RGPD – exécution d’un contrat ou mesures précontractuelles",
+      "Art. 6(1)(c) RGPD – respect d’obligations légales",
+      "Art. 6(1)(f) RGPD – intérêts légitimes, notamment sécurité, prévention des abus, modération et fonctionnement stable",
+    ],
+
+    hostingTitle: "5. Hébergement et données techniques d’accès",
+    hostingText:
+      "Lors de l’accès au site, des données techniquement nécessaires sont traitées afin que le site puisse être fourni et exploité en toute sécurité. Cela peut inclure l’adresse IP, la date et l’heure d’accès, les informations du navigateur, le référent, les pages demandées, les données système et les logs.",
+
+    discordTitle: "6. Connexion Discord et compte utilisateur",
+    discordText1:
+      "Lorsque la connexion via Discord est proposée, les données fournies par Discord sont traitées dans la mesure nécessaire à la connexion, à l’attribution du compte et aux fonctions de la plateforme. Cela peut inclure l’ID Discord, le nom d’utilisateur, l’avatar, les données publiques de profil et d’autres données nécessaires à l’authentification.",
+    discordText2:
+      "En s’inscrivant ou en se connectant à Asko Cafe, l’utilisateur accepte les conditions d’utilisation dans leur version actuelle.",
+
+    serverTitle: "7. Entrées de serveurs",
+    serverIntro:
+      "Lorsqu’un serveur Discord est soumis ou modifié, les données suivantes peuvent notamment être traitées :",
+    serverItems: [
+      "nom du serveur",
+      "description du serveur",
+      "catégorie, langue, pays et tags",
+      "lien d’invitation Discord",
+      "bannière, logo ou image du serveur",
+      "statut NSFW",
+      "statut Premium ou Partenaire",
+      "horodatages de bump et blocages de bump",
+      "statut de modération, raisons et modérateurs",
+    ],
+
+    reviewTitle: "8. Avis, commentaires et signalements",
+    reviewText:
+      "Les utilisateurs peuvent publier des avis, commentaires et signalements. L’ID Discord, le nom d’utilisateur, la note, le commentaire, le motif de signalement, le serveur signalé, l’avis signalé, les horodatages et les décisions de modération peuvent être traités.",
+
+    moderationTitle: "9. Modération et sécurité",
+    moderationText:
+      "Pour la sécurité de la plateforme et l’application des règles, les contenus peuvent être examinés, les serveurs verrouillés, bannis ou supprimés, les avis masqués ou supprimés et des blocages de bump imposés. Les raisons de modération, horodatages, durées et comptes staff responsables sont enregistrés.",
+
+    notificationsTitle: "10. Notifications",
+    notificationsText:
+      "Les utilisateurs peuvent recevoir des notifications, par exemple lorsqu’un serveur est accepté, refusé, verrouillé, banni, supprimé, Premium activé, Partenaire activé ou qu’un avis est modéré.",
+
+    storageTitle: "11. Cookies, stockage local et technologies similaires",
+    storageText1:
+      "Asko Cafe peut utiliser des cookies techniquement nécessaires, du stockage local ou des technologies similaires, par exemple pour les sessions de connexion, paramètres de langue, fonctions de sécurité ou fonctions demandées.",
+    storageText2:
+      "Lorsque des cookies non essentiels ou technologies comparables sont utilisés, cela se fait uniquement sur la base du consentement lorsque la loi l’exige.",
+
+    recipientsTitle: "12. Destinataires et prestataires techniques",
+    recipientsText:
+      "Des prestataires techniques peuvent être utilisés pour fournir la plateforme, notamment pour l’hébergement, la base de données, l’authentification, le stockage, la sécurité et l’infrastructure. Cela peut inclure Vercel, Supabase, Discord OAuth et NextAuth si ces services sont réellement utilisés.",
+
+    durationTitle: "13. Durée de conservation",
+    durationText:
+      "Les données personnelles ne sont conservées que le temps nécessaire aux finalités concernées. Les entrées de serveurs, avis, signalements et données de modération peuvent être conservés tant que cela est nécessaire pour la gestion de la plateforme, la prévention des abus, la traçabilité des décisions de modération ou le respect d’obligations légales.",
+
+    rightsTitle: "14. Droits des personnes concernées",
+    rightsIntro: "Les personnes concernées disposent notamment des droits suivants selon le RGPD :",
+    rightsItems: [
+      "droit d’accès",
+      "droit de rectification",
+      "droit à l’effacement",
+      "droit à la limitation du traitement",
+      "droit à la portabilité des données",
+      "droit d’opposition",
+      "droit de retirer un consentement",
+      "droit de déposer une plainte auprès d’une autorité de protection des données",
+    ],
+
+    securityTitle: "15. Sécurité des données",
+    securityText:
+      "Des mesures techniques et organisationnelles appropriées sont prises pour protéger les données contre la perte, l’abus, l’accès non autorisé, la divulgation non autorisée et la modification. Toutefois, une transmission totalement sans risque sur Internet ne peut être garantie.",
+
+    changesTitle: "16. Modifications de cette politique",
+    changesText:
+      "Cette politique de confidentialité peut être mise à jour si des circonstances techniques, juridiques ou organisationnelles changent.",
+
     imprint: "Mentions légales",
     discordTicket: "système de tickets Discord",
   },
 
   it: {
-    badge: "Regole",
-    title: "Condizioni d’uso",
+    badge: "Privacy",
+    title: "Informativa sulla privacy",
     intro:
-      "Queste condizioni d’uso regolano l’utilizzo di Asko Cafe. Registrandosi, accedendo o continuando a usare il sito, l’utente accetta queste condizioni nella versione vigente.",
+      "Questa informativa spiega quali dati personali vengono trattati durante l’utilizzo di Asko Cafe, per quali finalità e quali diritti hanno gli interessati.",
     legalNote:
-      "La versione tedesca di queste condizioni d’uso è giuridicamente vincolante. Le traduzioni servono solo per una migliore comprensione.",
-    providerTitle: "1. Fornitore",
-    providerText: "I dati del fornitore e i contatti sono disponibili nell’impressum.",
-    platformTitle: "2. Oggetto della piattaforma",
-    platformText:
-      "Asko Cafe è una piattaforma per mostrare, cercare, inserire, gestire, recensire e moderare server Discord. Gli utenti possono inserire server, gestire profili, scrivere recensioni, inviare segnalazioni e, se abilitato, usare funzioni Premium o Partner.",
-    registrationTitle: "3. Registrazione e login",
-    registrationText:
-      "Alcune funzioni richiedono registrazione o login, in particolare tramite Discord. Registrandosi o accedendo, l’utente conferma di aver letto e accettato queste condizioni.",
-    dutiesTitle: "4. Obblighi degli utenti",
-    dutiesText:
-      "Gli utenti devono fornire informazioni veritiere, rispettare i diritti di terzi e non pubblicare contenuti contrari alla legge, alle regole di Discord, ai diritti di terzi o a queste condizioni.",
-    responsibilityTitle: "5. Responsabilità per i contenuti dei server",
-    responsibilityText:
-      "Il rispettivo gestore del server è responsabile dei contenuti, regole, comportamento, moderazione e legalità di un server Discord inserito. Asko Cafe fornisce solo una piattaforma di visualizzazione e ricerca.",
-    forbiddenTitle: "6. Contenuti e azioni vietati",
-    forbiddenIntro: "Sono in particolare vietati:",
-    forbiddenItems: [
-      "contenuti illegali",
-      "odio, minacce, insulti o discriminazione",
-      "spam, scam, phishing, malware o tentativi di frode",
-      "contenuti estremisti o che glorificano la violenza",
-      "contenuti sessuali senza corretta indicazione NSFW",
-      "server falsi, informazioni fuorvianti o falsi invite in scadenza",
-      "abuso di recensioni, segnalazioni o funzioni bump",
-      "aggiramento di blocchi, ban o misure di moderazione",
-      "violazioni di copyright, marchi, diritti della personalità o protezione dati",
-    ],
-    serverEntriesTitle: "7. Inserimenti dei server",
-    serverEntriesText:
-      "Gli inserimenti dei server devono essere corretti e aggiornati. Ciò include nome, descrizione, categoria, lingua, tag, indicazione NSFW e link invito Discord. Il gestore del server è responsabile del funzionamento del link e dell’assenza di contenuti illegali o fuorvianti.",
-    reviewsTitle: "8. Recensioni e segnalazioni",
-    reviewsText:
-      "Le recensioni devono essere oggettive, corrette e veritiere. Recensioni false, insulti, spam o abuso del sistema di segnalazione sono vietati. Le segnalazioni devono essere usate solo per reali violazioni o richieste giustificate.",
-    bumpTitle: "9. Sistema bump",
-    bumpText:
-      "Il sistema bump non deve essere abusato. Abuso automatizzato, manipolazione, spam o tentativi di aggiramento possono comportare blocchi bump, restrizioni o ulteriori misure di moderazione.",
-    premiumTitle: "10. Funzioni Premium e Partner",
-    premiumText1:
-      "Le funzioni Premium e Partner possono includere design speciali, visibilità in homepage, maggiore visibilità, tempi bump ridotti o altri vantaggi. Non esiste diritto a una determinata portata, numero di membri, posizione o successo economico.",
-    premiumText2:
-      "Finché lo shop non è disponibile, non esiste diritto all’acquisto, attivazione o disponibilità permanente delle funzioni Premium.",
-    moderationTitle: "11. Diritti di moderazione",
-    moderationIntro:
-      "Asko Cafe può controllare server, recensioni, segnalazioni e altri contenuti e prendere misure in caso di violazioni. Ciò include in particolare:",
-    moderationItems: [
-      "approvazione o rifiuto delle candidature dei server",
-      "modifica o rimozione di server",
-      "nascondere o eliminare recensioni",
-      "blocchi bump",
-      "blocco temporaneo o permanente di un server",
-      "ban o eliminazione di un server",
-      "rimozione dello stato Premium o Partner",
-      "inoltro alle autorità competenti se legalmente necessario",
-    ],
-    noClaimTitle: "12. Nessun diritto alla pubblicazione",
-    noClaimText:
-      "Non esiste diritto alla pubblicazione, approvazione o visualizzazione permanente di server, recensioni o altri contenuti inviati. Asko Cafe può rifiutare, rimuovere o limitare contenuti per ragioni di sicurezza, qualità, moderazione o legge.",
-    availabilityTitle: "13. Disponibilità",
-    availabilityText:
-      "Non esiste diritto alla disponibilità ininterrotta del sito o di singole funzioni. Manutenzione, aggiornamenti, problemi tecnici, guasti esterni o misure di sicurezza possono limitare l’uso.",
-    liabilityTitle: "14. Responsabilità",
-    liabilityText1:
-      "Asko Cafe risponde pienamente in caso di dolo e colpa grave nonché per danni alla vita, al corpo o alla salute. In caso di colpa lieve, la responsabilità sussiste solo per violazione di obblighi contrattuali essenziali ed è limitata al danno prevedibile e tipico. Ulteriore responsabilità è esclusa nella misura consentita dalla legge.",
-    liabilityText2:
-      "Asko Cafe non assume responsabilità per contenuti degli utenti, server Discord esterni, link invito Discord e siti esterni finché non vi è conoscenza concreta di violazioni legali.",
-    indemnityTitle: "15. Manleva",
-    indemnityText:
-      "Gli utenti manlevano Asko Cafe da pretese di terzi derivanti da contenuti o azioni illegali, false o contrarie al contratto, nella misura in cui l’utente sia responsabile della violazione. Ciò include anche costi ragionevoli di difesa legale.",
-    changesTitle: "16. Modifiche delle condizioni",
-    changesText:
-      "Asko Cafe può modificare queste condizioni con effetto futuro se motivi tecnici, legali o organizzativi lo richiedono. La versione attuale è disponibile su questa pagina.",
-    contactTitle: "17. Contatto",
+      "La versione tedesca di questa informativa è giuridicamente vincolante. Le traduzioni servono solo per una migliore comprensione.",
+
+    controllerTitle: "1. Titolare del trattamento",
+    controllerText:
+      "Il titolare ai sensi del GDPR è il gestore di Asko Cafe. I dati completi del fornitore e i contatti sono disponibili nell’impressum.",
+
+    contactTitle: "2. Contatto per questioni privacy",
     contactText:
-      "Per domande su queste condizioni, blocchi, segnalazioni o questioni legali, Asko Cafe può essere contattato tramite sistema ticket Discord o e-mail.",
-    lawTitle: "18. Legge applicabile",
-    lawText:
-      "Si applica il diritto della Repubblica Federale di Germania, salvo norme obbligatorie di tutela dei consumatori.",
-    severabilityTitle: "19. Clausola salvatoria",
-    severabilityText:
-      "Se una disposizione di queste condizioni è o diventa invalida in tutto o in parte, la validità delle restanti disposizioni rimane invariata.",
+      "Richieste privacy, accesso, cancellazione o altri Anliegen possono essere inviate via e-mail o tramite sistema ticket Discord.",
+
+    generalTitle: "3. Trattamento generale dei dati",
+    generalText:
+      "I dati personali vengono trattati quando necessario per fornire il sito, utilizzare le funzioni della piattaforma, gestire inserimenti di server Discord, eseguire login e funzioni di sicurezza, moderare contenuti, gestire segnalazioni o adempiere obblighi legali.",
+
+    legalBasisTitle: "4. Basi giuridiche",
+    legalBasisIntro:
+      "A seconda della funzione, i dati personali vengono trattati sulle seguenti basi giuridiche:",
+    legalBasisItems: [
+      "Art. 6(1)(a) GDPR – consenso",
+      "Art. 6(1)(b) GDPR – esecuzione di un contratto o misure precontrattuali",
+      "Art. 6(1)(c) GDPR – adempimento di obblighi legali",
+      "Art. 6(1)(f) GDPR – interessi legittimi, in particolare sicurezza, prevenzione abusi, moderazione e funzionamento stabile",
+    ],
+
+    hostingTitle: "5. Hosting e dati tecnici di accesso",
+    hostingText:
+      "Quando il sito viene aperto, vengono trattati dati tecnicamente necessari affinché il sito possa essere fornito e gestito in sicurezza. Ciò può includere indirizzo IP, data e ora dell’accesso, informazioni browser, referrer, pagine richieste, dati di sistema e log.",
+
+    discordTitle: "6. Login Discord e account utente",
+    discordText1:
+      "Se viene offerto il login tramite Discord, i dati forniti da Discord vengono trattati nella misura necessaria per login, assegnazione account e funzioni della piattaforma. Ciò può includere ID Discord, nome utente, avatar, dati pubblici del profilo e altri dati necessari all’autenticazione.",
+    discordText2:
+      "Registrandosi o accedendo ad Asko Cafe, l’utente accetta le condizioni d’uso nella versione vigente.",
+
+    serverTitle: "7. Inserimenti server",
+    serverIntro:
+      "Quando un server Discord viene inserito o modificato, possono essere trattati in particolare i seguenti dati:",
+    serverItems: [
+      "nome server",
+      "descrizione server",
+      "categoria, lingua, paese e tag",
+      "link invito Discord",
+      "banner, logo o immagine server",
+      "indicazione NSFW",
+      "stato Premium o Partner",
+      "orari bump e blocchi bump",
+      "stato moderazione, motivi e moderatori",
+    ],
+
+    reviewTitle: "8. Recensioni, commenti e segnalazioni",
+    reviewText:
+      "Gli utenti possono inviare recensioni, commenti e segnalazioni. In questo contesto possono essere trattati ID Discord, nome utente, valutazione, testo commento, motivo segnalazione, server segnalato, recensione segnalata, timestamp e decisioni di moderazione.",
+
+    moderationTitle: "9. Moderazione e sicurezza",
+    moderationText:
+      "Per la sicurezza della piattaforma e l’applicazione delle regole, contenuti possono essere controllati, server bloccati, bannati o rimossi, recensioni nascoste o eliminate e blocchi bump applicati. Motivi, tempi, durata e account staff responsabili vengono salvati.",
+
+    notificationsTitle: "10. Notifiche",
+    notificationsText:
+      "Gli utenti possono ricevere notifiche, ad esempio quando un server viene approvato, rifiutato, bloccato, bannato, eliminato, Premium attivato, Partner attivato o una recensione moderata.",
+
+    storageTitle: "11. Cookie, local storage e tecnologie simili",
+    storageText1:
+      "Asko Cafe può usare cookie tecnicamente necessari, local storage o tecnologie simili, ad esempio per sessioni login, impostazioni lingua, funzioni di sicurezza o funzioni richieste.",
+    storageText2:
+      "Se vengono usati cookie non essenziali o tecnologie comparabili, ciò avviene solo sulla base del consenso quando richiesto dalla legge.",
+
+    recipientsTitle: "12. Destinatari e fornitori tecnici",
+    recipientsText:
+      "Per fornire la piattaforma possono essere usati fornitori tecnici, in particolare per hosting, database, autenticazione, archiviazione, sicurezza e infrastruttura. Ciò può includere Vercel, Supabase, Discord OAuth e NextAuth se questi servizi sono effettivamente usati.",
+
+    durationTitle: "13. Durata di conservazione",
+    durationText:
+      "I dati personali vengono conservati solo per il tempo necessario alle rispettive finalità. Inserimenti server, recensioni, segnalazioni e dati di moderazione possono essere conservati finché necessario per gestione piattaforma, prevenzione abusi, tracciabilità delle decisioni di moderazione o obblighi legali.",
+
+    rightsTitle: "14. Diritti degli interessati",
+    rightsIntro: "Gli interessati hanno in particolare i seguenti diritti secondo il GDPR:",
+    rightsItems: [
+      "diritto di accesso",
+      "diritto di rettifica",
+      "diritto alla cancellazione",
+      "diritto alla limitazione del trattamento",
+      "diritto alla portabilità dei dati",
+      "diritto di opposizione",
+      "diritto di revocare il consenso",
+      "diritto di proporre reclamo a un’autorità di controllo privacy",
+    ],
+
+    securityTitle: "15. Sicurezza dei dati",
+    securityText:
+      "Vengono adottate misure tecniche e organizzative adeguate per proteggere i dati da perdita, abuso, accesso non autorizzato, divulgazione non autorizzata e modifica. Tuttavia non può essere garantita una trasmissione completamente priva di rischi su Internet.",
+
+    changesTitle: "16. Modifiche a questa informativa",
+    changesText:
+      "Questa informativa può essere aggiornata se cambiano circostanze tecniche, legali o organizzative.",
+
     imprint: "Impressum",
     discordTicket: "sistema ticket Discord",
   },
 
   pl: {
-    badge: "Zasady",
-    title: "Warunki korzystania",
+    badge: "Prywatność",
+    title: "Polityka prywatności",
     intro:
-      "Niniejsze warunki korzystania regulują korzystanie z Asko Cafe. Rejestrując się, logując lub dalej korzystając ze strony, użytkownik akceptuje aktualną wersję tych warunków.",
+      "Niniejsza polityka prywatności informuje, jakie dane osobowe są przetwarzane podczas korzystania z Asko Cafe, w jakich celach i jakie prawa mają osoby, których dane dotyczą.",
     legalNote:
-      "Niemiecka wersja tych warunków korzystania jest prawnie wiążąca. Tłumaczenia służą wyłącznie lepszemu zrozumieniu.",
-    providerTitle: "1. Dostawca",
-    providerText: "Dane dostawcy i możliwości kontaktu znajdują się w impressum.",
-    platformTitle: "2. Cel platformy",
-    platformText:
-      "Asko Cafe to platforma do wyświetlania, wyszukiwania, dodawania, zarządzania, oceniania i moderowania serwerów Discord. Użytkownicy mogą dodawać serwery, zarządzać profilami, dodawać oceny, wysyłać zgłoszenia oraz, jeśli aktywne, korzystać z funkcji Premium lub Partner.",
-    registrationTitle: "3. Rejestracja i logowanie",
-    registrationText:
-      "Niektóre funkcje wymagają rejestracji lub logowania, zwłaszcza przez Discord. Rejestrując się lub logując, użytkownik potwierdza, że przeczytał i zaakceptował te warunki.",
-    dutiesTitle: "4. Obowiązki użytkowników",
-    dutiesText:
-      "Użytkownicy muszą podawać prawdziwe informacje, respektować prawa osób trzecich i nie publikować treści sprzecznych z prawem, zasadami Discord, prawami osób trzecich lub tymi warunkami.",
-    responsibilityTitle: "5. Odpowiedzialność za treści serwerów",
-    responsibilityText:
-      "Za treści, zasady, zachowanie, moderację i legalność dodanego serwera Discord odpowiada operator danego serwera. Asko Cafe udostępnia jedynie platformę do prezentacji i wyszukiwania.",
-    forbiddenTitle: "6. Zabronione treści i działania",
-    forbiddenIntro: "Zabronione są w szczególności:",
-    forbiddenItems: [
-      "treści nielegalne",
-      "mowa nienawiści, groźby, obrażanie lub dyskryminacja",
-      "spam, scam, phishing, malware lub próby oszustwa",
-      "treści ekstremistyczne lub gloryfikujące przemoc",
-      "treści seksualne bez prawidłowego oznaczenia NSFW",
-      "fałszywe serwery, mylące informacje lub fałszywe wygasające zaproszenia",
-      "nadużywanie ocen, zgłoszeń lub funkcji bump",
-      "omijanie blokad, banów lub środków moderacyjnych",
-      "naruszenia praw autorskich, znaków towarowych, dóbr osobistych lub ochrony danych",
-    ],
-    serverEntriesTitle: "7. Wpisy serwerów",
-    serverEntriesText:
-      "Wpisy serwerów muszą być poprawne i aktualne. Dotyczy to nazwy, opisu, kategorii, języka, tagów, oznaczenia NSFW i linku zaproszenia Discord. Operator serwera odpowiada za działanie linku oraz brak nielegalnych lub wprowadzających w błąd treści.",
-    reviewsTitle: "8. Oceny i zgłoszenia",
-    reviewsText:
-      "Oceny muszą być rzeczowe, uczciwe i prawdziwe. Fałszywe oceny, obrażanie, spam lub nadużywanie systemu zgłoszeń są zabronione. Zgłoszenia mogą być używane tylko przy rzeczywistych naruszeniach lub uzasadnionych sprawach.",
-    bumpTitle: "9. System bump",
-    bumpText:
-      "System bump nie może być nadużywany. Automatyczne nadużycia, manipulacje, spam lub próby obejścia mogą skutkować blokadami bump, ograniczeniami lub dalszymi środkami moderacyjnymi.",
-    premiumTitle: "10. Funkcje Premium i Partner",
-    premiumText1:
-      "Funkcje Premium i Partner mogą obejmować specjalne designy, widoczność na stronie głównej, lepszą widoczność, krótsze czasy bump lub inne korzyści. Nie ma prawa do określonego zasięgu, liczby członków, pozycji lub sukcesu ekonomicznego.",
-    premiumText2:
-      "Dopóki sklep nie jest dostępny, nie istnieje prawo do zakupu, aktywacji lub trwałej dostępności funkcji Premium.",
-    moderationTitle: "11. Prawa moderacyjne",
-    moderationIntro:
-      "Asko Cafe może sprawdzać wpisy serwerów, oceny, zgłoszenia i inne treści oraz podejmować działania w przypadku naruszeń. Obejmuje to w szczególności:",
-    moderationItems: [
-      "akceptację lub odrzucenie zgłoszeń serwerów",
-      "edycję lub usunięcie wpisów serwerów",
-      "ukrywanie lub usuwanie ocen",
-      "blokady bump",
-      "tymczasowe lub trwałe zablokowanie serwera",
-      "ban lub usunięcie wpisu serwera",
-      "odebranie statusu Premium lub Partner",
-      "przekazanie właściwym organom, jeśli jest to prawnie wymagane",
-    ],
-    noClaimTitle: "12. Brak prawa do publikacji",
-    noClaimText:
-      "Nie istnieje prawo do publikacji, akceptacji lub trwałego wyświetlania dodanych serwerów, ocen lub innych treści. Asko Cafe może odrzucać, usuwać lub ograniczać treści ze względów bezpieczeństwa, jakości, moderacji lub prawa.",
-    availabilityTitle: "13. Dostępność",
-    availabilityText:
-      "Nie istnieje prawo do nieprzerwanej dostępności strony lub poszczególnych funkcji. Prace techniczne, aktualizacje, problemy techniczne, awarie zewnętrzne lub środki bezpieczeństwa mogą ograniczać korzystanie.",
-    liabilityTitle: "14. Odpowiedzialność",
-    liabilityText1:
-      "Asko Cafe ponosi pełną odpowiedzialność za umyślne działanie i rażące niedbalstwo oraz za szkody dotyczące życia, ciała lub zdrowia. Przy lekkim niedbalstwie odpowiedzialność istnieje tylko przy naruszeniu istotnych obowiązków umownych i jest ograniczona do przewidywalnej, typowej szkody. Dalsza odpowiedzialność jest wyłączona w zakresie dopuszczalnym przez prawo.",
-    liabilityText2:
-      "Asko Cafe nie ponosi odpowiedzialności za treści użytkowników, zewnętrzne serwery Discord, linki zaproszeń Discord i strony zewnętrzne, dopóki nie ma konkretnej wiedzy o naruszeniach prawa.",
-    indemnityTitle: "15. Zwolnienie z roszczeń",
-    indemnityText:
-      "Użytkownicy zwalniają Asko Cafe z roszczeń osób trzecich wynikających z nielegalnych, fałszywych lub sprzecznych z umową treści lub działań użytkownika, o ile użytkownik odpowiada za naruszenie. Obejmuje to również uzasadnione koszty obrony prawnej.",
-    changesTitle: "16. Zmiany warunków",
-    changesText:
-      "Asko Cafe może zmieniać te warunki ze skutkiem na przyszłość, jeśli wymagają tego względy techniczne, prawne lub organizacyjne. Aktualna wersja jest dostępna na tej stronie.",
-    contactTitle: "17. Kontakt",
+      "Niemiecka wersja tej polityki prywatności jest prawnie wiążąca. Tłumaczenia służą wyłącznie lepszemu zrozumieniu.",
+
+    controllerTitle: "1. Administrator danych",
+    controllerText:
+      "Administratorem w rozumieniu RODO jest operator Asko Cafe. Pełne dane dostawcy i kontakt znajdują się w impressum.",
+
+    contactTitle: "2. Kontakt w sprawach prywatności",
     contactText:
-      "W przypadku pytań dotyczących tych warunków, blokad, zgłoszeń lub spraw prawnych można skontaktować się z Asko Cafe przez system ticketów Discord lub e-mail.",
-    lawTitle: "18. Prawo właściwe",
-    lawText:
-      "Obowiązuje prawo Republiki Federalnej Niemiec, o ile nie sprzeciwiają się temu bezwzględnie obowiązujące przepisy ochrony konsumentów.",
-    severabilityTitle: "19. Klauzula salwatoryjna",
-    severabilityText:
-      "Jeśli jakiekolwiek postanowienie tych warunków jest lub stanie się nieważne w całości lub części, ważność pozostałych postanowień pozostaje nienaruszona.",
+      "Zapytania dotyczące prywatności, dostępu, usunięcia danych lub inne sprawy można wysyłać e-mailem albo przez system ticketów Discord.",
+
+    generalTitle: "3. Ogólne przetwarzanie danych",
+    generalText:
+      "Dane osobowe są przetwarzane, gdy jest to konieczne do udostępnienia strony, korzystania z funkcji platformy, zarządzania wpisami serwerów Discord, realizacji logowania i bezpieczeństwa, moderacji, obsługi zgłoszeń lub spełnienia obowiązków prawnych.",
+
+    legalBasisTitle: "4. Podstawy prawne",
+    legalBasisIntro:
+      "W zależności od funkcji dane osobowe są przetwarzane na następujących podstawach prawnych:",
+    legalBasisItems: [
+      "Art. 6 ust. 1 lit. a RODO – zgoda",
+      "Art. 6 ust. 1 lit. b RODO – wykonanie umowy lub działania przedumowne",
+      "Art. 6 ust. 1 lit. c RODO – spełnienie obowiązków prawnych",
+      "Art. 6 ust. 1 lit. f RODO – uzasadnione interesy, w szczególności bezpieczeństwo, zapobieganie nadużyciom, moderacja i stabilne działanie",
+    ],
+
+    hostingTitle: "5. Hosting i techniczne dane dostępu",
+    hostingText:
+      "Podczas odwiedzania strony przetwarzane są technicznie niezbędne dane, aby strona mogła być dostarczana i bezpiecznie obsługiwana. Może to obejmować adres IP, datę i godzinę dostępu, informacje o przeglądarce, referrer, żądane strony, dane systemowe i logi.",
+
+    discordTitle: "6. Logowanie Discord i konto użytkownika",
+    discordText1:
+      "Jeżeli oferowane jest logowanie przez Discord, dane udostępnione przez Discord są przetwarzane w zakresie koniecznym do logowania, przypisania konta i funkcji platformy. Może to obejmować ID Discord, nazwę użytkownika, avatar, publiczne dane profilu i inne dane potrzebne do uwierzytelnienia.",
+    discordText2:
+      "Rejestrując się lub logując do Asko Cafe, użytkownik akceptuje warunki korzystania w aktualnej wersji.",
+
+    serverTitle: "7. Wpisy serwerów",
+    serverIntro:
+      "Gdy serwer Discord jest dodawany lub edytowany, mogą być przetwarzane w szczególności następujące dane:",
+    serverItems: [
+      "nazwa serwera",
+      "opis serwera",
+      "kategoria, język, kraj i tagi",
+      "link zaproszenia Discord",
+      "banner, logo lub obraz serwera",
+      "oznaczenie NSFW",
+      "status Premium lub Partner",
+      "czasy bump i blokady bump",
+      "status moderacji, powody i moderatorzy",
+    ],
+
+    reviewTitle: "8. Oceny, komentarze i zgłoszenia",
+    reviewText:
+      "Użytkownicy mogą dodawać oceny, komentarze i zgłoszenia. W tym kontekście mogą być przetwarzane ID Discord, nazwa użytkownika, ocena, tekst komentarza, powód zgłoszenia, zgłoszony serwer, zgłoszona ocena, znaczniki czasu i decyzje moderacyjne.",
+
+    moderationTitle: "9. Moderacja i bezpieczeństwo",
+    moderationText:
+      "Dla bezpieczeństwa platformy i egzekwowania zasad treści mogą być sprawdzane, serwery blokowane, banowane lub usuwane, oceny ukrywane lub usuwane oraz nakładane blokady bump. Zapisywane są powody moderacji, czas, długość oraz odpowiedzialne konta staff.",
+
+    notificationsTitle: "10. Powiadomienia",
+    notificationsText:
+      "Użytkownicy mogą otrzymywać powiadomienia, np. gdy serwer został zaakceptowany, odrzucony, zablokowany, zbanowany, usunięty, aktywowano Premium, aktywowano Partner lub ocena została zmoderowana.",
+
+    storageTitle: "11. Cookies, local storage i podobne technologie",
+    storageText1:
+      "Asko Cafe może używać technicznie niezbędnych cookies, local storage lub podobnych technologii, np. dla sesji logowania, ustawień języka, funkcji bezpieczeństwa lub żądanych funkcji.",
+    storageText2:
+      "Jeżeli używane są niekonieczne cookies lub podobne technologie, dzieje się to tylko na podstawie zgody, jeśli prawo tego wymaga.",
+
+    recipientsTitle: "12. Odbiorcy i dostawcy techniczni",
+    recipientsText:
+      "Do udostępnienia platformy mogą być używani dostawcy techniczni, szczególnie hosting, baza danych, uwierzytelnianie, przechowywanie, bezpieczeństwo i infrastruktura. Może to obejmować Vercel, Supabase, Discord OAuth i NextAuth, jeśli te usługi są faktycznie używane.",
+
+    durationTitle: "13. Okres przechowywania",
+    durationText:
+      "Dane osobowe są przechowywane tylko tak długo, jak jest to potrzebne do odpowiednich celów. Wpisy serwerów, oceny, zgłoszenia i dane moderacyjne mogą być przechowywane, dopóki jest to konieczne do zarządzania platformą, zapobiegania nadużyciom, śledzenia decyzji moderacyjnych lub spełniania obowiązków prawnych.",
+
+    rightsTitle: "14. Prawa osób, których dane dotyczą",
+    rightsIntro: "Osobom, których dane dotyczą, przysługują według RODO w szczególności:",
+    rightsItems: [
+      "prawo dostępu",
+      "prawo do sprostowania",
+      "prawo do usunięcia",
+      "prawo do ograniczenia przetwarzania",
+      "prawo do przenoszenia danych",
+      "prawo sprzeciwu",
+      "prawo cofnięcia zgody",
+      "prawo skargi do organu nadzorczego ochrony danych",
+    ],
+
+    securityTitle: "15. Bezpieczeństwo danych",
+    securityText:
+      "Stosowane są odpowiednie środki techniczne i organizacyjne w celu ochrony danych przed utratą, nadużyciem, nieuprawnionym dostępem, nieuprawnionym ujawnieniem i zmianą. Nie można jednak zagwarantować całkowicie bezpiecznej transmisji danych w Internecie.",
+
+    changesTitle: "16. Zmiany tej polityki",
+    changesText:
+      "Ta polityka prywatności może zostać zaktualizowana, jeśli zmienią się okoliczności techniczne, prawne lub organizacyjne.",
+
     imprint: "Impressum",
     discordTicket: "system ticketów Discord",
   },
 } as const;
 
-function tx(language: UiLanguage, key: keyof typeof TERMS_TEXT.de) {
-  return TERMS_TEXT[language]?.[key] || TERMS_TEXT.de[key];
+function tx(language: UiLanguage, key: keyof typeof PRIVACY_TEXT.de) {
+  return PRIVACY_TEXT[language]?.[key] || PRIVACY_TEXT.de[key];
 }
 
-function list(language: UiLanguage, key: "forbiddenItems" | "moderationItems") {
-  return TERMS_TEXT[language]?.[key] || TERMS_TEXT.de[key];
+function list(
+  language: UiLanguage,
+  key: "legalBasisItems" | "serverItems" | "rightsItems"
+) {
+  return PRIVACY_TEXT[language]?.[key] || PRIVACY_TEXT.de[key];
 }
 
-export default function NutzungsbedingungenPage() {
+export default function DatenschutzPage() {
   const language = useLanguage() as UiLanguage;
 
   return (
     <main className="legal-page">
       <section className="legal-card">
-        <span className="page-badge">📜 {tx(language, "badge")}</span>
+        <span className="page-badge">🔐 {tx(language, "badge")}</span>
         <h1>{tx(language, "title")}</h1>
 
         <p>{tx(language, "intro")}</p>
-
         <p className="legal-small">{tx(language, "legalNote")}</p>
 
-        <h2>{tx(language, "providerTitle")}</h2>
+        <h2>{tx(language, "controllerTitle")}</h2>
         <p>
-          {tx(language, "providerText")}{" "}
+          {tx(language, "controllerText")}{" "}
           <Link href="/impressum">{tx(language, "imprint")}</Link>.
         </p>
-
-        <h2>{tx(language, "platformTitle")}</h2>
-        <p>{tx(language, "platformText")}</p>
-
-        <h2>{tx(language, "registrationTitle")}</h2>
-        <p>{tx(language, "registrationText")}</p>
-
-        <h2>{tx(language, "dutiesTitle")}</h2>
-        <p>{tx(language, "dutiesText")}</p>
-
-        <h2>{tx(language, "responsibilityTitle")}</h2>
-        <p>{tx(language, "responsibilityText")}</p>
-
-        <h2>{tx(language, "forbiddenTitle")}</h2>
-        <p>{tx(language, "forbiddenIntro")}</p>
-        <ul>
-          {list(language, "forbiddenItems").map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-
-        <h2>{tx(language, "serverEntriesTitle")}</h2>
-        <p>{tx(language, "serverEntriesText")}</p>
-
-        <h2>{tx(language, "reviewsTitle")}</h2>
-        <p>{tx(language, "reviewsText")}</p>
-
-        <h2>{tx(language, "bumpTitle")}</h2>
-        <p>{tx(language, "bumpText")}</p>
-
-        <h2>{tx(language, "premiumTitle")}</h2>
-        <p>{tx(language, "premiumText1")}</p>
-        <p>{tx(language, "premiumText2")}</p>
-
-        <h2>{tx(language, "moderationTitle")}</h2>
-        <p>{tx(language, "moderationIntro")}</p>
-        <ul>
-          {list(language, "moderationItems").map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-
-        <h2>{tx(language, "noClaimTitle")}</h2>
-        <p>{tx(language, "noClaimText")}</p>
-
-        <h2>{tx(language, "availabilityTitle")}</h2>
-        <p>{tx(language, "availabilityText")}</p>
-
-        <h2>{tx(language, "liabilityTitle")}</h2>
-        <p>{tx(language, "liabilityText1")}</p>
-        <p>{tx(language, "liabilityText2")}</p>
-
-        <h2>{tx(language, "indemnityTitle")}</h2>
-        <p>{tx(language, "indemnityText")}</p>
-
-        <h2>{tx(language, "changesTitle")}</h2>
-        <p>{tx(language, "changesText")}</p>
 
         <h2>{tx(language, "contactTitle")}</h2>
         <p>
           {tx(language, "contactText")}{" "}
+          <a href="mailto:dcaskocafe@gmail.com">dcaskocafe@gmail.com</a> ·{" "}
           <a href="https://discord.gg/asko" target="_blank" rel="noreferrer">
             {tx(language, "discordTicket")}
-          </a>{" "}
-          · <a href="mailto:dcaskocafe@gmail.com">dcaskocafe@gmail.com</a>
+          </a>
         </p>
 
-        <h2>{tx(language, "lawTitle")}</h2>
-        <p>{tx(language, "lawText")}</p>
+        <h2>{tx(language, "generalTitle")}</h2>
+        <p>{tx(language, "generalText")}</p>
 
-        <h2>{tx(language, "severabilityTitle")}</h2>
-        <p>{tx(language, "severabilityText")}</p>
+        <h2>{tx(language, "legalBasisTitle")}</h2>
+        <p>{tx(language, "legalBasisIntro")}</p>
+        <ul>
+          {list(language, "legalBasisItems").map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+
+        <h2>{tx(language, "hostingTitle")}</h2>
+        <p>{tx(language, "hostingText")}</p>
+
+        <h2>{tx(language, "discordTitle")}</h2>
+        <p>{tx(language, "discordText1")}</p>
+        <p>{tx(language, "discordText2")}</p>
+
+        <h2>{tx(language, "serverTitle")}</h2>
+        <p>{tx(language, "serverIntro")}</p>
+        <ul>
+          {list(language, "serverItems").map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+
+        <h2>{tx(language, "reviewTitle")}</h2>
+        <p>{tx(language, "reviewText")}</p>
+
+        <h2>{tx(language, "moderationTitle")}</h2>
+        <p>{tx(language, "moderationText")}</p>
+
+        <h2>{tx(language, "notificationsTitle")}</h2>
+        <p>{tx(language, "notificationsText")}</p>
+
+        <h2>{tx(language, "storageTitle")}</h2>
+        <p>{tx(language, "storageText1")}</p>
+        <p>{tx(language, "storageText2")}</p>
+
+        <h2>{tx(language, "recipientsTitle")}</h2>
+        <p>{tx(language, "recipientsText")}</p>
+
+        <h2>{tx(language, "durationTitle")}</h2>
+        <p>{tx(language, "durationText")}</p>
+
+        <h2>{tx(language, "rightsTitle")}</h2>
+        <p>{tx(language, "rightsIntro")}</p>
+        <ul>
+          {list(language, "rightsItems").map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+
+        <h2>{tx(language, "securityTitle")}</h2>
+        <p>{tx(language, "securityText")}</p>
+
+        <h2>{tx(language, "changesTitle")}</h2>
+        <p>{tx(language, "changesText")}</p>
       </section>
     </main>
   );
