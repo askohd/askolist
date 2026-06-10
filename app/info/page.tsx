@@ -2,9 +2,35 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { supabaseRequest } from "@/lib/supabase";
 
-type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-const INFO_TEXT = {
+type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
+type InfoCard = readonly [string, string, string];
+
+type InfoText = {
+  badge: string;
+  title: string;
+  subtitle: string;
+  discover: string;
+  submit: string;
+  statsServers: string;
+  statsTeam: string;
+  statsPremium: string;
+  differenceTitle: string;
+  differenceSubtitle: string;
+  functionsTitle: string;
+  functionsSubtitle: string;
+  teamTitle: string;
+  teamSubtitle: string;
+  legalTitle: string;
+  legalText: string;
+  noTeam: string;
+  cards: readonly InfoCard[];
+  differenceCards: readonly InfoCard[];
+};
+
+const INFO_TEXT: Record<UiLanguage, InfoText> = {
   de: {
     badge: "Info",
     title: "Finde aktive Discord-Server",
@@ -26,6 +52,12 @@ const INFO_TEXT = {
     legalTitle: "Rechtliches & Sicherheit",
     legalText:
       "Impressum, Datenschutz und Nutzungsbedingungen sind dauerhaft erreichbar.",
+    noTeam: "Noch kein Team eingetragen.",
+    differenceCards: [
+      ["💬", "Community-Fokus", "Asko Cafe ist auf Discord-Communitys und Server-Sichtbarkeit ausgelegt."],
+      ["👁️", "Transparenz", "Meldungen, Bewertungen und Moderation sorgen für bessere Kontrolle."],
+      ["🎨", "Design", "Premium-Layouts geben Servern einen eigenen Stil."],
+    ],
     cards: [
       ["🛡️", "Moderation", "Server können geprüft, angenommen, abgelehnt, gemeldet oder gesperrt werden."],
       ["🔎", "Sofortsuche", "Finde Server nach Name, Sprache, Tags oder Kategorie."],
@@ -33,11 +65,6 @@ const INFO_TEXT = {
       ["⚡", "Bump-System", "Server können durch Bumps wieder sichtbarer werden."],
       ["👑", "Premium", "Premium-Server erhalten Design-Funktionen und mehr Sichtbarkeit."],
       ["🤝", "Partner", "Partner-Server können besonders hervorgehoben werden."],
-    ],
-    differenceCards: [
-      ["💬", "Community-Fokus", "Asko Cafe ist auf Discord-Communitys und Server-Sichtbarkeit ausgelegt."],
-      ["👁️", "Transparenz", "Meldungen, Bewertungen und Moderation sorgen für bessere Kontrolle."],
-      ["🎨", "Design", "Premium-Layouts geben Servern einen eigenen Stil."],
     ],
   },
 
@@ -52,16 +79,20 @@ const INFO_TEXT = {
     statsTeam: "Team",
     statsPremium: "Premium",
     differenceTitle: "What makes us different",
-    differenceSubtitle:
-      "A directory focused on clarity, activity and moderation.",
+    differenceSubtitle: "A directory focused on clarity, activity and moderation.",
     functionsTitle: "Features",
     functionsSubtitle:
       "Everything you need to find servers or make your own server more visible.",
     teamTitle: "The Team",
     teamSubtitle: "The people behind Asko Cafe.",
     legalTitle: "Legal & safety",
-    legalText:
-      "Imprint, privacy policy and terms are permanently available.",
+    legalText: "Imprint, privacy policy and terms are permanently available.",
+    noTeam: "No team members have been added yet.",
+    differenceCards: [
+      ["💬", "Community focus", "Asko Cafe is built for Discord communities and server visibility."],
+      ["👁️", "Transparency", "Reports, reviews and moderation provide better control."],
+      ["🎨", "Design", "Premium layouts give servers their own style."],
+    ],
     cards: [
       ["🛡️", "Moderation", "Servers can be reviewed, approved, rejected, reported or locked."],
       ["🔎", "Instant search", "Find servers by name, language, tags or category."],
@@ -69,11 +100,6 @@ const INFO_TEXT = {
       ["⚡", "Bump system", "Servers can become more visible again through bumps."],
       ["👑", "Premium", "Premium servers receive design features and more visibility."],
       ["🤝", "Partner", "Partner servers can be highlighted in a special way."],
-    ],
-    differenceCards: [
-      ["💬", "Community focus", "Asko Cafe is built for Discord communities and server visibility."],
-      ["👁️", "Transparency", "Reports, reviews and moderation provide better control."],
-      ["🎨", "Design", "Premium layouts give servers their own style."],
     ],
   },
 
@@ -88,16 +114,20 @@ const INFO_TEXT = {
     statsTeam: "Équipe",
     statsPremium: "Premium",
     differenceTitle: "Ce qui nous distingue",
-    differenceSubtitle:
-      "Un annuaire axé sur la clarté, l’activité et la modération.",
+    differenceSubtitle: "Un annuaire axé sur la clarté, l’activité et la modération.",
     functionsTitle: "Fonctions",
     functionsSubtitle:
       "Tout ce qu’il faut pour trouver des serveurs ou rendre ton serveur plus visible.",
     teamTitle: "L’équipe",
     teamSubtitle: "Les personnes derrière Asko Cafe.",
     legalTitle: "Légal & sécurité",
-    legalText:
-      "Mentions légales, confidentialité et conditions restent accessibles.",
+    legalText: "Mentions légales, confidentialité et conditions restent accessibles.",
+    noTeam: "Aucun membre d’équipe ajouté pour le moment.",
+    differenceCards: [
+      ["💬", "Focus communauté", "Asko Cafe est conçu pour les communautés Discord."],
+      ["👁️", "Transparence", "Signalements, avis et modération améliorent le contrôle."],
+      ["🎨", "Design", "Les layouts Premium donnent un style unique aux serveurs."],
+    ],
     cards: [
       ["🛡️", "Modération", "Les serveurs peuvent être vérifiés, acceptés, refusés, signalés ou bloqués."],
       ["🔎", "Recherche rapide", "Trouve des serveurs par nom, langue, tags ou catégorie."],
@@ -105,11 +135,6 @@ const INFO_TEXT = {
       ["⚡", "Bump", "Les serveurs peuvent redevenir plus visibles grâce aux bumps."],
       ["👑", "Premium", "Les serveurs Premium obtiennent du design et plus de visibilité."],
       ["🤝", "Partenaire", "Les serveurs partenaires peuvent être mis en avant."],
-    ],
-    differenceCards: [
-      ["💬", "Focus communauté", "Asko Cafe est conçu pour les communautés Discord."],
-      ["👁️", "Transparence", "Signalements, avis et modération améliorent le contrôle."],
-      ["🎨", "Design", "Les layouts Premium donnent un style unique aux serveurs."],
     ],
   },
 
@@ -124,16 +149,20 @@ const INFO_TEXT = {
     statsTeam: "Team",
     statsPremium: "Premium",
     differenceTitle: "Cosa ci distingue",
-    differenceSubtitle:
-      "Una directory focalizzata su chiarezza, attività e moderazione.",
+    differenceSubtitle: "Una directory focalizzata su chiarezza, attività e moderazione.",
     functionsTitle: "Funzioni",
     functionsSubtitle:
       "Tutto ciò che serve per trovare server o rendere il tuo server più visibile.",
     teamTitle: "Il Team",
     teamSubtitle: "Le persone dietro Asko Cafe.",
     legalTitle: "Legale & sicurezza",
-    legalText:
-      "Impressum, privacy e condizioni sono sempre disponibili.",
+    legalText: "Impressum, privacy e condizioni sono sempre disponibili.",
+    noTeam: "Nessun membro del team aggiunto.",
+    differenceCards: [
+      ["💬", "Focus community", "Asko Cafe è pensato per community Discord."],
+      ["👁️", "Trasparenza", "Segnalazioni, recensioni e moderazione danno più controllo."],
+      ["🎨", "Design", "I layout Premium danno uno stile unico ai server."],
+    ],
     cards: [
       ["🛡️", "Moderazione", "I server possono essere controllati, approvati, rifiutati, segnalati o bloccati."],
       ["🔎", "Ricerca rapida", "Trova server per nome, lingua, tag o categoria."],
@@ -141,11 +170,6 @@ const INFO_TEXT = {
       ["⚡", "Bump system", "I server possono diventare di nuovo più visibili tramite bump."],
       ["👑", "Premium", "I server Premium ricevono funzioni design e più visibilità."],
       ["🤝", "Partner", "I server Partner possono essere messi in evidenza."],
-    ],
-    differenceCards: [
-      ["💬", "Focus community", "Asko Cafe è pensato per community Discord."],
-      ["👁️", "Trasparenza", "Segnalazioni, recensioni e moderazione danno più controllo."],
-      ["🎨", "Design", "I layout Premium danno uno stile unico ai server."],
     ],
   },
 
@@ -160,16 +184,20 @@ const INFO_TEXT = {
     statsTeam: "Team",
     statsPremium: "Premium",
     differenceTitle: "Co nas wyróżnia",
-    differenceSubtitle:
-      "Katalog skupiony na przejrzystości, aktywności i moderacji.",
+    differenceSubtitle: "Katalog skupiony na przejrzystości, aktywności i moderacji.",
     functionsTitle: "Funkcje",
     functionsSubtitle:
       "Wszystko, czego potrzebujesz, aby znaleźć serwer lub zwiększyć widoczność własnego.",
     teamTitle: "Zespół",
     teamSubtitle: "Ludzie stojący za Asko Cafe.",
     legalTitle: "Prawo & bezpieczeństwo",
-    legalText:
-      "Impressum, prywatność i warunki są zawsze dostępne.",
+    legalText: "Impressum, prywatność i warunki są zawsze dostępne.",
+    noTeam: "Nie dodano jeszcze członków zespołu.",
+    differenceCards: [
+      ["💬", "Fokus na społeczność", "Asko Cafe jest stworzone dla społeczności Discord."],
+      ["👁️", "Przejrzystość", "Zgłoszenia, oceny i moderacja dają większą kontrolę."],
+      ["🎨", "Design", "Layouty Premium nadają serwerom własny styl."],
+    ],
     cards: [
       ["🛡️", "Moderacja", "Serwery mogą być sprawdzane, akceptowane, odrzucane, zgłaszane lub blokowane."],
       ["🔎", "Szybkie wyszukiwanie", "Znajdź serwery po nazwie, języku, tagach lub kategorii."],
@@ -178,13 +206,8 @@ const INFO_TEXT = {
       ["👑", "Premium", "Serwery Premium otrzymują funkcje designu i większą widoczność."],
       ["🤝", "Partner", "Serwery Partner mogą być specjalnie wyróżnione."],
     ],
-    differenceCards: [
-      ["💬", "Fokus na społeczność", "Asko Cafe jest stworzone dla społeczności Discord."],
-      ["👁️", "Przejrzystość", "Zgłoszenia, oceny i moderacja dają większą kontrolę."],
-      ["🎨", "Design", "Layouty Premium nadają serwerom własny styl."],
-    ],
   },
-} as const;
+};
 
 function normalizeUiLanguage(value: unknown): UiLanguage | null {
   const language = String(value ?? "").trim().toLowerCase();
@@ -219,10 +242,6 @@ async function getUiLanguage() {
   return "de";
 }
 
-function tx(language: UiLanguage, key: keyof typeof INFO_TEXT.de) {
-  return INFO_TEXT[language]?.[key] || INFO_TEXT.de[key];
-}
-
 function getRoleLabel(role: string) {
   if (role === "owner") return "Owner";
   if (role === "admin") return "Admin";
@@ -235,36 +254,60 @@ function getRoleIcon(role: string) {
   return "💬";
 }
 
+async function loadServers() {
+  try {
+    const response = await supabaseRequest(
+      "servers?select=id,premium_status,partner_status"
+    );
+
+    return Array.isArray(response) ? response : [];
+  } catch (error) {
+    console.error("Could not load info servers:", error);
+    return [];
+  }
+}
+
+async function loadTeam() {
+  try {
+    const response = await supabaseRequest(
+      "staff_members?select=*&order=role.asc,created_at.asc"
+    );
+
+    return Array.isArray(response) ? response : [];
+  } catch (error) {
+    console.error("Could not load info team:", error);
+    return [];
+  }
+}
+
 export default async function InfoPage() {
   const language = await getUiLanguage();
+  const text = INFO_TEXT[language] || INFO_TEXT.de;
 
-  const serversResponse = await supabaseRequest("servers?select=id,premium_status,partner_status");
-  const staffResponse = await supabaseRequest("staff_members?select=*&order=role.asc,created_at.asc");
-
-  const servers: any[] = Array.isArray(serversResponse) ? serversResponse : [];
-  const team: any[] = Array.isArray(staffResponse) ? staffResponse : [];
+  const servers = await loadServers();
+  const team = await loadTeam();
 
   const premiumCount = servers.filter(
-    (server) => server.premium_status || server.partner_status
+    (server: any) => server.premium_status || server.partner_status
   ).length;
 
   return (
     <main className="container info-page">
       <section className="info-hero-card">
-        <span className="page-badge">ℹ️ {tx(language, "badge")}</span>
+        <span className="page-badge">ℹ️ {text.badge}</span>
 
         <div className="info-hero-layout">
           <div>
-            <h1>{tx(language, "title")}</h1>
-            <p>{tx(language, "subtitle")}</p>
+            <h1>{text.title}</h1>
+            <p>{text.subtitle}</p>
 
             <div className="info-hero-actions">
               <Link href="/servers" className="btn">
-                {tx(language, "discover")}
+                {text.discover}
               </Link>
 
               <Link href="/submit" className="btn secondary">
-                {tx(language, "submit")}
+                {text.submit}
               </Link>
             </div>
           </div>
@@ -272,61 +315,61 @@ export default async function InfoPage() {
           <div className="info-stats-grid">
             <div className="info-stat-box">
               <strong>{servers.length}</strong>
-              <span>{tx(language, "statsServers")}</span>
+              <span>{text.statsServers}</span>
             </div>
 
             <div className="info-stat-box">
               <strong>{team.length}</strong>
-              <span>{tx(language, "statsTeam")}</span>
+              <span>{text.statsTeam}</span>
             </div>
 
             <div className="info-stat-box">
               <strong>{premiumCount}</strong>
-              <span>{tx(language, "statsPremium")}</span>
+              <span>{text.statsPremium}</span>
             </div>
           </div>
         </div>
       </section>
 
       <section className="info-section">
-        <h2>{tx(language, "differenceTitle")}</h2>
-        <p>{tx(language, "differenceSubtitle")}</p>
+        <h2>{text.differenceTitle}</h2>
+        <p>{text.differenceSubtitle}</p>
 
         <div className="info-card-grid three">
-          {tx(language, "differenceCards").map(([icon, title, text]) => (
+          {text.differenceCards.map(([icon, title, body]) => (
             <article className="info-feature-card" key={title}>
               <div className="info-feature-icon">{icon}</div>
               <h3>{title}</h3>
-              <p>{text}</p>
+              <p>{body}</p>
             </article>
           ))}
         </div>
       </section>
 
       <section className="info-section">
-        <h2>{tx(language, "functionsTitle")}</h2>
-        <p>{tx(language, "functionsSubtitle")}</p>
+        <h2>{text.functionsTitle}</h2>
+        <p>{text.functionsSubtitle}</p>
 
         <div className="info-card-grid">
-          {tx(language, "cards").map(([icon, title, text]) => (
+          {text.cards.map(([icon, title, body]) => (
             <article className="info-feature-card" key={title}>
               <div className="info-feature-icon">{icon}</div>
               <h3>{title}</h3>
-              <p>{text}</p>
+              <p>{body}</p>
             </article>
           ))}
         </div>
       </section>
 
       <section className="info-section">
-        <h2>{tx(language, "teamTitle")}</h2>
-        <p>{tx(language, "teamSubtitle")}</p>
+        <h2>{text.teamTitle}</h2>
+        <p>{text.teamSubtitle}</p>
 
         {team.length === 0 ? (
-          <div className="info-empty-team">Noch kein Team eingetragen.</div>
+          <div className="info-empty-team">{text.noTeam}</div>
         ) : (
           <div className="info-team-grid">
-            {team.map((member) => (
+            {team.map((member: any) => (
               <article className="info-team-card" key={member.id}>
                 <div className="info-team-avatar">
                   {member.avatar_url ? (
@@ -345,8 +388,8 @@ export default async function InfoPage() {
       </section>
 
       <section className="info-legal-card">
-        <h2>{tx(language, "legalTitle")}</h2>
-        <p>{tx(language, "legalText")}</p>
+        <h2>{text.legalTitle}</h2>
+        <p>{text.legalText}</p>
 
         <div className="info-legal-links">
           <Link href="/impressum">Impressum</Link>
