@@ -1,4 +1,9 @@
-import { getCurrentStaff, canModerateServers, canApproveServers } from "@/lib/admin";
+import {
+  getCurrentStaff,
+  canModerateServers,
+  canApproveServers,
+  canManageStaff,
+} from "@/lib/admin";
 import { supabaseRequest } from "@/lib/supabase";
 import type { ReactNode } from "react";
 
@@ -30,6 +35,14 @@ function getAdminNotice(searchParams: PageSearchParams) {
 
   if (getSearchValue(searchParams, "rejected") === "1") {
     return "Server wurde abgelehnt.";
+  }
+
+  if (getSearchValue(searchParams, "staff_saved") === "1") {
+    return "Teammitglied wurde gespeichert.";
+  }
+
+  if (getSearchValue(searchParams, "staff_removed") === "1") {
+    return "Teammitglied wurde entfernt.";
   }
 
   if (getSearchValue(searchParams, "report_done") === "1") {
@@ -165,7 +178,10 @@ function isRejectedApplication(server: any) {
 }
 
 function isAcceptedApplication(server: any) {
-  return Boolean(server.approved) || String(server.status || "").toLowerCase() === "approved";
+  return (
+    Boolean(server.approved) ||
+    String(server.status || "").toLowerCase() === "approved"
+  );
 }
 
 function isManagedServer(server: any) {
@@ -474,6 +490,24 @@ export default async function AdminPage({
     staff.role === "owner" ||
     staff.role === "administrator";
 
+  const isOwner = canManageStaff(staff);
+
+  let staffMembers: any[] = [];
+
+  if (isOwner) {
+    try {
+      const staffMembersResponse = await supabaseRequest(
+        "staff_members?select=*&order=created_at.desc"
+      );
+
+      staffMembers = Array.isArray(staffMembersResponse)
+        ? staffMembersResponse
+        : [];
+    } catch (error) {
+      console.error("Could not load staff members:", error);
+    }
+  }
+
   const serversResponse = await supabaseRequest(
     "servers?select=*&order=created_at.desc"
   );
@@ -541,10 +575,17 @@ export default async function AdminPage({
   const pendingApplications = servers.filter(isPendingApplication);
 
   const applicationHistory = servers
-    .filter((server: any) => isAcceptedApplication(server) || isRejectedApplication(server))
+    .filter(
+      (server: any) =>
+        isAcceptedApplication(server) || isRejectedApplication(server)
+    )
     .sort((a: any, b: any) => {
-      const aTime = getTimeValue(a.moderated_at || a.moderation_created_at || a.created_at);
-      const bTime = getTimeValue(b.moderated_at || b.moderation_created_at || b.created_at);
+      const aTime = getTimeValue(
+        a.moderated_at || a.moderation_created_at || a.created_at
+      );
+      const bTime = getTimeValue(
+        b.moderated_at || b.moderation_created_at || b.created_at
+      );
       return bTime - aTime;
     });
 
@@ -744,7 +785,9 @@ export default async function AdminPage({
           </div>
 
           <div className="admin-stat-card">
-            <strong>{openServerReports.length + openReviewReports.length}</strong>
+            <strong>
+              {openServerReports.length + openReviewReports.length}
+            </strong>
             <span>Offene Meldungen</span>
           </div>
 
@@ -767,9 +810,17 @@ export default async function AdminPage({
             <strong>{activePartnerServers.length}</strong>
             <span>Partner aktiv</span>
           </div>
+
+          {isOwner && (
+            <div className="admin-stat-card">
+              <strong>{staffMembers.length}</strong>
+              <span>Teammitglieder</span>
+            </div>
+          )}
         </div>
 
         <div className="admin-section-tabs">
+          {isOwner && <a href="#team">Team</a>}
           <a href="#applications">Bewerbungen</a>
           <a href="#reports">Meldungen</a>
           <a href="#servers">Serverliste</a>
@@ -782,6 +833,136 @@ export default async function AdminPage({
           <span className="page-badge">Info</span>
           <h3>{adminNotice}</h3>
         </section>
+      )}
+
+      {isOwner && (
+        <AdminSection
+          title="Team verwalten"
+          meta={`${staffMembers.length} Mitglieder`}
+        >
+          <div id="team" />
+
+          <div className="admin-warning-box">
+            Nur du als Owner kannst Supporter und Admins setzen. Supporter dürfen
+            Server-Bewerbungen annehmen oder ablehnen. Admins dürfen zusätzlich
+            Server bestrafen, Premium vergeben, Partner setzen und Bump-Sperren
+            verwalten.
+          </div>
+
+          <form
+            action="/api/admin/staff"
+            method="POST"
+            className="admin-inline-form"
+            style={{ marginTop: 16, maxWidth: 620 }}
+          >
+            <input type="hidden" name="action" value="save_staff" />
+
+            <label className="field">
+              <span>Discord Name</span>
+              <input
+                className="input"
+                name="discord_username"
+                placeholder="z. B. asko_pizza"
+                required
+              />
+            </label>
+
+            <label className="field">
+              <span>Discord ID optional</span>
+              <input
+                className="input"
+                name="discord_user_id"
+                placeholder="z. B. 779668785216880683"
+              />
+            </label>
+
+            <label className="field">
+              <span>Rolle</span>
+              <select name="role" defaultValue="supporter" required>
+                <option value="supporter">Supporter</option>
+                <option value="admin">Admin</option>
+              </select>
+            </label>
+
+            <button className="admin-action-btn primary" type="submit">
+              Speichern
+            </button>
+          </form>
+
+          <div className="admin-history-list" style={{ marginTop: 20 }}>
+            {staffMembers.length === 0 ? (
+              <div className="card empty">
+                <h3>Keine Teammitglieder eingetragen</h3>
+                <p>Gespeicherte Supporter und Admins erscheinen hier.</p>
+              </div>
+            ) : (
+              staffMembers.map((member: any) => (
+                <div className="admin-history-item" key={member.id}>
+                  <div>
+                    <h3>{member.discord_username}</h3>
+                    <p>
+                      Discord ID: {member.discord_user_id || "Nicht gesetzt"} ·
+                      Erstellt: {formatDate(member.created_at)}
+                    </p>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: 10,
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <span
+                      className="admin-history-badge"
+                      style={{
+                        background:
+                          member.role === "owner"
+                            ? "rgba(255, 207, 64, 0.14)"
+                            : member.role === "admin"
+                            ? "rgba(255, 61, 113, 0.14)"
+                            : "rgba(34, 197, 94, 0.14)",
+                        border:
+                          member.role === "owner"
+                            ? "1px solid rgba(255, 207, 64, 0.32)"
+                            : member.role === "admin"
+                            ? "1px solid rgba(255, 61, 113, 0.32)"
+                            : "1px solid rgba(34, 197, 94, 0.32)",
+                        color:
+                          member.role === "owner"
+                            ? "#ffe68a"
+                            : member.role === "admin"
+                            ? "#ff8aaa"
+                            : "#7cffb2",
+                      }}
+                    >
+                      {member.role}
+                    </span>
+
+                    {member.role !== "owner" && (
+                      <form action="/api/admin/staff" method="POST">
+                        <input
+                          type="hidden"
+                          name="action"
+                          value="remove_staff"
+                        />
+                        <input
+                          type="hidden"
+                          name="staff_member_id"
+                          value={member.id}
+                        />
+                        <button className="admin-action-btn danger" type="submit">
+                          Entfernen
+                        </button>
+                      </form>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </AdminSection>
       )}
 
       <AdminSection
@@ -809,12 +990,15 @@ export default async function AdminPage({
                       <div>
                         <h3>{server.server_name}</h3>
                         <p>
-                          {server.category} • {server.country} • {server.language}
+                          {server.category} • {server.country} •{" "}
+                          {server.language}
                         </p>
                       </div>
 
                       <div className="admin-status-group">
-                        <span className="status-pill pending">Bewerbung offen</span>
+                        <span className="status-pill pending">
+                          Bewerbung offen
+                        </span>
                       </div>
                     </div>
 
@@ -1425,7 +1609,11 @@ export default async function AdminPage({
                   <h3>{server.server_name}</h3>
                   <p>
                     {server.category} • {server.language} •{" "}
-                    {formatDate(server.moderated_at || server.moderation_created_at || server.created_at)}
+                    {formatDate(
+                      server.moderated_at ||
+                        server.moderation_created_at ||
+                        server.created_at
+                    )}
                   </p>
 
                   <p>
