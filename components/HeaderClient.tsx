@@ -15,6 +15,7 @@ const HEADER_TEXT = {
     submit: "Server eintragen",
     shop: "Shop",
     support: "Support",
+    info: "Info",
   },
   en: {
     home: "Home",
@@ -22,6 +23,7 @@ const HEADER_TEXT = {
     submit: "Submit Server",
     shop: "Shop",
     support: "Support",
+    info: "Info",
   },
   fr: {
     home: "Accueil",
@@ -29,6 +31,7 @@ const HEADER_TEXT = {
     submit: "Ajouter un serveur",
     shop: "Boutique",
     support: "Support",
+    info: "Info",
   },
   it: {
     home: "Home",
@@ -36,6 +39,7 @@ const HEADER_TEXT = {
     submit: "Aggiungi server",
     shop: "Shop",
     support: "Supporto",
+    info: "Info",
   },
   pl: {
     home: "Start",
@@ -43,6 +47,7 @@ const HEADER_TEXT = {
     submit: "Dodaj serwer",
     shop: "Sklep",
     support: "Pomoc",
+    info: "Info",
   },
 } as const;
 
@@ -69,7 +74,7 @@ export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
           <span>Asko Cafe</span>
         </Link>
 
-        <nav className="nav-links">
+        <nav className="nav-links" aria-label="Hauptnavigation">
           <Link href="/">
             <span className="nav-link-icon">🏠</span>
             {t(language, "home")}
@@ -93,6 +98,11 @@ export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
           <Link href="/support">
             <span className="nav-link-icon">💬</span>
             {t(language, "support")}
+          </Link>
+
+          <Link href="/info">
+            <span className="nav-link-icon">ℹ️</span>
+            {t(language, "info")}
           </Link>
         </nav>
 
