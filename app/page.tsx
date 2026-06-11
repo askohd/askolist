@@ -739,7 +739,7 @@ export default function HomePage() {
           left: 22px;
           top: 36px;
           transform: none;
-          width: 370px;
+          width: 320px;
           z-index: 10;
           display: flex;
           flex-direction: column;
@@ -794,7 +794,7 @@ export default function HomePage() {
         }
 
         .hero-premium-card {
-          min-height: 252px;
+          min-height: 214px;
           border-radius: 26px;
           opacity: 0;
           animation: premiumServerFadeIn 0.75s ease forwards;
@@ -867,7 +867,7 @@ export default function HomePage() {
         }
 
         .hero-premium-card-content {
-          min-height: 252px;
+          min-height: 214px;
           padding: 16px;
           display: flex;
           flex-direction: column;
@@ -878,7 +878,7 @@ export default function HomePage() {
           align-items: center;
           justify-content: space-between;
           gap: 10px;
-          margin-bottom: 18px;
+          margin-bottom: 10px;
         }
 
         .hero-premium-badges {
@@ -918,16 +918,16 @@ export default function HomePage() {
 
         .hero-premium-card-main {
           display: grid;
-          grid-template-columns: 58px minmax(0, 1fr);
-          gap: 13px;
+          grid-template-columns: 48px minmax(0, 1fr);
+          gap: 10px;
           align-items: center;
           margin-top: auto;
         }
 
         .hero-premium-icon {
-          width: 58px;
-          height: 58px;
-          border-radius: 17px;
+          width: 48px;
+          height: 48px;
+          border-radius: 15px;
           object-fit: cover;
           border: 1px solid rgba(255, 255, 255, 0.16);
           box-shadow:
@@ -938,7 +938,7 @@ export default function HomePage() {
         .hero-premium-card h4 {
           margin: 0;
           color: #fff;
-          font-size: 19px;
+          font-size: 17px;
           line-height: 1.1;
           font-weight: 950;
           letter-spacing: -0.035em;
@@ -950,13 +950,13 @@ export default function HomePage() {
         .hero-premium-card p {
           margin: 6px 0 0;
           color: rgba(246, 243, 255, 0.84);
-          font-size: 12px;
-          line-height: 1.45;
+          font-size: 11px;
+          line-height: 1.35;
           font-weight: 700;
         }
 
         .hero-premium-card-bottom {
-          margin-top: 13px;
+          margin-top: 9px;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -977,7 +977,7 @@ export default function HomePage() {
         }
 
         .hero-premium-actions {
-          margin-top: 14px;
+          margin-top: 10px;
           display: grid;
           grid-template-columns: 1fr;
           gap: 9px;
@@ -985,7 +985,7 @@ export default function HomePage() {
 
         .hero-premium-view,
         .hero-premium-join {
-          min-height: 36px;
+          min-height: 32px;
           padding: 0 13px;
           border-radius: 999px;
           display: inline-flex;
@@ -993,7 +993,7 @@ export default function HomePage() {
           justify-content: center;
           text-decoration: none;
           color: #ffffff;
-          font-size: 12px;
+          font-size: 11px;
           font-weight: 950;
           border: 1px solid rgba(255, 255, 255, 0.14);
         }
@@ -1118,6 +1118,78 @@ export default function HomePage() {
           background: #35ff92;
           box-shadow: 0 0 12px rgba(53,255,146,0.9);
           flex: 0 0 auto;
+        }
+
+
+        /* Startseite: Premium & Partner Cards wieder kompakt */
+        .hero-premium-showcase {
+          width: 320px !important;
+        }
+
+        .hero-premium-card {
+          min-height: 214px !important;
+          border-radius: 24px !important;
+        }
+
+        .hero-premium-card-content {
+          min-height: 214px !important;
+          padding: 14px !important;
+        }
+
+        .hero-premium-card-top {
+          margin-bottom: 10px !important;
+        }
+
+        .hero-premium-card-main {
+          grid-template-columns: 48px minmax(0, 1fr) !important;
+          gap: 10px !important;
+        }
+
+        .hero-premium-icon {
+          width: 48px !important;
+          height: 48px !important;
+          border-radius: 15px !important;
+        }
+
+        .hero-premium-card h4 {
+          font-size: 17px !important;
+        }
+
+        .hero-premium-card p {
+          font-size: 11px !important;
+          line-height: 1.35 !important;
+          display: -webkit-box !important;
+          -webkit-line-clamp: 2 !important;
+          -webkit-box-orient: vertical !important;
+          overflow: hidden !important;
+        }
+
+        .hero-premium-card-bottom {
+          margin-top: 8px !important;
+        }
+
+        .home-premium-overview-row.compact.single {
+          margin: 8px 0 0 !important;
+        }
+
+        .home-premium-overview-row.compact.single .home-premium-overview-pill {
+          min-height: 31px !important;
+          width: auto !important;
+          justify-self: start !important;
+          max-width: 112px !important;
+          padding: 0 10px !important;
+          font-size: 10px !important;
+        }
+
+        .hero-premium-actions {
+          margin-top: 10px !important;
+          gap: 7px !important;
+        }
+
+        .hero-premium-view,
+        .hero-premium-join {
+          min-height: 32px !important;
+          font-size: 11px !important;
         }
 
         @media (max-width: 700px) {
