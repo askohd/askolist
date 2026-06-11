@@ -2914,3 +2914,63 @@ body .home-page .hero-premium-showcase {
   }
 }
 
+/* =========================================================
+   Startseite - Small Laptop Fix
+   Auf kleinen Laptops wird die linke Premium-Spalte ausgeblendet,
+   damit Hero, Suche und rechte Discord-Card nicht überlappen.
+   ========================================================= */
+
+@media (max-width: 1350px) {
+  body .home-page .hero-premium-showcase {
+    display: none !important;
+  }
+
+  body .home-page .home-hero .container.home-hero-grid,
+  body .home-page .home-hero-grid {
+    grid-template-columns: minmax(0, 1fr) 360px !important;
+    gap: 26px !important;
+    max-width: 1180px !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+
+  body .home-page .home-hero-left-inner {
+    max-width: 620px !important;
+  }
+
+  body .home-page .hero-title-large {
+    font-size: clamp(52px, 6.2vw, 76px) !important;
+  }
+
+  body .home-page .home-hero-search,
+  body .home-page .centered-search {
+    width: min(100%, 540px) !important;
+  }
+
+  body .home-page .anime-discord-card,
+  body .home-page .asko-discord-card {
+    width: 360px !important;
+    max-width: 360px !important;
+  }
+}
+
+/* Wenn es noch enger wird, kommt alles sauber untereinander. */
+@media (max-width: 1180px) {
+  body .home-page .home-hero .container.home-hero-grid,
+  body .home-page .home-hero-grid {
+    grid-template-columns: 1fr !important;
+    max-width: 760px !important;
+    gap: 34px !important;
+  }
+
+  body .home-page .home-hero-right,
+  body .home-page .home-hero-right-pushed {
+    justify-self: center !important;
+    justify-content: center !important;
+  }
+
+  body .home-page .home-hero-left-inner {
+    max-width: 720px !important;
+  }
+}
+
