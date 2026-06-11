@@ -2632,3 +2632,122 @@ select option {
   background:
     linear-gradient(180deg, rgba(18, 16, 42, 0.98), rgba(9, 10, 26, 0.98)) !important;
 }
+/* =========================================================
+   Startseite Premium & Partner Cards - normale kompakte Größe
+   ========================================================= */
+
+.hero-premium-showcase {
+  width: 320px !important;
+  max-width: 320px !important;
+}
+
+.hero-premium-card {
+  min-height: 214px !important
+   ========================================================= */
+
+.hero-premium-showcase {
+  width: 320px !important;
+ ;
+  max-height: 214px !important;
+  height: 214px !important;
+  border-radius: 24px !important;
+}
+
+.hero-premium-card-content {
+  min-height: 214px !important;
+  height: 214px !important;
+  padding: 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-end !important;
+}
+
+.hero-premium-card-bg,
+.hero-premium-card img.hero-premium-card-bg {
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.hero-premium-card-top {
+  margin-bottom: 9px !important;
+}
+
+.hero-premium-card-main {
+  display: grid !important;
+  grid-template-columns: 48px minmax(0, 1fr) !important;
+  gap: 10px !important;
+  align-items: center !important;
+}
+
+.hero-premium-icon {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 15px !important;
+}
+
+.hero-premium-card h4 {
+  font-size: 17px !important;
+  line-height: 1.05 !important;
+  margin: 0 0 4px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.hero-premium-card p {
+  font-size: 11px !important;
+  line-height: 1.35 !important;
+  margin: 0 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+.hero-premium-card-bottom {
+  margin-top: 8px !important;
+}
+
+.home-premium-overview-row.compact,
+.home-premium-overview-row.compact.single {
+  margin: 8px 0 0 !important;
+  display: flex !important;
+  gap: 7px !important;
+}
+
+.home-premium-overview-row.compact .home-premium-overview-pill,
+.home-premium-overview-row.compact.single .home-premium-overview-pill {
+  width: auto !important;
+  max-width: 112px !important;
+  min-height: 30px !important;
+  padding: 0 10px !important;
+  font-size: 10px !important;
+}
+
+.hero-premium-actions {
+  margin-top: 10px !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 7px !important;
+}
+
+.hero-premium-view,
+.hero-premium-join {
+  min-height: 32px !important;
+  height: 32px !important;
+  font-size: 11px !important;
+  border-radius: 13px !important;
+}
+
+@media (max-width: 1150px) {
+  .hero-premium-showcase {
+    width: min(320px, calc(100vw - 28px)) !important;
+    max-width: min(320px, calc(100vw - 28px)) !important;
+  }
+
+  .hero-premium-card {
+    height: 214px !important;
+    min-height: 214px !important;
+    max-height: 214px !important;
+  }
+}
