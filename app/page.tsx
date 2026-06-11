@@ -739,7 +739,7 @@ export default function HomePage() {
           left: 22px;
           top: 36px;
           transform: none;
-          width: 320px;
+          width: 370px;
           z-index: 10;
           display: flex;
           flex-direction: column;
@@ -1036,8 +1036,15 @@ export default function HomePage() {
         }
 
         .home-premium-overview-row.compact {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          margin: 12px 0 2px;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 8px;
+          margin: 14px 0 2px;
+        }
+
+        .home-premium-overview-row.compact .home-premium-overview-pill {
+          min-height: 34px;
+          padding: 0 8px;
+          font-size: 10.5px;
         }
 
         .home-premium-overview-pill {
@@ -1454,10 +1461,15 @@ export default function HomePage() {
                       <span>{formatOnlineCount(serverData, language)}</span>
                     </span>
 
+                    <span className="home-premium-overview-pill members">
+                      <span>👥</span>
+                      <span>{formatMemberCount(serverData, language)}</span>
+                    </span>
+
                     <span className="home-premium-overview-pill bump">
                       <span>⚡</span>
                       <span>
-                        {ot(language, "bump")}: {" "}
+                        {ot(language, "bump")}:{" "}
                         {formatLastBump(serverData.last_bump, language)}
                       </span>
                     </span>
@@ -2284,7 +2296,7 @@ export default function HomePage() {
                       <span className="home-premium-overview-pill bump">
                         <span>⚡</span>
                         <span>
-                          {ot(language, "bump")}: {" "}
+                          {ot(language, "bump")}:{" "}
                           {formatLastBump(serverData.last_bump, language)}
                         </span>
                       </span>
