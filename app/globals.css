@@ -2675,3 +2675,17 @@ body .home-page .hero-premium-showcase .hero-premium-join {
     max-height: 330px !important;
   }
 }
+
+/* =========================================================
+   Startseite Premium Cards - etwas weiter nach oben
+   ========================================================= */
+
+body .home-page .hero-premium-showcase {
+  top: 16px !important;
+}
+
+@media (max-width: 1150px) {
+  body .home-page .hero-premium-showcase {
+    top: 14px !important;
+  }
+}
