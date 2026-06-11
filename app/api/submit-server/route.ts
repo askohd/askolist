@@ -101,7 +101,26 @@ function getUserDiscordName(user: any) {
 }
 
 function getLegalAcceptance(formData: FormData) {
-  return String(formData.get("legal_acceptance_submit") ?? "") === "accepted";
+  const possibleFields = [
+    "legal_acceptance_submit",
+    "legal_acceptance",
+    "accepted_terms",
+    "accepted_privacy",
+    "terms_accepted",
+    "privacy_accepted",
+  ];
+
+  return possibleFields.some((fieldName) => {
+    const value = String(formData.get(fieldName) ?? "").trim().toLowerCase();
+
+    return (
+      value === "accepted" ||
+      value === "on" ||
+      value === "true" ||
+      value === "1" ||
+      value === "yes"
+    );
+  });
 }
 
 function getVersionFromForm(
