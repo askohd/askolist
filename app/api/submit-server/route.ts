@@ -114,6 +114,18 @@ function getVersionFromForm(
   return value || fallback;
 }
 
+function isDuplicateDatabaseError(error: any) {
+  const message = String(error?.message || error || "").toLowerCase();
+
+  return (
+    message.includes("duplicate key") ||
+    message.includes("23505") ||
+    message.includes("unique constraint") ||
+    message.includes("servers_one_server_per_owner") ||
+    message.includes("servers_one_entry_per_discord_server")
+  );
+}
+
 async function getDiscordGuildFromInvite(inviteLink: string) {
   const inviteCode = extractInviteCode(inviteLink);
 
@@ -158,6 +170,30 @@ async function getDiscordGuildFromInvite(inviteLink: string) {
     console.error("Could not fetch Discord guild from invite:", error);
     return null;
   }
+}
+
+async function ownerAlreadyHasServer(ownerDiscordUserId: string) {
+  const rows = await supabaseRequest(
+    `servers?owner_discord_user_id=eq.${encodeURIComponent(
+      ownerDiscordUserId
+    )}&select=id&limit=1`
+  );
+
+  return Array.isArray(rows) && rows.length > 0;
+}
+
+async function discordServerAlreadyExists(discordServerId: string | null) {
+  if (!discordServerId) {
+    return false;
+  }
+
+  const rows = await supabaseRequest(
+    `servers?discord_server_id=eq.${encodeURIComponent(
+      discordServerId
+    )}&select=id&limit=1`
+  );
+
+  return Array.isArray(rows) && rows.length > 0;
 }
 
 async function redirectToBotInvite(request: Request, inviteLink: string) {
@@ -295,15 +331,15 @@ export async function POST(request: Request) {
       return redirectToSubmit(request, "error=missing");
     }
 
-    const existingServers = await supabaseRequest(
-      `servers?owner_discord_user_id=eq.${ownerDiscordUserId}&select=*`
-    );
-
-    if (existingServers?.length > 0) {
+    if (await ownerAlreadyHasServer(ownerDiscordUserId)) {
       return redirectToSubmit(request, "error=only_one_server");
     }
 
     const discordGuild = await getDiscordGuildFromInvite(inviteLink);
+
+    if (await discordServerAlreadyExists(discordGuild?.id || null)) {
+      return redirectToSubmit(request, "error=server_already_exists");
+    }
 
     let bannerUrl: string | null = null;
 
@@ -325,49 +361,57 @@ export async function POST(request: Request) {
       privacyVersion: acceptedPrivacyVersion,
     });
 
-    await supabaseRequest("servers", {
-      method: "POST",
-      body: JSON.stringify({
-        owner_discord_user_id: ownerDiscordUserId,
+    try {
+      await supabaseRequest("servers", {
+        method: "POST",
+        body: JSON.stringify({
+          owner_discord_user_id: ownerDiscordUserId,
 
-        discord_server_id:
-          discordGuild?.id || `manual-${ownerDiscordUserId}-${Date.now()}`,
+          discord_server_id:
+            discordGuild?.id || `manual-${ownerDiscordUserId}-${Date.now()}`,
 
-        server_name: serverName,
-        description,
-        invite_link: inviteLink,
+          server_name: serverName,
+          description,
+          invite_link: inviteLink,
 
-        logo_url: discordGuild?.iconUrl || null,
-        discord_server_icon_url: discordGuild?.iconUrl || null,
+          logo_url: discordGuild?.iconUrl || null,
+          discord_server_icon_url: discordGuild?.iconUrl || null,
 
-        banner_url: bannerUrl,
-        category,
-        country: "International",
-        language,
-        tags,
-        nsfw,
+          banner_url: bannerUrl,
+          category,
+          country: "International",
+          language,
+          tags,
+          nsfw,
 
-        accepted_terms: true,
-        accepted_terms_at: acceptedAt,
-        accepted_terms_version: acceptedTermsVersion,
-        accepted_privacy: true,
-        accepted_privacy_at: acceptedAt,
-        accepted_privacy_version: acceptedPrivacyVersion,
+          accepted_terms: true,
+          accepted_terms_at: acceptedAt,
+          accepted_terms_version: acceptedTermsVersion,
+          accepted_privacy: true,
+          accepted_privacy_at: acceptedAt,
+          accepted_privacy_version: acceptedPrivacyVersion,
 
-        approved: false,
-        status: "pending",
-        bumps: 0,
-        premium_status: false,
-        partner_status: false,
-        premium_glow_color: "#8b5cf6",
-        server_name_color: "#ffffff",
-        server_text_color: "#ddd9ef",
-        premium_layout: "glow",
-        banner_position_x: 50,
-        banner_position_y: 50,
-        banner_zoom: 1,
-      }),
-    });
+          approved: false,
+          status: "pending",
+          bumps: 0,
+          premium_status: false,
+          partner_status: false,
+          premium_glow_color: "#8b5cf6",
+          server_name_color: "#ffffff",
+          server_text_color: "#ddd9ef",
+          premium_layout: "glow",
+          banner_position_x: 50,
+          banner_position_y: 50,
+          banner_zoom: 1,
+        }),
+      });
+    } catch (error) {
+      if (isDuplicateDatabaseError(error)) {
+        return redirectToSubmit(request, "error=only_one_server");
+      }
+
+      throw error;
+    }
 
     return await redirectToBotInvite(request, inviteLink);
   } catch (error: any) {
