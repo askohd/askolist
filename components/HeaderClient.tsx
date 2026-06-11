@@ -14,6 +14,7 @@ const HEADER_TEXT = {
     home: "Home",
     servers: "Serverliste",
     submit: "Server eintragen",
+    myServer: "Mein Server",
     shop: "Shop",
     support: "Support",
     info: "Info",
@@ -25,6 +26,7 @@ const HEADER_TEXT = {
     home: "Home",
     servers: "Server List",
     submit: "Submit Server",
+    myServer: "My Server",
     shop: "Shop",
     support: "Support",
     info: "Info",
@@ -36,6 +38,7 @@ const HEADER_TEXT = {
     home: "Accueil",
     servers: "Liste des serveurs",
     submit: "Ajouter un serveur",
+    myServer: "Mon serveur",
     shop: "Boutique",
     support: "Support",
     info: "Info",
@@ -47,6 +50,7 @@ const HEADER_TEXT = {
     home: "Home",
     servers: "Lista server",
     submit: "Aggiungi server",
+    myServer: "Il mio server",
     shop: "Shop",
     support: "Supporto",
     info: "Info",
@@ -58,6 +62,7 @@ const HEADER_TEXT = {
     home: "Start",
     servers: "Lista serwerów",
     submit: "Dodaj serwer",
+    myServer: "Mój serwer",
     shop: "Sklep",
     support: "Pomoc",
     info: "Info",
@@ -76,6 +81,16 @@ const NAV_LINKS = [
   { href: "/info", icon: "ℹ️", key: "info" },
 ] as const;
 
+const MOBILE_NAV_LINKS = [
+  { href: "/", icon: "🏠", key: "home" },
+  { href: "/servers", icon: "📋", key: "servers" },
+  { href: "/submit", icon: "🚀", key: "submit" },
+  { href: "/profile", icon: "🧩", key: "myServer" },
+  { href: "/shop", icon: "🛒", key: "shop" },
+  { href: "/support", icon: "💬", key: "support" },
+  { href: "/info", icon: "ℹ️", key: "info" },
+] as const;
+
 function normalizeLanguage(language: unknown): UiLanguage {
   const value = String(language ?? "").toLowerCase();
 
@@ -88,7 +103,7 @@ function normalizeLanguage(language: unknown): UiLanguage {
 }
 
 function t(language: UiLanguage, key: keyof typeof HEADER_TEXT.de) {
-  return HEADER_TEXT[language]?.[key] || HEADER_TEXT.de[key];
+  return HEADER_TEXT[language][key] || HEADER_TEXT.de[key];
 }
 
 export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
@@ -171,6 +186,15 @@ export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
               📋
             </Link>
 
+            <Link
+              className="mobile-icon-link"
+              href="/profile"
+              aria-label={t(language, "myServer")}
+              onClick={closeMobileMenu}
+            >
+              🧩
+            </Link>
+
             <div className="mobile-language-wrap">
               <LanguageSwitcher />
             </div>
@@ -220,7 +244,7 @@ export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
           className="nav-links mobile-menu-links"
           aria-label="Mobile Navigation"
         >
-          {NAV_LINKS.map((item) => (
+          {MOBILE_NAV_LINKS.map((item) => (
             <Link key={item.href} href={item.href} onClick={closeMobileMenu}>
               <span className="nav-link-icon">{item.icon}</span>
               {t(language, item.key)}
