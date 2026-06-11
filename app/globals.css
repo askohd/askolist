@@ -2511,35 +2511,37 @@ select option {
 }
 
 /* =========================================================
-   Startseite Premium Cards - etwas größer mit 2 Cards
+   Startseite Premium Cards - sichtbar größer, 2 Cards bleiben sichtbar
+   Sehr spezifisch, damit page.tsx Inline-Style-CSS überschrieben wird
    ========================================================= */
 
-.hero-premium-showcase {
-  width: 340px !important;
-  max-width: 340px !important;
+body .home-page .hero-premium-showcase {
+  width: 390px !important;
+  max-width: 390px !important;
+  gap: 16px !important;
 }
 
-.hero-premium-card {
-  height: auto !important;
+body .home-page .hero-premium-showcase .hero-premium-card {
+  width: 390px !important;
+  max-width: 390px !important;
+  height: 300px !important;
   min-height: 300px !important;
-  max-height: none !important;
-  border-radius: 25px !important;
+  max-height: 300px !important;
+  border-radius: 26px !important;
   overflow: hidden !important;
 }
 
-.hero-premium-card-bg,
-.hero-premium-card img.hero-premium-card-bg {
+body .home-page .hero-premium-showcase .hero-premium-card-bg,
+body .home-page .hero-premium-showcase .hero-premium-card img.hero-premium-card-bg {
   position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
+  inset: 0 auto auto 0 !important;
   width: 100% !important;
-  height: 150px !important;
+  height: 138px !important;
   object-fit: cover !important;
   object-position: center !important;
 }
 
-.hero-premium-card::before {
+body .home-page .hero-premium-showcase .hero-premium-card::before {
   content: "" !important;
   position: absolute !important;
   inset: 0 !important;
@@ -2548,61 +2550,63 @@ select option {
   background:
     linear-gradient(
       180deg,
-      rgba(0, 0, 0, 0.05) 0%,
-      rgba(7, 8, 22, 0.40) 110px,
-      rgba(7, 8, 22, 0.90) 155px,
+      rgba(0, 0, 0, 0.03) 0%,
+      rgba(7, 8, 22, 0.34) 96px,
+      rgba(7, 8, 22, 0.90) 142px,
       rgba(7, 8, 22, 0.98) 100%
     ) !important;
 }
 
-.hero-premium-card-content {
+body .home-page .hero-premium-showcase .hero-premium-card-content {
   position: relative !important;
   z-index: 5 !important;
-  height: auto !important;
+  width: 100% !important;
+  height: 300px !important;
   min-height: 300px !important;
-  max-height: none !important;
-  padding: 156px 15px 15px !important;
+  max-height: 300px !important;
+  padding: 145px 16px 15px !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: flex-start !important;
 }
 
-.hero-premium-card-top {
+body .home-page .hero-premium-showcase .hero-premium-card-top {
   position: absolute !important;
   top: 12px !important;
-  left: 15px !important;
-  right: 15px !important;
+  left: 16px !important;
+  right: 16px !important;
   z-index: 8 !important;
   margin: 0 !important;
 }
 
-.hero-premium-card-main {
+body .home-page .hero-premium-showcase .hero-premium-card-main {
   display: grid !important;
-  grid-template-columns: 54px minmax(0, 1fr) !important;
-  gap: 11px !important;
+  grid-template-columns: 56px minmax(0, 1fr) !important;
+  gap: 12px !important;
   align-items: center !important;
   margin: 0 !important;
 }
 
-.hero-premium-icon {
-  width: 54px !important;
-  height: 54px !important;
-  border-radius: 17px !important;
+body .home-page .hero-premium-showcase .hero-premium-icon {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 18px !important;
 }
 
-.hero-premium-card h4 {
+body .home-page .hero-premium-showcase .hero-premium-card h4 {
   display: block !important;
-  font-size: 19px !important;
+  font-size: 20px !important;
   line-height: 1.05 !important;
   margin: 0 0 4px !important;
+  max-width: 100% !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
 
-.hero-premium-card p {
+body .home-page .hero-premium-showcase .hero-premium-card p {
   display: -webkit-box !important;
-  font-size: 11.5px !important;
+  font-size: 12px !important;
   line-height: 1.35 !important;
   margin: 0 !important;
   -webkit-line-clamp: 2 !important;
@@ -2610,59 +2614,60 @@ select option {
   overflow: hidden !important;
 }
 
-.hero-premium-card-bottom {
+body .home-page .hero-premium-showcase .hero-premium-card-bottom {
   display: block !important;
   margin-top: 9px !important;
 }
 
-.home-premium-overview-row.compact,
-.home-premium-overview-row.compact.single {
-  margin: 8px 0 0 !important;
+body .home-page .hero-premium-showcase .home-premium-overview-row.compact,
+body .home-page .hero-premium-showcase .home-premium-overview-row.compact.single {
   display: flex !important;
-  gap: 7px !important;
+  margin: 8px 0 0 !important;
+  gap: 8px !important;
 }
 
-.home-premium-overview-row.compact .home-premium-overview-pill,
-.home-premium-overview-row.compact.single .home-premium-overview-pill {
+body .home-page .hero-premium-showcase .home-premium-overview-pill {
   display: inline-flex !important;
   width: auto !important;
-  max-width: 124px !important;
-  min-height: 30px !important;
-  padding: 0 10px !important;
+  max-width: 128px !important;
+  min-height: 31px !important;
+  padding: 0 11px !important;
   font-size: 10.5px !important;
 }
 
-.hero-premium-actions {
+body .home-page .hero-premium-showcase .hero-premium-actions {
   display: grid !important;
-  margin-top: 10px !important;
   grid-template-columns: 1fr !important;
-  gap: 7px !important;
+  gap: 8px !important;
+  margin-top: 10px !important;
 }
 
-.hero-premium-view,
-.hero-premium-join {
+body .home-page .hero-premium-showcase .hero-premium-view,
+body .home-page .hero-premium-showcase .hero-premium-join {
   display: inline-flex !important;
-  min-height: 34px !important;
-  height: 34px !important;
+  height: 35px !important;
+  min-height: 35px !important;
+  border-radius: 14px !important;
   font-size: 11.5px !important;
-  border-radius: 13px !important;
 }
 
 @media (max-width: 1150px) {
-  .hero-premium-showcase {
-    width: min(340px, calc(100vw - 28px)) !important;
-    max-width: min(340px, calc(100vw - 28px)) !important;
+  body .home-page .hero-premium-showcase {
+    width: min(390px, calc(100vw - 28px)) !important;
+    max-width: min(390px, calc(100vw - 28px)) !important;
   }
 
-  .hero-premium-card {
+  body .home-page .hero-premium-showcase .hero-premium-card {
+    width: min(390px, calc(100vw - 28px)) !important;
+    max-width: min(390px, calc(100vw - 28px)) !important;
+    height: 300px !important;
     min-height: 300px !important;
-    height: auto !important;
-    max-height: none !important;
+    max-height: 300px !important;
   }
 
-  .hero-premium-card-content {
+  body .home-page .hero-premium-showcase .hero-premium-card-content {
+    height: 300px !important;
     min-height: 300px !important;
-    height: auto !important;
-    max-height: none !important;
+    max-height: 300px !important;
   }
 }
