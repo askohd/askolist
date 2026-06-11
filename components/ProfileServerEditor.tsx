@@ -587,10 +587,308 @@ export default function ProfileServerEditor({ server }: { server: any }) {
         <input type="hidden" name="premium_layout" value={premiumLayout} />
       )}
 
+      <style>{`
+        .profile-mobile-editor-nav {
+          display: none;
+        }
+
+        @media (max-width: 900px) {
+          .profile-edit-card {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 16px !important;
+            overflow: visible !important;
+          }
+
+          .profile-mobile-editor-nav {
+            position: sticky;
+            top: 86px;
+            z-index: 60;
+            margin: 14px 0 16px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 20px;
+            background:
+              radial-gradient(circle at 0% 0%, rgba(181, 76, 255, 0.18), transparent 36%),
+              rgba(10, 10, 26, 0.94);
+            border: 1px solid rgba(255, 255, 255, 0.11);
+            box-shadow:
+              0 18px 46px rgba(0, 0, 0, 0.34),
+              0 0 28px rgba(139, 92, 246, 0.14);
+            backdrop-filter: blur(16px);
+          }
+
+          .profile-mobile-editor-nav a {
+            min-height: 42px;
+            border-radius: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 950;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+          }
+
+          .profile-mobile-editor-nav a:first-child {
+            background:
+              linear-gradient(135deg, rgba(181, 76, 255, 0.22), rgba(116, 223, 255, 0.13));
+            border-color: rgba(116, 223, 255, 0.20);
+          }
+
+          .profile-editor-two-column {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 18px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: visible !important;
+          }
+
+          .profile-editor-preview {
+            order: -1 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+          }
+
+          .profile-editor-controls {
+            order: 2 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+          }
+
+          .preview-sticky-box {
+            position: sticky !important;
+            top: 144px !important;
+            z-index: 35 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            max-height: calc(100dvh - 164px) !important;
+            overflow-y: auto !important;
+            overscroll-behavior: contain !important;
+            padding: 14px !important;
+            border-radius: 26px !important;
+            background:
+              radial-gradient(circle at 0% 0%, rgba(181, 76, 255, 0.14), transparent 35%),
+              linear-gradient(180deg, rgba(13, 14, 34, 0.96), rgba(9, 9, 24, 0.96)) !important;
+            border: 1px solid rgba(116, 223, 255, 0.15) !important;
+            box-shadow:
+              0 22px 70px rgba(0, 0, 0, 0.44),
+              0 0 34px rgba(116, 223, 255, 0.10) !important;
+            backdrop-filter: blur(18px) !important;
+          }
+
+          .preview-sticky-box > .page-badge {
+            margin-bottom: 8px !important;
+            min-height: 30px !important;
+            padding: 7px 12px !important;
+            font-size: 11px !important;
+          }
+
+          .preview-sticky-box > h3 {
+            margin: 0 0 4px !important;
+            font-size: 18px !important;
+            line-height: 1.1 !important;
+          }
+
+          .preview-sticky-box > p {
+            margin: 0 0 12px !important;
+            font-size: 12px !important;
+            line-height: 1.35 !important;
+            color: rgba(246, 243, 255, 0.68) !important;
+          }
+
+          .server-list-live-preview {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            border-radius: 24px !important;
+          }
+
+          .server-list-live-preview .server-directory-banner {
+            height: 106px !important;
+          }
+
+          .server-list-live-preview .server-directory-body {
+            padding: 0 14px 14px !important;
+          }
+
+          .server-list-live-preview .server-directory-top {
+            gap: 10px !important;
+            margin-top: -26px !important;
+          }
+
+          .server-list-live-preview .server-directory-logo {
+            width: 58px !important;
+            height: 58px !important;
+            border-radius: 18px !important;
+            border-width: 3px !important;
+            font-size: 22px !important;
+          }
+
+          .server-list-live-preview .server-directory-title h3 {
+            font-size: 20px !important;
+            line-height: 1.05 !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
+            white-space: nowrap !important;
+            text-overflow: ellipsis !important;
+          }
+
+          .server-list-live-preview .server-directory-title p {
+            font-size: 12px !important;
+            line-height: 1.25 !important;
+          }
+
+          .server-list-live-preview .premium-server-meta-row {
+            display: grid !important;
+            grid-template-columns: 1fr 1.25fr !important;
+            gap: 8px !important;
+            margin: 12px 0 !important;
+          }
+
+          .server-list-live-preview .premium-server-meta-pill {
+            min-width: 0 !important;
+            min-height: 32px !important;
+            padding: 0 8px !important;
+            border-radius: 999px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 5px !important;
+            font-size: 10.8px !important;
+            font-weight: 950 !important;
+            line-height: 1 !important;
+            overflow: hidden !important;
+            white-space: nowrap !important;
+            text-overflow: ellipsis !important;
+          }
+
+          .server-list-live-preview .server-directory-badges {
+            gap: 7px !important;
+          }
+
+          .server-list-live-preview .badge {
+            min-height: 28px !important;
+            padding: 0 9px !important;
+            font-size: 11px !important;
+          }
+
+          .server-list-live-preview .server-directory-description {
+            max-height: 108px !important;
+            margin-top: 12px !important;
+            padding: 13px !important;
+            border-radius: 18px !important;
+            font-size: 12px !important;
+            line-height: 1.55 !important;
+          }
+
+          .server-list-live-preview .description-toggle-button,
+          .server-list-live-preview .fake-preview-toggle {
+            margin-top: 8px !important;
+            font-size: 13px !important;
+          }
+
+          .server-list-live-preview .server-directory-footer {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 8px !important;
+            margin-top: 12px !important;
+          }
+
+          .server-list-live-preview .server-directory-footer .btn {
+            width: 100% !important;
+            min-height: 42px !important;
+            padding: 0 10px !important;
+            border-radius: 15px !important;
+            font-size: 12.5px !important;
+          }
+
+          .profile-upload-grid,
+          .premium-color-grid-inline {
+            grid-template-columns: 1fr !important;
+          }
+
+          .banner-control-card,
+          .premium-inline-tools {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 18px !important;
+            border-radius: 24px !important;
+          }
+
+          .premium-inline-tools [style*="repeat(auto-fit"] {
+            grid-template-columns: 1fr !important;
+          }
+
+          .profile-editor-actions {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 10px !important;
+          }
+
+          .profile-save-button,
+          .profile-editor-actions .btn {
+            width: 100% !important;
+          }
+        }
+
+        @media (max-width: 430px) {
+          .profile-edit-card {
+            padding: 12px !important;
+          }
+
+          .profile-mobile-editor-nav {
+            top: 82px;
+            grid-template-columns: 1fr;
+          }
+
+          .preview-sticky-box {
+            top: 136px !important;
+            max-height: calc(100dvh - 152px) !important;
+            padding: 12px !important;
+            border-radius: 22px !important;
+          }
+
+          .server-list-live-preview .server-directory-banner {
+            height: 96px !important;
+          }
+
+          .server-list-live-preview .server-directory-body {
+            padding: 0 12px 12px !important;
+          }
+
+          .server-list-live-preview .premium-server-meta-row {
+            grid-template-columns: 1fr !important;
+          }
+
+          .server-list-live-preview .server-directory-footer {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
+
       <h3>{tr(language, "editTitle")}</h3>
 
+
+      <div className="profile-mobile-editor-nav" aria-label="Mobile Editor Navigation">
+        <a href="#profile-live-preview">
+          👁 {tr(language, "previewBadge")}
+        </a>
+        <a href="#profile-editor-controls">
+          ✏️ {tr(language, "editTitle")}
+        </a>
+      </div>
+
       <div className="profile-editor-two-column">
-        <section className="profile-editor-controls">
+        <section id="profile-editor-controls" className="profile-editor-controls">
           <div className="profile-upload-grid">
             <label className="field full">
               <span>{tr(language, "bannerChange")}</span>
@@ -1060,7 +1358,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           </div>
         </section>
 
-        <aside className="profile-editor-preview">
+        <aside id="profile-live-preview" className="profile-editor-preview">
           <div className="preview-sticky-box">
             <span className="page-badge">{tr(language, "previewBadge")}</span>
             <h3>{tr(language, "previewTitle")}</h3>
