@@ -2511,7 +2511,7 @@ select option {
 }
 
 /* =========================================================
-   Startseite Premium & Partner Cards - normale kompakte Größe
+   Startseite Premium Cards - Inhalt wieder sichtbar
    ========================================================= */
 
 .hero-premium-showcase {
@@ -2520,15 +2520,17 @@ select option {
 }
 
 .hero-premium-card {
-  min-height: 214px !important;
-  max-height: 214px !important;
-  height: 214px !important;
+  height: auto !important;
+  min-height: 318px !important;
+  max-height: none !important;
   border-radius: 24px !important;
+  overflow: hidden !important;
 }
 
 .hero-premium-card-content {
-  min-height: 214px !important;
-  height: 214px !important;
+  height: auto !important;
+  min-height: 318px !important;
+  max-height: none !important;
   padding: 14px !important;
   display: flex !important;
   flex-direction: column !important;
@@ -2559,6 +2561,7 @@ select option {
 }
 
 .hero-premium-card h4 {
+  display: block !important;
   font-size: 17px !important;
   line-height: 1.05 !important;
   margin: 0 0 4px !important;
@@ -2568,16 +2571,17 @@ select option {
 }
 
 .hero-premium-card p {
+  display: -webkit-box !important;
   font-size: 11px !important;
   line-height: 1.35 !important;
   margin: 0 !important;
-  display: -webkit-box !important;
   -webkit-line-clamp: 2 !important;
   -webkit-box-orient: vertical !important;
   overflow: hidden !important;
 }
 
 .hero-premium-card-bottom {
+  display: block !important;
   margin-top: 8px !important;
 }
 
@@ -2590,6 +2594,7 @@ select option {
 
 .home-premium-overview-row.compact .home-premium-overview-pill,
 .home-premium-overview-row.compact.single .home-premium-overview-pill {
+  display: inline-flex !important;
   width: auto !important;
   max-width: 112px !important;
   min-height: 30px !important;
@@ -2598,14 +2603,15 @@ select option {
 }
 
 .hero-premium-actions {
-  margin-top: 10px !important;
   display: grid !important;
+  margin-top: 10px !important;
   grid-template-columns: 1fr !important;
   gap: 7px !important;
 }
 
 .hero-premium-view,
 .hero-premium-join {
+  display: inline-flex !important;
   min-height: 32px !important;
   height: 32px !important;
   font-size: 11px !important;
@@ -2619,8 +2625,14 @@ select option {
   }
 
   .hero-premium-card {
-    height: 214px !important;
-    min-height: 214px !important;
-    max-height: 214px !important;
+    min-height: 318px !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  .hero-premium-card-content {
+    min-height: 318px !important;
+    height: auto !important;
+    max-height: none !important;
   }
 }
