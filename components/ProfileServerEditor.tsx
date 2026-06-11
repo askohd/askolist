@@ -488,40 +488,56 @@ function getPremiumPreviewStyle(layout: PremiumLayout, glowColor: string) {
   const layoutStyles: Record<PremiumLayout, CSSProperties> = {
     glow: {
       borderColor: glowColor,
+      background:
+        `radial-gradient(circle at 0% 0%, ${glowColor}30, transparent 40%), linear-gradient(180deg, rgba(18, 16, 42, 0.98), rgba(9, 10, 26, 0.98))`,
       boxShadow: `0 0 42px ${glowColor}88, 0 0 90px ${glowColor}44`,
     },
     starborder: {
       borderColor: "rgba(255, 220, 92, 0.96)",
+      background:
+        "radial-gradient(circle at 15% 15%, rgba(255, 232, 120, 0.24), transparent 36%), radial-gradient(circle at 88% 20%, rgba(255, 232, 120, 0.16), transparent 30%), linear-gradient(180deg, rgba(22, 18, 36, 0.98), rgba(8, 8, 18, 0.98))",
       boxShadow:
         "0 0 0 2px rgba(255, 220, 92, 0.35), 0 0 42px rgba(255, 220, 92, 0.38), 0 0 84px rgba(139, 92, 246, 0.24)",
     },
     sunset: {
       borderColor: "rgba(255, 146, 92, 0.92)",
+      background:
+        "radial-gradient(circle at 0% 0%, rgba(255, 117, 77, 0.30), transparent 42%), radial-gradient(circle at 100% 0%, rgba(244, 90, 214, 0.24), transparent 36%), linear-gradient(180deg, rgba(42, 20, 35, 0.98), rgba(18, 10, 24, 0.98))",
       boxShadow:
         "0 0 40px rgba(255, 122, 92, 0.36), 0 0 82px rgba(244, 90, 214, 0.24)",
     },
     aurora: {
       borderColor: "rgba(116, 223, 255, 0.92)",
+      background:
+        "linear-gradient(120deg, rgba(72, 211, 255, 0.18), rgba(181, 76, 255, 0.18), rgba(54, 255, 154, 0.12)), linear-gradient(180deg, rgba(12, 22, 38, 0.98), rgba(9, 10, 26, 0.98))",
       boxShadow:
         "0 0 40px rgba(116, 223, 255, 0.34), 0 0 86px rgba(181, 76, 255, 0.26)",
     },
     neon: {
       borderColor: "rgba(255, 75, 216, 0.95)",
+      background:
+        "radial-gradient(circle at 12% 20%, rgba(255, 75, 216, 0.34), transparent 35%), radial-gradient(circle at 92% 72%, rgba(116, 223, 255, 0.24), transparent 36%), linear-gradient(180deg, rgba(24, 10, 38, 0.98), rgba(8, 8, 18, 0.98))",
       boxShadow:
         "0 0 42px rgba(255, 75, 216, 0.40), 0 0 86px rgba(116, 223, 255, 0.22)",
     },
     galaxy: {
       borderColor: "rgba(165, 120, 255, 0.95)",
+      background:
+        "radial-gradient(circle at 25% 18%, rgba(165, 120, 255, 0.32), transparent 34%), radial-gradient(circle at 78% 70%, rgba(79, 70, 229, 0.30), transparent 36%), linear-gradient(180deg, rgba(15, 10, 36, 0.98), rgba(5, 6, 18, 0.98))",
       boxShadow:
         "0 0 42px rgba(139, 92, 246, 0.38), 0 0 88px rgba(61, 29, 135, 0.38)",
     },
     flame: {
       borderColor: "rgba(255, 117, 55, 0.96)",
+      background:
+        "radial-gradient(circle at 50% 100%, rgba(255, 117, 55, 0.34), transparent 42%), radial-gradient(circle at 15% 0%, rgba(255, 207, 64, 0.20), transparent 35%), linear-gradient(180deg, rgba(36, 14, 12, 0.98), rgba(12, 6, 10, 0.98))",
       boxShadow:
         "0 0 42px rgba(255, 117, 55, 0.40), 0 0 90px rgba(255, 207, 64, 0.20)",
     },
     ocean: {
       borderColor: "rgba(72, 211, 255, 0.95)",
+      background:
+        "radial-gradient(circle at 15% 80%, rgba(72, 211, 255, 0.32), transparent 38%), radial-gradient(circle at 90% 20%, rgba(52, 115, 255, 0.24), transparent 34%), linear-gradient(180deg, rgba(10, 24, 42, 0.98), rgba(5, 10, 22, 0.98))",
       boxShadow:
         "0 0 42px rgba(72, 211, 255, 0.38), 0 0 86px rgba(52, 115, 255, 0.24)",
     },
@@ -1350,6 +1366,290 @@ export default function ProfileServerEditor({ server }: { server: any }) {
             padding: 6px;
           }
         }
+
+        /* FINAL MOBILE DASHBOARD FIX:
+           Handy nutzt jetzt volle Breite fürs Bearbeiten.
+           Die Vorschau bleibt kompakt oben sticky, statt alles links/rechts zu quetschen. */
+        @media (max-width: 900px) {
+          .profile-editor-modern {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            overflow: visible !important;
+          }
+
+          .profile-editor-modern-title {
+            margin: 0 0 12px !important;
+            padding: 0 4px !important;
+            font-size: 1.55rem !important;
+          }
+
+          .profile-editor-tabs {
+            position: sticky !important;
+            top: 74px !important;
+            z-index: 120 !important;
+            grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+            gap: 6px !important;
+            margin: 0 0 12px !important;
+            padding: 6px !important;
+            border-radius: 18px !important;
+          }
+
+          .profile-editor-tabs button {
+            min-height: 40px !important;
+            padding: 0 5px !important;
+            font-size: 11px !important;
+            gap: 4px !important;
+          }
+
+          .profile-editor-workbench {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 14px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow: visible !important;
+          }
+
+          .profile-preview-panel {
+            order: -1 !important;
+            position: sticky !important;
+            top: 128px !important;
+            z-index: 80 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            padding: 10px !important;
+            border-radius: 24px !important;
+            max-height: 43dvh !important;
+            overflow-y: auto !important;
+            overscroll-behavior: contain !important;
+            background:
+              radial-gradient(circle at 0% 0%, rgba(181, 76, 255, 0.16), transparent 36%),
+              linear-gradient(180deg, rgba(15, 14, 36, 0.96), rgba(9, 9, 24, 0.96)) !important;
+            box-shadow:
+              0 18px 56px rgba(0, 0, 0, 0.44),
+              0 0 28px rgba(116, 223, 255, 0.10) !important;
+          }
+
+          .profile-preview-panel .preview-heading {
+            display: none !important;
+          }
+
+          .profile-editor-panel {
+            order: 1 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            padding: 16px !important;
+            border-radius: 24px !important;
+          }
+
+          .profile-panel-head {
+            display: grid !important;
+            grid-template-columns: 40px minmax(0, 1fr) !important;
+            gap: 10px !important;
+            margin-bottom: 14px !important;
+          }
+
+          .profile-panel-head p {
+            display: block !important;
+            margin-top: 5px !important;
+            font-size: 12px !important;
+            line-height: 1.35 !important;
+          }
+
+          .profile-panel-icon {
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 14px !important;
+            font-size: 17px !important;
+          }
+
+          .profile-editor-modern .input,
+          .profile-editor-modern select {
+            min-height: 48px !important;
+            font-size: 14px !important;
+          }
+
+          .profile-editor-modern textarea {
+            min-height: 150px !important;
+            font-size: 14px !important;
+          }
+
+          .profile-editor-modern input[type="file"] {
+            min-height: 48px !important;
+            font-size: 13px !important;
+          }
+
+          .banner-slider-card {
+            gap: 16px !important;
+          }
+
+          .banner-slider-card input[type="range"] {
+            height: 54px !important;
+          }
+
+          .premium-layout-grid-modern,
+          .premium-color-grid-modern {
+            grid-template-columns: 1fr !important;
+          }
+
+          .premium-layout-button-modern {
+            min-height: 74px !important;
+          }
+
+          .profile-editor-actions-modern {
+            grid-template-columns: 1fr !important;
+          }
+
+          .profile-live-card {
+            width: 100% !important;
+            max-width: 100% !important;
+            border-radius: 22px !important;
+            transform: none !important;
+          }
+
+          .profile-live-card .server-directory-banner {
+            height: 118px !important;
+          }
+
+          .profile-live-card .server-directory-body {
+            padding: 0 12px 12px !important;
+          }
+
+          .profile-live-card .server-directory-top {
+            grid-template-columns: 52px minmax(0, 1fr) !important;
+            gap: 9px !important;
+            margin-top: -24px !important;
+          }
+
+          .profile-live-card .server-directory-logo {
+            width: 52px !important;
+            height: 52px !important;
+            border-radius: 16px !important;
+          }
+
+          .profile-live-card .server-directory-title h3 {
+            font-size: 19px !important;
+            line-height: 1.05 !important;
+          }
+
+          .profile-live-card .server-directory-title p {
+            font-size: 11.5px !important;
+          }
+
+          .profile-live-card .hero-premium-badges {
+            display: flex !important;
+            margin: 8px 0 !important;
+            gap: 6px !important;
+          }
+
+          .profile-live-card .hero-premium-badge {
+            min-height: 24px !important;
+            padding: 0 8px !important;
+            font-size: 9.5px !important;
+          }
+
+          .profile-live-card .premium-server-meta-row {
+            display: grid !important;
+            grid-template-columns: 1fr 1.1fr !important;
+            gap: 7px !important;
+            margin: 8px 0 !important;
+          }
+
+          .profile-live-card .premium-server-meta-pill {
+            min-height: 29px !important;
+            padding: 0 7px !important;
+            font-size: 10px !important;
+          }
+
+          .profile-live-card .server-directory-badges {
+            gap: 6px !important;
+            margin: 8px 0 !important;
+          }
+
+          .profile-live-card .badge {
+            min-height: 24px !important;
+            padding: 0 8px !important;
+            font-size: 9.8px !important;
+          }
+
+          .profile-live-card .server-directory-description {
+            -webkit-line-clamp: 3 !important;
+            max-height: 74px !important;
+            margin-top: 8px !important;
+            padding: 10px !important;
+            border-radius: 15px !important;
+            font-size: 11px !important;
+            line-height: 1.45 !important;
+          }
+
+          .profile-live-card .fake-preview-toggle {
+            display: none !important;
+          }
+
+          .profile-live-card .server-directory-footer {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 7px !important;
+            margin-top: 9px !important;
+          }
+
+          .profile-live-card .server-directory-footer .btn {
+            min-height: 34px !important;
+            border-radius: 12px !important;
+            font-size: 10.5px !important;
+          }
+        }
+
+        @media (max-width: 430px) {
+          .profile-editor-tabs {
+            top: 70px !important;
+          }
+
+          .profile-preview-panel {
+            top: 124px !important;
+            max-height: 40dvh !important;
+            padding: 8px !important;
+          }
+
+          .profile-editor-panel {
+            padding: 14px !important;
+          }
+
+          .profile-live-card .server-directory-banner {
+            height: 104px !important;
+          }
+
+          .profile-live-card .server-directory-top {
+            grid-template-columns: 46px minmax(0, 1fr) !important;
+            margin-top: -21px !important;
+          }
+
+          .profile-live-card .server-directory-logo {
+            width: 46px !important;
+            height: 46px !important;
+          }
+
+          .profile-live-card .server-directory-title h3 {
+            font-size: 16px !important;
+          }
+
+          .profile-live-card .server-directory-title p {
+            font-size: 10px !important;
+          }
+
+          .profile-live-card .premium-server-meta-row {
+            grid-template-columns: 1fr !important;
+          }
+
+          .profile-live-card .server-directory-footer {
+            grid-template-columns: 1fr !important;
+          }
+        }
+
       `}</style>
 
       <h3 className="profile-editor-modern-title">{tr(language, "editTitle")}</h3>
