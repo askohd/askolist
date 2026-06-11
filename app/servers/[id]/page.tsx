@@ -285,6 +285,7 @@ export default async function ServerDetailPage({
 
   return (
     <main
+      className="server-detail-page-mobile"
       style={{
         minHeight: "100vh",
         padding: "54px 22px 90px",
@@ -293,7 +294,219 @@ export default async function ServerDetailPage({
           "radial-gradient(circle at 0% 20%, rgba(139, 92, 246, 0.35), transparent 34%), radial-gradient(circle at 100% 12%, rgba(85, 214, 255, 0.24), transparent 30%), linear-gradient(135deg, #06000d 0%, #12051f 48%, #102236 100%)",
       }}
     >
+      <style>{`
+        @media (max-width: 900px) {
+          .server-detail-page-mobile {
+            padding: 22px 12px 70px !important;
+            overflow-x: hidden !important;
+          }
+
+          .server-detail-shell {
+            max-width: 100% !important;
+          }
+
+          .server-detail-shell > a {
+            margin-bottom: 14px !important;
+            min-height: 38px !important;
+            padding: 0 13px !important;
+            font-size: 13px !important;
+          }
+
+          .server-detail-card {
+            width: 100% !important;
+            max-width: 100% !important;
+            border-radius: 28px !important;
+            overflow: hidden !important;
+          }
+
+          .server-detail-hero-banner {
+            height: auto !important;
+            min-height: 0 !important;
+            overflow: visible !important;
+            padding-top: 188px !important;
+          }
+
+          .server-detail-hero-banner > img,
+          .server-detail-hero-banner > div:first-child {
+            position: absolute !important;
+            inset: 0 auto auto 0 !important;
+            width: 100% !important;
+            height: 188px !important;
+          }
+
+          .server-detail-hero-banner > div:nth-child(2) {
+            height: 188px !important;
+            bottom: auto !important;
+          }
+
+          .server-detail-hero-content {
+            position: relative !important;
+            left: auto !important;
+            right: auto !important;
+            bottom: auto !important;
+            padding: 0 18px 22px !important;
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+            align-items: start !important;
+            background:
+              linear-gradient(180deg, rgba(7,0,16,0.02), rgba(7,0,16,0.96) 18%, rgba(7,0,16,1) 100%) !important;
+          }
+
+          .server-detail-server-icon {
+            width: 96px !important;
+            height: 96px !important;
+            border-radius: 26px !important;
+            margin-top: -48px !important;
+          }
+
+          .server-detail-title-block {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+          }
+
+          .server-detail-title-block h1 {
+            font-size: clamp(34px, 11vw, 48px) !important;
+            line-height: 0.95 !important;
+            max-width: 100% !important;
+            overflow-wrap: anywhere !important;
+          }
+
+          .server-detail-title-block p {
+            font-size: 14px !important;
+            line-height: 1.4 !important;
+            margin-top: 10px !important;
+          }
+
+          .server-detail-content-grid {
+            padding: 16px !important;
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+          }
+
+          .server-detail-main-column {
+            min-width: 0 !important;
+            display: grid !important;
+            gap: 16px !important;
+          }
+
+          .server-detail-main-column > section,
+          .server-detail-side-column > div,
+          .server-detail-side-column > a {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+
+          .server-detail-main-column > section {
+            padding: 18px !important;
+            border-radius: 22px !important;
+            margin-top: 0 !important;
+          }
+
+          .server-detail-main-column h2,
+          .server-detail-side-column h3 {
+            font-size: 20px !important;
+            line-height: 1.15 !important;
+          }
+
+          .server-detail-main-column p {
+            font-size: 14px !important;
+            line-height: 1.65 !important;
+            overflow-wrap: anywhere !important;
+          }
+
+          .server-detail-rating-grid {
+            grid-template-columns: 1fr !important;
+            gap: 14px !important;
+          }
+
+          .server-detail-side-column {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+            min-width: 0 !important;
+          }
+
+          .server-detail-join-button {
+            order: -1 !important;
+            min-height: 50px !important;
+            border-radius: 16px !important;
+          }
+
+          .server-detail-report-box,
+          .server-detail-info-box,
+          .server-detail-community-box {
+            padding: 18px !important;
+            border-radius: 22px !important;
+          }
+
+          .server-detail-report-box form {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 10px !important;
+          }
+
+          .server-detail-report-box select,
+          .server-detail-report-box textarea,
+          .server-detail-report-box button {
+            width: 100% !important;
+            min-width: 0 !important;
+          }
+
+          .server-detail-report-box textarea {
+            min-height: 118px !important;
+          }
+
+          .server-detail-info-box [style*="space-between"] {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 4px !important;
+          }
+
+          .server-detail-info-box strong {
+            text-align: left !important;
+            overflow-wrap: anywhere !important;
+          }
+        }
+
+        @media (max-width: 430px) {
+          .server-detail-page-mobile {
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+          }
+
+          .server-detail-hero-banner {
+            padding-top: 170px !important;
+          }
+
+          .server-detail-hero-banner > img,
+          .server-detail-hero-banner > div:first-child,
+          .server-detail-hero-banner > div:nth-child(2) {
+            height: 170px !important;
+          }
+
+          .server-detail-hero-content {
+            padding-left: 14px !important;
+            padding-right: 14px !important;
+          }
+
+          .server-detail-content-grid {
+            padding: 12px !important;
+          }
+
+          .server-detail-main-column > section,
+          .server-detail-report-box,
+          .server-detail-info-box,
+          .server-detail-community-box {
+            padding: 15px !important;
+          }
+        }
+      `}</style>
+
       <section
+        className="server-detail-shell"
         style={{
           width: "100%",
           maxWidth: "1180px",
@@ -322,6 +535,7 @@ export default async function ServerDetailPage({
         </Link>
 
         <article
+          className="server-detail-card"
           style={{
             overflow: "hidden",
             borderRadius: "34px",
@@ -338,6 +552,7 @@ export default async function ServerDetailPage({
           }}
         >
           <div
+            className="server-detail-hero-banner"
             style={{
               position: "relative",
               height: "320px",
@@ -384,6 +599,7 @@ export default async function ServerDetailPage({
             />
 
             <div
+              className="server-detail-hero-content"
               style={{
                 position: "absolute",
                 left: "30px",
@@ -396,6 +612,7 @@ export default async function ServerDetailPage({
               }}
             >
               <div
+                className="server-detail-server-icon"
                 style={{
                   width: "118px",
                   height: "118px",
@@ -433,7 +650,7 @@ export default async function ServerDetailPage({
                 )}
               </div>
 
-              <div style={{ minWidth: 0 }}>
+              <div className="server-detail-title-block" style={{ minWidth: 0 }}>
                 <div
                   style={{
                     display: "flex",
@@ -535,6 +752,7 @@ export default async function ServerDetailPage({
           </div>
 
           <div
+            className="server-detail-content-grid"
             style={{
               padding: "30px",
               display: "grid",
@@ -542,8 +760,8 @@ export default async function ServerDetailPage({
               gap: "26px",
             }}
           >
-            <div>
-              <section
+            <div className="server-detail-main-column">
+              <section className="server-detail-info-section"
                 style={{
                   padding: "24px",
                   borderRadius: "26px",
@@ -629,6 +847,7 @@ export default async function ServerDetailPage({
                 </h2>
 
                 <div
+                  className="server-detail-rating-grid"
                   style={{
                     display: "grid",
                     gridTemplateColumns: "160px minmax(0, 1fr)",
@@ -1084,6 +1303,7 @@ export default async function ServerDetailPage({
             </div>
 
             <aside
+              className="server-detail-side-column"
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -1091,6 +1311,7 @@ export default async function ServerDetailPage({
               }}
             >
               <a
+                className="server-detail-join-button"
                 href={invite}
                 target="_blank"
                 rel="noreferrer"
@@ -1114,6 +1335,7 @@ export default async function ServerDetailPage({
               </a>
 
               <div
+                className="server-detail-report-box"
                 style={{
                   padding: "22px",
                   borderRadius: "24px",
@@ -1234,6 +1456,7 @@ export default async function ServerDetailPage({
               </div>
 
               <div
+                className="server-detail-info-box"
                 style={{
                   padding: "22px",
                   borderRadius: "24px",
@@ -1277,6 +1500,7 @@ export default async function ServerDetailPage({
               </div>
 
               <div
+                className="server-detail-community-box"
                 style={{
                   padding: "22px",
                   borderRadius: "24px",
