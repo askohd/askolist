@@ -614,7 +614,7 @@ export default async function ServersPage({
       <style>{`
         .server-directory-card .premium-server-meta-row.server-card-top-stats {
           display: grid !important;
-          grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+          grid-template-columns: minmax(76px, 0.82fr) minmax(98px, 1.05fr) minmax(128px, 1.38fr) !important;
           align-items: center !important;
           gap: 8px !important;
           margin-top: 14px !important;
@@ -626,10 +626,13 @@ export default async function ServersPage({
           width: 100% !important;
           min-width: 0 !important;
           min-height: 34px !important;
-          justify-content: center !important;
-          padding: 0 8px !important;
+          padding: 0 9px !important;
           border-radius: 999px !important;
-          font-size: 10.8px !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 6px !important;
+          font-size: 11px !important;
           font-weight: 950 !important;
           line-height: 1 !important;
           white-space: nowrap !important;
@@ -642,6 +645,11 @@ export default async function ServersPage({
           overflow: hidden !important;
           text-overflow: ellipsis !important;
           white-space: nowrap !important;
+        }
+
+        .server-directory-card .premium-server-meta-row.server-card-top-stats .premium-server-meta-pill > span:first-child {
+          flex: 0 0 auto !important;
+          font-size: 10px !important;
         }
 
         .server-directory-card .premium-server-meta-row.server-card-top-stats .premium-online-dot {
@@ -867,12 +875,21 @@ export default async function ServersPage({
                       <span>{formatOnlineCount(onlineCount, uiLanguage)}</span>
                     </span>
 
-                    <span className="premium-server-meta-pill members">
+                    <span
+                      className="premium-server-meta-pill members"
+                      title={formatMemberCount(memberCount, uiLanguage)}
+                    >
                       <span>👥</span>
                       <span>{formatMemberCount(memberCount, uiLanguage)}</span>
                     </span>
 
-                    <span className="premium-server-meta-pill bump">
+                    <span
+                      className="premium-server-meta-pill bump"
+                      title={`${t(uiLanguage, "bump")}: ${formatLastBump(
+                        server.last_bump,
+                        uiLanguage
+                      )}`}
+                    >
                       <span>⚡</span>
                       <span>
                         {t(uiLanguage, "bump")}:{" "}
