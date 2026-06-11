@@ -479,20 +479,58 @@ function normalizePremiumLayout(value: unknown): PremiumLayout {
 function getPremiumPreviewStyle(layout: PremiumLayout, glowColor: string) {
   const base = {
     "--premium-glow": glowColor,
+    "--layout-accent": glowColor,
     position: "relative",
     isolation: "isolate",
     overflow: "hidden",
   } as CSSProperties & Record<string, string>;
 
-  if (layout === "glow") {
-    return {
-      ...base,
+  const layoutStyles: Record<PremiumLayout, CSSProperties> = {
+    glow: {
       borderColor: glowColor,
       boxShadow: `0 0 42px ${glowColor}88, 0 0 90px ${glowColor}44`,
-    };
-  }
+    },
+    starborder: {
+      borderColor: "rgba(255, 220, 92, 0.96)",
+      boxShadow:
+        "0 0 0 2px rgba(255, 220, 92, 0.35), 0 0 42px rgba(255, 220, 92, 0.38), 0 0 84px rgba(139, 92, 246, 0.24)",
+    },
+    sunset: {
+      borderColor: "rgba(255, 146, 92, 0.92)",
+      boxShadow:
+        "0 0 40px rgba(255, 122, 92, 0.36), 0 0 82px rgba(244, 90, 214, 0.24)",
+    },
+    aurora: {
+      borderColor: "rgba(116, 223, 255, 0.92)",
+      boxShadow:
+        "0 0 40px rgba(116, 223, 255, 0.34), 0 0 86px rgba(181, 76, 255, 0.26)",
+    },
+    neon: {
+      borderColor: "rgba(255, 75, 216, 0.95)",
+      boxShadow:
+        "0 0 42px rgba(255, 75, 216, 0.40), 0 0 86px rgba(116, 223, 255, 0.22)",
+    },
+    galaxy: {
+      borderColor: "rgba(165, 120, 255, 0.95)",
+      boxShadow:
+        "0 0 42px rgba(139, 92, 246, 0.38), 0 0 88px rgba(61, 29, 135, 0.38)",
+    },
+    flame: {
+      borderColor: "rgba(255, 117, 55, 0.96)",
+      boxShadow:
+        "0 0 42px rgba(255, 117, 55, 0.40), 0 0 90px rgba(255, 207, 64, 0.20)",
+    },
+    ocean: {
+      borderColor: "rgba(72, 211, 255, 0.95)",
+      boxShadow:
+        "0 0 42px rgba(72, 211, 255, 0.38), 0 0 86px rgba(52, 115, 255, 0.24)",
+    },
+  };
 
-  return base;
+  return {
+    ...base,
+    ...layoutStyles[layout],
+  };
 }
 
 function isEnabled(value: unknown) {
@@ -1028,6 +1066,64 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           font-size: 12px;
         }
 
+                .profile-live-card .premium-layout-effect {
+          position: absolute !important;
+          inset: 0 !important;
+          z-index: 2 !important;
+          pointer-events: none !important;
+          border-radius: inherit !important;
+          overflow: hidden !important;
+        }
+
+        .profile-live-card .premium-layout-effect::before,
+        .profile-live-card .premium-layout-effect::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          opacity: 0.72;
+          pointer-events: none;
+        }
+
+        .profile-live-card.premium-layout-starborder .premium-layout-effect::before {
+          background-image:
+            radial-gradient(circle at 12% 18%, rgba(255, 232, 120, 0.72) 0 2px, transparent 3px),
+            radial-gradient(circle at 86% 22%, rgba(255, 232, 120, 0.62) 0 2px, transparent 3px),
+            radial-gradient(circle at 74% 82%, rgba(255, 232, 120, 0.50) 0 1px, transparent 2px);
+        }
+
+        .profile-live-card.premium-layout-sunset .premium-layout-effect::before {
+          background: linear-gradient(135deg, rgba(255, 117, 77, 0.24), transparent 42%, rgba(244, 90, 214, 0.24));
+        }
+
+        .profile-live-card.premium-layout-aurora .premium-layout-effect::before {
+          background: linear-gradient(120deg, rgba(116, 223, 255, 0.20), rgba(181, 76, 255, 0.18), rgba(54, 255, 154, 0.12));
+          filter: blur(1px);
+        }
+
+        .profile-live-card.premium-layout-neon .premium-layout-effect::before {
+          background:
+            radial-gradient(circle at 12% 20%, rgba(255, 75, 216, 0.28), transparent 32%),
+            radial-gradient(circle at 92% 72%, rgba(116, 223, 255, 0.20), transparent 34%);
+        }
+
+        .profile-live-card.premium-layout-galaxy .premium-layout-effect::before {
+          background:
+            radial-gradient(circle at 25% 18%, rgba(165, 120, 255, 0.28), transparent 32%),
+            radial-gradient(circle at 78% 70%, rgba(79, 70, 229, 0.26), transparent 34%);
+        }
+
+        .profile-live-card.premium-layout-flame .premium-layout-effect::before {
+          background:
+            radial-gradient(circle at 50% 100%, rgba(255, 117, 55, 0.28), transparent 38%),
+            linear-gradient(180deg, transparent, rgba(255, 207, 64, 0.12));
+        }
+
+        .profile-live-card.premium-layout-ocean .premium-layout-effect::before {
+          background:
+            radial-gradient(circle at 15% 80%, rgba(72, 211, 255, 0.26), transparent 34%),
+            linear-gradient(135deg, transparent, rgba(52, 115, 255, 0.18));
+        }
+
         @media (max-width: 900px) {
           .profile-editor-tabs {
             top: 70px;
@@ -1046,7 +1142,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           }
 
           .profile-editor-workbench {
-            grid-template-columns: minmax(0, 1fr) 174px;
+            grid-template-columns: minmax(0, 1fr) minmax(170px, 42vw);
             gap: 10px;
             align-items: start;
           }
@@ -1062,15 +1158,15 @@ export default function ProfileServerEditor({ server }: { server: any }) {
 
           .profile-preview-panel {
             position: sticky;
-            top: 128px;
-            padding: 8px;
-            max-height: calc(100dvh - 140px);
-            overflow-y: auto;
+            top: 124px;
+            padding: 7px;
+            max-height: none;
+            overflow: visible;
           }
 
           .profile-panel-head {
-            gap: 9px;
-            margin-bottom: 12px;
+            gap: 8px;
+            margin-bottom: 10px;
           }
 
           .profile-panel-icon {
@@ -1085,8 +1181,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           }
 
           .profile-panel-head p {
-            font-size: 12px;
-            line-height: 1.35;
+            display: none;
           }
 
           .profile-editor-modern .input,
@@ -1135,7 +1230,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           }
 
           .profile-live-card .server-directory-banner {
-            height: 82px;
+            height: 96px;
           }
 
           .profile-live-card .server-directory-body {
@@ -1196,12 +1291,12 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           }
 
           .profile-live-card .server-directory-description {
-            -webkit-line-clamp: 3;
-            max-height: 58px;
+            -webkit-line-clamp: 2;
+            max-height: 45px;
             margin-top: 6px;
             padding: 8px;
             border-radius: 13px;
-            font-size: 9.5px;
+            font-size: 10px;
             line-height: 1.35;
           }
 
@@ -1220,11 +1315,25 @@ export default function ProfileServerEditor({ server }: { server: any }) {
             border-radius: 11px;
             font-size: 9.5px;
           }
+          .profile-editor-panel .field span {
+            font-size: 12px;
+            line-height: 1.15;
+          }
+
+          .profile-editor-panel .profile-mini-note {
+            display: block;
+            margin-top: 8px;
+            font-size: 11px;
+          }
+
+          .profile-live-card .server-directory-footer {
+            display: none;
+          }
         }
 
         @media (max-width: 430px) {
           .profile-editor-workbench {
-            grid-template-columns: minmax(0, 1fr) 148px;
+            grid-template-columns: minmax(0, 1fr) minmax(165px, 44vw);
             gap: 8px;
           }
 
@@ -1556,6 +1665,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           </div>
 
           <article
+            key={premiumLayout}
             className={
               "server-directory-card server-list-live-preview profile-live-card " +
               (isPremiumOrPartner
