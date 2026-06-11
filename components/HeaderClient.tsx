@@ -186,15 +186,6 @@ export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
               📋
             </Link>
 
-            <Link
-              className="mobile-icon-link"
-              href="/profile"
-              aria-label={t(language, "myServer")}
-              onClick={closeMobileMenu}
-            >
-              🧩
-            </Link>
-
             <div className="mobile-language-wrap">
               <LanguageSwitcher />
             </div>
