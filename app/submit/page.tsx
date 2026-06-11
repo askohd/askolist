@@ -230,6 +230,86 @@ const SUBMIT_TEXT = {
   },
 } as const;
 
+const SUBMIT_ERROR_TEXT = {
+  de: {
+    login: "Du musst dich zuerst mit Discord einloggen.",
+    user: "Dein Discord-Konto konnte nicht eindeutig erkannt werden. Bitte melde dich neu an.",
+    missing: "Bitte fülle Servername, Invite-Link und Beschreibung aus.",
+    legal_required:
+      "Bitte akzeptiere die Nutzungsbedingungen und die Datenschutzerklärung.",
+    only_one_server:
+      "Du hast bereits einen Server eingetragen. Pro Discord-Nutzer ist nur ein Server erlaubt. Bearbeite deinen vorhandenen Server im Server-Dashboard.",
+    server_already_exists:
+      "Dieser Discord-Server ist bereits eingetragen. Ein Discord-Server kann nicht doppelt gelistet werden.",
+    unknown:
+      "Der Server konnte nicht eingetragen werden. Bitte prüfe deine Angaben und versuche es erneut.",
+    title: "Eintragen nicht möglich",
+    dashboardButton: "Zum Server-Dashboard",
+    tryAgainButton: "Angaben prüfen",
+  },
+  en: {
+    login: "You need to login with Discord first.",
+    user: "Your Discord account could not be identified. Please login again.",
+    missing: "Please fill in server name, invite link and description.",
+    legal_required: "Please accept the Terms of Use and Privacy Policy.",
+    only_one_server:
+      "You already submitted a server. Only one server is allowed per Discord user. Edit your existing server in your server dashboard.",
+    server_already_exists:
+      "This Discord server is already listed. A Discord server cannot be listed twice.",
+    unknown:
+      "The server could not be submitted. Please check your details and try again.",
+    title: "Submission not possible",
+    dashboardButton: "Open server dashboard",
+    tryAgainButton: "Check details",
+  },
+  fr: {
+    login: "Tu dois d'abord te connecter avec Discord.",
+    user: "Ton compte Discord n'a pas pu être identifié. Connecte-toi à nouveau.",
+    missing: "Veuillez remplir le nom du serveur, le lien d'invitation et la description.",
+    legal_required:
+      "Veuillez accepter les conditions d’utilisation et la politique de confidentialité.",
+    only_one_server:
+      "Tu as déjà ajouté un serveur. Un seul serveur est autorisé par utilisateur Discord. Modifie ton serveur existant dans le tableau de bord.",
+    server_already_exists:
+      "Ce serveur Discord est déjà listé. Un serveur Discord ne peut pas être listé deux fois.",
+    unknown:
+      "Le serveur n'a pas pu être ajouté. Vérifie tes informations et réessaie.",
+    title: "Ajout impossible",
+    dashboardButton: "Ouvrir le tableau de bord",
+    tryAgainButton: "Vérifier les informations",
+  },
+  it: {
+    login: "Devi prima accedere con Discord.",
+    user: "Il tuo account Discord non è stato riconosciuto. Accedi di nuovo.",
+    missing: "Compila nome server, link invito e descrizione.",
+    legal_required: "Accetta le condizioni d’uso e la privacy policy.",
+    only_one_server:
+      "Hai già aggiunto un server. È consentito un solo server per utente Discord. Modifica il server esistente nel dashboard.",
+    server_already_exists:
+      "Questo server Discord è già presente. Un server Discord non può essere inserito due volte.",
+    unknown:
+      "Il server non può essere aggiunto. Controlla i dati e riprova.",
+    title: "Invio non possibile",
+    dashboardButton: "Apri dashboard server",
+    tryAgainButton: "Controlla dati",
+  },
+  pl: {
+    login: "Najpierw zaloguj się przez Discord.",
+    user: "Nie udało się rozpoznać konta Discord. Zaloguj się ponownie.",
+    missing: "Wpisz nazwę serwera, link zaproszenia i opis.",
+    legal_required: "Zaakceptuj warunki korzystania i politykę prywatności.",
+    only_one_server:
+      "Masz już dodany serwer. Dozwolony jest tylko jeden serwer na użytkownika Discord. Edytuj istniejący serwer w panelu.",
+    server_already_exists:
+      "Ten serwer Discord jest już dodany. Serwer Discord nie może być dodany dwa razy.",
+    unknown:
+      "Nie udało się dodać serwera. Sprawdź dane i spróbuj ponownie.",
+    title: "Nie można dodać",
+    dashboardButton: "Otwórz panel serwera",
+    tryAgainButton: "Sprawdź dane",
+  },
+} as const;
+
 function normalizeLanguage(value: string | undefined): LanguageCode {
   if (
     value === "de" ||
@@ -274,10 +354,53 @@ function LegalAcceptanceCheckbox({
   );
 }
 
-export default async function SubmitPage() {
+
+type SubmitPageProps = {
+  searchParams?:
+    | Promise<Record<string, string | string[] | undefined>>
+    | Record<string, string | string[] | undefined>;
+};
+
+async function resolveSearchParams(searchParams: SubmitPageProps["searchParams"]) {
+  return await Promise.resolve(searchParams ?? {});
+}
+
+function getSearchParam(
+  searchParams: Record<string, string | string[] | undefined>,
+  key: string
+) {
+  const value = searchParams[key];
+
+  if (Array.isArray(value)) {
+    return value[0] || "";
+  }
+
+  return value || "";
+}
+
+function getSubmitErrorMessage(language: LanguageCode, errorCode: string) {
+  const messages = SUBMIT_ERROR_TEXT[language] || SUBMIT_ERROR_TEXT.de;
+
+  if (
+    errorCode === "login" ||
+    errorCode === "user" ||
+    errorCode === "missing" ||
+    errorCode === "legal_required" ||
+    errorCode === "only_one_server" ||
+    errorCode === "server_already_exists"
+  ) {
+    return messages[errorCode];
+  }
+
+  return messages.unknown;
+}
+
+export default async function SubmitPage {
   const session = await getServerSession(authOptions);
   const cookieStore = await cookies();
   const pageLanguage = normalizeLanguage(cookieStore.get("asko_language")?.value);
+  const resolvedSearchParams = await resolveSearchParams(searchParams);
+  const submitError = getSearchParam(resolvedSearchParams, "error");
 
   if (!session) {
     return (
@@ -388,6 +511,56 @@ export default async function SubmitPage() {
           font-size: 0.88rem;
           line-height: 1.55;
         }
+
+        .submit-error-box {
+          margin: 0 0 22px;
+          padding: 18px;
+          border-radius: 22px;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(255, 77, 109, 0.14), transparent 38%),
+            rgba(255, 77, 109, 0.08);
+          border: 1px solid rgba(255, 77, 109, 0.28);
+          box-shadow: 0 0 28px rgba(255, 77, 109, 0.10);
+        }
+
+        .submit-error-box strong {
+          display: block;
+          color: #ffffff;
+          font-size: 1rem;
+          margin-bottom: 7px;
+        }
+
+        .submit-error-box p {
+          margin: 0;
+          color: rgba(255, 235, 241, 0.82);
+          line-height: 1.6;
+        }
+
+        .submit-error-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin-top: 14px;
+        }
+
+        .submit-error-actions a {
+          min-height: 40px;
+          padding: 0 14px;
+          border-radius: 14px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 950;
+          color: #ffffff;
+          text-decoration: none;
+          background: rgba(255,255,255,0.08);
+          border: 1px solid rgba(255,255,255,0.14);
+        }
+
+        .submit-error-actions a:first-child {
+          background: linear-gradient(135deg, #8b5cf6, #ec4899, #22d3ee);
+          border-color: transparent;
+        }
       `}</style>
 
       <section className="submit-hero">
@@ -396,6 +569,26 @@ export default async function SubmitPage() {
         <p>{text(pageLanguage, "intro")}</p>
       </section>
 
+      {submitError && (
+        <section className="submit-error-box">
+          <strong>{SUBMIT_ERROR_TEXT[pageLanguage].title}</strong>
+          <p>{getSubmitErrorMessage(pageLanguage, submitError)}</p>
+
+          <div className="submit-error-actions">
+            {(submitError === "only_one_server" ||
+              submitError === "server_already_exists") && (
+              <Link href="/profile">
+                {SUBMIT_ERROR_TEXT[pageLanguage].dashboardButton}
+              </Link>
+            )}
+
+            <Link href="/submit">
+              {SUBMIT_ERROR_TEXT[pageLanguage].tryAgainButton}
+            </Link>
+          </div>
+        </section>
+      )}
+
       <section className="submit-layout">
         <form
           className="submit-card"
@@ -403,8 +596,6 @@ export default async function SubmitPage() {
           method="POST"
           encType="multipart/form-data"
         >
-          <input type="hidden" name="accepted_terms" value="true" />
-          <input type="hidden" name="accepted_privacy" value="true" />
           <input type="hidden" name="accepted_terms_version" value={TERMS_VERSION} />
           <input
             type="hidden"
