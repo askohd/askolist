@@ -1047,6 +1047,15 @@ export default function HomePage() {
           font-size: 10.5px;
         }
 
+        .home-premium-overview-row.compact.single {
+          grid-template-columns: 1fr;
+        }
+
+        .home-premium-overview-row.compact.single .home-premium-overview-pill {
+          width: 100%;
+          min-height: 34px;
+        }
+
         .home-premium-overview-pill {
           min-height: 34px;
           padding: 0 9px;
@@ -1455,17 +1464,7 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  <div className="home-premium-overview-row compact">
-                    <span className="home-premium-overview-pill online">
-                      <span className="home-premium-online-dot" />
-                      <span>{formatOnlineCount(serverData, language)}</span>
-                    </span>
-
-                    <span className="home-premium-overview-pill members">
-                      <span>👥</span>
-                      <span>{formatMemberCount(serverData, language)}</span>
-                    </span>
-
+                  <div className="home-premium-overview-row compact single">
                     <span className="home-premium-overview-pill bump">
                       <span>⚡</span>
                       <span>
