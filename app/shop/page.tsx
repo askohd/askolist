@@ -183,6 +183,7 @@ export default function ShopPage() {
 
   return (
     <main
+      className="shop-page-mobile-fixed"
       style={{
         minHeight: "100vh",
         padding: "86px 24px 96px",
@@ -191,13 +192,203 @@ export default function ShopPage() {
           "radial-gradient(circle at 0% 20%, rgba(137,32,191,0.38), transparent 34%), radial-gradient(circle at 100% 16%, rgba(56,151,202,0.30), transparent 34%), linear-gradient(135deg, #07000f 0%, #11051f 48%, #10243d 100%)",
       }}
     >
+      <style>{`
+        @media (max-width: 900px) {
+          .shop-page-mobile-fixed {
+            padding: 30px 12px 70px !important;
+            overflow-x: hidden !important;
+          }
+
+          .shop-shell-mobile-fixed {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 auto !important;
+          }
+
+          .shop-header-mobile-fixed {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 14px !important;
+            margin-bottom: 18px !important;
+          }
+
+          .shop-header-mobile-fixed > div:first-child {
+            min-width: 0 !important;
+          }
+
+          .shop-header-mobile-fixed h1 {
+            font-size: clamp(34px, 12vw, 48px) !important;
+            line-height: 0.95 !important;
+            letter-spacing: -0.055em !important;
+            overflow-wrap: anywhere !important;
+          }
+
+          .shop-header-mobile-fixed p {
+            max-width: 100% !important;
+            font-size: 14px !important;
+            line-height: 1.55 !important;
+          }
+
+          .shop-header-product-pill {
+            width: 100% !important;
+            min-height: 42px !important;
+            justify-content: center !important;
+            padding: 0 14px !important;
+            font-size: 12px !important;
+            text-align: center !important;
+          }
+
+          .shop-product-card-mobile-fixed {
+            border-radius: 26px !important;
+            overflow: hidden !important;
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+
+          .shop-product-grid-mobile-fixed {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 18px !important;
+            padding: 18px !important;
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+
+          .shop-product-main-mobile-fixed {
+            min-width: 0 !important;
+            width: 100% !important;
+          }
+
+          .shop-product-main-mobile-fixed h2 {
+            font-size: clamp(28px, 9vw, 38px) !important;
+            line-height: 1.02 !important;
+            overflow-wrap: anywhere !important;
+          }
+
+          .shop-product-main-mobile-fixed p {
+            max-width: 100% !important;
+            font-size: 14px !important;
+            line-height: 1.6 !important;
+            overflow-wrap: anywhere !important;
+          }
+
+          .shop-included-box-mobile-fixed {
+            margin-top: 18px !important;
+            padding: 16px !important;
+            border-radius: 22px !important;
+          }
+
+          .shop-included-box-mobile-fixed h3 {
+            font-size: 20px !important;
+          }
+
+          .shop-feature-item-mobile-fixed {
+            align-items: flex-start !important;
+            padding: 12px !important;
+            border-radius: 16px !important;
+            font-size: 13px !important;
+            line-height: 1.45 !important;
+            overflow-wrap: anywhere !important;
+          }
+
+          .shop-feature-item-mobile-fixed span {
+            flex: 0 0 auto !important;
+          }
+
+          .shop-price-card-mobile-fixed {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 18px !important;
+            border-radius: 24px !important;
+          }
+
+          .shop-price-card-mobile-fixed > div:first-child {
+            width: 58px !important;
+            height: 58px !important;
+            border-radius: 18px !important;
+            font-size: 28px !important;
+            margin-bottom: 16px !important;
+          }
+
+          .shop-price-card-mobile-fixed strong {
+            font-size: 30px !important;
+          }
+
+          .shop-price-card-mobile-fixed button {
+            min-height: 48px !important;
+            width: 100% !important;
+          }
+
+          .shop-note-box-mobile-fixed {
+            padding: 14px !important;
+            border-radius: 18px !important;
+          }
+
+          .shop-note-box-mobile-fixed p {
+            font-size: 13px !important;
+            line-height: 1.55 !important;
+          }
+
+          .shop-unavailable-card-mobile-fixed {
+            margin-top: 18px !important;
+            padding: 18px !important;
+            border-radius: 24px !important;
+          }
+
+          .shop-unavailable-card-mobile-fixed h2 {
+            font-size: 24px !important;
+            line-height: 1.1 !important;
+          }
+
+          .shop-unavailable-card-mobile-fixed p {
+            font-size: 14px !important;
+            line-height: 1.6 !important;
+          }
+
+          .shop-bottom-actions-mobile-fixed {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 10px !important;
+          }
+
+          .shop-bottom-actions-mobile-fixed a {
+            width: 100% !important;
+            min-height: 48px !important;
+            padding: 0 14px !important;
+            text-align: center !important;
+          }
+        }
+
+        @media (max-width: 430px) {
+          .shop-page-mobile-fixed {
+            padding: 22px 10px 64px !important;
+          }
+
+          .shop-product-grid-mobile-fixed {
+            padding: 14px !important;
+          }
+
+          .shop-product-main-mobile-fixed h2 {
+            font-size: 28px !important;
+          }
+
+          .shop-price-card-mobile-fixed,
+          .shop-included-box-mobile-fixed,
+          .shop-unavailable-card-mobile-fixed {
+            padding: 14px !important;
+          }
+        }
+      `}</style>
+
       <section
+        className="shop-shell-mobile-fixed"
         style={{
           maxWidth: "1180px",
           margin: "0 auto",
         }}
       >
         <div
+          className="shop-header-mobile-fixed"
           style={{
             display: "flex",
             justifyContent: "space-between",
@@ -254,6 +445,7 @@ export default function ShopPage() {
           </div>
 
           <div
+            className="shop-header-product-pill"
             style={{
               minHeight: "48px",
               padding: "0 18px",
@@ -273,6 +465,7 @@ export default function ShopPage() {
         </div>
 
         <article
+          className="shop-product-card-mobile-fixed"
           style={{
             position: "relative",
             overflow: "hidden",
@@ -297,6 +490,7 @@ export default function ShopPage() {
           />
 
           <div
+            className="shop-product-grid-mobile-fixed"
             style={{
               position: "relative",
               zIndex: 2,
@@ -306,7 +500,7 @@ export default function ShopPage() {
               gap: "28px",
             }}
           >
-            <div>
+            <div className="shop-product-main-mobile-fixed">
               <div
                 style={{
                   display: "flex",
@@ -379,6 +573,7 @@ export default function ShopPage() {
               </p>
 
               <div
+                className="shop-included-box-mobile-fixed"
                 style={{
                   marginTop: "28px",
                   padding: "22px",
@@ -406,6 +601,7 @@ export default function ShopPage() {
                 >
                   {includedItems.map((item) => (
                     <div
+                      className="shop-feature-item-mobile-fixed"
                       key={item}
                       style={{
                         display: "flex",
@@ -444,6 +640,7 @@ export default function ShopPage() {
             </div>
 
             <aside
+              className="shop-price-card-mobile-fixed"
               style={{
                 padding: "24px",
                 borderRadius: "28px",
@@ -523,6 +720,7 @@ export default function ShopPage() {
               </button>
 
               <div
+                className="shop-note-box-mobile-fixed"
                 style={{
                   marginTop: "18px",
                   padding: "16px",
@@ -557,6 +755,7 @@ export default function ShopPage() {
         </article>
 
         <section
+          className="shop-unavailable-card-mobile-fixed"
           style={{
             marginTop: "30px",
             padding: "28px",
@@ -594,6 +793,7 @@ export default function ShopPage() {
           </p>
 
           <div
+            className="shop-bottom-actions-mobile-fixed"
             style={{
               marginTop: "24px",
               display: "flex",
