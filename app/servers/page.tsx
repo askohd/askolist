@@ -94,6 +94,8 @@ const UI_TEXT = {
     daysAgoPlural: "vor {value} Tagen",
     onlineUnknown: "Online unbekannt",
     onlineSuffix: "online",
+    membersUnknown: "Mitglieder unbekannt",
+    membersSuffix: "Mitglieder",
     bump: "Bump",
     showMore: "Mehr anzeigen",
     showLess: "Weniger anzeigen",
@@ -123,6 +125,8 @@ const UI_TEXT = {
     daysAgoPlural: "{value} days ago",
     onlineUnknown: "Online unknown",
     onlineSuffix: "online",
+    membersUnknown: "Members unknown",
+    membersSuffix: "members",
     bump: "Bump",
     showMore: "Show more",
     showLess: "Show less",
@@ -153,6 +157,8 @@ const UI_TEXT = {
     daysAgoPlural: "il y a {value} jours",
     onlineUnknown: "Online inconnu",
     onlineSuffix: "en ligne",
+    membersUnknown: "Membres inconnus",
+    membersSuffix: "membres",
     bump: "Bump",
     showMore: "Afficher plus",
     showLess: "Afficher moins",
@@ -183,6 +189,8 @@ const UI_TEXT = {
     daysAgoPlural: "{value} giorni fa",
     onlineUnknown: "Online sconosciuto",
     onlineSuffix: "online",
+    membersUnknown: "Membri sconosciuti",
+    membersSuffix: "membri",
     bump: "Bump",
     showMore: "Mostra altro",
     showLess: "Mostra meno",
@@ -213,6 +221,8 @@ const UI_TEXT = {
     daysAgoPlural: "{value} dni temu",
     onlineUnknown: "Online nieznane",
     onlineSuffix: "online",
+    membersUnknown: "Członkowie nieznani",
+    membersSuffix: "członków",
     bump: "Bump",
     showMore: "Pokaż więcej",
     showLess: "Pokaż mniej",
@@ -416,12 +426,46 @@ function getOnlineCount(server: any) {
   return Number(value);
 }
 
+function getMemberCount(server: any) {
+  const possibleValues = [
+    server.member_count,
+    server.members_count,
+    server.guild_member_count,
+    server.discord_member_count,
+    server.discord_members_count,
+    server.approximate_member_count,
+    server.memberCount,
+    server.membersCount,
+    server.guildMemberCount,
+    server.approximateMemberCount,
+  ];
+
+  const value = possibleValues.find(
+    (item) => item !== null && item !== undefined && !Number.isNaN(Number(item))
+  );
+
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  return Number(value);
+}
+
 function formatOnlineCount(value: number | null, language: UiLanguage) {
   if (value === null) return t(language, "onlineUnknown");
 
   return `${value.toLocaleString(language === "de" ? "de-DE" : "en-US")} ${t(
     language,
     "onlineSuffix"
+  )}`;
+}
+
+function formatMemberCount(value: number | null, language: UiLanguage) {
+  if (value === null) return t(language, "membersUnknown");
+
+  return `${value.toLocaleString(language === "de" ? "de-DE" : "en-US")} ${t(
+    language,
+    "membersSuffix"
   )}`;
 }
 
@@ -570,21 +614,23 @@ export default async function ServersPage({
       <style>{`
         .server-directory-card .premium-server-meta-row.server-card-top-stats {
           display: grid !important;
-          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+          grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
           align-items: center !important;
           gap: 8px !important;
-          margin-top: 12px !important;
-          margin-bottom: 10px !important;
+          margin-top: 14px !important;
+          margin-bottom: 12px !important;
           flex-wrap: nowrap !important;
         }
 
         .server-directory-card .premium-server-meta-row.server-card-top-stats .premium-server-meta-pill {
           width: 100% !important;
           min-width: 0 !important;
-          min-height: 31px !important;
+          min-height: 34px !important;
           justify-content: center !important;
-          padding: 7px 9px !important;
-          font-size: 11.5px !important;
+          padding: 0 8px !important;
+          border-radius: 999px !important;
+          font-size: 10.8px !important;
+          font-weight: 950 !important;
           line-height: 1 !important;
           white-space: nowrap !important;
           overflow: hidden !important;
@@ -600,6 +646,30 @@ export default async function ServersPage({
 
         .server-directory-card .premium-server-meta-row.server-card-top-stats .premium-online-dot {
           flex: 0 0 auto !important;
+        }
+
+        .server-directory-card .premium-server-meta-row.server-card-top-stats .premium-server-meta-pill.online {
+          color: #b8ffd8 !important;
+          border-color: rgba(54,255,154,0.34) !important;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(54,255,154,0.20), transparent 44%),
+            rgba(255,255,255,0.065) !important;
+        }
+
+        .server-directory-card .premium-server-meta-row.server-card-top-stats .premium-server-meta-pill.members {
+          color: #ffe9a6 !important;
+          border-color: rgba(255,220,115,0.34) !important;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(255,220,115,0.18), transparent 44%),
+            rgba(255,255,255,0.065) !important;
+        }
+
+        .server-directory-card .premium-server-meta-row.server-card-top-stats .premium-server-meta-pill.bump {
+          color: #bdefff !important;
+          border-color: rgba(116,223,255,0.34) !important;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(116,223,255,0.18), transparent 44%),
+            rgba(255,255,255,0.065) !important;
         }
 
         @media (max-width: 420px) {
@@ -684,6 +754,7 @@ export default async function ServersPage({
 
             const descriptionToggleId = `description-${server.id}`;
             const onlineCount = getOnlineCount(server);
+            const memberCount = getMemberCount(server);
 
             const serverLogo =
               server.discord_server_icon_url &&
@@ -794,6 +865,11 @@ export default async function ServersPage({
                     <span className="premium-server-meta-pill online">
                       <span className="premium-online-dot" />
                       <span>{formatOnlineCount(onlineCount, uiLanguage)}</span>
+                    </span>
+
+                    <span className="premium-server-meta-pill members">
+                      <span>👥</span>
+                      <span>{formatMemberCount(memberCount, uiLanguage)}</span>
                     </span>
 
                     <span className="premium-server-meta-pill bump">
