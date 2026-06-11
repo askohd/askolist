@@ -66,6 +66,7 @@ const PREMIUM_LAYOUTS = [
 
 type PremiumLayout = (typeof PREMIUM_LAYOUTS)[number]["value"];
 type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
+type EditorTab = "banner" | "text" | "premium" | "invite";
 
 const DASHBOARD_TEXT = {
   de: {
@@ -494,12 +495,24 @@ function getPremiumPreviewStyle(layout: PremiumLayout, glowColor: string) {
   return base;
 }
 
+function isEnabled(value: unknown) {
+  const normalized = String(value ?? "").trim().toLowerCase();
+
+  return (
+    value === true ||
+    value === 1 ||
+    normalized === "true" ||
+    normalized === "1" ||
+    normalized === "yes" ||
+    normalized === "on"
+  );
+}
+
 export default function ProfileServerEditor({ server }: { server: any }) {
   const language = useLanguage() as UiLanguage;
 
-  const isPremiumOrPartner = Boolean(
-    server.premium_status || server.partner_status
-  );
+  const isPremiumOrPartner =
+    isEnabled(server.premium_status) || isEnabled(server.partner_status);
 
   const [lockedNotice, setLockedNotice] = useState(false);
   const [serverName, setServerName] = useState(server.server_name ?? "");
@@ -544,6 +557,9 @@ export default function ProfileServerEditor({ server }: { server: any }) {
     normalizePremiumLayout(server.premium_layout)
   );
 
+  const [activeEditorTab, setActiveEditorTab] =
+    useState<EditorTab>("banner");
+
   const bannerStyle = useMemo(
     () => ({
       objectPosition: `${bannerX}% ${bannerY}%`,
@@ -579,673 +595,846 @@ export default function ProfileServerEditor({ server }: { server: any }) {
       action="/api/profile/update-server"
       method="POST"
       encType="multipart/form-data"
-      className="profile-edit-card"
+      className="profile-edit-card profile-editor-modern"
     >
       <input type="hidden" name="server_id" value={server.id} />
+      <input type="hidden" name="server_name" value={serverName} />
+      <input type="hidden" name="language" value={serverLanguage} />
+      <input type="hidden" name="description" value={description} />
       <input type="hidden" name="inviteLink" value={inviteLink} />
-      {isPremiumOrPartner && (
-        <input type="hidden" name="premium_layout" value={premiumLayout} />
-      )}
+      <input type="hidden" name="invite_link" value={inviteLink} />
+      <input type="hidden" name="banner_position_x" value={bannerX} />
+      <input type="hidden" name="banner_position_y" value={bannerY} />
+      <input type="hidden" name="banner_zoom" value={bannerZoom} />
+      <input type="hidden" name="premium_layout" value={premiumLayout} />
+      <input type="hidden" name="server_name_color" value={serverNameColor} />
+      <input type="hidden" name="server_text_color" value={serverTextColor} />
+      <input type="hidden" name="premium_glow_color" value={glowColor} />
 
       <style>{`
-        .profile-mobile-editor-nav {
-          display: none;
+        .profile-editor-modern {
+          width: 100%;
+          max-width: 100%;
+          overflow: visible;
+        }
+
+        .profile-editor-modern-title {
+          margin: 0 0 16px;
+          color: #ffffff;
+          font-size: clamp(1.35rem, 3vw, 2.2rem);
+          line-height: 1.05;
+          font-weight: 950;
+          letter-spacing: -0.04em;
+        }
+
+        .profile-editor-tabs {
+          position: sticky;
+          top: 82px;
+          z-index: 80;
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 8px;
+          margin: 0 0 16px;
+          padding: 8px;
+          border-radius: 22px;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(181, 76, 255, 0.18), transparent 36%),
+            rgba(10, 10, 26, 0.94);
+          border: 1px solid rgba(255, 255, 255, 0.11);
+          box-shadow:
+            0 18px 46px rgba(0, 0, 0, 0.34),
+            0 0 28px rgba(139, 92, 246, 0.14);
+          backdrop-filter: blur(16px);
+        }
+
+        .profile-editor-tabs button {
+          min-height: 42px;
+          border: 0;
+          border-radius: 16px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 7px;
+          color: rgba(246, 243, 255, 0.82);
+          font-size: 13px;
+          font-weight: 950;
+          cursor: pointer;
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.09);
+        }
+
+        .profile-editor-tabs button.active {
+          color: #ffffff;
+          background: linear-gradient(135deg, rgba(181, 76, 255, 0.34), rgba(116, 223, 255, 0.18));
+          border-color: rgba(116, 223, 255, 0.28);
+          box-shadow: 0 0 24px rgba(116, 223, 255, 0.12);
+        }
+
+        .profile-editor-workbench {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(320px, 390px);
+          gap: 18px;
+          align-items: start;
+        }
+
+        .profile-editor-panel,
+        .profile-preview-panel {
+          min-width: 0;
+          border-radius: 30px;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(181, 76, 255, 0.12), transparent 36%),
+            linear-gradient(180deg, rgba(38, 31, 62, 0.82), rgba(17, 15, 36, 0.92));
+          border: 1px solid rgba(255, 255, 255, 0.10);
+          box-shadow:
+            0 0 0 1px rgba(255, 255, 255, 0.025) inset,
+            0 0 34px rgba(139, 92, 246, 0.10);
+        }
+
+        .profile-editor-panel {
+          padding: clamp(16px, 3vw, 24px);
+        }
+
+        .profile-preview-panel {
+          position: sticky;
+          top: 154px;
+          padding: 14px;
+        }
+
+        .profile-panel-head {
+          display: flex;
+          align-items: flex-start;
+          gap: 14px;
+          margin-bottom: 18px;
+        }
+
+        .profile-panel-icon {
+          width: 46px;
+          height: 46px;
+          border-radius: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex: 0 0 auto;
+          font-size: 20px;
+          background: linear-gradient(135deg, rgba(181, 76, 255, 0.30), rgba(116, 223, 255, 0.16));
+          border: 1px solid rgba(255, 255, 255, 0.13);
+          box-shadow: 0 0 24px rgba(217, 70, 239, 0.16);
+        }
+
+        .profile-panel-head h3 {
+          margin: 0;
+          color: #ffffff;
+          font-size: 1.3rem;
+          line-height: 1.1;
+          font-weight: 950;
+        }
+
+        .profile-panel-head p {
+          margin: 8px 0 0;
+          color: rgba(246, 243, 255, 0.72);
+          line-height: 1.55;
+        }
+
+        .profile-editor-modern .field {
+          display: grid;
+          gap: 8px;
+          margin-bottom: 14px;
+        }
+
+        .profile-editor-modern .field span,
+        .profile-editor-modern .control-label {
+          color: rgba(246, 243, 255, 0.92);
+          font-size: 13px;
+          font-weight: 950;
+        }
+
+        .profile-editor-modern .input,
+        .profile-editor-modern select,
+        .profile-editor-modern textarea {
+          width: 100%;
+          min-width: 0;
+          border-radius: 16px;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          background: rgba(255, 255, 255, 0.07);
+          color: #ffffff;
+          outline: none;
+          font-weight: 800;
+        }
+
+        .profile-editor-modern .input,
+        .profile-editor-modern select {
+          min-height: 50px;
+          padding: 0 14px;
+        }
+
+        .profile-editor-modern textarea {
+          min-height: 190px;
+          padding: 14px;
+          resize: vertical;
+          line-height: 1.55;
+        }
+
+        .profile-editor-modern input[type="file"] {
+          width: 100%;
+          min-height: 48px;
+          padding: 10px;
+          border-radius: 16px;
+          background: rgba(255, 255, 255, 0.07);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          color: rgba(246, 243, 255, 0.88);
+        }
+
+        .banner-slider-card {
+          display: grid;
+          gap: 16px;
+        }
+
+        .banner-slider-card input[type="range"] {
+          width: 100%;
+          height: 46px;
+          accent-color: #75ddff;
+        }
+
+        .profile-mini-note,
+        .form-note,
+        .char-counter {
+          color: rgba(246, 243, 255, 0.62);
+          font-size: 12px;
+          line-height: 1.45;
+        }
+
+        .premium-layout-grid-modern {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 10px;
+        }
+
+        .premium-layout-button-modern {
+          min-height: 86px;
+          padding: 12px;
+          border-radius: 18px;
+          color: #ffffff;
+          text-align: left;
+          cursor: pointer;
+          background: rgba(255, 255, 255, 0.055);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .premium-layout-button-modern.active {
+          border-color: rgba(116, 223, 255, 0.62);
+          background: linear-gradient(135deg, rgba(180, 76, 255, 0.30), rgba(116, 223, 255, 0.18));
+          box-shadow: 0 0 26px rgba(116, 223, 255, 0.18);
+        }
+
+        .premium-layout-button-modern strong {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          margin-bottom: 6px;
+          font-size: 13px;
+        }
+
+        .premium-layout-button-modern span:last-child {
+          display: block;
+          color: rgba(246, 243, 255, 0.66);
+          font-size: 11px;
+          line-height: 1.35;
+        }
+
+        .premium-color-grid-modern {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+          gap: 12px;
+          margin-top: 16px;
+        }
+
+        .premium-color-field-modern {
+          display: grid;
+          gap: 8px;
+          padding: 14px;
+          border-radius: 18px;
+          background: rgba(255, 255, 255, 0.055);
+          border: 1px solid rgba(255, 255, 255, 0.10);
+        }
+
+        .premium-color-field-modern input[type="color"] {
+          width: 100%;
+          height: 42px;
+          border: 0;
+          padding: 0;
+          background: transparent;
+          cursor: pointer;
+        }
+
+        .profile-editor-actions-modern {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+          margin-top: 18px;
+        }
+
+        .profile-editor-actions-modern .btn {
+          width: 100%;
+          min-height: 48px;
+        }
+
+        .profile-preview-panel .preview-heading {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          margin-bottom: 12px;
+        }
+
+        .profile-preview-panel .preview-heading strong {
+          color: #ffffff;
+          font-size: 14px;
+        }
+
+        .profile-preview-panel .preview-heading span {
+          color: rgba(246, 243, 255, 0.62);
+          font-size: 12px;
+          font-weight: 800;
+        }
+
+        .server-list-live-preview.profile-live-card {
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
+          border-radius: 24px;
+          overflow: hidden;
+        }
+
+        .profile-live-card .server-directory-banner {
+          height: 132px;
+        }
+
+        .profile-live-card .server-directory-body {
+          padding: 0 16px 16px;
+        }
+
+        .profile-live-card .server-directory-top {
+          display: grid;
+          grid-template-columns: 58px minmax(0, 1fr);
+          gap: 12px;
+          align-items: end;
+          margin-top: -26px;
+        }
+
+        .profile-live-card .server-directory-logo {
+          width: 58px;
+          height: 58px;
+          border-radius: 18px;
+          border-width: 3px;
+        }
+
+        .profile-live-card .server-directory-title {
+          min-width: 0;
+        }
+
+        .profile-live-card .server-directory-title h3,
+        .profile-live-card .server-directory-title p {
+          max-width: 100%;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+
+        .profile-live-card .server-directory-title h3 {
+          font-size: 20px;
+          line-height: 1.08;
+        }
+
+        .profile-live-card .server-directory-title p {
+          font-size: 12px;
+        }
+
+        .profile-live-card .hero-premium-badges {
+          margin: 10px 0;
+          gap: 7px;
+        }
+
+        .profile-live-card .hero-premium-badge {
+          min-height: 26px;
+          padding: 0 9px;
+          font-size: 10px;
+        }
+
+        .profile-live-card .premium-server-meta-row {
+          display: grid;
+          grid-template-columns: 1fr 1.2fr;
+          gap: 8px;
+          margin: 10px 0;
+        }
+
+        .profile-live-card .premium-server-meta-pill {
+          min-width: 0;
+          min-height: 31px;
+          padding: 0 8px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+          border-radius: 999px;
+          font-size: 10.5px;
+          font-weight: 950;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .profile-live-card .server-directory-badges {
+          gap: 7px;
+          margin: 9px 0;
+        }
+
+        .profile-live-card .badge {
+          min-height: 27px;
+          padding: 0 9px;
+          font-size: 10.5px;
+        }
+
+        .profile-live-card .server-directory-description {
+          display: -webkit-box;
+          -webkit-line-clamp: 4;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          max-height: 98px;
+          margin-top: 10px;
+          padding: 12px;
+          border-radius: 17px;
+          font-size: 12px;
+          line-height: 1.55;
+          white-space: pre-wrap;
+          overflow-wrap: anywhere;
+        }
+
+        .profile-live-card .fake-preview-toggle {
+          margin-top: 8px;
+          font-size: 13px;
+        }
+
+        .profile-live-card .server-directory-footer {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+          margin-top: 12px;
+        }
+
+        .profile-live-card .server-directory-footer .btn {
+          width: 100%;
+          min-height: 40px;
+          border-radius: 14px;
+          font-size: 12px;
         }
 
         @media (max-width: 900px) {
-          .profile-edit-card {
-            width: 100% !important;
-            max-width: 100% !important;
-            padding: 14px !important;
-            overflow: visible !important;
+          .profile-editor-tabs {
+            top: 70px;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 6px;
+            margin-bottom: 12px;
+            padding: 6px;
+            border-radius: 18px;
           }
 
-          .profile-mobile-editor-nav {
+          .profile-editor-tabs button {
+            min-height: 38px;
+            gap: 4px;
+            padding: 0 5px;
+            font-size: 11px;
+          }
+
+          .profile-editor-workbench {
+            grid-template-columns: minmax(0, 1fr) 174px;
+            gap: 10px;
+            align-items: start;
+          }
+
+          .profile-editor-panel,
+          .profile-preview-panel {
+            border-radius: 22px;
+          }
+
+          .profile-editor-panel {
+            padding: 12px;
+          }
+
+          .profile-preview-panel {
             position: sticky;
-            top: 72px;
-            z-index: 50;
-            margin: 10px 0 12px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            top: 128px;
             padding: 8px;
-            border-radius: 20px;
-            background:
-              radial-gradient(circle at 0% 0%, rgba(181, 76, 255, 0.18), transparent 36%),
-              rgba(10, 10, 26, 0.94);
-            border: 1px solid rgba(255, 255, 255, 0.11);
-            box-shadow:
-              0 16px 40px rgba(0, 0, 0, 0.34),
-              0 0 24px rgba(139, 92, 246, 0.14);
-            backdrop-filter: blur(16px);
+            max-height: calc(100dvh - 140px);
+            overflow-y: auto;
           }
 
-          .profile-mobile-editor-nav a {
-            min-height: 40px;
-            border-radius: 15px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            color: #ffffff;
-            text-decoration: none;
+          .profile-panel-head {
+            gap: 9px;
+            margin-bottom: 12px;
+          }
+
+          .profile-panel-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 13px;
+            font-size: 16px;
+          }
+
+          .profile-panel-head h3 {
+            font-size: 1.05rem;
+          }
+
+          .profile-panel-head p {
+            font-size: 12px;
+            line-height: 1.35;
+          }
+
+          .profile-editor-modern .input,
+          .profile-editor-modern select {
+            min-height: 44px;
+            padding: 0 11px;
             font-size: 13px;
-            font-weight: 950;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.09);
           }
 
-          .profile-mobile-editor-nav a:first-child {
-            background:
-              linear-gradient(135deg, rgba(181, 76, 255, 0.22), rgba(116, 223, 255, 0.13));
-            border-color: rgba(116, 223, 255, 0.20);
+          .profile-editor-modern textarea {
+            min-height: 140px;
+            padding: 11px;
+            font-size: 13px;
           }
 
-          .profile-editor-two-column {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 14px !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            overflow: visible !important;
+          .profile-editor-modern input[type="file"] {
+            min-height: 44px;
+            padding: 8px;
+            font-size: 12px;
           }
 
-          .profile-editor-preview {
-            order: -1 !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            min-width: 0 !important;
-            scroll-margin-top: 140px !important;
+          .banner-slider-card {
+            gap: 12px;
           }
 
-          .profile-editor-controls {
-            order: 2 !important;
-            position: relative !important;
-            z-index: 30 !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            min-width: 0 !important;
-            scroll-margin-top: 140px !important;
+          .banner-slider-card input[type="range"] {
+            height: 44px;
           }
 
-          .preview-sticky-box {
-            position: sticky !important;
-            top: 126px !important;
-            z-index: 10 !important;
-            pointer-events: none !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            max-height: 42dvh !important;
-            overflow: hidden !important;
-            padding: 10px !important;
-            border-radius: 24px !important;
-            background:
-              radial-gradient(circle at 0% 0%, rgba(181, 76, 255, 0.14), transparent 35%),
-              linear-gradient(180deg, rgba(13, 14, 34, 0.96), rgba(9, 9, 24, 0.96)) !important;
-            border: 1px solid rgba(116, 223, 255, 0.15) !important;
-            box-shadow:
-              0 18px 54px rgba(0, 0, 0, 0.36),
-              0 0 28px rgba(116, 223, 255, 0.10) !important;
-            backdrop-filter: blur(18px) !important;
+          .premium-layout-grid-modern,
+          .premium-color-grid-modern {
+            grid-template-columns: 1fr;
           }
 
-          .preview-sticky-box > .page-badge {
-            display: none !important;
+          .premium-layout-button-modern {
+            min-height: 70px;
+            padding: 10px;
           }
 
-          .preview-sticky-box > h3 {
-            margin: 0 0 2px !important;
-            font-size: 15px !important;
-            line-height: 1.1 !important;
+          .profile-editor-actions-modern {
+            grid-template-columns: 1fr;
           }
 
-          .preview-sticky-box > p {
-            display: none !important;
+          .profile-preview-panel .preview-heading {
+            display: none;
           }
 
-          .server-list-live-preview {
-            width: 100% !important;
-            max-width: 100% !important;
-            min-width: 0 !important;
-            border-radius: 22px !important;
-            overflow: hidden !important;
+          .profile-live-card .server-directory-banner {
+            height: 82px;
           }
 
-          .server-list-live-preview .server-directory-banner {
-            height: 94px !important;
+          .profile-live-card .server-directory-body {
+            padding: 0 8px 8px;
           }
 
-          .server-list-live-preview .server-directory-body {
-            padding: 0 12px 12px !important;
+          .profile-live-card .server-directory-top {
+            grid-template-columns: 42px minmax(0, 1fr);
+            gap: 7px;
+            margin-top: -19px;
           }
 
-          .server-list-live-preview .server-directory-top {
-            display: grid !important;
-            grid-template-columns: 54px minmax(0, 1fr) !important;
-            gap: 10px !important;
-            align-items: end !important;
-            margin-top: -24px !important;
+          .profile-live-card .server-directory-logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 13px;
           }
 
-          .server-list-live-preview .server-directory-logo {
-            width: 54px !important;
-            height: 54px !important;
-            border-radius: 17px !important;
-            border-width: 3px !important;
-            font-size: 21px !important;
+          .profile-live-card .server-directory-title h3 {
+            font-size: 14px;
           }
 
-          .server-list-live-preview .server-directory-title {
-            min-width: 0 !important;
+          .profile-live-card .server-directory-title p {
+            font-size: 9.5px;
           }
 
-          .server-list-live-preview .server-directory-title h3 {
-            font-size: 18px !important;
-            line-height: 1.05 !important;
-            max-width: 100% !important;
-            overflow: hidden !important;
-            white-space: nowrap !important;
-            text-overflow: ellipsis !important;
+          .profile-live-card .hero-premium-badges {
+            margin: 6px 0;
           }
 
-          .server-list-live-preview .server-directory-title p {
-            font-size: 11.5px !important;
-            line-height: 1.25 !important;
-            max-width: 100% !important;
-            overflow: hidden !important;
-            white-space: nowrap !important;
-            text-overflow: ellipsis !important;
+          .profile-live-card .hero-premium-badge {
+            min-height: 21px;
+            padding: 0 6px;
+            font-size: 8.5px;
           }
 
-          .server-list-live-preview .hero-premium-badges {
-            margin: 8px 0 !important;
-            gap: 6px !important;
+          .profile-live-card .premium-server-meta-row {
+            grid-template-columns: 1fr;
+            gap: 5px;
+            margin: 6px 0;
           }
 
-          .server-list-live-preview .hero-premium-badge {
-            min-height: 24px !important;
-            padding: 0 8px !important;
-            font-size: 10px !important;
+          .profile-live-card .premium-server-meta-pill {
+            min-height: 24px;
+            padding: 0 5px;
+            font-size: 8.5px;
           }
 
-          .server-list-live-preview .premium-server-meta-row {
-            display: grid !important;
-            grid-template-columns: 1fr 1.25fr !important;
-            gap: 7px !important;
-            margin: 8px 0 !important;
+          .profile-live-card .server-directory-badges {
+            gap: 4px;
+            margin: 6px 0;
           }
 
-          .server-list-live-preview .premium-server-meta-pill {
-            min-width: 0 !important;
-            min-height: 29px !important;
-            padding: 0 7px !important;
-            border-radius: 999px !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            gap: 5px !important;
-            font-size: 10px !important;
-            font-weight: 950 !important;
-            line-height: 1 !important;
-            overflow: hidden !important;
-            white-space: nowrap !important;
-            text-overflow: ellipsis !important;
+          .profile-live-card .badge {
+            min-height: 21px;
+            padding: 0 6px;
+            font-size: 8.5px;
           }
 
-          .server-list-live-preview .server-directory-badges {
-            gap: 6px !important;
-            margin-top: 8px !important;
+          .profile-live-card .server-directory-description {
+            -webkit-line-clamp: 3;
+            max-height: 58px;
+            margin-top: 6px;
+            padding: 8px;
+            border-radius: 13px;
+            font-size: 9.5px;
+            line-height: 1.35;
           }
 
-          .server-list-live-preview .badge {
-            min-height: 25px !important;
-            padding: 0 8px !important;
-            font-size: 10px !important;
+          .profile-live-card .fake-preview-toggle {
+            display: none;
           }
 
-          .server-list-live-preview .server-directory-description {
-            display: -webkit-box !important;
-            -webkit-line-clamp: 3 !important;
-            -webkit-box-orient: vertical !important;
-            overflow: hidden !important;
-            max-height: 72px !important;
-            margin-top: 8px !important;
-            padding: 10px !important;
-            border-radius: 16px !important;
-            font-size: 11px !important;
-            line-height: 1.45 !important;
-            white-space: pre-wrap !important;
-            overflow-wrap: anywhere !important;
+          .profile-live-card .server-directory-footer {
+            grid-template-columns: 1fr;
+            gap: 5px;
+            margin-top: 7px;
           }
 
-          .server-list-live-preview .description-toggle-button,
-          .server-list-live-preview .fake-preview-toggle {
-            display: none !important;
-          }
-
-          .server-list-live-preview .server-directory-footer {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            gap: 7px !important;
-            margin-top: 9px !important;
-          }
-
-          .server-list-live-preview .server-directory-footer .btn {
-            width: 100% !important;
-            min-height: 36px !important;
-            padding: 0 8px !important;
-            border-radius: 13px !important;
-            font-size: 11px !important;
-          }
-
-          .profile-upload-grid,
-          .premium-color-grid-inline {
-            grid-template-columns: 1fr !important;
-          }
-
-          .banner-control-card,
-          .premium-inline-tools {
-            position: relative !important;
-            z-index: 35 !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            padding: 18px !important;
-            border-radius: 24px !important;
-          }
-
-          .banner-control-top {
-            margin-top: 12px !important;
-            scroll-margin-top: 52dvh !important;
-          }
-
-          .banner-control-card input[type="range"] {
-            width: 100% !important;
-            height: 42px !important;
-          }
-
-          .premium-inline-tools button,
-          .premium-inline-tools input,
-          .premium-inline-tools label {
-            pointer-events: auto !important;
-          }
-
-          .premium-inline-tools [style*="repeat(auto-fit"] {
-            grid-template-columns: 1fr !important;
-          }
-
-          .profile-editor-actions {
-            position: relative !important;
-            z-index: 40 !important;
-            display: grid !important;
-            grid-template-columns: 1fr !important;
-            gap: 10px !important;
-          }
-
-          .profile-save-button,
-          .profile-editor-actions .btn {
-            width: 100% !important;
+          .profile-live-card .server-directory-footer .btn {
+            min-height: 30px;
+            border-radius: 11px;
+            font-size: 9.5px;
           }
         }
 
         @media (max-width: 430px) {
-          .profile-edit-card {
-            padding: 10px !important;
+          .profile-editor-workbench {
+            grid-template-columns: minmax(0, 1fr) 148px;
+            gap: 8px;
           }
 
-          .profile-mobile-editor-nav {
-            top: 68px;
-            grid-template-columns: 1fr 1fr;
+          .profile-editor-tabs button {
+            font-size: 10px;
           }
 
-          .preview-sticky-box {
-            top: 120px !important;
-            max-height: 38dvh !important;
-            padding: 8px !important;
-            border-radius: 20px !important;
+          .profile-editor-panel {
+            padding: 10px;
           }
 
-          .server-list-live-preview .server-directory-banner {
-            height: 82px !important;
-          }
-
-          .server-list-live-preview .server-directory-body {
-            padding: 0 10px 10px !important;
-          }
-
-          .server-list-live-preview .server-directory-logo {
-            width: 48px !important;
-            height: 48px !important;
-          }
-
-          .server-list-live-preview .server-directory-title h3 {
-            font-size: 16px !important;
-          }
-
-          .server-list-live-preview .premium-server-meta-row {
-            grid-template-columns: 1fr !important;
-          }
-
-          .server-list-live-preview .server-directory-description {
-            -webkit-line-clamp: 2 !important;
-            max-height: 46px !important;
-          }
-
-          .server-list-live-preview .server-directory-footer {
-            grid-template-columns: 1fr 1fr !important;
-          }
-
-          .banner-control-card,
-          .premium-inline-tools {
-            padding: 15px !important;
+          .profile-preview-panel {
+            top: 122px;
+            padding: 6px;
           }
         }
       `}</style>
 
-      <h3>{tr(language, "editTitle")}</h3>
+      <h3 className="profile-editor-modern-title">{tr(language, "editTitle")}</h3>
 
-
-      <div className="profile-mobile-editor-nav" aria-label="Mobile Editor Navigation">
-        <a href="#profile-live-preview">
-          👁 {tr(language, "previewBadge")}
-        </a>
-        <a href="#profile-editor-controls">
-          ✏️ {tr(language, "editTitle")}
-        </a>
+      <div className="profile-editor-tabs" aria-label="Editor Bereiche">
+        {[
+          { key: "banner", icon: "🖼️", label: "Banner" },
+          { key: "text", icon: "✏️", label: "Text" },
+          { key: "premium", icon: "👑", label: "Premium" },
+          { key: "invite", icon: "🔗", label: "Invite" },
+        ].map((tab) => (
+          <button
+            key={tab.key}
+            type="button"
+            className={activeEditorTab === tab.key ? "active" : ""}
+            onClick={() => setActiveEditorTab(tab.key as EditorTab)}
+          >
+            <span>{tab.icon}</span>
+            <span>{tab.label}</span>
+          </button>
+        ))}
       </div>
 
-      <div className="profile-editor-two-column">
-        <section id="profile-editor-controls" className="profile-editor-controls">
-          <div className="profile-upload-grid">
-            <label className="field full">
-              <span>{tr(language, "bannerChange")}</span>
-              <input
-                type="file"
-                name="banner"
-                accept="image/*"
-                onChange={(event) => {
-                  const file = event.target.files?.[0];
-
-                  if (file) {
-                    setBannerPreview(URL.createObjectURL(file));
-                  }
-                }}
-              />
-            </label>
-          </div>
-
-          <small className="form-note">{tr(language, "logoAuto")}</small>
-
-          <div className="banner-control-card banner-control-top">
-            <h3>{tr(language, "bannerPositionTitle")}</h3>
-            <p>{tr(language, "bannerPositionText")}</p>
-
-            <label className="field">
-              <span>
-                {tr(language, "horizontal")}: {bannerX}%
-              </span>
-              <input
-                type="range"
-                name="banner_position_x"
-                min="0"
-                max="100"
-                value={bannerX}
-                onChange={(event) => setBannerX(Number(event.target.value))}
-              />
-            </label>
-
-            <label className="field">
-              <span>
-                {tr(language, "vertical")}: {bannerY}%
-              </span>
-              <input
-                type="range"
-                name="banner_position_y"
-                min="0"
-                max="100"
-                value={bannerY}
-                onChange={(event) => setBannerY(Number(event.target.value))}
-              />
-            </label>
-
-            <label className="field">
-              <span>
-                {tr(language, "zoom")}: {bannerZoom}x
-              </span>
-              <input
-                type="range"
-                name="banner_zoom"
-                min="1"
-                max="2.5"
-                step="0.1"
-                value={bannerZoom}
-                onChange={(event) => setBannerZoom(Number(event.target.value))}
-              />
-            </label>
-          </div>
-
-          <label className="field">
-            <span>{tr(language, "serverName")}</span>
-            <input
-              className="input"
-              name="server_name"
-              value={serverName}
-              placeholder={tr(language, "serverNamePlaceholder")}
-              onChange={(event) => setServerName(event.target.value)}
-            />
-          </label>
-
-          <label className="field">
-            <span>{tr(language, "language")}</span>
-            <select
-              name="language"
-              value={serverLanguage}
-              onChange={(event) => setServerLanguage(event.target.value)}
-            >
-              {SERVER_LANGUAGES.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <div
-            style={{
-              margin: "18px 0",
-              padding: "20px",
-              borderRadius: "24px",
-              background:
-                "linear-gradient(180deg, rgba(38, 31, 62, 0.82), rgba(25, 21, 45, 0.82))",
-              border: "1px solid rgba(116, 223, 255, 0.18)",
-              boxShadow:
-                "0 0 0 1px rgba(255,255,255,0.03) inset, 0 0 28px rgba(116,223,255,0.08)",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "flex-start",
-                gap: "14px",
-                marginBottom: "16px",
-              }}
-            >
-              <div
-                style={{
-                  width: "42px",
-                  height: "42px",
-                  borderRadius: "14px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  background:
-                    "linear-gradient(135deg, #8b5cf6 0%, #d946ef 50%, #67e8f9 100%)",
-                  boxShadow: "0 0 20px rgba(116,223,255,0.18)",
-                  fontSize: "20px",
-                  flex: "0 0 auto",
-                }}
-              >
-                🔗
+      <div className="profile-editor-workbench">
+        <section className="profile-editor-panel">
+          {activeEditorTab === "banner" && (
+            <div>
+              <div className="profile-panel-head">
+                <div className="profile-panel-icon">🖼️</div>
+                <div>
+                  <h3>{tr(language, "bannerPositionTitle")}</h3>
+                  <p>{tr(language, "bannerPositionText")}</p>
+                </div>
               </div>
 
-              <div>
-                <h3 style={{ margin: 0 }}>{tr(language, "inviteTitle")}</h3>
-                <p
-                  style={{
-                    margin: "8px 0 0",
-                    color: "rgba(246,243,255,0.72)",
-                    lineHeight: 1.55,
+              <label className="field full">
+                <span>{tr(language, "bannerChange")}</span>
+                <input
+                  type="file"
+                  name="banner"
+                  accept="image/*"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+
+                    if (file) {
+                      setBannerPreview(URL.createObjectURL(file));
+                    }
                   }}
-                >
-                  {tr(language, "inviteText")}
-                </p>
+                />
+              </label>
+
+              <small className="profile-mini-note">{tr(language, "logoAuto")}</small>
+
+              <div className="banner-slider-card" style={{ marginTop: 16 }}>
+                <label className="field">
+                  <span>
+                    {tr(language, "horizontal")}: {bannerX}%
+                  </span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={bannerX}
+                    onChange={(event) => setBannerX(Number(event.target.value))}
+                  />
+                </label>
+
+                <label className="field">
+                  <span>
+                    {tr(language, "vertical")}: {bannerY}%
+                  </span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={bannerY}
+                    onChange={(event) => setBannerY(Number(event.target.value))}
+                  />
+                </label>
+
+                <label className="field">
+                  <span>
+                    {tr(language, "zoom")}: {bannerZoom}x
+                  </span>
+                  <input
+                    type="range"
+                    min="1"
+                    max="2.5"
+                    step="0.1"
+                    value={bannerZoom}
+                    onChange={(event) => setBannerZoom(Number(event.target.value))}
+                  />
+                </label>
               </div>
             </div>
+          )}
 
-            <label className="field full" style={{ margin: 0 }}>
-              <span>{tr(language, "inviteLabel")}</span>
-              <input
-                className="input"
-                type="url"
-                name="invite_link"
-                value={inviteLink}
-                placeholder={tr(language, "invitePlaceholder")}
-                onChange={(event) => setInviteLink(event.target.value)}
-              />
-            </label>
+          {activeEditorTab === "text" && (
+            <div>
+              <div className="profile-panel-head">
+                <div className="profile-panel-icon">✏️</div>
+                <div>
+                  <h3>{tr(language, "serverName")}</h3>
+                  <p>{tr(language, "description")}</p>
+                </div>
+              </div>
 
-            <small
-              className="form-note"
-              style={{
-                display: "block",
-                marginTop: "10px",
-                color: "rgba(246,243,255,0.64)",
-              }}
-            >
-              {tr(language, "inviteHint")}
-            </small>
-          </div>
+              <label className="field">
+                <span>{tr(language, "serverName")}</span>
+                <input
+                  className="input"
+                  value={serverName}
+                  placeholder={tr(language, "serverNamePlaceholder")}
+                  onChange={(event) => setServerName(event.target.value)}
+                />
+              </label>
 
-          <label className="field full">
-            <span>{tr(language, "description")}</span>
-            <textarea
-              name="description"
-              value={description}
-              placeholder={tr(language, "descriptionPlaceholder")}
-              onChange={(event) => {
-                const value = event.target.value;
+              <label className="field">
+                <span>{tr(language, "language")}</span>
+                <select
+                  value={serverLanguage}
+                  onChange={(event) => setServerLanguage(event.target.value)}
+                >
+                  {SERVER_LANGUAGES.map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
+              </label>
 
-                if (countWords(value) <= MAX_DESCRIPTION_WORDS) {
-                  setDescription(value);
-                } else {
-                  setDescription(limitWords(value, MAX_DESCRIPTION_WORDS));
-                }
-              }}
-            />
+              <label className="field full">
+                <span>{tr(language, "description")}</span>
+                <textarea
+                  value={description}
+                  placeholder={tr(language, "descriptionPlaceholder")}
+                  onChange={(event) => {
+                    const value = event.target.value;
 
-            <small className="char-counter">
-              {countWords(description)}/{MAX_DESCRIPTION_WORDS}{" "}
-              {tr(language, "words")}
-            </small>
-          </label>
+                    if (countWords(value) <= MAX_DESCRIPTION_WORDS) {
+                      setDescription(value);
+                    } else {
+                      setDescription(limitWords(value, MAX_DESCRIPTION_WORDS));
+                    }
+                  }}
+                />
 
-          <div
-            className="premium-inline-tools"
-            style={{
-              marginTop: "20px",
-              padding: "22px",
-              borderRadius: "28px",
-              background:
-                "radial-gradient(circle at 0% 0%, rgba(211, 76, 255, 0.18), transparent 35%), linear-gradient(180deg, rgba(30, 25, 55, 0.92), rgba(17, 15, 36, 0.92))",
-              border: "1px solid rgba(202, 115, 255, 0.24)",
-              boxShadow:
-                "0 0 0 1px rgba(255,255,255,0.035) inset, 0 0 34px rgba(139,92,246,0.14)",
-            }}
-          >
-            <div
-              className="premium-inline-head"
-              style={{
-                display: "flex",
-                alignItems: "flex-start",
-                gap: "14px",
-                marginBottom: "18px",
-              }}
-            >
-              <button
-                type="button"
-                className="premium-diamond"
-                onClick={showLockedNotice}
-                aria-label={tr(language, "lockedButton")}
-                style={{
-                  width: "46px",
-                  height: "46px",
-                  borderRadius: "16px",
-                  border: "1px solid rgba(255,255,255,0.14)",
-                  background:
-                    "linear-gradient(135deg, rgba(255,207,64,0.24), rgba(217,70,239,0.22), rgba(103,232,249,0.20))",
-                  color: "#ffffff",
-                  fontSize: "20px",
-                  boxShadow: "0 0 24px rgba(217,70,239,0.18)",
-                  cursor: "pointer",
-                  flex: "0 0 auto",
-                }}
-              >
-                ◆
-              </button>
+                <small className="char-counter">
+                  {countWords(description)}/{MAX_DESCRIPTION_WORDS} {tr(language, "words")}
+                </small>
+              </label>
+            </div>
+          )}
 
-              <div>
-                <h3 style={{ margin: 0 }}>{tr(language, "premiumTitle")}</h3>
-                <p
+          {activeEditorTab === "premium" && (
+            <div>
+              <div className="profile-panel-head">
+                <button
+                  type="button"
+                  className="profile-panel-icon"
+                  onClick={showLockedNotice}
+                  aria-label={tr(language, "lockedButton")}
+                  style={{ color: "#ffffff", cursor: "pointer" }}
+                >
+                  👑
+                </button>
+                <div>
+                  <h3>{tr(language, "premiumTitle")}</h3>
+                  <p>{tr(language, "premiumText")}</p>
+                </div>
+              </div>
+
+              {lockedNotice && !isPremiumOrPartner && (
+                <div
                   style={{
-                    margin: "8px 0 0",
-                    color: "rgba(246,243,255,0.72)",
-                    lineHeight: 1.55,
+                    marginBottom: "16px",
+                    padding: "14px",
+                    borderRadius: "18px",
+                    background: "rgba(255, 207, 64, 0.09)",
+                    border: "1px solid rgba(255, 207, 64, 0.22)",
                   }}
                 >
-                  {tr(language, "premiumText")}
-                </p>
-              </div>
-            </div>
+                  <strong>{tr(language, "premiumLockedTitle")}</strong>
+                  <p style={{ margin: "8px 0 12px", color: "rgba(246,243,255,0.72)" }}>
+                    {tr(language, "premiumLockedText")}
+                  </p>
+                  <Link href="/shop" className="btn">
+                    {tr(language, "shop")}
+                  </Link>
+                </div>
+              )}
 
-            {lockedNotice && !isPremiumOrPartner && (
-              <div
-                className="premium-locked-message"
-                style={{
-                  marginBottom: "18px",
-                  padding: "16px",
-                  borderRadius: "20px",
-                  background: "rgba(255, 207, 64, 0.09)",
-                  border: "1px solid rgba(255, 207, 64, 0.22)",
-                }}
-              >
-                <strong>{tr(language, "premiumLockedTitle")}</strong>
-                <p>{tr(language, "premiumLockedText")}</p>
-                <Link href="/shop" className="btn">
-                  {tr(language, "shop")}
-                </Link>
-              </div>
-            )}
-
-            <div style={{ marginBottom: "18px" }}>
-              <span
-                style={{
-                  display: "block",
-                  marginBottom: "10px",
-                  fontSize: "14px",
-                  fontWeight: 950,
-                  color: "#ffffff",
-                }}
-              >
-                {tr(language, "chooseLayout")}
-              </span>
-
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-                  gap: "10px",
-                  opacity: isPremiumOrPartner ? 1 : 0.56,
-                }}
-              >
+              <span className="control-label">{tr(language, "chooseLayout")}</span>
+              <div className="premium-layout-grid-modern" style={{ marginTop: 10 }}>
                 {PREMIUM_LAYOUTS.map((layout) => {
                   const active = premiumLayout === layout.value;
 
@@ -1253,161 +1442,97 @@ export default function ProfileServerEditor({ server }: { server: any }) {
                     <button
                       key={layout.value}
                       type="button"
-                      disabled={!isPremiumOrPartner}
-                      onClick={() => setPremiumLayout(layout.value)}
-                      style={{
-                        minHeight: "82px",
-                        padding: "12px",
-                        borderRadius: "18px",
-                        border: active
-                          ? "1px solid rgba(116,223,255,0.56)"
-                          : "1px solid rgba(255,255,255,0.12)",
-                        background: active
-                          ? "linear-gradient(135deg, rgba(180,76,255,0.28), rgba(116,223,255,0.16))"
-                          : "rgba(255,255,255,0.055)",
-                        color: "#ffffff",
-                        textAlign: "left",
-                        cursor: isPremiumOrPartner ? "pointer" : "not-allowed",
-                        boxShadow: active
-                          ? "0 0 22px rgba(116,223,255,0.16)"
-                          : "none",
+                      className={
+                        "premium-layout-button-modern" + (active ? " active" : "")
+                      }
+                      onClick={() => {
+                        setPremiumLayout(layout.value);
+
+                        if (!isPremiumOrPartner) {
+                          setLockedNotice(true);
+                        }
                       }}
                     >
-                      <strong
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "7px",
-                          fontSize: "13px",
-                          marginBottom: "6px",
-                        }}
-                      >
+                      <strong>
                         <span>{layout.emoji}</span>
                         {layout.label}
                       </strong>
-
-                      <span
-                        style={{
-                          display: "block",
-                          color: "rgba(246,243,255,0.66)",
-                          fontSize: "11px",
-                          lineHeight: 1.35,
-                        }}
-                      >
-                        {layout.description}
-                      </span>
+                      <span>{layout.description}</span>
                     </button>
                   );
                 })}
               </div>
-            </div>
 
-            <div>
-              <span
-                style={{
-                  display: "block",
-                  marginBottom: "10px",
-                  fontSize: "14px",
-                  fontWeight: 950,
-                  color: "#ffffff",
-                }}
-              >
-                {tr(language, "colors")}
-              </span>
+              <div style={{ marginTop: 18 }}>
+                <span className="control-label">{tr(language, "colors")}</span>
 
-              <div
-                className="premium-color-grid-inline"
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-                  gap: "12px",
-                }}
-              >
-                <label
-                  className="premium-color-field"
-                  style={{
-                    padding: "14px",
-                    borderRadius: "18px",
-                    background: "rgba(255,255,255,0.055)",
-                    border: "1px solid rgba(255,255,255,0.10)",
-                  }}
-                >
-                  <span>{tr(language, "serverNameColor")}</span>
-                  <input
-                    type="color"
-                    name="server_name_color"
-                    value={serverNameColor}
-                    disabled={!isPremiumOrPartner}
-                    onChange={(event) => setServerNameColor(event.target.value)}
-                  />
-                  <small>{serverNameColor}</small>
-                </label>
+                <div className="premium-color-grid-modern">
+                  <label className="premium-color-field-modern">
+                    <span>{tr(language, "serverNameColor")}</span>
+                    <input
+                      type="color"
+                      value={serverNameColor}
+                      onChange={(event) => setServerNameColor(event.target.value)}
+                    />
+                    <small>{serverNameColor}</small>
+                  </label>
 
-                <label
-                  className="premium-color-field"
-                  style={{
-                    padding: "14px",
-                    borderRadius: "18px",
-                    background: "rgba(255,255,255,0.055)",
-                    border: "1px solid rgba(255,255,255,0.10)",
-                  }}
-                >
-                  <span>{tr(language, "textColor")}</span>
-                  <input
-                    type="color"
-                    name="server_text_color"
-                    value={serverTextColor}
-                    disabled={!isPremiumOrPartner}
-                    onChange={(event) => setServerTextColor(event.target.value)}
-                  />
-                  <small>{serverTextColor}</small>
-                </label>
+                  <label className="premium-color-field-modern">
+                    <span>{tr(language, "textColor")}</span>
+                    <input
+                      type="color"
+                      value={serverTextColor}
+                      onChange={(event) => setServerTextColor(event.target.value)}
+                    />
+                    <small>{serverTextColor}</small>
+                  </label>
 
-                {premiumLayout === "glow" ? (
-                  <label
-                    className="premium-color-field"
-                    style={{
-                      padding: "14px",
-                      borderRadius: "18px",
-                      background: "rgba(255,255,255,0.055)",
-                      border: "1px solid rgba(255,255,255,0.10)",
-                    }}
-                  >
+                  <label className="premium-color-field-modern">
                     <span>{tr(language, "glowColor")}</span>
                     <input
                       type="color"
-                      name="premium_glow_color"
                       value={glowColor}
-                      disabled={!isPremiumOrPartner}
                       onChange={(event) => setGlowColor(event.target.value)}
                     />
                     <small>{glowColor}</small>
                   </label>
-                ) : (
-                  <input
-                    type="hidden"
-                    name="premium_glow_color"
-                    value={glowColor}
-                  />
+                </div>
+
+                {premiumLayout !== "glow" && (
+                  <small className="profile-mini-note" style={{ display: "block", marginTop: 10 }}>
+                    {tr(language, "glowOnly")}
+                  </small>
                 )}
               </div>
-
-              {premiumLayout !== "glow" && (
-                <small
-                  className="form-note"
-                  style={{
-                    display: "block",
-                    marginTop: "10px",
-                    color: "rgba(246,243,255,0.64)",
-                  }}
-                >
-                  {tr(language, "glowOnly")}
-                </small>
-              )}
             </div>
-          </div>
+          )}
 
-          <div className="profile-editor-actions">
+          {activeEditorTab === "invite" && (
+            <div>
+              <div className="profile-panel-head">
+                <div className="profile-panel-icon">🔗</div>
+                <div>
+                  <h3>{tr(language, "inviteTitle")}</h3>
+                  <p>{tr(language, "inviteText")}</p>
+                </div>
+              </div>
+
+              <label className="field full">
+                <span>{tr(language, "inviteLabel")}</span>
+                <input
+                  className="input"
+                  type="url"
+                  value={inviteLink}
+                  placeholder={tr(language, "invitePlaceholder")}
+                  onChange={(event) => setInviteLink(event.target.value)}
+                />
+              </label>
+
+              <small className="profile-mini-note">{tr(language, "inviteHint")}</small>
+            </div>
+          )}
+
+          <div className="profile-editor-actions-modern">
             <button className="btn profile-save-button" type="submit">
               {tr(language, "save")}
             </button>
@@ -1424,149 +1549,130 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           </div>
         </section>
 
-        <aside id="profile-live-preview" className="profile-editor-preview">
-          <div className="preview-sticky-box">
-            <span className="page-badge">{tr(language, "previewBadge")}</span>
-            <h3>{tr(language, "previewTitle")}</h3>
-            <p>{tr(language, "previewText")}</p>
+        <aside className="profile-preview-panel">
+          <div className="preview-heading">
+            <strong>{tr(language, "previewTitle")}</strong>
+            <span>{tr(language, "previewBadge")}</span>
+          </div>
 
-            <article
-              className={
-                "server-directory-card server-list-live-preview " +
-                (isPremiumOrPartner
-                  ? "server-directory-card-premium premium-layout-" +
-                    premiumLayout
-                  : "")
-              }
-              style={cardStyle}
-            >
-              {isPremiumOrPartner && premiumLayout === "glow" && (
-                <div className="premium-glow-ring" aria-hidden="true" />
+          <article
+            className={
+              "server-directory-card server-list-live-preview profile-live-card " +
+              (isPremiumOrPartner
+                ? "server-directory-card-premium premium-layout-" + premiumLayout
+                : "")
+            }
+            style={cardStyle}
+          >
+            {isPremiumOrPartner && premiumLayout === "glow" && (
+              <div className="premium-glow-ring" aria-hidden="true" />
+            )}
+
+            {isPremiumOrPartner && (
+              <div className="premium-layout-effect" aria-hidden="true" />
+            )}
+
+            <div className="server-directory-banner">
+              {bannerPreview ? (
+                <img src={bannerPreview} alt="Banner preview" style={bannerStyle} />
+              ) : (
+                <div
+                  className="server-directory-banner-fallback"
+                  style={
+                    isPremiumOrPartner
+                      ? {
+                          background:
+                            "linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01))",
+                        }
+                      : undefined
+                  }
+                />
               )}
+
+              <div className="server-directory-rating">⭐ {tr(language, "noRatings")}</div>
+            </div>
+
+            <div className="server-directory-body">
+              <div className="server-directory-top">
+                <div className="server-directory-logo">
+                  {logoPreview ? (
+                    <img src={logoPreview} alt="Discord server logo" />
+                  ) : (
+                    <span>{serverName?.slice(0, 1) || "S"}</span>
+                  )}
+                </div>
+
+                <div className="server-directory-title">
+                  <h3 style={{ color: isPremiumOrPartner ? serverNameColor : undefined }}>
+                    {serverName || tr(language, "serverName")}
+                  </h3>
+
+                  <p style={{ color: isPremiumOrPartner ? serverTextColor : undefined }}>
+                    {server.category || tr(language, "categoryFallback")} • {serverLanguage}
+                  </p>
+                </div>
+              </div>
 
               {isPremiumOrPartner && (
-                <div className="premium-layout-effect" aria-hidden="true" />
+                <div className="hero-premium-badges">
+                  {isEnabled(server.premium_status) && (
+                    <span className="hero-premium-badge premium">
+                      👑 {tr(language, "premiumBadge")}
+                    </span>
+                  )}
+
+                  {isEnabled(server.partner_status) && (
+                    <span className="hero-premium-badge partner">
+                      🤝 {tr(language, "partnerBadge")}
+                    </span>
+                  )}
+                </div>
               )}
 
-              <div className="server-directory-banner">
-                {bannerPreview ? (
-                  <img
-                    src={bannerPreview}
-                    alt="Banner preview"
-                    style={bannerStyle}
-                  />
-                ) : (
-                  <div
-                    className="server-directory-banner-fallback"
-                    style={
-                      isPremiumOrPartner
-                        ? {
-                            background:
-                              "linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01))",
-                          }
-                        : undefined
-                    }
-                  />
-                )}
+              <div className="premium-server-meta-row">
+                <span className="premium-server-meta-pill online">
+                  <span className="premium-online-dot" />
+                  {formatOnlineCount(onlineCount, language)}
+                </span>
 
-                <div className="server-directory-rating">
-                  ⭐ {tr(language, "noRatings")}
-                </div>
+                <span className="premium-server-meta-pill bump">
+                  <span>⚡</span>
+                  Bump: {formatLastBump(server.last_bump, language)}
+                </span>
               </div>
 
-              <div className="server-directory-body">
-                <div className="server-directory-top">
-                  <div className="server-directory-logo">
-                    {logoPreview ? (
-                      <img src={logoPreview} alt="Discord server logo" />
-                    ) : (
-                      <span>{serverName?.slice(0, 1) || "S"}</span>
-                    )}
-                  </div>
+              <div className="server-directory-badges">
+                {server.nsfw && <span className="badge">NSFW</span>}
 
-                  <div className="server-directory-title">
-                    <h3
-                      style={{
-                        color: isPremiumOrPartner ? serverNameColor : undefined,
-                      }}
-                    >
-                      {serverName || tr(language, "serverName")}
-                    </h3>
-
-                    <p
-                      style={{
-                        color: isPremiumOrPartner ? serverTextColor : undefined,
-                      }}
-                    >
-                      {server.category || tr(language, "categoryFallback")} •{" "}
-                      {serverLanguage}
-                    </p>
-                  </div>
-                </div>
-
-                {isPremiumOrPartner && (
-                  <div className="hero-premium-badges" style={{ marginBottom: 10 }}>
-                    {server.premium_status && (
-                      <span className="hero-premium-badge premium">
-                        👑 {tr(language, "premiumBadge")}
-                      </span>
-                    )}
-
-                    {server.partner_status && (
-                      <span className="hero-premium-badge partner">
-                        🤝 {tr(language, "partnerBadge")}
-                      </span>
-                    )}
-                  </div>
-                )}
-
-                <div className="premium-server-meta-row">
-                  <span className="premium-server-meta-pill online">
-                    <span className="premium-online-dot" />
-                    {formatOnlineCount(onlineCount, language)}
+                {tags.map((tag: string) => (
+                  <span className="badge" key={tag}>
+                    #{tag}
                   </span>
-
-                  <span className="premium-server-meta-pill bump">
-                    <span>⚡</span>
-                    Bump: {formatLastBump(server.last_bump, language)}
-                  </span>
-                </div>
-
-                <div className="server-directory-badges">
-                  {server.nsfw && <span className="badge">NSFW</span>}
-
-                  {tags.map((tag: string) => (
-                    <span className="badge" key={tag}>
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-
-                <div
-                  className="server-directory-description live-preview-description"
-                  style={{
-                    color: isPremiumOrPartner ? serverTextColor : undefined,
-                  }}
-                >
-                  {description || tr(language, "previewDescription")}
-                </div>
-
-                <div className="description-toggle-button fake-preview-toggle">
-                  {tr(language, "showMore")}
-                </div>
-
-                <div className="server-directory-footer">
-                  <button className="btn secondary" type="button">
-                    {tr(language, "viewServer")}
-                  </button>
-
-                  <button className="btn" type="button">
-                    {tr(language, "join")}
-                  </button>
-                </div>
+                ))}
               </div>
-            </article>
-          </div>
+
+              <div
+                className="server-directory-description live-preview-description"
+                style={{ color: isPremiumOrPartner ? serverTextColor : undefined }}
+              >
+                {description || tr(language, "previewDescription")}
+              </div>
+
+              <div className="description-toggle-button fake-preview-toggle">
+                {tr(language, "showMore")}
+              </div>
+
+              <div className="server-directory-footer">
+                <button className="btn secondary" type="button">
+                  {tr(language, "viewServer")}
+                </button>
+
+                <button className="btn" type="button">
+                  {tr(language, "join")}
+                </button>
+              </div>
+            </div>
+          </article>
         </aside>
       </div>
     </form>
