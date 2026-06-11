@@ -596,15 +596,15 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           .profile-edit-card {
             width: 100% !important;
             max-width: 100% !important;
-            padding: 16px !important;
+            padding: 14px !important;
             overflow: visible !important;
           }
 
           .profile-mobile-editor-nav {
             position: sticky;
-            top: 86px;
-            z-index: 60;
-            margin: 14px 0 16px;
+            top: 72px;
+            z-index: 50;
+            margin: 10px 0 12px;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
@@ -615,13 +615,13 @@ export default function ProfileServerEditor({ server }: { server: any }) {
               rgba(10, 10, 26, 0.94);
             border: 1px solid rgba(255, 255, 255, 0.11);
             box-shadow:
-              0 18px 46px rgba(0, 0, 0, 0.34),
-              0 0 28px rgba(139, 92, 246, 0.14);
+              0 16px 40px rgba(0, 0, 0, 0.34),
+              0 0 24px rgba(139, 92, 246, 0.14);
             backdrop-filter: blur(16px);
           }
 
           .profile-mobile-editor-nav a {
-            min-height: 42px;
+            min-height: 40px;
             border-radius: 15px;
             display: inline-flex;
             align-items: center;
@@ -644,7 +644,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           .profile-editor-two-column {
             display: flex !important;
             flex-direction: column !important;
-            gap: 18px !important;
+            gap: 14px !important;
             width: 100% !important;
             max-width: 100% !important;
             overflow: visible !important;
@@ -655,86 +655,92 @@ export default function ProfileServerEditor({ server }: { server: any }) {
             width: 100% !important;
             max-width: 100% !important;
             min-width: 0 !important;
+            scroll-margin-top: 140px !important;
           }
 
           .profile-editor-controls {
             order: 2 !important;
+            position: relative !important;
+            z-index: 30 !important;
             width: 100% !important;
             max-width: 100% !important;
             min-width: 0 !important;
+            scroll-margin-top: 140px !important;
           }
 
           .preview-sticky-box {
             position: sticky !important;
-            top: 144px !important;
-            z-index: 35 !important;
+            top: 126px !important;
+            z-index: 10 !important;
+            pointer-events: none !important;
             width: 100% !important;
             max-width: 100% !important;
-            max-height: calc(100dvh - 164px) !important;
-            overflow-y: auto !important;
-            overscroll-behavior: contain !important;
-            padding: 14px !important;
-            border-radius: 26px !important;
+            max-height: 42dvh !important;
+            overflow: hidden !important;
+            padding: 10px !important;
+            border-radius: 24px !important;
             background:
               radial-gradient(circle at 0% 0%, rgba(181, 76, 255, 0.14), transparent 35%),
               linear-gradient(180deg, rgba(13, 14, 34, 0.96), rgba(9, 9, 24, 0.96)) !important;
             border: 1px solid rgba(116, 223, 255, 0.15) !important;
             box-shadow:
-              0 22px 70px rgba(0, 0, 0, 0.44),
-              0 0 34px rgba(116, 223, 255, 0.10) !important;
+              0 18px 54px rgba(0, 0, 0, 0.36),
+              0 0 28px rgba(116, 223, 255, 0.10) !important;
             backdrop-filter: blur(18px) !important;
           }
 
           .preview-sticky-box > .page-badge {
-            margin-bottom: 8px !important;
-            min-height: 30px !important;
-            padding: 7px 12px !important;
-            font-size: 11px !important;
+            display: none !important;
           }
 
           .preview-sticky-box > h3 {
-            margin: 0 0 4px !important;
-            font-size: 18px !important;
+            margin: 0 0 2px !important;
+            font-size: 15px !important;
             line-height: 1.1 !important;
           }
 
           .preview-sticky-box > p {
-            margin: 0 0 12px !important;
-            font-size: 12px !important;
-            line-height: 1.35 !important;
-            color: rgba(246, 243, 255, 0.68) !important;
+            display: none !important;
           }
 
           .server-list-live-preview {
             width: 100% !important;
             max-width: 100% !important;
             min-width: 0 !important;
-            border-radius: 24px !important;
+            border-radius: 22px !important;
+            overflow: hidden !important;
           }
 
           .server-list-live-preview .server-directory-banner {
-            height: 106px !important;
+            height: 94px !important;
           }
 
           .server-list-live-preview .server-directory-body {
-            padding: 0 14px 14px !important;
+            padding: 0 12px 12px !important;
           }
 
           .server-list-live-preview .server-directory-top {
+            display: grid !important;
+            grid-template-columns: 54px minmax(0, 1fr) !important;
             gap: 10px !important;
-            margin-top: -26px !important;
+            align-items: end !important;
+            margin-top: -24px !important;
           }
 
           .server-list-live-preview .server-directory-logo {
-            width: 58px !important;
-            height: 58px !important;
-            border-radius: 18px !important;
+            width: 54px !important;
+            height: 54px !important;
+            border-radius: 17px !important;
             border-width: 3px !important;
-            font-size: 22px !important;
+            font-size: 21px !important;
+          }
+
+          .server-list-live-preview .server-directory-title {
+            min-width: 0 !important;
           }
 
           .server-list-live-preview .server-directory-title h3 {
-            font-size: 20px !important;
+            font-size: 18px !important;
             line-height: 1.05 !important;
             max-width: 100% !important;
             overflow: hidden !important;
@@ -743,27 +749,42 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           }
 
           .server-list-live-preview .server-directory-title p {
-            font-size: 12px !important;
+            font-size: 11.5px !important;
             line-height: 1.25 !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
+            white-space: nowrap !important;
+            text-overflow: ellipsis !important;
+          }
+
+          .server-list-live-preview .hero-premium-badges {
+            margin: 8px 0 !important;
+            gap: 6px !important;
+          }
+
+          .server-list-live-preview .hero-premium-badge {
+            min-height: 24px !important;
+            padding: 0 8px !important;
+            font-size: 10px !important;
           }
 
           .server-list-live-preview .premium-server-meta-row {
             display: grid !important;
             grid-template-columns: 1fr 1.25fr !important;
-            gap: 8px !important;
-            margin: 12px 0 !important;
+            gap: 7px !important;
+            margin: 8px 0 !important;
           }
 
           .server-list-live-preview .premium-server-meta-pill {
             min-width: 0 !important;
-            min-height: 32px !important;
-            padding: 0 8px !important;
+            min-height: 29px !important;
+            padding: 0 7px !important;
             border-radius: 999px !important;
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
             gap: 5px !important;
-            font-size: 10.8px !important;
+            font-size: 10px !important;
             font-weight: 950 !important;
             line-height: 1 !important;
             overflow: hidden !important;
@@ -772,43 +793,49 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           }
 
           .server-list-live-preview .server-directory-badges {
-            gap: 7px !important;
+            gap: 6px !important;
+            margin-top: 8px !important;
           }
 
           .server-list-live-preview .badge {
-            min-height: 28px !important;
-            padding: 0 9px !important;
-            font-size: 11px !important;
+            min-height: 25px !important;
+            padding: 0 8px !important;
+            font-size: 10px !important;
           }
 
           .server-list-live-preview .server-directory-description {
-            max-height: 108px !important;
-            margin-top: 12px !important;
-            padding: 13px !important;
-            border-radius: 18px !important;
-            font-size: 12px !important;
-            line-height: 1.55 !important;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 3 !important;
+            -webkit-box-orient: vertical !important;
+            overflow: hidden !important;
+            max-height: 72px !important;
+            margin-top: 8px !important;
+            padding: 10px !important;
+            border-radius: 16px !important;
+            font-size: 11px !important;
+            line-height: 1.45 !important;
+            white-space: pre-wrap !important;
+            overflow-wrap: anywhere !important;
           }
 
           .server-list-live-preview .description-toggle-button,
           .server-list-live-preview .fake-preview-toggle {
-            margin-top: 8px !important;
-            font-size: 13px !important;
+            display: none !important;
           }
 
           .server-list-live-preview .server-directory-footer {
             display: grid !important;
             grid-template-columns: 1fr 1fr !important;
-            gap: 8px !important;
-            margin-top: 12px !important;
+            gap: 7px !important;
+            margin-top: 9px !important;
           }
 
           .server-list-live-preview .server-directory-footer .btn {
             width: 100% !important;
-            min-height: 42px !important;
-            padding: 0 10px !important;
-            border-radius: 15px !important;
-            font-size: 12.5px !important;
+            min-height: 36px !important;
+            padding: 0 8px !important;
+            border-radius: 13px !important;
+            font-size: 11px !important;
           }
 
           .profile-upload-grid,
@@ -818,10 +845,28 @@ export default function ProfileServerEditor({ server }: { server: any }) {
 
           .banner-control-card,
           .premium-inline-tools {
+            position: relative !important;
+            z-index: 35 !important;
             width: 100% !important;
             max-width: 100% !important;
             padding: 18px !important;
             border-radius: 24px !important;
+          }
+
+          .banner-control-top {
+            margin-top: 12px !important;
+            scroll-margin-top: 52dvh !important;
+          }
+
+          .banner-control-card input[type="range"] {
+            width: 100% !important;
+            height: 42px !important;
+          }
+
+          .premium-inline-tools button,
+          .premium-inline-tools input,
+          .premium-inline-tools label {
+            pointer-events: auto !important;
           }
 
           .premium-inline-tools [style*="repeat(auto-fit"] {
@@ -829,6 +874,8 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           }
 
           .profile-editor-actions {
+            position: relative !important;
+            z-index: 40 !important;
             display: grid !important;
             grid-template-columns: 1fr !important;
             gap: 10px !important;
@@ -842,35 +889,54 @@ export default function ProfileServerEditor({ server }: { server: any }) {
 
         @media (max-width: 430px) {
           .profile-edit-card {
-            padding: 12px !important;
+            padding: 10px !important;
           }
 
           .profile-mobile-editor-nav {
-            top: 82px;
-            grid-template-columns: 1fr;
+            top: 68px;
+            grid-template-columns: 1fr 1fr;
           }
 
           .preview-sticky-box {
-            top: 136px !important;
-            max-height: calc(100dvh - 152px) !important;
-            padding: 12px !important;
-            border-radius: 22px !important;
+            top: 120px !important;
+            max-height: 38dvh !important;
+            padding: 8px !important;
+            border-radius: 20px !important;
           }
 
           .server-list-live-preview .server-directory-banner {
-            height: 96px !important;
+            height: 82px !important;
           }
 
           .server-list-live-preview .server-directory-body {
-            padding: 0 12px 12px !important;
+            padding: 0 10px 10px !important;
+          }
+
+          .server-list-live-preview .server-directory-logo {
+            width: 48px !important;
+            height: 48px !important;
+          }
+
+          .server-list-live-preview .server-directory-title h3 {
+            font-size: 16px !important;
           }
 
           .server-list-live-preview .premium-server-meta-row {
             grid-template-columns: 1fr !important;
           }
 
+          .server-list-live-preview .server-directory-description {
+            -webkit-line-clamp: 2 !important;
+            max-height: 46px !important;
+          }
+
           .server-list-live-preview .server-directory-footer {
-            grid-template-columns: 1fr !important;
+            grid-template-columns: 1fr 1fr !important;
+          }
+
+          .banner-control-card,
+          .premium-inline-tools {
+            padding: 15px !important;
           }
         }
       `}</style>
