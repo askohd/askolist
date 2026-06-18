@@ -66,6 +66,44 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "hourly",
       priority: 0.95,
     },
+
+    {
+      url: `${baseUrl}/servers/deutsch`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/servers/gaming`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.86,
+    },
+    {
+      url: `${baseUrl}/servers/anime`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.86,
+    },
+    {
+      url: `${baseUrl}/servers/community`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.86,
+    },
+    {
+      url: `${baseUrl}/servers/minecraft`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.82,
+    },
+    {
+      url: `${baseUrl}/servers/valorant`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.82,
+    },
+
     {
       url: `${baseUrl}/submit`,
       lastModified: now,
