@@ -131,7 +131,7 @@ const UI_TEXT = {
     pageBadge: "Asko Cafe Directory",
     title: "Discord Server Liste",
     subtitle:
-      "Finde aktive deutsche Discord Server und internationale Communities für Gaming, Anime, Community, Chill, Events, Minecraft, Valorant und mehr.",
+      "Finde aktive Discord Server für Gaming, Anime, Community, Minecraft, Valorant und mehr.",
     submitServer: "Server eintragen",
     searchPlaceholder: "Server suchen...",
     allLanguages: "Alle Sprachen",
@@ -776,65 +776,6 @@ export default async function ServersPage({
             font-size: 10.8px !important;
           }
         }
-
-        .servers-seo-intro {
-          margin: 18px 0 24px;
-          padding: 24px;
-          border-radius: 28px;
-          background:
-            radial-gradient(circle at 0% 0%, rgba(236,72,153,0.16), transparent 36%),
-            radial-gradient(circle at 100% 0%, rgba(34,211,238,0.12), transparent 34%),
-            rgba(14, 10, 34, 0.72);
-          border: 1px solid rgba(255,255,255,0.10);
-          box-shadow: 0 22px 60px rgba(0,0,0,0.24);
-        }
-
-        .servers-seo-intro h2 {
-          margin: 0 0 10px;
-          color: #ffffff;
-          font-size: clamp(1.35rem, 2.4vw, 2rem);
-          line-height: 1.15;
-          letter-spacing: -0.03em;
-        }
-
-        .servers-seo-intro p {
-          margin: 0;
-          max-width: 980px;
-          color: rgba(244, 239, 255, 0.78);
-          line-height: 1.7;
-          font-size: 0.98rem;
-        }
-
-        .servers-seo-points {
-          display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 10px;
-          margin-top: 16px;
-        }
-
-        .servers-seo-points span {
-          min-height: 44px;
-          display: flex;
-          align-items: center;
-          padding: 10px 12px;
-          border-radius: 16px;
-          color: rgba(255,255,255,0.88);
-          font-size: 0.88rem;
-          font-weight: 850;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.10);
-        }
-
-        @media (max-width: 760px) {
-          .servers-seo-intro {
-            padding: 18px;
-            border-radius: 22px;
-          }
-
-          .servers-seo-points {
-            grid-template-columns: 1fr;
-          }
-        }
       `}</style>
 
       <section className="servers-directory-header">
@@ -847,17 +788,6 @@ export default async function ServersPage({
         <Link href="/submit" className="btn">
           {t(uiLanguage, "submitServer")}
         </Link>
-      </section>
-
-      <section className="servers-seo-intro">
-        <h2>{t(uiLanguage, "seoTitle")}</h2>
-        <p>{t(uiLanguage, "seoText")}</p>
-
-        <div className="servers-seo-points">
-          <span>{t(uiLanguage, "seoPointOne")}</span>
-          <span>{t(uiLanguage, "seoPointTwo")}</span>
-          <span>{t(uiLanguage, "seoPointThree")}</span>
-        </div>
       </section>
 
       <form className="server-directory-filters" action="/servers">
