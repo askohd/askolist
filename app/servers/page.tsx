@@ -1,8 +1,62 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import type { CSSProperties } from "react";
 import { supabaseRequest } from "@/lib/supabase";
 import { languages } from "@/lib/demoData";
+
+export const metadata: Metadata = {
+  title: "Discord Server Liste – Deutsche Discord Server finden",
+  description:
+    "Finde aktive Discord Server und deutsche Discord Communities für Gaming, Anime, Community, Chill, Events, Minecraft, Valorant und mehr. Entdecke neue Server oder trage deinen eigenen Discord Server kostenlos auf Asko Cafe ein.",
+  keywords: [
+    "Discord Server",
+    "Discord Server Liste",
+    "Discord Server finden",
+    "Discord Server eintragen",
+    "deutsche Discord Server",
+    "Discord Server Deutsch",
+    "Discord Server Liste Deutsch",
+    "Gaming Discord Server",
+    "Anime Discord Server",
+    "Community Discord Server",
+    "Minecraft Discord Server",
+    "Valorant Discord Server",
+    "Chill Discord Server",
+    "Asko Cafe",
+  ],
+  alternates: {
+    canonical: "/servers",
+  },
+  openGraph: {
+    title: "Discord Server Liste – Deutsche Discord Server finden",
+    description:
+      "Entdecke aktive deutsche Discord Server und internationale Communities für Gaming, Anime, Community, Events und mehr.",
+    url: "https://www.askocafe.com/servers",
+    siteName: "Asko Cafe",
+    type: "website",
+    locale: "de_DE",
+    images: [
+      {
+        url: "/asko-cafe-hero.png",
+        width: 1200,
+        height: 630,
+        alt: "Asko Cafe Discord Server Liste",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Discord Server Liste – Deutsche Discord Server finden",
+    description:
+      "Finde aktive Discord Server, deutsche Communities und neue Server für Gaming, Anime, Minecraft, Valorant und mehr.",
+    images: ["/asko-cafe-hero.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
 type ServerLanguage = "Deutsch" | "English" | "Français" | "Italiano" | "Polski";
@@ -75,8 +129,9 @@ const LANGUAGE_SEARCH_ALIASES: Record<ServerLanguage, string[]> = {
 const UI_TEXT = {
   de: {
     pageBadge: "Asko Cafe Directory",
-    title: "Asko Cafe Discord Server",
-    subtitle: "Die zuletzt gebumpten Server stehen automatisch ganz oben.",
+    title: "Discord Server Liste",
+    subtitle:
+      "Finde aktive deutsche Discord Server und internationale Communities für Gaming, Anime, Community, Chill, Events, Minecraft, Valorant und mehr.",
     submitServer: "Server eintragen",
     searchPlaceholder: "Server suchen...",
     allLanguages: "Alle Sprachen",
@@ -102,12 +157,19 @@ const UI_TEXT = {
     viewServer: "Server ansehen",
     join: "Beitreten",
     partner: "Partner",
+    seoTitle: "Deutsche Discord Server und internationale Communities finden",
+    seoText:
+      "Auf Asko Cafe findest du aktive Discord Server aus verschiedenen Kategorien. Entdecke deutsche Discord Server, Gaming Communities, Anime Server, Minecraft Server, Valorant Server, Chill Server und neue Community Server. Du kannst auch deinen eigenen Discord Server kostenlos eintragen und neue Mitglieder erreichen.",
+    seoPointOne: "Deutsche Discord Server für Gaming, Anime und Community",
+    seoPointTwo: "Internationale Discord Server nach Sprache, Tags und Kategorie",
+    seoPointThree: "Kostenlos Discord Server finden, ansehen und eintragen",
   },
 
   en: {
     pageBadge: "Asko Cafe Directory",
-    title: "Asko Cafe Discord Servers",
-    subtitle: "The most recently bumped servers are automatically shown first.",
+    title: "Discord Server List",
+    subtitle:
+      "Find active Discord servers and communities for gaming, anime, community, chill, events, Minecraft, Valorant and more.",
     submitServer: "Submit server",
     searchPlaceholder: "Search servers...",
     allLanguages: "All languages",
@@ -133,6 +195,12 @@ const UI_TEXT = {
     viewServer: "View server",
     join: "Join",
     partner: "Partner",
+    seoTitle: "Find Discord servers and international communities",
+    seoText:
+      "Asko Cafe helps you discover active Discord servers across many categories. Find German Discord servers, gaming communities, anime servers, Minecraft servers, Valorant servers, chill servers and new community servers. You can also submit your own Discord server for free and reach new members.",
+    seoPointOne: "German Discord servers for gaming, anime and community",
+    seoPointTwo: "International Discord servers by language, tags and category",
+    seoPointThree: "Find, view and submit Discord servers for free",
   },
 
   fr: {
@@ -165,6 +233,12 @@ const UI_TEXT = {
     viewServer: "Voir le serveur",
     join: "Rejoindre",
     partner: "Partenaire",
+    seoTitle: "Trouver des serveurs Discord et des communautés internationales",
+    seoText:
+      "Asko Cafe t'aide à découvrir des serveurs Discord actifs dans plusieurs catégories. Trouve des serveurs Discord allemands, des communautés gaming, des serveurs anime, Minecraft, Valorant, chill et de nouveaux serveurs communautaires. Tu peux aussi ajouter ton propre serveur Discord gratuitement.",
+    seoPointOne: "Serveurs Discord allemands pour gaming, anime et communauté",
+    seoPointTwo: "Serveurs Discord internationaux par langue, tags et catégorie",
+    seoPointThree: "Trouver, voir et ajouter des serveurs Discord gratuitement",
   },
 
   it: {
@@ -197,6 +271,12 @@ const UI_TEXT = {
     viewServer: "Vedi server",
     join: "Entra",
     partner: "Partner",
+    seoTitle: "Trova server Discord e community internazionali",
+    seoText:
+      "Asko Cafe ti aiuta a scoprire server Discord attivi in tante categorie. Trova server Discord tedeschi, community gaming, server anime, Minecraft, Valorant, chill e nuovi server community. Puoi anche inserire gratuitamente il tuo server Discord.",
+    seoPointOne: "Server Discord tedeschi per gaming, anime e community",
+    seoPointTwo: "Server Discord internazionali per lingua, tag e categoria",
+    seoPointThree: "Trova, guarda e inserisci server Discord gratis",
   },
 
   pl: {
@@ -229,6 +309,12 @@ const UI_TEXT = {
     viewServer: "Zobacz serwer",
     join: "Dołącz",
     partner: "Partner",
+    seoTitle: "Znajdź serwery Discord i międzynarodowe społeczności",
+    seoText:
+      "Asko Cafe pomaga odkrywać aktywne serwery Discord w wielu kategoriach. Znajdź niemieckie serwery Discord, społeczności gamingowe, serwery anime, Minecraft, Valorant, chill oraz nowe serwery community. Możesz też bezpłatnie dodać własny serwer Discord.",
+    seoPointOne: "Niemieckie serwery Discord dla gamingu, anime i community",
+    seoPointTwo: "Międzynarodowe serwery Discord według języka, tagów i kategorii",
+    seoPointThree: "Znajdź, zobacz i dodaj serwery Discord za darmo",
   },
 } as const;
 
@@ -690,6 +776,65 @@ export default async function ServersPage({
             font-size: 10.8px !important;
           }
         }
+
+        .servers-seo-intro {
+          margin: 18px 0 24px;
+          padding: 24px;
+          border-radius: 28px;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(236,72,153,0.16), transparent 36%),
+            radial-gradient(circle at 100% 0%, rgba(34,211,238,0.12), transparent 34%),
+            rgba(14, 10, 34, 0.72);
+          border: 1px solid rgba(255,255,255,0.10);
+          box-shadow: 0 22px 60px rgba(0,0,0,0.24);
+        }
+
+        .servers-seo-intro h2 {
+          margin: 0 0 10px;
+          color: #ffffff;
+          font-size: clamp(1.35rem, 2.4vw, 2rem);
+          line-height: 1.15;
+          letter-spacing: -0.03em;
+        }
+
+        .servers-seo-intro p {
+          margin: 0;
+          max-width: 980px;
+          color: rgba(244, 239, 255, 0.78);
+          line-height: 1.7;
+          font-size: 0.98rem;
+        }
+
+        .servers-seo-points {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 10px;
+          margin-top: 16px;
+        }
+
+        .servers-seo-points span {
+          min-height: 44px;
+          display: flex;
+          align-items: center;
+          padding: 10px 12px;
+          border-radius: 16px;
+          color: rgba(255,255,255,0.88);
+          font-size: 0.88rem;
+          font-weight: 850;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.10);
+        }
+
+        @media (max-width: 760px) {
+          .servers-seo-intro {
+            padding: 18px;
+            border-radius: 22px;
+          }
+
+          .servers-seo-points {
+            grid-template-columns: 1fr;
+          }
+        }
       `}</style>
 
       <section className="servers-directory-header">
@@ -702,6 +847,17 @@ export default async function ServersPage({
         <Link href="/submit" className="btn">
           {t(uiLanguage, "submitServer")}
         </Link>
+      </section>
+
+      <section className="servers-seo-intro">
+        <h2>{t(uiLanguage, "seoTitle")}</h2>
+        <p>{t(uiLanguage, "seoText")}</p>
+
+        <div className="servers-seo-points">
+          <span>{t(uiLanguage, "seoPointOne")}</span>
+          <span>{t(uiLanguage, "seoPointTwo")}</span>
+          <span>{t(uiLanguage, "seoPointThree")}</span>
+        </div>
       </section>
 
       <form className="server-directory-filters" action="/servers">
