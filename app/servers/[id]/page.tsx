@@ -32,6 +32,26 @@ function getBaseUrl() {
   return SITE_URL.replace(/\/$/, "");
 }
 
+function isUuidLike(value: string) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    value.trim()
+  );
+}
+
+function getServerLookupFilter(value: string) {
+  const safeValue = encodeURIComponent(value.trim());
+
+  if (isUuidLike(value)) {
+    return `id=eq.${safeValue}`;
+  }
+
+  return `slug=eq.${safeValue}`;
+}
+
+function getServerPublicPath(server: any) {
+  return String(server?.slug || server?.id || "").trim();
+}
+
 function cleanSeoText(value: unknown) {
   return String(value ?? "")
     .replace(/\s+/g, " ")
@@ -95,9 +115,7 @@ function getServerSeoDescription(server: ServerMetadataRow) {
 async function getServerForMetadata(id: string) {
   try {
     const servers = await supabaseRequest(
-      `servers?id=eq.${encodeURIComponent(
-        id
-      )}&approved=eq.true&status=eq.approved&select=*&limit=1`
+      `servers?${getServerLookupFilter(id)}&approved=eq.true&status=eq.approved&select=*&limit=1`
     );
 
     if (!Array.isArray(servers)) {
@@ -136,7 +154,8 @@ export async function generateMetadata({
   const language = cleanSeoText(server.language || "Deutsch");
   const title = `${serverName} Discord Server – ${category} ${language}`;
   const description = getServerSeoDescription(server);
-  const serverUrl = `${getBaseUrl()}/servers/${encodeURIComponent(server.id)}`;
+  const serverPath = getServerPublicPath(server);
+  const serverUrl = `${getBaseUrl()}/servers/${encodeURIComponent(serverPath)}`;
   const imageUrl = getServerSeoImage(server);
 
   return {
@@ -156,7 +175,7 @@ export async function generateMetadata({
       "Asko Cafe",
     ],
     alternates: {
-      canonical: `/servers/${server.id}`,
+      canonical: `/servers/${serverPath}`,
     },
     openGraph: {
       title,
@@ -410,7 +429,7 @@ export default async function ServerDetailPage({
   const isAdmin = isAdminUser(user);
 
   const servers = await supabaseRequest(
-    `servers?id=eq.${id}&approved=eq.true&status=eq.approved&select=*`
+    `servers?${getServerLookupFilter(id)}&approved=eq.true&status=eq.approved&select=*`
   );
 
   const server = servers?.[0];
@@ -455,8 +474,9 @@ export default async function ServerDetailPage({
   const invite = getServerInvite(server);
   const tags = getServerTags(server);
 
+  const serverSeoPath = getServerPublicPath(server);
   const serverSeoUrl = `${getBaseUrl()}/servers/${encodeURIComponent(
-    server.id
+    serverSeoPath
   )}`;
 
   const serverStructuredData = {
