@@ -97,7 +97,7 @@ async function getServerForMetadata(id: string) {
     const servers = await supabaseRequest(
       `servers?id=eq.${encodeURIComponent(
         id
-      )}&approved=eq.true&status=eq.approved&select=id,server_name,description,category,language,country,tags,banner_url,premium_banner_url,logo_url,discord_server_icon_url,member_count,online_count&limit=1`
+      )}&approved=eq.true&status=eq.approved&select=*&limit=1`
     );
 
     if (!Array.isArray(servers)) {
