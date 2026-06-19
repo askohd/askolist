@@ -766,6 +766,78 @@ export default async function ServersPage({
             rgba(255,255,255,0.065) !important;
         }
 
+        .server-directory-seo-card {
+          margin: 22px 0 26px;
+          padding: 22px;
+          border-radius: 28px;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(139, 92, 246, 0.18), transparent 36%),
+            radial-gradient(circle at 100% 0%, rgba(116, 223, 255, 0.14), transparent 34%),
+            rgba(255,255,255,0.055);
+          border: 1px solid rgba(255,255,255,0.10);
+          box-shadow: 0 0 28px rgba(139,92,246,0.12);
+        }
+
+        .server-directory-seo-card h2 {
+          margin: 0 0 10px;
+          color: #ffffff;
+          font-size: clamp(22px, 3vw, 34px);
+          line-height: 1.05;
+          letter-spacing: -0.045em;
+          font-weight: 950;
+        }
+
+        .server-directory-seo-card p {
+          margin: 0;
+          max-width: 980px;
+          color: rgba(246,243,255,0.78);
+          font-size: 15px;
+          line-height: 1.75;
+          font-weight: 700;
+        }
+
+        .server-directory-seo-points {
+          margin-top: 16px;
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 10px;
+        }
+
+        .server-directory-seo-point {
+          min-height: 42px;
+          padding: 10px 13px;
+          border-radius: 16px;
+          display: flex;
+          align-items: center;
+          gap: 9px;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.10);
+          color: rgba(255,255,255,0.88);
+          font-size: 13px;
+          font-weight: 900;
+          line-height: 1.35;
+        }
+
+        .server-directory-seo-point span:first-child {
+          flex: 0 0 auto;
+        }
+
+        @media (max-width: 760px) {
+          .server-directory-seo-card {
+            margin: 18px 0 22px;
+            padding: 18px;
+            border-radius: 22px;
+          }
+
+          .server-directory-seo-points {
+            grid-template-columns: 1fr;
+          }
+
+          .server-directory-seo-card p {
+            font-size: 14px;
+          }
+        }
+
         @media (max-width: 420px) {
           .server-directory-card .premium-server-meta-row.server-card-top-stats {
             gap: 6px !important;
@@ -826,6 +898,28 @@ export default async function ServersPage({
           </Link>
         )}
       </form>
+
+      <section className="server-directory-seo-card" aria-labelledby="servers-seo-title">
+        <h2 id="servers-seo-title">{t(uiLanguage, "seoTitle")}</h2>
+        <p>{t(uiLanguage, "seoText")}</p>
+
+        <div className="server-directory-seo-points">
+          <div className="server-directory-seo-point">
+            <span>🇩🇪</span>
+            <span>{t(uiLanguage, "seoPointOne")}</span>
+          </div>
+
+          <div className="server-directory-seo-point">
+            <span>🌍</span>
+            <span>{t(uiLanguage, "seoPointTwo")}</span>
+          </div>
+
+          <div className="server-directory-seo-point">
+            <span>✨</span>
+            <span>{t(uiLanguage, "seoPointThree")}</span>
+          </div>
+        </div>
+      </section>
 
       {servers.length === 0 ? (
         <section className="card empty">
