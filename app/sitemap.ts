@@ -1,12 +1,6 @@
 import type { MetadataRoute } from "next";
 import { supabaseRequest } from "@/lib/supabase";
 
-export const dynamic = dieser Version:
-
-```ts
-import type { MetadataRoute } from "next";
-import { supabaseRequest } from "@/lib/supabase";
-
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
