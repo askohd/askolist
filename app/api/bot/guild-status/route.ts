@@ -61,11 +61,17 @@ export async function POST(request: Request) {
     const body = await request.json();
 
     const discordServerId = String(body.discordServerId ?? "").trim();
-    const botInGuild = Boolean(body.botInGuild);
 
     if (!discordServerId) {
       return NextResponse.json(
         { success: false, message: "Missing discordServerId." },
+        { status: 400 }
+      );
+    }
+
+    if (typeof body.botInGuild !== "boolean") {
+      return NextResponse.json(
+        { success: false, message: "Missing botInGuild boolean." },
         { status: 400 }
       );
     }
@@ -89,17 +95,17 @@ export async function POST(request: Request) {
       );
     }
 
-    await updateBotStatus(String(server.id), botInGuild);
+    await updateBotStatus(String(server.id), body.botInGuild);
 
     return NextResponse.json({
       success: true,
-      message: botInGuild
+      message: body.botInGuild
         ? "Bot-Status wurde auf verbunden gesetzt."
         : "Bot-Status wurde auf entfernt gesetzt.",
       serverId: String(server.id),
       serverName: server.server_name,
       discordServerId: String(server.discord_server_id ?? ""),
-      botInGuild,
+      botInGuild: body.botInGuild,
     });
   } catch (error: any) {
     console.error("Bot guild-status route failed:", error);
