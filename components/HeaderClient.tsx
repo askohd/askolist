@@ -106,7 +106,13 @@ function t(language: UiLanguage, key: keyof typeof HEADER_TEXT.de) {
   return HEADER_TEXT[language][key] || HEADER_TEXT.de[key];
 }
 
-export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
+export default function HeaderClient({
+  isAdmin,
+  hasDashboardAlert,
+}: {
+  isAdmin: boolean;
+  hasDashboardAlert?: boolean;
+}) {
   const language = normalizeLanguage(useLanguage());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -116,6 +122,27 @@ export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
 
   return (
     <header className="nav">
+      <style>{`
+        .nav-alert-dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 999px;
+          background: #ff1744;
+          box-shadow:
+            0 0 0 3px rgba(255, 23, 68, 0.18),
+            0 0 14px rgba(255, 23, 68, 0.55);
+          flex: 0 0 auto;
+        }
+
+        .mobile-menu-alert-link {
+          position: relative;
+        }
+
+        .mobile-menu-alert-dot {
+          margin-left: auto;
+        }
+      `}</style>
+
       <div className="container nav-inner">
         <Link className="logo" href="/">
           <span className="logo-mark">
@@ -144,7 +171,10 @@ export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
 
         <div className="nav-right-actions desktop-nav-actions">
           <LanguageSwitcher />
-          <LoginButton isAdmin={isAdmin} />
+          <LoginButton
+            isAdmin={isAdmin}
+            hasDashboardAlert={Boolean(hasDashboardAlert)}
+          />
         </div>
 
         <div className="mobile-nav-shell">
@@ -236,16 +266,35 @@ export default function HeaderClient({ isAdmin }: { isAdmin: boolean }) {
           aria-label="Mobile Navigation"
         >
           {MOBILE_NAV_LINKS.map((item) => (
-            <Link key={item.href} href={item.href} onClick={closeMobileMenu}>
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={closeMobileMenu}
+              className={
+                item.href === "/profile" && hasDashboardAlert
+                  ? "mobile-menu-alert-link"
+                  : undefined
+              }
+            >
               <span className="nav-link-icon">{item.icon}</span>
               {t(language, item.key)}
+
+              {item.href === "/profile" && hasDashboardAlert && (
+                <span
+                  className="nav-alert-dot mobile-menu-alert-dot"
+                  aria-label="Neue Dashboard Benachrichtigung"
+                />
+              )}
             </Link>
           ))}
         </nav>
 
         <div className="nav-right-actions mobile-menu-actions">
           <LanguageSwitcher />
-          <LoginButton isAdmin={isAdmin} />
+          <LoginButton
+            isAdmin={isAdmin}
+            hasDashboardAlert={Boolean(hasDashboardAlert)}
+          />
         </div>
       </div>
     </header>
