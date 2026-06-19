@@ -1035,7 +1035,7 @@ export default async function ServersPage({
                   <div className="server-directory-footer">
                     <Link
                       className="btn secondary"
-                      href={`/servers/${server.id}`}
+                      href={`/servers/${encodeURIComponent(server.slug || server.id)}`}
                     >
                       {t(uiLanguage, "viewServer")}
                     </Link>
