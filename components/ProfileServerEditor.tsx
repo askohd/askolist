@@ -1231,12 +1231,12 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           padding: 16px;
           border-radius: 24px;
           background:
-            radial-gradient(circle at 0% 0%, rgba(255, 207, 64, 0.18), transparent 34%),
-            linear-gradient(135deg, rgba(255, 207, 64, 0.12), rgba(181, 76, 255, 0.10));
-          border: 1px solid rgba(255, 207, 64, 0.28);
+            radial-gradient(circle at 0% 0%, rgba(255, 45, 85, 0.26), transparent 34%),
+            linear-gradient(135deg, rgba(255, 45, 85, 0.18), rgba(181, 76, 255, 0.10));
+          border: 1px solid rgba(255, 45, 85, 0.52);
           box-shadow:
             0 16px 44px rgba(0, 0, 0, 0.24),
-            0 0 28px rgba(255, 207, 64, 0.10);
+            0 0 34px rgba(255, 45, 85, 0.20);
         }
 
         .bot-invite-alert-inner {
@@ -1262,8 +1262,9 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           justify-content: center;
           flex: 0 0 auto;
           font-size: 20px;
-          background: rgba(255, 207, 64, 0.14);
-          border: 1px solid rgba(255, 207, 64, 0.24);
+          background: rgba(255, 45, 85, 0.20);
+          border: 1px solid rgba(255, 45, 85, 0.38);
+          box-shadow: 0 0 18px rgba(255, 45, 85, 0.18);
         }
 
         .bot-invite-alert h4 {
@@ -1275,7 +1276,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
 
         .bot-invite-alert p {
           margin: 6px 0 0;
-          color: rgba(246, 243, 255, 0.76);
+          color: rgba(255, 235, 240, 0.86);
           font-size: 13px;
           line-height: 1.45;
         }
@@ -1284,6 +1285,9 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           flex: 0 0 auto;
           min-height: 44px;
           white-space: nowrap;
+          background: linear-gradient(135deg, #ff2d55, #ff005d, #74dfff);
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          box-shadow: 0 0 28px rgba(255, 45, 85, 0.24);
         }
 
         @media (max-width: 900px) {
@@ -1842,7 +1846,7 @@ export default function ProfileServerEditor({ server }: { server: any }) {
         <div className="bot-invite-alert">
           <div className="bot-invite-alert-inner">
             <div className="bot-invite-alert-copy">
-              <div className="bot-invite-alert-icon">🤖</div>
+              <div className="bot-invite-alert-icon">⚠️</div>
 
               <div>
                 <h4>{tr(language, "botInviteRequiredTitle")}</h4>
