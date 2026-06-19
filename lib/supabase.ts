@@ -1,179 +1,48 @@
-import type { MetadataRoute } from "next";
-import { supabaseRequest } from "@/lib/supabase";
+export async function supabaseRequest(
+  path: string,
+  options: RequestInit = {}
+) {
+  const rawSupabaseUrl = process.env.SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  process.env.NEXT_PUBLIC_APP_URL ||
-  "https://www.askocafe.com";
-
-type ServerSitemapRow = {
-  id: string;
-  slug?: string | null;
-  updated_at?: string | null;
-  created_at?: string | null;
-  last_bump?: string | null;
-};
-
-function getBaseUrl() {
-  return SITE_URL.replace(/\/$/, "");
-}
-
-function getValidDate(...values: Array<string | null | undefined>) {
-  for (const value of values) {
-    if (!value) continue;
-
-    const date = new Date(value);
-
-    if (!Number.isNaN(date.getTime())) {
-      return date;
-    }
+  if (!rawSupabaseUrl || !serviceRoleKey) {
+    throw new Error("Missing Supabase environment variables");
   }
 
-  return new Date();
-}
+  const supabaseUrl = rawSupabaseUrl
+    .trim()
+    .replace(/\/rest\/v1\/?$/i, "")
+    .replace(/\/$/i, "");
 
-function getServerPublicPath(server: ServerSitemapRow) {
-  const value = String(server.slug || server.id || "").trim();
+  const cleanPath = path
+    .trim()
+    .replace(/^\/+/i, "")
+    .replace(/^rest\/v1\/?/i, "");
 
-  return value || server.id;
-}
+  const requestUrl = `${supabaseUrl}/rest/v1/${cleanPath}`;
 
-async function getApprovedServers(): Promise<ServerSitemapRow[]> {
-  const servers = await supabaseRequest(
-    "servers?approved=is.true&status=eq.approved&select=id,slug,updated_at,created_at,last_bump&order=created_at.desc&limit=5000"
-  );
+  const response = await fetch(requestUrl, {
+    ...options,
+    headers: {
+      apikey: serviceRoleKey,
+      Authorization: `Bearer ${serviceRoleKey}`,
+      "Content-Type": "application/json",
+      Prefer: "return=representation",
+      ...(options.headers || {}),
+    },
+    cache: "no-store",
+  });
 
-  if (!Array.isArray(servers)) {
-    return [];
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(
+      `Supabase error: ${response.status} ${errorText} | URL: ${requestUrl}`
+    );
   }
 
-  return servers.filter((server) => Boolean(server?.id));
-}
-
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = getBaseUrl();
-  const now = new Date();
-
-  let servers: ServerSitemapRow[] = [];
-
-  try {
-    servers = await getApprovedServers();
-  } catch (error) {
-    console.error("Sitemap server loading failed:", error);
+  if (response.status === 204) {
+    return null;
   }
 
-  const staticPages: MetadataRoute.Sitemap = [
-    {
-      url: baseUrl,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/servers`,
-      lastModified: now,
-      changeFrequency: "hourly",
-      priority: 0.95,
-    },
-    {
-      url: `${baseUrl}/servers/deutsch`,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/servers/gaming`,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 0.86,
-    },
-    {
-      url: `${baseUrl}/servers/anime`,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 0.86,
-    },
-    {
-      url: `${baseUrl}/servers/community`,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 0.86,
-    },
-    {
-      url: `${baseUrl}/servers/minecraft`,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 0.82,
-    },
-    {
-      url: `${baseUrl}/servers/valorant`,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 0.82,
-    },
-    {
-      url: `${baseUrl}/submit`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.75,
-    },
-    {
-daily",
-      priority: 0.82,
-    },
-    {
-      url: `${baseUrl}/submit`,
-      lastModified: now,
-      changeFrequency      url: `${baseUrl}/shop`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/support`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/info`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/datenschutz`,
-      lastModified: now,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/nutzungsbedingungen`,
-      lastModified: now,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/impressum`,
-      lastModified: now,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-  ];
-
-  const serverPages: MetadataRoute.Sitemap = servers.map((server) => ({
-    url: `${baseUrl}/servers/${encodeURIComponent(getServerPublicPath(server))}`,
-    lastModified: getValidDate(
-      server.updated_at,
-      server.last_bump,
-      server.created_at
-    ),
-    changeFrequency: "daily",
-    priority: 0.82,
-  }));
-
-  return [...staticPages, ...serverPages];
+  return response.json();
 }
