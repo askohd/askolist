@@ -316,16 +316,17 @@ export default function LoginButton({
 
         .user-menu-alert-dot {
           position: absolute;
-          top: -2px;
-          right: -2px;
-          width: 12px;
-          height: 12px;
+          top: -6px;
+          right: -6px;
+          width: 20px;
+          height: 20px;
           border-radius: 999px;
           background: #ff1744;
-          border: 2px solid rgba(12, 10, 24, 0.98);
+          border: 3px solid rgba(12, 10, 24, 0.98);
           box-shadow:
-            0 0 0 3px rgba(255, 23, 68, 0.20),
-            0 0 16px rgba(255, 23, 68, 0.65);
+            0 0 0 4px rgba(255, 23, 68, 0.26),
+            0 0 20px rgba(255, 23, 68, 0.90);
+          z-index: 20;
         }
 
         .user-menu-dashboard-link {
