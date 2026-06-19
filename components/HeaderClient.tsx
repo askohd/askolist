@@ -124,13 +124,14 @@ export default function HeaderClient({
     <header className="nav">
       <style>{`
         .nav-alert-dot {
-          width: 10px;
-          height: 10px;
+          width: 14px;
+          height: 14px;
           border-radius: 999px;
           background: #ff1744;
+          border: 2px solid rgba(12, 10, 24, 0.98);
           box-shadow:
-            0 0 0 3px rgba(255, 23, 68, 0.18),
-            0 0 14px rgba(255, 23, 68, 0.55);
+            0 0 0 4px rgba(255, 23, 68, 0.22),
+            0 0 18px rgba(255, 23, 68, 0.75);
           flex: 0 0 auto;
         }
 
@@ -140,6 +141,26 @@ export default function HeaderClient({
 
         .mobile-menu-alert-dot {
           margin-left: auto;
+        }
+
+        .mobile-menu-toggle {
+          position: relative;
+        }
+
+        .mobile-menu-toggle-main-dot {
+          position: absolute;
+          top: 6px;
+          right: 6px;
+          width: 19px;
+          height: 19px;
+          border-radius: 999px;
+          background: #ff1744;
+          border: 3px solid rgba(12, 10, 24, 0.98);
+          box-shadow:
+            0 0 0 4px rgba(255, 23, 68, 0.24),
+            0 0 20px rgba(255, 23, 68, 0.9);
+          z-index: 20;
+          pointer-events: none;
         }
       `}</style>
 
@@ -229,6 +250,13 @@ export default function HeaderClient({
               onClick={() => setMobileMenuOpen((current) => !current)}
             >
               <span>{mobileMenuOpen ? "×" : "≡"}</span>
+
+              {hasDashboardAlert && (
+                <span
+                  className="mobile-menu-toggle-main-dot"
+                  aria-label="Neue Dashboard Benachrichtigung"
+                />
+              )}
             </button>
           </div>
         </div>
