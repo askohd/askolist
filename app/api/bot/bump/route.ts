@@ -92,6 +92,40 @@ function isMissingOptionalColumnError(error: any) {
   );
 }
 
+async function markBotInGuild(serverId: string) {
+  const now = new Date().toISOString();
+
+  try {
+    await supabaseRequest(`servers?id=eq.${serverId}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        bot_in_guild: true,
+        bot_added_at: now,
+        bot_removed_at: null,
+      }),
+    });
+  } catch (error) {
+    if (!isMissingOptionalColumnError(error)) {
+      console.warn("Could not update bot guild status:", error);
+      return;
+    }
+
+    try {
+      await supabaseRequest(`servers?id=eq.${serverId}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          bot_in_guild: true,
+        }),
+      });
+    } catch (retryError) {
+      console.warn(
+        "Could not update bot_in_guild. Is the column missing?",
+        retryError
+      );
+    }
+  }
+}
+
 function getServerUrl(serverId: string) {
   return `${SITE_URL.replace(/\/$/, "")}/servers/${serverId}`;
 }
@@ -143,6 +177,7 @@ function getBumpResponse({
     language: server.language || null,
     premium: Boolean(server.premium_status),
     partner: Boolean(server.partner_status),
+    botInGuild: true,
 
     buttons: {
       viewServer: {
@@ -229,6 +264,8 @@ export async function POST(request: Request) {
         { status: 404 }
       );
     }
+
+    await markBotInGuild(String(server.id));
 
     if (server.status === "banned") {
       return NextResponse.json(
