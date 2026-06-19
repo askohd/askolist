@@ -1,10 +1,192 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { supabaseRequest } from "@/lib/supabase";
 
 const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  process.env.NEXT_PUBLIC_APP_URL ||
+  "https://www.askocafe.com";
+
+type ServerMetadataRow = {
+  id: string;
+  server_name?: string | null;
+  description?: string | null;
+  category?: string | null;
+  language?: string | null;
+  country?: string | null;
+  tags?: string[] | null;
+  banner_url?: string | null;
+  premium_banner_url?: string | null;
+  logo_url?: string | null;
+  discord_server_icon_url?: string | null;
+  member_count?: number | null;
+  online_count?: number | null;
+};
+
+function getBaseUrl() {
+  return SITE_URL.replace(/\/$/, "");
+}
+
+function cleanSeoText(value: unknown) {
+  return String(value ?? "")
+    .replace(/\s+/g, " ")
+    .replace(/[#*_`<>]/g, "")
+    .trim();
+}
+
+function truncateSeoText(value: string, maxLength: number) {
+  if (value.length <= maxLength) {
+    return value;
+  }
+
+  return `${value.slice(0, maxLength - 1).trim()}…`;
+}
+
+function getAbsoluteUrl(pathOrUrl: string | null | undefined) {
+  const value = String(pathOrUrl ?? "").trim();
+
+  if (!value) {
+    return `${getBaseUrl()}/asko-cafe-hero.png`;
+  }
+
+  if (value.startsWith("http://") || value.startsWith("https://")) {
+    return value;
+  }
+
+  return `${getBaseUrl()}${value.startsWith("/") ? value : `/${value}`}`;
+}
+
+function getServerSeoImage(server: ServerMetadataRow) {
+  return getAbsoluteUrl(
+    server.premium_banner_url ||
+      server.banner_url ||
+      server.logo_url ||
+      server.discord_server_icon_url ||
+      "/asko-cafe-hero.png"
+  );
+}
+
+function getServerSeoDescription(server: ServerMetadataRow) {
+  const name = cleanSeoText(server.server_name || "Discord Server");
+  const category = cleanSeoText(server.category || "Community");
+  const language = cleanSeoText(server.language || "Deutsch");
+  const description = cleanSeoText(server.description);
+  const tags = Array.isArray(server.tags)
+    ? server.tags.filter(Boolean).slice(0, 5).join(", ")
+    : "";
+
+  const text =
+    description ||
+    `Tritt dem ${name} Discord Server bei. Entdecke eine aktive ${language} ${category} Community auf Asko Cafe.`;
+
+  const tagText = tags ? ` Tags: ${tags}.` : "";
+
+  return truncateSeoText(
+    `${text} Finde ${category} Discord Server, deutsche Discord Server und neue Communities auf Asko Cafe.${tagText}`,
+    300
+  );
+}
+
+async function getServerForMetadata(id: string) {
+  try {
+    const servers = await supabaseRequest(
+      `servers?id=eq.${encodeURIComponent(
+        id
+      )}&approved=eq.true&status=eq.approved&select=id,server_name,description,category,language,country,tags,banner_url,premium_banner_url,logo_url,discord_server_icon_url,member_count,online_count&limit=1`
+    );
+
+    if (!Array.isArray(servers)) {
+      return null;
+    }
+
+    return (servers[0] ?? null) as ServerMetadataRow | null;
+  } catch (error) {
+    console.error("Could not load server metadata:", error);
+    return null;
+  }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const server = await getServerForMetadata(id);
+
+  if (!server) {
+    return {
+      title: "Discord Server nicht gefunden",
+      description:
+        "Dieser Discord Server wurde nicht gefunden oder ist noch nicht freigegeben.",
+      robots: {
+        index: false,
+        follow: true,
+      },
+    };
+  }
+
+  const serverName = cleanSeoText(server.server_name || "Discord Server");
+  const category = cleanSeoText(server.category || "Community");
+  const language = cleanSeoText(server.language || "Deutsch");
+  const title = `${serverName} Discord Server – ${category} ${language}`;
+  const description = getServerSeoDescription(server);
+  const serverUrl = `${getBaseUrl()}/servers/${encodeURIComponent(server.id)}`;
+  const imageUrl = getServerSeoImage(server);
+
+  return {
+    title,
+    description,
+    keywords: [
+      `${serverName} Discord Server`,
+      `${category} Discord Server`,
+      `${language} Discord Server`,
+      "Discord Server",
+      "deutsche Discord Server",
+      "Discord Server Liste",
+      "Discord Server finden",
+      "Gaming Discord Server",
+      "Anime Discord Server",
+      "Community Discord Server",
+      "Asko Cafe",
+    ],
+    alternates: {
+      canonical: `/servers/${server.id}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: serverUrl,
+      siteName: "Asko Cafe",
+      type: "website",
+      locale: "de_DE",
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${serverName} Discord Server`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [imageUrl],
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
+
 
 const SERVER_REPORT_REASONS = [
   "Unpassende Inhalte",
@@ -273,6 +455,28 @@ export default async function ServerDetailPage({
   const invite = getServerInvite(server);
   const tags = getServerTags(server);
 
+  const serverSeoUrl = `${getBaseUrl()}/servers/${encodeURIComponent(
+    server.id
+  )}`;
+
+  const serverStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: `${server.server_name} Discord Server`,
+    description: getServerSeoDescription(server),
+    url: serverSeoUrl,
+    image: getServerSeoImage(server),
+    isPartOf: {
+      "@type": "WebSite",
+      name: "Asko Cafe",
+      url: getBaseUrl(),
+    },
+    about: {
+      "@type": "Thing",
+      name: `${server.category || "Community"} Discord Server`,
+    },
+  };
+
   const serverNameColor = isPremiumOrPartner
     ? server.server_name_color || "#ffffff"
     : "#ffffff";
@@ -294,6 +498,13 @@ export default async function ServerDetailPage({
           "radial-gradient(circle at 0% 20%, rgba(139, 92, 246, 0.35), transparent 34%), radial-gradient(circle at 100% 12%, rgba(85, 214, 255, 0.24), transparent 30%), linear-gradient(135deg, #06000d 0%, #12051f 48%, #102236 100%)",
       }}
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(serverStructuredData),
+        }}
+      />
+
       <style>{`
         @media (max-width: 900px) {
           .server-detail-page-mobile {
