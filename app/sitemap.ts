@@ -12,27 +12,10 @@ const SITE_URL =
 type ServerSitemapRow = {
   id: string;
   slug?: string | null;
-  updated_at?: string | null;
-  created_at?: string | null;
-  last_bump?: string | null;
 };
 
 function getBaseUrl() {
   return SITE_URL.replace(/\/$/, "");
-}
-
-function getValidDate(...values: Array<string | null | undefined>) {
-  for (const value of values) {
-    if (!value) continue;
-
-    const date = new Date(value);
-
-    if (!Number.isNaN(date.getTime())) {
-      return date;
-    }
-  }
-
-  return new Date();
 }
 
 function getServerPublicPath(server: ServerSitemapRow) {
@@ -42,7 +25,7 @@ function getServerPublicPath(server: ServerSitemapRow) {
 async function getApprovedServers(): Promise<ServerSitemapRow[]> {
   try {
     const servers = await supabaseRequest(
-      "servers?approved=eq.true&status=eq.approved&select=id,slug,updated_at,created_at,last_bump&order=created_at.desc&limit=5000"
+      "servers?approved=is.true&status=eq.approved&select=id,slug&order=created_at.desc&limit=5000"
     );
 
     if (!Array.isArray(servers)) {
@@ -51,7 +34,7 @@ async function getApprovedServers(): Promise<ServerSitemapRow[]> {
 
     return servers.filter((server) => Boolean(server?.id));
   } catch (error) {
-    console.error("Could not build server sitemap entries:", error);
+    console.error("Sitemap server loading failed:", error);
     return [];
   }
 }
@@ -156,11 +139,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const serverPages: MetadataRoute.Sitemap = servers.map((server) => ({
     url: `${baseUrl}/servers/${encodeURIComponent(getServerPublicPath(server))}`,
-    lastModified: getValidDate(
-      server.updated_at,
-      server.last_bump,
-      server.created_at
-    ),
+    lastModified: now,
     changeFrequency: "daily",
     priority: 0.82,
   }));
