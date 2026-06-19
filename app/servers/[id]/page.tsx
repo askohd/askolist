@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { supabaseRequest } from "@/lib/supabase";
@@ -438,6 +438,13 @@ export default async function ServerDetailPage({
     notFound();
   }
 
+  const serverSeoPath = getServerPublicPath(server);
+  const requestedPath = String(id || "").trim();
+
+  if (isUuidLike(requestedPath) && serverSeoPath && serverSeoPath !== requestedPath) {
+    redirect(`/servers/${encodeURIComponent(serverSeoPath)}`);
+  }
+
   const reviewsResponse = await supabaseRequest(
     `reviews?server_id=eq.${server.id}&select=*&order=created_at.desc`
   );
@@ -474,7 +481,6 @@ export default async function ServerDetailPage({
   const invite = getServerInvite(server);
   const tags = getServerTags(server);
 
-  const serverSeoPath = getServerPublicPath(server);
   const serverSeoUrl = `${getBaseUrl()}/servers/${encodeURIComponent(
     serverSeoPath
   )}`;
