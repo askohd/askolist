@@ -110,7 +110,13 @@ function t(language: UiLanguage, key: keyof typeof USER_MENU_TEXT.de) {
   return USER_MENU_TEXT[language][key] || USER_MENU_TEXT.de[key];
 }
 
-export default function LoginButton({ isAdmin }: { isAdmin?: boolean }) {
+export default function LoginButton({
+  isAdmin,
+  hasDashboardAlert,
+}: {
+  isAdmin?: boolean;
+  hasDashboardAlert?: boolean;
+}) {
   const { data: session, status } = useSession();
   const language = normalizeLanguage(useLanguage());
 
@@ -299,22 +305,92 @@ export default function LoginButton({ isAdmin }: { isAdmin?: boolean }) {
 
   return (
     <div className="user-menu">
+      <style>{`
+        .user-menu-avatar-wrap {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          flex: 0 0 auto;
+        }
+
+        .user-menu-alert-dot {
+          position: absolute;
+          top: -2px;
+          right: -2px;
+          width: 12px;
+          height: 12px;
+          border-radius: 999px;
+          background: #ff1744;
+          border: 2px solid rgba(12, 10, 24, 0.98);
+          box-shadow:
+            0 0 0 3px rgba(255, 23, 68, 0.20),
+            0 0 16px rgba(255, 23, 68, 0.65);
+        }
+
+        .user-menu-dashboard-link {
+          position: relative;
+        }
+
+        .user-menu-dashboard-alert {
+          margin-left: auto;
+          width: 10px;
+          height: 10px;
+          border-radius: 999px;
+          background: #ff1744;
+          box-shadow:
+            0 0 0 3px rgba(255, 23, 68, 0.18),
+            0 0 14px rgba(255, 23, 68, 0.55);
+          flex: 0 0 auto;
+        }
+
+        .user-menu-dashboard-count {
+          margin-left: auto;
+          min-width: 20px;
+          height: 20px;
+          padding: 0 6px;
+          border-radius: 999px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: #ff1744;
+          color: #ffffff;
+          font-size: 12px;
+          font-weight: 950;
+          line-height: 1;
+          box-shadow:
+            0 0 0 3px rgba(255, 23, 68, 0.16),
+            0 0 16px rgba(255, 23, 68, 0.54);
+        }
+      `}</style>
+
       <button
         type="button"
         className="user-menu-trigger"
         onClick={() => setOpen((current) => !current)}
         aria-label="User menu öffnen"
       >
-        {image ? (
-          <img
-            src={image}
-            alt={name}
-            className="user-menu-avatar"
-            referrerPolicy="no-referrer"
-          />
-        ) : (
-          <span className="user-menu-avatar-fallback">{name.slice(0, 1)}</span>
-        )}
+        <span className="user-menu-avatar-wrap">
+          {image ? (
+            <img
+              src={image}
+              alt={name}
+              className="user-menu-avatar"
+              referrerPolicy="no-referrer"
+            />
+          ) : (
+            <span className="user-menu-avatar-fallback">
+              {name.slice(0, 1)}
+            </span>
+          )}
+
+          {hasDashboardAlert && (
+            <span
+              className="user-menu-alert-dot"
+              aria-label="Neue Dashboard Benachrichtigung"
+            />
+          )}
+        </span>
 
         <span className="user-menu-name">{name}</span>
       </button>
@@ -342,9 +418,22 @@ export default function LoginButton({ isAdmin }: { isAdmin?: boolean }) {
           </div>
 
           <div className="user-menu-list">
-            <Link href="/profile" onClick={() => setOpen(false)}>
+            <Link
+              href="/profile"
+              onClick={() => setOpen(false)}
+              className="user-menu-dashboard-link"
+            >
               <span>📊</span>
               {t(language, "dashboard")}
+
+              {hasDashboardAlert && (
+                <span
+                  className="user-menu-dashboard-count"
+                  aria-label="Neue Dashboard Benachrichtigung"
+                >
+                  1
+                </span>
+              )}
             </Link>
 
             <Link href="/shop" onClick={() => setOpen(false)}>
