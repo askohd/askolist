@@ -129,6 +129,12 @@ const DASHBOARD_TEXT = {
     premiumBadge: "Premium",
     partnerBadge: "Partner",
     lockedButton: "Premium Funktion",
+    botInviteRequiredTitle: "Bot noch nicht eingeladen",
+    botInviteRequiredText:
+      "Bitte lade unseren Bot auf deinen Discord-Server ein, damit du bumpen und alle Serverfunktionen nutzen kannst.",
+    botInviteButton: "Bot einladen",
+    botInviteMissingConfig:
+      "Die Bot Client-ID fehlt noch in den Website-Einstellungen.",
   },
 
   en: {
@@ -191,6 +197,12 @@ const DASHBOARD_TEXT = {
     premiumBadge: "Premium",
     partnerBadge: "Partner",
     lockedButton: "Premium feature",
+    botInviteRequiredTitle: "Bot not invited yet",
+    botInviteRequiredText:
+      "Please invite our bot to your Discord server so you can bump and use all server features.",
+    botInviteButton: "Invite bot",
+    botInviteMissingConfig:
+      "The bot client ID is still missing in the website settings.",
   },
 
   fr: {
@@ -256,6 +268,12 @@ const DASHBOARD_TEXT = {
     premiumBadge: "Premium",
     partnerBadge: "Partenaire",
     lockedButton: "Fonction Premium",
+    botInviteRequiredTitle: "Bot pas encore invité",
+    botInviteRequiredText:
+      "Invite notre bot sur ton serveur Discord afin de pouvoir bump et utiliser toutes les fonctions serveur.",
+    botInviteButton: "Inviter le bot",
+    botInviteMissingConfig:
+      "L'ID client du bot manque encore dans les paramètres du site.",
   },
 
   it: {
@@ -318,6 +336,12 @@ const DASHBOARD_TEXT = {
     premiumBadge: "Premium",
     partnerBadge: "Partner",
     lockedButton: "Funzione Premium",
+    botInviteRequiredTitle: "Bot non ancora invitato",
+    botInviteRequiredText:
+      "Invita il nostro bot sul tuo server Discord per poter fare bump e usare tutte le funzioni del server.",
+    botInviteButton: "Invita bot",
+    botInviteMissingConfig:
+      "L'ID client del bot manca ancora nelle impostazioni del sito.",
   },
 
   pl: {
@@ -380,6 +404,12 @@ const DASHBOARD_TEXT = {
     premiumBadge: "Premium",
     partnerBadge: "Partner",
     lockedButton: "Funkcja Premium",
+    botInviteRequiredTitle: "Bot nie został jeszcze zaproszony",
+    botInviteRequiredText:
+      "Zaproś naszego bota na swój serwer Discord, aby móc bumpować i korzystać ze wszystkich funkcji serwera.",
+    botInviteButton: "Zaproś bota",
+    botInviteMissingConfig:
+      "Brakuje jeszcze ID klienta bota w ustawieniach strony.",
   },
 } as const;
 
@@ -577,8 +607,49 @@ function isEnabled(value: unknown) {
   );
 }
 
+function getDiscordServerId(server: any) {
+  return (
+    server.discord_server_id ||
+    server.discordServerId ||
+    server.guild_id ||
+    server.guildId ||
+    ""
+  );
+}
+
+function isBotInGuild(server: any) {
+  return (
+    isEnabled(server.bot_in_guild) ||
+    isEnabled(server.botInGuild) ||
+    isEnabled(server.has_bot) ||
+    isEnabled(server.bot_joined)
+  );
+}
+
+function getBotInviteUrl(server: any) {
+  const clientId = process.env.NEXT_PUBLIC_DISCORD_BOT_CLIENT_ID || "";
+  const permissions = process.env.NEXT_PUBLIC_DISCORD_BOT_PERMISSIONS || "0";
+  const guildId = getDiscordServerId(server);
+
+  const params = new URLSearchParams({
+    client_id: clientId,
+    permissions,
+    scope: "bot applications.commands",
+  });
+
+  if (guildId) {
+    params.set("guild_id", guildId);
+    params.set("disable_guild_select", "true");
+  }
+
+  return `https://discord.com/oauth2/authorize?${params.toString()}`;
+}
+
 export default function ProfileServerEditor({ server }: { server: any }) {
   const language = useLanguage() as UiLanguage;
+  const botInGuild = isBotInGuild(server);
+  const botInviteUrl = getBotInviteUrl(server);
+  const botClientId = process.env.NEXT_PUBLIC_DISCORD_BOT_CLIENT_ID || "";
 
   const isPremiumOrPartner =
     isEnabled(server.premium_status) || isEnabled(server.partner_status);
@@ -1155,6 +1226,104 @@ export default function ProfileServerEditor({ server }: { server: any }) {
             linear-gradient(135deg, transparent, rgba(52, 115, 255, 0.18));
         }
 
+        .bot-invite-alert {
+          margin: 0 0 16px;
+          padding: 16px;
+          border-radius: 24px;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(255, 207, 64, 0.18), transparent 34%),
+            linear-gradient(135deg, rgba(255, 207, 64, 0.12), rgba(181, 76, 255, 0.10));
+          border: 1px solid rgba(255, 207, 64, 0.28);
+          box-shadow:
+            0 16px 44px rgba(0, 0, 0, 0.24),
+            0 0 28px rgba(255, 207, 64, 0.10);
+        }
+
+        .bot-invite-alert-inner {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+        }
+
+        .bot-invite-alert-copy {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          min-width: 0;
+        }
+
+        .bot-invite-alert-icon {
+          width: 42px;
+          height: 42px;
+          border-radius: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex: 0 0 auto;
+          font-size: 20px;
+          background: rgba(255, 207, 64, 0.14);
+          border: 1px solid rgba(255, 207, 64, 0.24);
+        }
+
+        .bot-invite-alert h4 {
+          margin: 0;
+          color: #ffffff;
+          font-size: 15px;
+          font-weight: 950;
+        }
+
+        .bot-invite-alert p {
+          margin: 6px 0 0;
+          color: rgba(246, 243, 255, 0.76);
+          font-size: 13px;
+          line-height: 1.45;
+        }
+
+        .bot-invite-alert .btn {
+          flex: 0 0 auto;
+          min-height: 44px;
+          white-space: nowrap;
+        }
+
+        @media (max-width: 900px) {
+          .bot-invite-alert {
+            margin-bottom: 12px;
+            padding: 14px;
+            border-radius: 22px;
+          }
+
+          .bot-invite-alert-inner {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 14px;
+          }
+
+          .bot-invite-alert-copy {
+            gap: 10px;
+          }
+
+          .bot-invite-alert-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            font-size: 18px;
+          }
+
+          .bot-invite-alert h4 {
+            font-size: 14px;
+          }
+
+          .bot-invite-alert p {
+            font-size: 12px;
+          }
+
+          .bot-invite-alert .btn {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+
         @media (max-width: 900px) {
           .profile-editor-tabs {
             top: 70px;
@@ -1668,6 +1837,36 @@ export default function ProfileServerEditor({ server }: { server: any }) {
       `}</style>
 
       <h3 className="profile-editor-modern-title">{tr(language, "editTitle")}</h3>
+
+      {!botInGuild && (
+        <div className="bot-invite-alert">
+          <div className="bot-invite-alert-inner">
+            <div className="bot-invite-alert-copy">
+              <div className="bot-invite-alert-icon">🤖</div>
+
+              <div>
+                <h4>{tr(language, "botInviteRequiredTitle")}</h4>
+                <p>
+                  {botClientId
+                    ? tr(language, "botInviteRequiredText")
+                    : tr(language, "botInviteMissingConfig")}
+                </p>
+              </div>
+            </div>
+
+            {botClientId && (
+              <a
+                className="btn"
+                href={botInviteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {tr(language, "botInviteButton")}
+              </a>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="profile-editor-tabs" aria-label="Editor Bereiche">
         {[
