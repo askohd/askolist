@@ -48,6 +48,47 @@ function slugifyFileName(name: string) {
   return name.replace(/[^a-zA-Z0-9.-]/g, "_");
 }
 
+function slugifyServerName(name: string) {
+  const normalized = String(name ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/ä/g, "ae")
+    .replace(/ö/g, "oe")
+    .replace(/ü/g, "ue")
+    .replace(/ß/g, "ss")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .replace(/-+/g, "-")
+    .slice(0, 64);
+
+  return normalized || "discord-server";
+}
+
+async function slugAlreadyExists(slug: string) {
+  const rows = await supabaseRequest(
+    `servers?slug=eq.${encodeURIComponent(slug)}&select=id&limit=1`
+  );
+
+  return Array.isArray(rows) && rows.length > 0;
+}
+
+async function createUniqueServerSlug(serverName: string) {
+  const baseSlug = slugifyServerName(serverName);
+  let candidate = baseSlug;
+
+  for (let counter = 2; counter <= 100; counter += 1) {
+    if (!(await slugAlreadyExists(candidate))) {
+      return candidate;
+    }
+
+    candidate = `${baseSlug}-${counter}`;
+  }
+
+  return `${baseSlug}-${Date.now()}`;
+}
+
 function redirectToSubmit(request: Request, query: string) {
   return NextResponse.redirect(new URL(`/submit?${query}`, request.url), {
     status: 303,
@@ -142,6 +183,15 @@ function isDuplicateDatabaseError(error: any) {
     message.includes("unique constraint") ||
     message.includes("servers_one_server_per_owner") ||
     message.includes("servers_one_entry_per_discord_server")
+  );
+}
+
+function isSlugDuplicateDatabaseError(error: any) {
+  const message = String(error?.message || error || "").toLowerCase();
+
+  return (
+    message.includes("servers_slug_unique") ||
+    (message.includes("duplicate key") && message.includes("slug"))
   );
 }
 
@@ -371,6 +421,7 @@ export async function POST(request: Request) {
     }
 
     const tags = cleanTags(tagsText);
+    const slug = await createUniqueServerSlug(serverName);
 
     await saveLegalAcceptanceLog({
       discordUserId: ownerDiscordUserId,
@@ -390,6 +441,7 @@ export async function POST(request: Request) {
             discordGuild?.id || `manual-${ownerDiscordUserId}-${Date.now()}`,
 
           server_name: serverName,
+          slug,
           description,
           invite_link: inviteLink,
 
@@ -425,6 +477,10 @@ export async function POST(request: Request) {
         }),
       });
     } catch (error) {
+      if (isSlugDuplicateDatabaseError(error)) {
+        return redirectToSubmit(request, "error=slug_exists");
+      }
+
       if (isDuplicateDatabaseError(error)) {
         return redirectToSubmit(request, "error=only_one_server");
       }
