@@ -8,6 +8,7 @@ const SITE_URL =
 
 type ServerSitemapRow = {
   id: string;
+  slug?: string | null;
   updated_at?: string | null;
   created_at?: string | null;
   last_bump?: string | null;
@@ -31,10 +32,14 @@ function getValidDate(...values: Array<string | null | undefined>) {
   return new Date();
 }
 
+function getServerPublicPath(server: ServerSitemapRow) {
+  return String(server.slug || server.id).trim();
+}
+
 async function getApprovedServers(): Promise<ServerSitemapRow[]> {
   try {
     const servers = await supabaseRequest(
-      "servers?approved=eq.true&status=eq.approved&select=id,updated_at,created_at,last_bump&limit=5000"
+      "servers?approved=eq.true&status=eq.approved&select=id,slug,updated_at,created_at,last_bump&limit=5000"
     );
 
     if (!Array.isArray(servers)) {
@@ -149,7 +154,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const serverPages: MetadataRoute.Sitemap = servers.map((server) => ({
-    url: `${baseUrl}/servers/${encodeURIComponent(server.id)}`,
+    url: `${baseUrl}/servers/${encodeURIComponent(getServerPublicPath(server))}`,
     lastModified: getValidDate(
       server.updated_at,
       server.last_bump,
