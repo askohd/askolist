@@ -1,6 +1,15 @@
 import type { MetadataRoute } from "next";
 import { supabaseRequest } from "@/lib/supabase";
 
+export const dynamic = dieser Version:
+
+```ts
+import type { MetadataRoute } from "next";
+import { supabaseRequest } from "@/lib/supabase";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
   process.env.NEXT_PUBLIC_APP_URL ||
@@ -39,7 +48,7 @@ function getServerPublicPath(server: ServerSitemapRow) {
 async function getApprovedServers(): Promise<ServerSitemapRow[]> {
   try {
     const servers = await supabaseRequest(
-      "servers?approved=eq.true&status=eq.approved&select=id,slug,updated_at,created_at,last_bump&limit=5000"
+      "servers?approved=eq.true&status=eq.approved&select=id,slug,updated_at,created_at,last_bump&order=created_at.desc&limit=5000"
     );
 
     if (!Array.isArray(servers)) {
@@ -71,7 +80,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "hourly",
       priority: 0.95,
     },
-
     {
       url: `${baseUrl}/servers/deutsch`,
       lastModified: now,
@@ -108,7 +116,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily",
       priority: 0.82,
     },
-
     {
       url: `${baseUrl}/submit`,
       lastModified: now,
