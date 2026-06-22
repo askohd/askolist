@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
@@ -132,14 +133,14 @@ async function getServerForMetadata(id: string) {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { id } = await params;
-  const server = await getServerForMetadata(id);
+  const { slug } = await params;
+  const server = await getServerForMetadata(slug);
 
   if (!server) {
     return {
-      title: "Discord Server nicht gefunden",
+      title: "Discord Server nicht gefunden | Asko Cafe",
       description:
         "Dieser Discord Server wurde nicht gefunden oder ist noch nicht freigegeben.",
       robots: {
@@ -152,30 +153,48 @@ export async function generateMetadata({
   const serverName = cleanSeoText(server.server_name || "Discord Server");
   const category = cleanSeoText(server.category || "Community");
   const language = cleanSeoText(server.language || "Deutsch");
-  const title = `${serverName} Discord Server – ${category} ${language}`;
+  const title = `${serverName} Discord Server beitreten | Asko Cafe`;
   const description = getServerSeoDescription(server);
   const serverPath = getServerPublicPath(server);
   const serverUrl = `${getBaseUrl()}/servers/${encodeURIComponent(serverPath)}`;
   const imageUrl = getServerSeoImage(server);
+
+  const tagKeywords = Array.isArray(server.tags)
+    ? server.tags
+        .filter(Boolean)
+        .slice(0, 8)
+        .flatMap((tag) => [
+          `${cleanSeoText(tag)} Discord Server`,
+          `${cleanSeoText(tag)} Community`,
+        ])
+    : [];
 
   return {
     title,
     description,
     keywords: [
       `${serverName} Discord Server`,
+      `${serverName} Discord beitreten`,
+      `${serverName} Server`,
       `${category} Discord Server`,
       `${language} Discord Server`,
+      `${language} ${category} Discord Server`,
       "Discord Server",
       "deutsche Discord Server",
       "Discord Server Liste",
       "Discord Server finden",
+      "Discord Server beitreten",
+      "Discord Server eintragen",
       "Gaming Discord Server",
       "Anime Discord Server",
+      "Minecraft Discord Server",
+      "Valorant Discord Server",
       "Community Discord Server",
       "Asko Cafe",
+      ...tagKeywords,
     ],
     alternates: {
-      canonical: `/servers/${serverPath}`,
+      canonical: serverUrl,
     },
     openGraph: {
       title,
@@ -189,7 +208,7 @@ export async function generateMetadata({
           url: imageUrl,
           width: 1200,
           height: 630,
-          alt: `${serverName} Discord Server`,
+          alt: `${serverName} Discord Server beitreten`,
         },
       ],
     },
@@ -202,6 +221,13 @@ export async function generateMetadata({
     robots: {
       index: true,
       follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
     },
   };
 }
@@ -419,9 +445,9 @@ function StarRatingText({ rating }: { rating: number }) {
 export default async function ServerDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }) {
-  const { id } = await params;
+  const { slug } = await params;
 
   const session = await getServerSession(authOptions);
   const user = session?.user as any;
@@ -429,7 +455,7 @@ export default async function ServerDetailPage({
   const isAdmin = isAdminUser(user);
 
   const servers = await supabaseRequest(
-    `servers?${getServerLookupFilter(id)}&approved=eq.true&status=eq.approved&select=*`
+    `servers?${getServerLookupFilter(slug)}&approved=eq.true&status=eq.approved&select=*`
   );
 
   const server = servers?.[0];
@@ -439,7 +465,7 @@ export default async function ServerDetailPage({
   }
 
   const serverSeoPath = getServerPublicPath(server);
-  const requestedPath = String(id || "").trim();
+  const requestedPath = String(slug || "").trim();
 
   if (isUuidLike(requestedPath) && serverSeoPath && serverSeoPath !== requestedPath) {
     redirect(`/servers/${encodeURIComponent(serverSeoPath)}`);
@@ -488,19 +514,56 @@ export default async function ServerDetailPage({
   const serverStructuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: `${server.server_name} Discord Server`,
+    name: `${server.server_name} Discord Server beitreten`,
+    headline: `${server.server_name} Discord Server`,
     description: getServerSeoDescription(server),
     url: serverSeoUrl,
     image: getServerSeoImage(server),
+    inLanguage: server.language || "de-DE",
     isPartOf: {
       "@type": "WebSite",
       name: "Asko Cafe",
       url: getBaseUrl(),
     },
-    about: {
-      "@type": "Thing",
-      name: `${server.category || "Community"} Discord Server`,
-    },
+    about: [
+      {
+        "@type": "Thing",
+        name: `${server.category || "Community"} Discord Server`,
+      },
+      {
+        "@type": "Thing",
+        name: `${server.language || "Deutsch"} Discord Server`,
+      },
+      {
+        "@type": "Thing",
+        name: "Discord Server Liste",
+      },
+    ],
+  };
+
+  const breadcrumbStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Startseite",
+        item: getBaseUrl(),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Discord Server Liste",
+        item: `${getBaseUrl()}/servers`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: `${server.server_name} Discord Server`,
+        item: serverSeoUrl,
+      },
+    ],
   };
 
   const serverNameColor = isPremiumOrPartner
@@ -528,6 +591,13 @@ export default async function ServerDetailPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(serverStructuredData),
+        }}
+      />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbStructuredData),
         }}
       />
 
