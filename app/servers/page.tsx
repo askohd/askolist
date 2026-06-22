@@ -772,12 +772,46 @@ export default async function ServersPage({
     ],
   };
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Wie finde ich gute Discord Server?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Auf Asko Cafe kannst du Discord Server nach Namen, Sprache, Tags und Kategorien suchen. Die Serverliste zeigt aktive Communities für Gaming, Anime, Minecraft, Valorant, Community und weitere Themen.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Kann ich deutsche Discord Server suchen?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Ja. Auf der Seite Deutsche Discord Server findest du deutschsprachige Discord Communities. Du kannst zusätzlich nach Gaming, Anime, Minecraft, Valorant oder Community filtern.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Kann ich meinen Discord Server kostenlos eintragen?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Ja. Serverbesitzer können ihren Discord Server kostenlos auf Asko Cafe eintragen und so neue Mitglieder erreichen.",
+        },
+      },
+    ],
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify([collectionJsonLd, breadcrumbJsonLd]),
+          __html: JSON.stringify([collectionJsonLd, breadcrumbJsonLd, faqJsonLd]),
         }}
       />
 
@@ -886,6 +920,167 @@ export default async function ServersPage({
           box-shadow:
             0 0 0 1px rgba(255,255,255,0.04) inset,
             0 0 24px rgba(112,219,255,0.14);
+        }
+
+        .server-directory-seo-guide {
+          width: 100%;
+          max-width: 1080px;
+          margin: 0 auto 34px;
+          padding: 24px;
+          border-radius: 28px;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(139,92,246,0.18), transparent 34%),
+            radial-gradient(circle at 100% 0%, rgba(112,219,255,0.13), transparent 34%),
+            rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.10);
+          box-shadow:
+            0 0 0 1px rgba(255,255,255,0.025) inset,
+            0 0 26px rgba(139,92,246,0.12);
+        }
+
+        .server-directory-seo-guide-badge {
+          min-height: 32px;
+          padding: 0 13px;
+          border-radius: 999px;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          color: #9deaff;
+          font-size: 12px;
+          font-weight: 950;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          background: rgba(112,219,255,0.08);
+          border: 1px solid rgba(112,219,255,0.20);
+        }
+
+        .server-directory-seo-guide h2 {
+          margin: 14px 0 10px;
+          color: #ffffff;
+          font-size: clamp(26px, 3.2vw, 42px);
+          line-height: 1.02;
+          letter-spacing: -0.045em;
+          font-weight: 950;
+        }
+
+        .server-directory-seo-guide > p {
+          max-width: 860px;
+          margin: 0;
+          color: rgba(246,243,255,0.76);
+          font-size: 15px;
+          line-height: 1.75;
+          font-weight: 700;
+        }
+
+        .server-directory-seo-guide-grid {
+          margin-top: 22px;
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 14px;
+        }
+
+        .server-directory-seo-guide-card {
+          padding: 18px;
+          border-radius: 22px;
+          background:
+            linear-gradient(180deg, rgba(255,255,255,0.065), rgba(255,255,255,0.030));
+          border: 1px solid rgba(255,255,255,0.09);
+          box-shadow: 0 0 18px rgba(112,219,255,0.06);
+        }
+
+        .server-directory-seo-guide-card h3 {
+          margin: 0 0 8px;
+          color: rgba(255,255,255,0.94);
+          font-size: 18px;
+          line-height: 1.15;
+          letter-spacing: -0.025em;
+          font-weight: 950;
+        }
+
+        .server-directory-seo-guide-card p {
+          margin: 0;
+          color: rgba(246,243,255,0.68);
+          font-size: 13.5px;
+          line-height: 1.65;
+          font-weight: 650;
+        }
+
+        .server-directory-seo-guide-card a {
+          margin-top: 13px;
+          min-height: 34px;
+          padding: 0 12px;
+          border-radius: 999px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          text-decoration: none;
+          color: #ffffff;
+          font-size: 12.5px;
+          font-weight: 950;
+          background:
+            linear-gradient(90deg, rgba(181,76,255,0.78), rgba(116,223,255,0.62));
+          border: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .server-directory-seo-faq {
+          margin-top: 18px;
+          padding-top: 18px;
+          border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .server-directory-seo-faq h3 {
+          margin: 0 0 12px;
+          color: #ffffff;
+          font-size: 21px;
+          line-height: 1.2;
+          letter-spacing: -0.03em;
+          font-weight: 950;
+        }
+
+        .server-directory-seo-faq details {
+          border-radius: 16px;
+          background: rgba(255,255,255,0.035);
+          border: 1px solid rgba(255,255,255,0.08);
+          overflow: hidden;
+        }
+
+        .server-directory-seo-faq details + details {
+          margin-top: 9px;
+        }
+
+        .server-directory-seo-faq summary {
+          padding: 13px 15px;
+          cursor: pointer;
+          color: rgba(255,255,255,0.90);
+          font-size: 14px;
+          font-weight: 950;
+        }
+
+        .server-directory-seo-faq details p {
+          margin: 0;
+          padding: 0 15px 15px;
+          color: rgba(246,243,255,0.68);
+          font-size: 13.5px;
+          line-height: 1.65;
+          font-weight: 650;
+        }
+
+        @media (max-width: 900px) {
+          .server-directory-seo-guide-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        @media (max-width: 760px) {
+          .server-directory-seo-guide {
+            padding: 18px;
+            border-radius: 22px;
+            margin-bottom: 26px;
+          }
+
+          .server-directory-seo-guide > p {
+            font-size: 14px;
+          }
         }
 
         .server-directory-seo-footnote {
@@ -1021,6 +1216,90 @@ export default async function ServersPage({
           </Link>
         ))}
       </nav>
+
+      <section
+        className="server-directory-seo-guide"
+        aria-labelledby="discord-server-suchen-title"
+      >
+        <span className="server-directory-seo-guide-badge">
+          🔎 Discord Server suchen
+        </span>
+
+        <h2 id="discord-server-suchen-title">
+          Discord Server suchen und neue Communities finden
+        </h2>
+
+        <p>
+          Auf Asko Cafe findest du eine aktive Discord Server Liste für deutsche
+          und internationale Communities. Suche nach Gaming Discord Servern,
+          Anime Discord Servern, Minecraft Discord Servern, Valorant Discord
+          Servern oder Community Discord Servern und entdecke neue Server zum
+          Chatten, Spielen, Kennenlernen und Mitmachen.
+        </p>
+
+        <div className="server-directory-seo-guide-grid">
+          <article className="server-directory-seo-guide-card">
+            <h3>Deutsche Discord Server</h3>
+            <p>
+              Entdecke deutschsprachige Discord Server für Gaming, Anime,
+              Community, Chill, Events und neue Freundschaften. Die deutsche
+              Serverliste hilft dir, passende Communities schneller zu finden.
+            </p>
+            <Link href="/servers/deutsch">Deutsche Server ansehen</Link>
+          </article>
+
+          <article className="server-directory-seo-guide-card">
+            <h3>Gaming Discord Server</h3>
+            <p>
+              Finde Gaming Discords für Mitspieler, Clans, Teams, Ranked,
+              Events und verschiedene Spiele. Besonders beliebt sind Minecraft,
+              Valorant und allgemeine Gaming Communities.
+            </p>
+            <Link href="/servers/gaming">Gaming Server ansehen</Link>
+          </article>
+
+          <article className="server-directory-seo-guide-card">
+            <h3>Discord Server kostenlos eintragen</h3>
+            <p>
+              Du betreibst einen eigenen Discord Server? Trage deine Community
+              kostenlos auf Asko Cafe ein, damit neue Mitglieder deinen Server
+              über die Discord Server Liste finden können.
+            </p>
+            <Link href="/submit">Server eintragen</Link>
+          </article>
+        </div>
+
+        <div className="server-directory-seo-faq">
+          <h3>Häufige Fragen zur Discord Server Liste</h3>
+
+          <details>
+            <summary>Wie finde ich gute Discord Server?</summary>
+            <p>
+              Nutze die Suche, die Sprache, Tags und Kategorien auf Asko Cafe.
+              So findest du passende Discord Server für Gaming, Anime,
+              Minecraft, Valorant, Community oder andere Interessen.
+            </p>
+          </details>
+
+          <details>
+            <summary>Kann ich deutsche Discord Server suchen?</summary>
+            <p>
+              Ja. Auf Asko Cafe gibt es eine eigene Seite für deutsche Discord
+              Server. Dort findest du deutschsprachige Communities aus
+              verschiedenen Bereichen.
+            </p>
+          </details>
+
+          <details>
+            <summary>Kann ich meinen Discord Server kostenlos eintragen?</summary>
+            <p>
+              Ja. Du kannst deinen eigenen Discord Server kostenlos eintragen.
+              Nach der Freigabe erscheint er in der Serverliste und kann von
+              neuen Mitgliedern gefunden werden.
+            </p>
+          </details>
+        </div>
+      </section>
 
       {servers.length === 0 ? (
         <section className="card empty">
