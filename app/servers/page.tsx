@@ -924,10 +924,10 @@ export default async function ServersPage({
 
         .server-directory-seo-guide {
           width: 100%;
-          max-width: 1080px;
-          margin: 0 auto 34px;
-          padding: 24px;
-          border-radius: 28px;
+          max-width: 980px;
+          margin: 34px auto 0;
+          padding: 18px;
+          border-radius: 22px;
           background:
             radial-gradient(circle at 0% 0%, rgba(139,92,246,0.18), transparent 34%),
             radial-gradient(circle at 100% 0%, rgba(112,219,255,0.13), transparent 34%),
@@ -939,14 +939,14 @@ export default async function ServersPage({
         }
 
         .server-directory-seo-guide-badge {
-          min-height: 32px;
-          padding: 0 13px;
+          min-height: 28px;
+          padding: 0 11px;
           border-radius: 999px;
           display: inline-flex;
           align-items: center;
           gap: 8px;
           color: #9deaff;
-          font-size: 12px;
+          font-size: 11px;
           font-weight: 950;
           text-transform: uppercase;
           letter-spacing: 0.06em;
@@ -955,9 +955,9 @@ export default async function ServersPage({
         }
 
         .server-directory-seo-guide h2 {
-          margin: 14px 0 10px;
+          margin: 12px 0 8px;
           color: #ffffff;
-          font-size: clamp(26px, 3.2vw, 42px);
+          font-size: clamp(22px, 2.5vw, 32px);
           line-height: 1.02;
           letter-spacing: -0.045em;
           font-weight: 950;
@@ -966,22 +966,22 @@ export default async function ServersPage({
         .server-directory-seo-guide > p {
           max-width: 860px;
           margin: 0;
-          color: rgba(246,243,255,0.76);
-          font-size: 15px;
-          line-height: 1.75;
+          color: rgba(246,243,255,0.72);
+          font-size: 13.5px;
+          line-height: 1.65;
           font-weight: 700;
         }
 
         .server-directory-seo-guide-grid {
-          margin-top: 22px;
+          margin-top: 15px;
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 14px;
+          gap: 10px;
         }
 
         .server-directory-seo-guide-card {
-          padding: 18px;
-          border-radius: 22px;
+          padding: 14px;
+          border-radius: 18px;
           background:
             linear-gradient(180deg, rgba(255,255,255,0.065), rgba(255,255,255,0.030));
           border: 1px solid rgba(255,255,255,0.09);
@@ -989,9 +989,9 @@ export default async function ServersPage({
         }
 
         .server-directory-seo-guide-card h3 {
-          margin: 0 0 8px;
+          margin: 0 0 6px;
           color: rgba(255,255,255,0.94);
-          font-size: 18px;
+          font-size: 15.5px;
           line-height: 1.15;
           letter-spacing: -0.025em;
           font-weight: 950;
@@ -999,15 +999,15 @@ export default async function ServersPage({
 
         .server-directory-seo-guide-card p {
           margin: 0;
-          color: rgba(246,243,255,0.68);
-          font-size: 13.5px;
-          line-height: 1.65;
+          color: rgba(246,243,255,0.66);
+          font-size: 11.5px;
+          line-height: 1.55;
           font-weight: 650;
         }
 
         .server-directory-seo-guide-card a {
-          margin-top: 13px;
-          min-height: 34px;
+          margin-top: 10px;
+          min-height: 30px;
           padding: 0 12px;
           border-radius: 999px;
           display: inline-flex;
@@ -1015,7 +1015,7 @@ export default async function ServersPage({
           justify-content: center;
           text-decoration: none;
           color: #ffffff;
-          font-size: 12.5px;
+          font-size: 11.5px;
           font-weight: 950;
           background:
             linear-gradient(90deg, rgba(181,76,255,0.78), rgba(116,223,255,0.62));
@@ -1023,15 +1023,15 @@ export default async function ServersPage({
         }
 
         .server-directory-seo-faq {
-          margin-top: 18px;
-          padding-top: 18px;
+          margin-top: 14px;
+          padding-top: 14px;
           border-top: 1px solid rgba(255,255,255,0.08);
         }
 
         .server-directory-seo-faq h3 {
-          margin: 0 0 12px;
+          margin: 0 0 10px;
           color: #ffffff;
-          font-size: 21px;
+          font-size: 17px;
           line-height: 1.2;
           letter-spacing: -0.03em;
           font-weight: 950;
@@ -1049,19 +1049,19 @@ export default async function ServersPage({
         }
 
         .server-directory-seo-faq summary {
-          padding: 13px 15px;
+          padding: 10px 12px;
           cursor: pointer;
           color: rgba(255,255,255,0.90);
-          font-size: 14px;
+          font-size: 12.5px;
           font-weight: 950;
         }
 
         .server-directory-seo-faq details p {
           margin: 0;
-          padding: 0 15px 15px;
+          padding: 0 12px 12px;
           color: rgba(246,243,255,0.68);
-          font-size: 13.5px;
-          line-height: 1.65;
+          font-size: 12.5px;
+          line-height: 1.55;
           font-weight: 650;
         }
 
@@ -1128,7 +1128,7 @@ export default async function ServersPage({
           background: rgba(255,255,255,0.045);
           border: 1px solid rgba(255,255,255,0.08);
           color: rgba(255,255,255,0.76);
-          font-size: 12px;
+          font-size: 11px;
           font-weight: 850;
           line-height: 1.3;
         }
@@ -1216,90 +1216,6 @@ export default async function ServersPage({
           </Link>
         ))}
       </nav>
-
-      <section
-        className="server-directory-seo-guide"
-        aria-labelledby="discord-server-suchen-title"
-      >
-        <span className="server-directory-seo-guide-badge">
-          🔎 Discord Server suchen
-        </span>
-
-        <h2 id="discord-server-suchen-title">
-          Discord Server suchen und neue Communities finden
-        </h2>
-
-        <p>
-          Auf Asko Cafe findest du eine aktive Discord Server Liste für deutsche
-          und internationale Communities. Suche nach Gaming Discord Servern,
-          Anime Discord Servern, Minecraft Discord Servern, Valorant Discord
-          Servern oder Community Discord Servern und entdecke neue Server zum
-          Chatten, Spielen, Kennenlernen und Mitmachen.
-        </p>
-
-        <div className="server-directory-seo-guide-grid">
-          <article className="server-directory-seo-guide-card">
-            <h3>Deutsche Discord Server</h3>
-            <p>
-              Entdecke deutschsprachige Discord Server für Gaming, Anime,
-              Community, Chill, Events und neue Freundschaften. Die deutsche
-              Serverliste hilft dir, passende Communities schneller zu finden.
-            </p>
-            <Link href="/servers/deutsch">Deutsche Server ansehen</Link>
-          </article>
-
-          <article className="server-directory-seo-guide-card">
-            <h3>Gaming Discord Server</h3>
-            <p>
-              Finde Gaming Discords für Mitspieler, Clans, Teams, Ranked,
-              Events und verschiedene Spiele. Besonders beliebt sind Minecraft,
-              Valorant und allgemeine Gaming Communities.
-            </p>
-            <Link href="/servers/gaming">Gaming Server ansehen</Link>
-          </article>
-
-          <article className="server-directory-seo-guide-card">
-            <h3>Discord Server kostenlos eintragen</h3>
-            <p>
-              Du betreibst einen eigenen Discord Server? Trage deine Community
-              kostenlos auf Asko Cafe ein, damit neue Mitglieder deinen Server
-              über die Discord Server Liste finden können.
-            </p>
-            <Link href="/submit">Server eintragen</Link>
-          </article>
-        </div>
-
-        <div className="server-directory-seo-faq">
-          <h3>Häufige Fragen zur Discord Server Liste</h3>
-
-          <details>
-            <summary>Wie finde ich gute Discord Server?</summary>
-            <p>
-              Nutze die Suche, die Sprache, Tags und Kategorien auf Asko Cafe.
-              So findest du passende Discord Server für Gaming, Anime,
-              Minecraft, Valorant, Community oder andere Interessen.
-            </p>
-          </details>
-
-          <details>
-            <summary>Kann ich deutsche Discord Server suchen?</summary>
-            <p>
-              Ja. Auf Asko Cafe gibt es eine eigene Seite für deutsche Discord
-              Server. Dort findest du deutschsprachige Communities aus
-              verschiedenen Bereichen.
-            </p>
-          </details>
-
-          <details>
-            <summary>Kann ich meinen Discord Server kostenlos eintragen?</summary>
-            <p>
-              Ja. Du kannst deinen eigenen Discord Server kostenlos eintragen.
-              Nach der Freigabe erscheint er in der Serverliste und kann von
-              neuen Mitgliedern gefunden werden.
-            </p>
-          </details>
-        </div>
-      </section>
 
       {servers.length === 0 ? (
         <section className="card empty">
@@ -1529,6 +1445,89 @@ export default async function ServersPage({
           })}
         </section>
       )}
+
+      <section
+        className="server-directory-seo-guide"
+        aria-labelledby="discord-server-suchen-title"
+      >
+        <span className="server-directory-seo-guide-badge">
+          🔎 Discord Server suchen
+        </span>
+
+        <h2 id="discord-server-suchen-title">
+          Discord Server suchen
+        </h2>
+
+        <p>
+          Auf Asko Cafe findest du eine Discord Server Liste für deutsche und
+          internationale Communities. Suche nach Gaming, Anime, Minecraft,
+          Valorant oder Community Servern und entdecke neue Discord Server.
+        </p>
+
+        <div className="server-directory-seo-guide-grid">
+          <article className="server-directory-seo-guide-card">
+            <h3>Deutsche Discord Server</h3>
+            <p>
+              Entdecke deutschsprachige Discord Server für Gaming, Anime,
+              Community, Chill, Events und neue Freundschaften. Die deutsche
+              Serverliste hilft dir, passende Communities schneller zu finden.
+            </p>
+            <Link href="/servers/deutsch">Deutsche Server ansehen</Link>
+          </article>
+
+          <article className="server-directory-seo-guide-card">
+            <h3>Gaming Discord Server</h3>
+            <p>
+              Finde Gaming Discords für Mitspieler, Clans, Teams, Ranked,
+              Events und verschiedene Spiele. Besonders beliebt sind Minecraft,
+              Valorant und allgemeine Gaming Communities.
+            </p>
+            <Link href="/servers/gaming">Gaming Server ansehen</Link>
+          </article>
+
+          <article className="server-directory-seo-guide-card">
+            <h3>Discord Server kostenlos eintragen</h3>
+            <p>
+              Du betreibst einen eigenen Discord Server? Trage deine Community
+              kostenlos auf Asko Cafe ein, damit neue Mitglieder deinen Server
+              über die Discord Server Liste finden können.
+            </p>
+            <Link href="/submit">Server eintragen</Link>
+          </article>
+        </div>
+
+        <div className="server-directory-seo-faq">
+          <h3>Häufige Fragen zur Discord Server Liste</h3>
+
+          <details>
+            <summary>Wie finde ich gute Discord Server?</summary>
+            <p>
+              Nutze die Suche, die Sprache, Tags und Kategorien auf Asko Cafe.
+              So findest du passende Discord Server für Gaming, Anime,
+              Minecraft, Valorant, Community oder andere Interessen.
+            </p>
+          </details>
+
+          <details>
+            <summary>Kann ich deutsche Discord Server suchen?</summary>
+            <p>
+              Ja. Auf Asko Cafe gibt es eine eigene Seite für deutsche Discord
+              Server. Dort findest du deutschsprachige Communities aus
+              verschiedenen Bereichen.
+            </p>
+          </details>
+
+          <details>
+            <summary>Kann ich meinen Discord Server kostenlos eintragen?</summary>
+            <p>
+              Ja. Du kannst deinen eigenen Discord Server kostenlos eintragen.
+              Nach der Freigabe erscheint er in der Serverliste und kann von
+              neuen Mitgliedern gefunden werden.
+            </p>
+          </details>
+        </div>
+      </section>
+
 
       <section className="server-directory-seo-footnote" aria-labelledby="servers-seo-title">
         <h2 id="servers-seo-title">{t(uiLanguage, "seoTitle")}</h2>
