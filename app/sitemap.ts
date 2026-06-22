@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
 import { supabaseRequest } from "@/lib/supabase";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 3600;
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -12,137 +11,230 @@ const SITE_URL =
 type ServerSitemapRow = {
   id: string;
   slug?: string | null;
+  updated_at?: string | null;
+  created_at?: string | null;
+  last_bump?: string | null;
+  banner_url?: string | null;
+  premium_banner_url?: string | null;
+  logo_url?: string | null;
+  discord_server_icon_url?: string | null;
 };
+
+const RESERVED_SERVER_PATHS = new Set([
+  "deutsch",
+  "gaming",
+  "anime",
+  "community",
+  "minecraft",
+  "valorant",
+]);
 
 function getBaseUrl() {
   return SITE_URL.replace(/\/$/, "");
 }
 
 function getServerPublicPath(server: ServerSitemapRow) {
-  return String(server.slug || server.id).trim();
+  return String(server.slug || server.id || "").trim();
+}
+
+function getValidDate(...values: Array<string | null | undefined>) {
+  for (const value of values) {
+    if (!value) continue;
+
+    const date = new Date(value);
+
+    if (Number.isFinite(date.getTime())) {
+      return date;
+    }
+  }
+
+  return undefined;
+}
+
+function getNewestDate(dates: Array<Date | undefined>) {
+  const validDates = dates.filter(
+    (date): date is Date => Boolean(date && Number.isFinite(date.getTime()))
+  );
+
+  if (validDates.length === 0) {
+    return new Date();
+  }
+
+  return new Date(Math.max(...validDates.map((date) => date.getTime())));
+}
+
+function getServerLastModified(server: ServerSitemapRow) {
+  return getValidDate(server.updated_at, server.last_bump, server.created_at);
 }
 
 async function getApprovedServers(): Promise<ServerSitemapRow[]> {
   try {
     const servers = await supabaseRequest(
-      "servers?approved=is.true&status=eq.approved&select=id,slug&order=created_at.desc&limit=5000"
+      [
+        "servers?approved=eq.true",
+        "status=eq.approved",
+        "select=id,slug,updated_at,created_at,last_bump,banner_url,premium_banner_url,logo_url,discord_server_icon_url",
+        "order=updated_at.desc.nullslast",
+        "limit=5000",
+      ].join("&")
     );
 
     if (!Array.isArray(servers)) {
       return [];
     }
 
-    return servers.filter((server) => Boolean(server?.id));
+    return servers.filter((server) => {
+      const publicPath = getServerPublicPath(server);
+      return Boolean(server?.id && publicPath);
+    });
   } catch (error) {
     console.error("Sitemap server loading failed:", error);
     return [];
   }
 }
 
+function createSitemapEntry({
+  url,
+  lastModified,
+  changeFrequency,
+  priority,
+}: {
+  url: string;
+  lastModified?: Date;
+  changeFrequency: NonNullable<MetadataRoute.Sitemap[number]["changeFrequency"]>;
+  priority: number;
+}): MetadataRoute.Sitemap[number] {
+  return {
+    url,
+    lastModified,
+    changeFrequency,
+    priority,
+  };
+}
+
+function dedupeSitemap(entries: MetadataRoute.Sitemap): MetadataRoute.Sitemap {
+  const seen = new Set<string>();
+
+  return entries.filter((entry) => {
+    if (seen.has(entry.url)) {
+      return false;
+    }
+
+    seen.add(entry.url);
+    return true;
+  });
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = getBaseUrl();
-  const now = new Date();
   const servers = await getApprovedServers();
 
+  const latestServerUpdate = getNewestDate(servers.map(getServerLastModified));
+
   const staticPages: MetadataRoute.Sitemap = [
-    {
+    createSitemapEntry({
       url: baseUrl,
-      lastModified: now,
+      lastModified: latestServerUpdate,
       changeFrequency: "daily",
       priority: 1,
-    },
-    {
+    }),
+    createSitemapEntry({
       url: `${baseUrl}/servers`,
-      lastModified: now,
+      lastModified: latestServerUpdate,
       changeFrequency: "hourly",
-      priority: 0.95,
-    },
-    {
+      priority: 0.98,
+    }),
+    createSitemapEntry({
       url: `${baseUrl}/servers/deutsch`,
-      lastModified: now,
+      lastModified: latestServerUpdate,
+      changeFrequency: "daily",
+      priority: 0.94,
+    }),
+    createSitemapEntry({
+      url: `${baseUrl}/servers/gaming`,
+      lastModified: latestServerUpdate,
       changeFrequency: "daily",
       priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/servers/gaming`,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 0.86,
-    },
-    {
+    }),
+    createSitemapEntry({
       url: `${baseUrl}/servers/anime`,
-      lastModified: now,
+      lastModified: latestServerUpdate,
       changeFrequency: "daily",
-      priority: 0.86,
-    },
-    {
+      priority: 0.9,
+    }),
+    createSitemapEntry({
       url: `${baseUrl}/servers/community`,
-      lastModified: now,
+      lastModified: latestServerUpdate,
       changeFrequency: "daily",
-      priority: 0.86,
-    },
-    {
+      priority: 0.9,
+    }),
+    createSitemapEntry({
       url: `${baseUrl}/servers/minecraft`,
-      lastModified: now,
+      lastModified: latestServerUpdate,
       changeFrequency: "daily",
-      priority: 0.82,
-    },
-    {
+      priority: 0.88,
+    }),
+    createSitemapEntry({
       url: `${baseUrl}/servers/valorant`,
-      lastModified: now,
+      lastModified: latestServerUpdate,
       changeFrequency: "daily",
-      priority: 0.82,
-    },
-    {
+      priority: 0.88,
+    }),
+    createSitemapEntry({
       url: `${baseUrl}/submit`,
-      lastModified: now,
+      lastModified: latestServerUpdate,
       changeFrequency: "weekly",
-      priority: 0.75,
-    },
-    {
+      priority: 0.78,
+    }),
+    createSitemapEntry({
       url: `${baseUrl}/shop`,
-      lastModified: now,
       changeFrequency: "weekly",
-      priority: 0.6,
-    },
-    {
+      priority: 0.58,
+    }),
+    createSitemapEntry({
       url: `${baseUrl}/support`,
-      lastModified: now,
       changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
+      priority: 0.58,
+    }),
+    createSitemapEntry({
       url: `${baseUrl}/info`,
-      lastModified: now,
       changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
+      priority: 0.58,
+    }),
+    createSitemapEntry({
       url: `${baseUrl}/datenschutz`,
-      lastModified: now,
       changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
+      priority: 0.25,
+    }),
+    createSitemapEntry({
       url: `${baseUrl}/nutzungsbedingungen`,
-      lastModified: now,
       changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
+      priority: 0.25,
+    }),
+    createSitemapEntry({
       url: `${baseUrl}/impressum`,
-      lastModified: now,
       changeFrequency: "yearly",
-      priority: 0.3,
-    },
+      priority: 0.25,
+    }),
   ];
 
-  const serverPages: MetadataRoute.Sitemap = servers.map((server) => ({
-    url: `${baseUrl}/servers/${encodeURIComponent(getServerPublicPath(server))}`,
-    lastModified: now,
-    changeFrequency: "daily",
-    priority: 0.82,
-  }));
+  const serverPages: MetadataRoute.Sitemap = servers
+    .map((server) => {
+      const publicPath = getServerPublicPath(server);
+      const normalizedPath = publicPath.toLowerCase();
 
-  return [...staticPages, ...serverPages];
+      if (!publicPath || RESERVED_SERVER_PATHS.has(normalizedPath)) {
+        return null;
+      }
+
+      return createSitemapEntry({
+        url: `${baseUrl}/servers/${encodeURIComponent(publicPath)}`,
+        lastModified: getServerLastModified(server),
+        changeFrequency: "daily",
+        priority: 0.84,
+      });
+    })
+    .filter((entry): entry is MetadataRoute.Sitemap[number] => Boolean(entry));
+
+  return dedupeSitemap([...staticPages, ...serverPages]);
 }
