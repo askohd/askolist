@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
@@ -40,7 +39,7 @@ function isUuidLike(value: string) {
 }
 
 function getServerLookupFilter(value: string) {
-  const safeValue = encodeURIComponent(value.trim());
+  const safeValue = encodeURIComponent(String(value ?? "").trim());
 
   if (isUuidLike(value)) {
     return `id=eq.${safeValue}`;
@@ -133,10 +132,26 @@ async function getServerForMetadata(id: string) {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ id?: string; slug?: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const server = await getServerForMetadata(slug);
+  const resolvedParams = await params;
+  const lookupValue = String(
+    resolvedParams.slug ?? resolvedParams.id ?? ""
+  ).trim();
+
+  if (!lookupValue) {
+    return {
+      title: "Discord Server nicht gefunden | Asko Cafe",
+      description:
+        "Dieser Discord Server wurde nicht gefunden oder ist noch nicht freigegeben.",
+      robots: {
+        index: false,
+        follow: true,
+      },
+    };
+  }
+
+  const server = await getServerForMetadata(lookupValue);
 
   if (!server) {
     return {
@@ -445,9 +460,16 @@ function StarRatingText({ rating }: { rating: number }) {
 export default async function ServerDetailPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ id?: string; slug?: string }>;
 }) {
-  const { slug } = await params;
+  const resolvedParams = await params;
+  const lookupValue = String(
+    resolvedParams.slug ?? resolvedParams.id ?? ""
+  ).trim();
+
+  if (!lookupValue) {
+    notFound();
+  }
 
   const session = await getServerSession(authOptions);
   const user = session?.user as any;
@@ -455,7 +477,7 @@ export default async function ServerDetailPage({
   const isAdmin = isAdminUser(user);
 
   const servers = await supabaseRequest(
-    `servers?${getServerLookupFilter(slug)}&approved=eq.true&status=eq.approved&select=*`
+    `servers?${getServerLookupFilter(lookupValue)}&approved=eq.true&status=eq.approved&select=*`
   );
 
   const server = servers?.[0];
@@ -465,7 +487,7 @@ export default async function ServerDetailPage({
   }
 
   const serverSeoPath = getServerPublicPath(server);
-  const requestedPath = String(slug || "").trim();
+  const requestedPath = lookupValue;
 
   if (isUuidLike(requestedPath) && serverSeoPath && serverSeoPath !== requestedPath) {
     redirect(`/servers/${encodeURIComponent(serverSeoPath)}`);
