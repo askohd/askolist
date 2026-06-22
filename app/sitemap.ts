@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
 import { supabaseRequest } from "@/lib/supabase";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -11,13 +12,9 @@ const SITE_URL =
 type ServerSitemapRow = {
   id: string;
   slug?: string | null;
-  updated_at?: string | null;
   created_at?: string | null;
   last_bump?: string | null;
-  banner_url?: string | null;
-  premium_banner_url?: string | null;
-  logo_url?: string | null;
-  discord_server_icon_url?: string | null;
+  updated_at?: string | null;
 };
 
 const RESERVED_SERVER_PATHS = new Set([
@@ -48,19 +45,25 @@ function getValidDate(...values: Array<string | null | undefined>) {
     }
   }
 
-  return undefined;
+  return new Date();
 }
 
-function getNewestDate(dates: Array<Date | undefined>) {
-  const validDates = dates.filter(
-    (date): date is Date => Boolean(date && Number.isFinite(date.getTime()))
-  );
-
-  if (validDates.length === 0) {
+function getNewestDate(servers: ServerSitemapRow[]) {
+  if (servers.length === 0) {
     return new Date();
   }
 
-  return new Date(Math.max(...validDates.map((date) => date.getTime())));
+  const times = servers
+    .map((server) =>
+      getValidDate(server.updated_at, server.last_bump, server.created_at).getTime()
+    )
+    .filter((time) => Number.isFinite(time));
+
+  if (times.length === 0) {
+    return new Date();
+  }
+
+  return new Date(Math.max(...times));
 }
 
 function getServerLastModified(server: ServerSitemapRow) {
@@ -68,29 +71,29 @@ function getServerLastModified(server: ServerSitemapRow) {
 }
 
 async function getApprovedServers(): Promise<ServerSitemapRow[]> {
-  try {
-    const servers = await supabaseRequest(
-      [
-        "servers?approved=eq.true",
-        "status=eq.approved",
-        "select=id,slug,updated_at,created_at,last_bump,banner_url,premium_banner_url,logo_url,discord_server_icon_url",
-        "order=updated_at.desc.nullslast",
-        "limit=5000",
-      ].join("&")
-    );
+  const queries = [
+    "servers?approved=eq.true&status=eq.approved&select=id,slug,updated_at,created_at,last_bump&order=created_at.desc&limit=5000",
+    "servers?approved=eq.true&status=eq.approved&select=id,slug,created_at,last_bump&order=created_at.desc&limit=5000",
+    "servers?approved=eq.true&status=eq.approved&select=id,slug&limit=5000",
+    "servers?approved=is.true&status=eq.approved&select=id,slug&limit=5000",
+  ];
 
-    if (!Array.isArray(servers)) {
-      return [];
+  for (const query of queries) {
+    try {
+      const servers = await supabaseRequest(query);
+
+      if (Array.isArray(servers) && servers.length > 0) {
+        return servers.filter((server) => {
+          const publicPath = getServerPublicPath(server);
+          return Boolean(server?.id && publicPath);
+        });
+      }
+    } catch (error) {
+      console.error("Sitemap server query failed:", query, error);
     }
-
-    return servers.filter((server) => {
-      const publicPath = getServerPublicPath(server);
-      return Boolean(server?.id && publicPath);
-    });
-  } catch (error) {
-    console.error("Sitemap server loading failed:", error);
-    return [];
   }
+
+  return [];
 }
 
 function createSitemapEntry({
@@ -128,8 +131,7 @@ function dedupeSitemap(entries: MetadataRoute.Sitemap): MetadataRoute.Sitemap {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = getBaseUrl();
   const servers = await getApprovedServers();
-
-  const latestServerUpdate = getNewestDate(servers.map(getServerLastModified));
+  const latestServerUpdate = getNewestDate(servers);
 
   const staticPages: MetadataRoute.Sitemap = [
     createSitemapEntry({
