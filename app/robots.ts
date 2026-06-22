@@ -12,14 +12,21 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
+        allow: [
+          "/",
+          "/servers",
+          "/servers/",
+          "/submit",
+          "/info",
+          "/support",
+          "/shop",
+        ],
         disallow: [
           "/api/",
           "/admin/",
           "/profile/",
           "/login",
           "/auth/",
-          "/_next/",
         ],
       },
     ],
