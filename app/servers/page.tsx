@@ -5,16 +5,22 @@ import type { CSSProperties } from "react";
 import { supabaseRequest } from "@/lib/supabase";
 import { languages } from "@/lib/demoData";
 
+const SITE_URL = "https://www.askocafe.com";
+
+const pageTitle = "Discord Server Liste | Deutsche Discord Server finden";
+const pageDescription =
+  "Finde aktive deutsche Discord Server für Gaming, Anime, Community, Minecraft, Valorant und mehr. Entdecke neue Communities oder trage deinen Server kostenlos ein.";
+
 export const metadata: Metadata = {
-  title: "Discord Server Liste – Deutsche Discord Server finden",
-  description:
-    "Finde aktive Discord Server und deutsche Discord Communities für Gaming, Anime, Community, Chill, Events, Minecraft, Valorant und mehr. Entdecke neue Server oder trage deinen eigenen Discord Server kostenlos auf Asko Cafe ein.",
+  title: pageTitle,
+  description: pageDescription,
   keywords: [
     "Discord Server",
     "Discord Server Liste",
     "Discord Server finden",
     "Discord Server eintragen",
     "deutsche Discord Server",
+    "deutsche Discord Server Liste",
     "Discord Server Deutsch",
     "Discord Server Liste Deutsch",
     "Gaming Discord Server",
@@ -23,22 +29,22 @@ export const metadata: Metadata = {
     "Minecraft Discord Server",
     "Valorant Discord Server",
     "Chill Discord Server",
+    "Discord Community",
     "Asko Cafe",
   ],
   alternates: {
-    canonical: "/servers",
+    canonical: `${SITE_URL}/servers`,
   },
   openGraph: {
-    title: "Discord Server Liste – Deutsche Discord Server finden",
-    description:
-      "Entdecke aktive deutsche Discord Server und internationale Communities für Gaming, Anime, Community, Events und mehr.",
-    url: "https://www.askocafe.com/servers",
+    title: pageTitle,
+    description: pageDescription,
+    url: `${SITE_URL}/servers`,
     siteName: "Asko Cafe",
     type: "website",
     locale: "de_DE",
     images: [
       {
-        url: "/asko-cafe-hero.png",
+        url: `${SITE_URL}/asko-cafe-hero.png`,
         width: 1200,
         height: 630,
         alt: "Asko Cafe Discord Server Liste",
@@ -47,19 +53,33 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Discord Server Liste – Deutsche Discord Server finden",
-    description:
-      "Finde aktive Discord Server, deutsche Communities und neue Server für Gaming, Anime, Minecraft, Valorant und mehr.",
-    images: ["/asko-cafe-hero.png"],
+    title: pageTitle,
+    description: pageDescription,
+    images: [`${SITE_URL}/asko-cafe-hero.png`],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
 };
-
 type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
 type ServerLanguage = "Deutsch" | "English" | "Français" | "Italiano" | "Polski";
+
+const SEO_CATEGORY_LINKS = [
+  { href: "/servers/deutsch", label: "Deutsche Discord Server" },
+  { href: "/servers/gaming", label: "Gaming Discord Server" },
+  { href: "/servers/anime", label: "Anime Discord Server" },
+  { href: "/servers/minecraft", label: "Minecraft Discord Server" },
+  { href: "/servers/valorant", label: "Valorant Discord Server" },
+  { href: "/servers/community", label: "Community Discord Server" },
+] as const;
 
 const LANGUAGE_SEARCH_ALIASES: Record<ServerLanguage, string[]> = {
   Deutsch: [
@@ -695,8 +715,73 @@ export default async function ServersPage({
     return matchesSearch && matchesLanguage && matchesTag;
   });
 
+  const collectionJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: pageTitle,
+    description: pageDescription,
+    url: `${SITE_URL}/servers`,
+    isPartOf: {
+      "@type": "WebSite",
+      name: "Asko Cafe",
+      url: SITE_URL,
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${SITE_URL}/servers?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    },
+    about: [
+      "Discord Server Liste",
+      "Deutsche Discord Server",
+      "Gaming Discord Server",
+      "Anime Discord Server",
+      "Minecraft Discord Server",
+      "Valorant Discord Server",
+      "Community Discord Server",
+    ],
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: servers.length,
+      itemListElement: servers.slice(0, 20).map((server: any, index: number) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: `${SITE_URL}/servers/${encodeURIComponent(server.slug || server.id)}`,
+        name: server.server_name || "Discord Server",
+        description: server.description || "Discord Server auf Asko Cafe",
+      })),
+    },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Discord Server Liste",
+        item: `${SITE_URL}/servers`,
+      },
+    ],
+  };
+
   return (
-    <main className="container servers-directory-page">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([collectionJsonLd, breadcrumbJsonLd]),
+        }}
+      />
+
+      <main className="container servers-directory-page">
       <style>{`
         .server-directory-card .premium-server-meta-row.server-card-top-stats {
           display: grid !important;
@@ -764,6 +849,43 @@ export default async function ServersPage({
           background:
             radial-gradient(circle at 0% 0%, rgba(116,223,255,0.18), transparent 44%),
             rgba(255,255,255,0.065) !important;
+        }
+
+        .server-directory-seo-links {
+          width: 100%;
+          max-width: 980px;
+          margin: 18px auto 28px;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 10px;
+        }
+
+        .server-directory-seo-link {
+          min-height: 38px;
+          padding: 0 14px;
+          border-radius: 999px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          text-decoration: none;
+          color: rgba(255,255,255,0.88);
+          font-size: 13px;
+          font-weight: 900;
+          background:
+            linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.035));
+          border: 1px solid rgba(112,219,255,0.18);
+          box-shadow:
+            0 0 0 1px rgba(255,255,255,0.025) inset,
+            0 0 18px rgba(139,92,246,0.08);
+        }
+
+        .server-directory-seo-link:hover {
+          color: #ffffff;
+          border-color: rgba(112,219,255,0.36);
+          box-shadow:
+            0 0 0 1px rgba(255,255,255,0.04) inset,
+            0 0 24px rgba(112,219,255,0.14);
         }
 
         .server-directory-seo-footnote {
@@ -888,6 +1010,17 @@ export default async function ServersPage({
           </Link>
         )}
       </form>
+
+      <nav
+        className="server-directory-seo-links"
+        aria-label="Beliebte Discord Server Kategorien"
+      >
+        {SEO_CATEGORY_LINKS.map((item) => (
+          <Link key={item.href} href={item.href} className="server-directory-seo-link">
+            {item.label}
+          </Link>
+        ))}
+      </nav>
 
       {servers.length === 0 ? (
         <section className="card empty">
@@ -1134,6 +1267,7 @@ export default async function ServersPage({
           </span>
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }
