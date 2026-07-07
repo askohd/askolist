@@ -5,6 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { supabaseRequest } from "@/lib/supabase";
 import ProfileServerEditor from "@/components/ProfileServerEditor";
 import ProfileReferralBox from "@/components/ProfileReferralBox";
+import ProfileModerationAlerts from "@/components/ProfileModerationAlerts";
 
 type LanguageCode = "de" | "en" | "fr" | "it" | "pl";
 
@@ -316,6 +317,10 @@ export default async function ProfilePage() {
           </div>
         </div>
       </section>
+
+      {hasServer && (
+        <ProfileModerationAlerts servers={myServers} language={pageLanguage} />
+      )}
 
       {hasServer && (
         <ProfileReferralBox
