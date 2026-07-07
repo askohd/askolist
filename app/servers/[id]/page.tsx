@@ -437,6 +437,24 @@ function isAdminUser(user: any) {
   );
 }
 
+function removeEmptyJsonLdValues(value: any): any {
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => removeEmptyJsonLdValues(item))
+      .filter((item) => item !== undefined && item !== null && item !== "");
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value)
+        .map(([key, item]) => [key, removeEmptyJsonLdValues(item)])
+        .filter(([, item]) => item !== undefined && item !== null && item !== "")
+    );
+  }
+
+  return value;
+}
+
 function StarRatingText({ rating }: { rating: number }) {
   const safeRating = Math.max(0, Math.min(5, Number(rating || 0)));
 
@@ -589,6 +607,55 @@ export default async function ServerDetailPage({
     ],
   };
 
+  const serverCommunityStructuredData = removeEmptyJsonLdValues({
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${serverSeoUrl}#discord-server`,
+    name: `${server.server_name}`,
+    url: serverSeoUrl,
+    description: getServerSeoDescription(server),
+    image: getServerSeoImage(server),
+    sameAs: invite && invite.startsWith("http") ? [invite] : undefined,
+    areaServed: server.language || "Deutsch",
+    keywords: [
+      `${server.server_name} Discord Server`,
+      `${server.category || "Community"} Discord Server`,
+      `${server.language || "Deutsch"} Discord Server`,
+      "Discord Server Liste",
+      ...tags.map((tag: string) => `${tag} Discord Server`),
+    ],
+    aggregateRating:
+      ratingStats.count > 0
+        ? {
+            "@type": "AggregateRating",
+            ratingValue: Number(ratingStats.average.toFixed(1)),
+            reviewCount: ratingStats.count,
+            bestRating: 5,
+            worstRating: 1,
+          }
+        : undefined,
+    review:
+      visibleReviews.length > 0
+        ? visibleReviews.slice(0, 10).map((review: any) =>
+            removeEmptyJsonLdValues({
+              "@type": "Review",
+              author: {
+                "@type": "Person",
+                name: getReviewName(review),
+              },
+              datePublished: review.created_at,
+              reviewBody: getReviewComment(review) || undefined,
+              reviewRating: {
+                "@type": "Rating",
+                ratingValue: Number(review.rating ?? 0),
+                bestRating: 5,
+                worstRating: 1,
+              },
+            })
+          )
+        : undefined,
+  });
+
   const serverNameColor = isPremiumOrPartner
     ? server.server_name_color || "#ffffff"
     : "#ffffff";
@@ -621,6 +688,13 @@ export default async function ServerDetailPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(breadcrumbStructuredData),
+        }}
+      />
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(serverCommunityStructuredData),
         }}
       />
 
