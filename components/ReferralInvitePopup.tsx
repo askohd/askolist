@@ -13,10 +13,22 @@ type ReferralInvitePopupProps = {
 
 const TEXT = {
   de: {
+    successBadge: "Eintragung erfolgreich",
     successTitle: "Server eingetragen",
     successText:
-      "Lade jetzt den Asko Cafe Bot ein. Danach kannst du Freunde einladen und kostenlos Premium verdienen.",
+      "Dein Server ist gespeichert. Lade jetzt den Asko Cafe Bot ein, damit dein Server später gebumpt werden kann und nicht unten in der Liste verschwindet.",
+    approvalInfoTitle: "Was passiert jetzt?",
+    approvalInfoOne:
+      "Dein Server wird geprüft. Die Freigabe kann bis zu 1 Tag dauern.",
+    approvalInfoTwo:
+      "Schau morgen kurz im Server-Dashboard vorbei, ob dein Server verfügbar ist.",
+    approvalInfoThree:
+      "Wichtig: Lade den Bot auf deinen Discord Server ein. Nur mit Bot kann dein Server gebumpt werden und weiter oben in der Liste erscheinen.",
+    approvalInfoFour:
+      "Ohne Bot bleibt dein Server weit unten und wird deutlich schlechter gefunden.",
     botButton: "Bot jetzt einladen",
+    dashboardButton: "Server-Dashboard öffnen",
+    inviteFriendsButton: "Premium-Link anzeigen",
     popupTitle: "1 Monat kostenlos Premium für 2 Freunde",
     introBefore:
       "Teile deinen Einladungslink mit Freunden, die einen Discord Server besitzen.",
@@ -38,21 +50,26 @@ const TEXT = {
     missingBot:
       "Bot-Einladungslink fehlt. Öffne dein Dashboard, falls der Bot noch nicht eingeladen wurde.",
     premiumBadge: "Premium Belohnung",
-    approvalInfoTitle: "Was passiert jetzt?",
-    approvalInfoOne:
-      "Dein Server wird geprüft. Die Freigabe kann bis zu 1 Tag dauern.",
-    approvalInfoTwo:
-      "Schau morgen kurz wieder im Server-Dashboard vorbei, ob dein Server verfügbar ist.",
-    approvalInfoThree:
-      "Wichtig: Lade den Bot auf deinen Discord Server ein. Nur mit Bot kann dein Server gebumpt werden und weiter oben in der Liste erscheinen.",
-    approvalInfoFour:
-      "Ohne Bot bleibt dein Server weit unten und wird deutlich schlechter gefunden.",
+    rewardBadgeOne: "2 Freunde = 1 Monat Premium",
+    rewardBadgeTwo: "4 Freunde = 2 Monate Premium",
   },
   en: {
+    successBadge: "Submission successful",
     successTitle: "Server submitted",
     successText:
-      "Invite the Asko Cafe bot now. After that, you can invite friends and earn Premium for free.",
+      "Your server has been saved. Invite the Asko Cafe bot now so your server can be bumped later and does not disappear at the bottom of the list.",
+    approvalInfoTitle: "What happens now?",
+    approvalInfoOne:
+      "Your server will be reviewed. Approval can take up to 1 day.",
+    approvalInfoTwo:
+      "Check your server dashboard again tomorrow to see whether your server is available.",
+    approvalInfoThree:
+      "Important: Invite the bot to your Discord server. Only with the bot can your server be bumped and appear higher in the list.",
+    approvalInfoFour:
+      "Without the bot, your server stays far down and is much harder to find.",
     botButton: "Invite bot now",
+    dashboardButton: "Open server dashboard",
+    inviteFriendsButton: "Show Premium link",
     popupTitle: "1 free month of Premium for 2 friends",
     introBefore:
       "Share your invite link with friends who own a Discord server.",
@@ -74,21 +91,26 @@ const TEXT = {
     missingBot:
       "Bot invite link is missing. Open your dashboard if the bot has not been invited yet.",
     premiumBadge: "Premium reward",
-    approvalInfoTitle: "What happens now?",
-    approvalInfoOne:
-      "Your server will be reviewed. Approval can take up to 1 day.",
-    approvalInfoTwo:
-      "Check your server dashboard again tomorrow to see whether your server is available.",
-    approvalInfoThree:
-      "Important: Invite the bot to your Discord server. Only with the bot can your server be bumped and appear higher in the list.",
-    approvalInfoFour:
-      "Without the bot, your server stays far down and is much harder to find.",
+    rewardBadgeOne: "2 friends = 1 month Premium",
+    rewardBadgeTwo: "4 friends = 2 months Premium",
   },
   fr: {
+    successBadge: "Ajout réussi",
     successTitle: "Serveur ajouté",
     successText:
-      "Invite maintenant le bot Asko Cafe. Ensuite, tu peux inviter des amis et gagner Premium gratuitement.",
+      "Ton serveur est enregistré. Invite maintenant le bot Asko Cafe pour que ton serveur puisse être bumpé plus tard et ne reste pas en bas de la liste.",
+    approvalInfoTitle: "Que se passe-t-il maintenant ?",
+    approvalInfoOne:
+      "Ton serveur va être vérifié. L'approbation peut prendre jusqu'à 1 jour.",
+    approvalInfoTwo:
+      "Reviens demain dans le tableau de bord pour voir si ton serveur est disponible.",
+    approvalInfoThree:
+      "Important : invite le bot sur ton serveur Discord. Seul le bot permet de bumper ton serveur et de le faire apparaître plus haut dans la liste.",
+    approvalInfoFour:
+      "Sans le bot, ton serveur reste beaucoup plus bas et sera moins visible.",
     botButton: "Inviter le bot",
+    dashboardButton: "Ouvrir le tableau de bord",
+    inviteFriendsButton: "Afficher le lien Premium",
     popupTitle: "1 mois Premium gratuit pour 2 amis",
     introBefore:
       "Partage ton lien d'invitation avec des amis qui possèdent un serveur Discord.",
@@ -110,21 +132,26 @@ const TEXT = {
     missingBot:
       "Le lien d'invitation du bot manque. Ouvre ton tableau de bord si le bot n'a pas encore été invité.",
     premiumBadge: "Récompense Premium",
-    approvalInfoTitle: "Que se passe-t-il maintenant ?",
-    approvalInfoOne:
-      "Ton serveur va être vérifié. L'approbation peut prendre jusqu'à 1 jour.",
-    approvalInfoTwo:
-      "Reviens demain dans le tableau de bord pour voir si ton serveur est disponible.",
-    approvalInfoThree:
-      "Important : invite le bot sur ton serveur Discord. Seul le bot permet de bumper ton serveur et de le faire apparaître plus haut dans la liste.",
-    approvalInfoFour:
-      "Sans le bot, ton serveur reste beaucoup plus bas et sera moins visible.",
+    rewardBadgeOne: "2 amis = 1 mois Premium",
+    rewardBadgeTwo: "4 amis = 2 mois Premium",
   },
   it: {
+    successBadge: "Invio riuscito",
     successTitle: "Server aggiunto",
     successText:
-      "Invita ora il bot Asko Cafe. Dopo potrai invitare amici e guadagnare Premium gratis.",
+      "Il tuo server è stato salvato. Invita ora il bot Asko Cafe così il server potrà essere bumpato più tardi e non resterà in fondo alla lista.",
+    approvalInfoTitle: "Cosa succede ora?",
+    approvalInfoOne:
+      "Il tuo server verrà controllato. L'approvazione può richiedere fino a 1 giorno.",
+    approvalInfoTwo:
+      "Controlla domani la dashboard per vedere se il server è disponibile.",
+    approvalInfoThree:
+      "Importante: invita il bot nel tuo server Discord. Solo con il bot il server può essere bumpato e comparire più in alto nella lista.",
+    approvalInfoFour:
+      "Senza bot, il server rimane molto più in basso ed è più difficile da trovare.",
     botButton: "Invita bot",
+    dashboardButton: "Apri dashboard server",
+    inviteFriendsButton: "Mostra link Premium",
     popupTitle: "1 mese Premium gratis per 2 amici",
     introBefore:
       "Condividi il tuo link con amici che possiedono un server Discord.",
@@ -146,21 +173,26 @@ const TEXT = {
     missingBot:
       "Manca il link di invito del bot. Apri il dashboard se il bot non è ancora stato invitato.",
     premiumBadge: "Ricompensa Premium",
-    approvalInfoTitle: "Cosa succede ora?",
-    approvalInfoOne:
-      "Il tuo server verrà controllato. L'approvazione può richiedere fino a 1 giorno.",
-    approvalInfoTwo:
-      "Controlla domani la dashboard per vedere se il server è disponibile.",
-    approvalInfoThree:
-      "Importante: invita il bot nel tuo server Discord. Solo con il bot il server può essere bumpato e comparire più in alto nella lista.",
-    approvalInfoFour:
-      "Senza bot, il server rimane molto più in basso ed è più difficile da trovare.",
+    rewardBadgeOne: "2 amici = 1 mese Premium",
+    rewardBadgeTwo: "4 amici = 2 mesi Premium",
   },
   pl: {
+    successBadge: "Dodano pomyślnie",
     successTitle: "Serwer dodany",
     successText:
-      "Zaproś teraz bota Asko Cafe. Potem możesz zapraszać znajomych i zdobyć Premium za darmo.",
+      "Twój serwer został zapisany. Zaproś teraz bota Asko Cafe, aby serwer mógł być bumpowany i nie zniknął na dole listy.",
+    approvalInfoTitle: "Co teraz?",
+    approvalInfoOne:
+      "Twój serwer zostanie sprawdzony. Akceptacja może potrwać do 1 dnia.",
+    approvalInfoTwo:
+      "Zajrzyj jutro do panelu serwera, aby sprawdzić, czy serwer jest już dostępny.",
+    approvalInfoThree:
+      "Ważne: zaproś bota na swój serwer Discord. Tylko z botem serwer może być bumpowany i pojawiać się wyżej na liście.",
+    approvalInfoFour:
+      "Bez bota serwer zostaje dużo niżej i jest trudniejszy do znalezienia.",
     botButton: "Zaproś bota",
+    dashboardButton: "Otwórz panel serwera",
+    inviteFriendsButton: "Pokaż link Premium",
     popupTitle: "1 miesiąc Premium za darmo za 2 znajomych",
     introBefore:
       "Udostępnij swój link znajomym, którzy mają serwer Discord.",
@@ -182,15 +214,8 @@ const TEXT = {
     missingBot:
       "Brakuje linku zaproszenia bota. Otwórz panel, jeśli bot nie został jeszcze zaproszony.",
     premiumBadge: "Nagroda Premium",
-    approvalInfoTitle: "Co teraz?",
-    approvalInfoOne:
-      "Twój serwer zostanie sprawdzony. Akceptacja może potrwać do 1 dnia.",
-    approvalInfoTwo:
-      "Zajrzyj jutro do panelu serwera, aby sprawdzić, czy serwer jest już dostępny.",
-    approvalInfoThree:
-      "Ważne: zaproś bota na swój serwer Discord. Tylko z botem serwer może być bumpowany i pojawiać się wyżej na liście.",
-    approvalInfoFour:
-      "Bez bota serwer zostaje dużo niżej i jest trudniejszy do znalezienia.",
+    rewardBadgeOne: "2 znajomych = 1 miesiąc Premium",
+    rewardBadgeTwo: "4 znajomych = 2 miesiące Premium",
   },
 } as const;
 
@@ -225,28 +250,10 @@ export default function ReferralInvitePopup({
     [referralCode]
   );
 
-  useEffect(() => {
-    const raw = window.localStorage.getItem(storageKey);
-
-    if (!raw) {
-      return;
-    }
-
-    try {
-      const data = JSON.parse(raw);
-
-      if (data?.dismissed === true) {
-        setShowPopup(false);
-        return;
-      }
-
-      if (data?.remindAt && Number(data.remindAt) > Date.now()) {
-        setShowPopup(false);
-      }
-    } catch {
-      window.localStorage.removeItem(storageKey);
-    }
-  }, [storageKey]);
+  const afterBotStorageKey = useMemo(
+    () => `${storageKey}-after-bot-invite`,
+    [storageKey]
+  );
 
   function shouldOpenPopup() {
     const raw = window.localStorage.getItem(storageKey);
@@ -272,13 +279,66 @@ export default function ReferralInvitePopup({
     }
   }
 
-  function openBotInvite() {
-    if (botInviteUrl) {
-      window.open(botInviteUrl, "_blank", "noopener,noreferrer");
-    }
-
+  function openReferralPopup() {
     if (shouldOpenPopup()) {
       setShowPopup(true);
+    }
+  }
+
+  useEffect(() => {
+    const raw = window.localStorage.getItem(storageKey);
+
+    if (!raw) {
+      return;
+    }
+
+    try {
+      const data = JSON.parse(raw);
+
+      if (data?.dismissed === true) {
+        setShowPopup(false);
+        return;
+      }
+
+      if (data?.remindAt && Number(data.remindAt) > Date.now()) {
+        setShowPopup(false);
+      }
+    } catch {
+      window.localStorage.removeItem(storageKey);
+    }
+  }, [storageKey]);
+
+  useEffect(() => {
+    function showPopupAfterReturningFromDiscord() {
+      const shouldShowAfterBotInvite =
+        window.sessionStorage.getItem(afterBotStorageKey) === "1";
+
+      if (!shouldShowAfterBotInvite) {
+        return;
+      }
+
+      window.sessionStorage.removeItem(afterBotStorageKey);
+      openReferralPopup();
+    }
+
+    window.addEventListener("focus", showPopupAfterReturningFromDiscord);
+    document.addEventListener("visibilitychange", showPopupAfterReturningFromDiscord);
+
+    return () => {
+      window.removeEventListener("focus", showPopupAfterReturningFromDiscord);
+      document.removeEventListener(
+        "visibilitychange",
+        showPopupAfterReturningFromDiscord
+      );
+    };
+  }, [afterBotStorageKey]);
+
+  function openBotInvite() {
+    window.sessionStorage.setItem(afterBotStorageKey, "1");
+    openReferralPopup();
+
+    if (botInviteUrl) {
+      window.open(botInviteUrl, "_blank", "noopener,noreferrer");
     }
   }
 
@@ -317,48 +377,100 @@ export default function ReferralInvitePopup({
     <>
       <style>{`
         .referral-success-card {
+          position: relative;
           width: 100%;
-          max-width: 720px;
-          padding: 28px;
-          border-radius: 28px;
+          max-width: 920px;
+          overflow: hidden;
+          padding: 32px;
+          border-radius: 34px;
           background:
-            radial-gradient(circle at 0% 0%, rgba(181,76,255,0.18), transparent 38%),
-            rgba(255,255,255,0.055);
-          border: 1px solid rgba(255,255,255,0.12);
-          box-shadow: 0 0 34px rgba(139,92,246,0.18);
+            radial-gradient(circle at 0% 0%, rgba(181,76,255,0.26), transparent 34%),
+            radial-gradient(circle at 100% 0%, rgba(116,223,255,0.18), transparent 32%),
+            linear-gradient(180deg, rgba(34,18,55,0.96), rgba(16,10,34,0.97));
+          border: 1px solid rgba(255,255,255,0.13);
+          box-shadow:
+            0 0 0 1px rgba(255,255,255,0.025) inset,
+            0 0 46px rgba(139,92,246,0.18);
+        }
+
+        .referral-success-card::before {
+          content: "";
+          position: absolute;
+          width: 260px;
+          height: 260px;
+          right: -95px;
+          top: -110px;
+          border-radius: 999px;
+          background: radial-gradient(circle, rgba(255,207,64,0.22), transparent 67%);
+          pointer-events: none;
+        }
+
+        .referral-success-badge {
+          min-height: 34px;
+          padding: 0 13px;
+          border-radius: 999px;
+          display: inline-flex;
+          align-items: center;
+          color: #9deaff;
+          font-size: 12px;
+          font-weight: 950;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          background: rgba(116,223,255,0.10);
+          border: 1px solid rgba(116,223,255,0.24);
         }
 
         .referral-success-card h1 {
-          margin: 0;
-          font-size: clamp(34px, 6vw, 62px);
-          line-height: 0.96;
-          letter-spacing: -0.055em;
+          position: relative;
+          margin: 16px 0 0;
+          max-width: 760px;
+          font-size: clamp(42px, 7vw, 76px);
+          line-height: 0.92;
+          letter-spacing: -0.065em;
           font-weight: 950;
+          color: #ffffff;
         }
 
-        .referral-success-card p {
-          margin: 14px 0 0;
-          color: rgba(246,243,255,0.76);
-          font-size: 15px;
-          line-height: 1.7;
-          font-weight: 750;
+        .referral-success-card > p {
+          position: relative;
+          max-width: 720px;
+          margin: 15px 0 0;
+          color: rgba(246,243,255,0.78);
+          font-size: 16px;
+          line-height: 1.72;
+          font-weight: 780;
+        }
+
+        .referral-success-grid {
+          position: relative;
+          margin-top: 22px;
+          display: grid;
+          grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
+          gap: 16px;
+          align-items: stretch;
+        }
+
+        .referral-success-info,
+        .referral-premium-teaser {
+          padding: 18px;
+          border-radius: 22px;
+          background: rgba(255,255,255,0.058);
+          border: 1px solid rgba(255,255,255,0.12);
         }
 
         .referral-success-info {
-          margin-top: 18px;
-          padding: 16px;
-          border-radius: 18px;
           background:
-            radial-gradient(circle at 0% 0%, rgba(116,223,255,0.11), transparent 38%),
+            radial-gradient(circle at 0% 0%, rgba(116,223,255,0.12), transparent 38%),
             rgba(255,255,255,0.055);
-          border: 1px solid rgba(116,223,255,0.18);
+          border-color: rgba(116,223,255,0.19);
         }
 
-        .referral-success-info strong {
+        .referral-success-info strong,
+        .referral-premium-teaser strong {
           display: block;
-          margin-bottom: 10px;
+          margin-bottom: 11px;
           color: #ffffff;
-          font-size: 15px;
+          font-size: 16px;
           font-weight: 950;
         }
 
@@ -368,7 +480,7 @@ export default function ReferralInvitePopup({
           color: rgba(246,243,255,0.78);
           font-size: 14px;
           line-height: 1.65;
-          font-weight: 750;
+          font-weight: 760;
         }
 
         .referral-success-info li + li {
@@ -380,8 +492,43 @@ export default function ReferralInvitePopup({
           font-weight: 950;
         }
 
+        .referral-premium-teaser {
+          background:
+            radial-gradient(circle at 0% 0%, rgba(255,207,64,0.17), transparent 40%),
+            rgba(255,255,255,0.055);
+          border-color: rgba(255,207,64,0.22);
+        }
+
+        .referral-premium-teaser p {
+          margin: 0;
+          color: rgba(246,243,255,0.78);
+          line-height: 1.6;
+          font-size: 14px;
+          font-weight: 760;
+        }
+
+        .referral-premium-badges {
+          margin-top: 13px;
+          display: grid;
+          gap: 9px;
+        }
+
+        .referral-premium-badges span {
+          min-height: 34px;
+          padding: 0 12px;
+          border-radius: 999px;
+          display: inline-flex;
+          align-items: center;
+          color: #ffe68a;
+          font-size: 12px;
+          font-weight: 950;
+          background: rgba(255,207,64,0.11);
+          border: 1px solid rgba(255,207,64,0.24);
+        }
+
         .referral-success-actions {
-          margin-top: 20px;
+          position: relative;
+          margin-top: 22px;
           display: flex;
           gap: 10px;
           flex-wrap: wrap;
@@ -389,23 +536,34 @@ export default function ReferralInvitePopup({
 
         .referral-success-actions button,
         .referral-success-actions a {
-          min-height: 46px;
-          padding: 0 17px;
-          border-radius: 15px;
+          min-height: 50px;
+          padding: 0 18px;
+          border-radius: 16px;
           display: inline-flex;
           align-items: center;
           justify-content: center;
           color: #ffffff;
           text-decoration: none;
+          font-size: 15px;
           font-weight: 950;
           border: 0;
           cursor: pointer;
           background: linear-gradient(135deg, #b54cff 0%, #f35acd 45%, #6fddff 100%);
+          box-shadow: 0 0 20px rgba(116,223,255,0.12);
         }
 
-        .referral-success-actions a {
-          background: rgba(255,255,255,0.07);
-          border: 1px solid rgba(255,255,255,0.13);
+        .referral-success-actions a,
+        .referral-success-actions .ghost {
+          background: rgba(255,255,255,0.075);
+          border: 1px solid rgba(255,255,255,0.14);
+          box-shadow: none;
+        }
+
+        .referral-success-actions .premium-link {
+          color: #ffe68a;
+          background: rgba(255,207,64,0.10);
+          border: 1px solid rgba(255,207,64,0.25);
+          box-shadow: 0 0 18px rgba(255,207,64,0.08);
         }
 
         .referral-popup-backdrop {
@@ -547,6 +705,22 @@ export default function ReferralInvitePopup({
           font-size: 13px !important;
         }
 
+        @media (max-width: 760px) {
+          .referral-success-card {
+            padding: 24px;
+            border-radius: 28px;
+          }
+
+          .referral-success-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .referral-success-actions button,
+          .referral-success-actions a {
+            width: 100%;
+          }
+        }
+
         @media (max-width: 520px) {
           .referral-popup-actions {
             grid-template-columns: 1fr;
@@ -559,18 +733,32 @@ export default function ReferralInvitePopup({
       `}</style>
 
       <section className="referral-success-card">
+        <span className="referral-success-badge">✅ {t.successBadge}</span>
+
         <h1>{t.successTitle}</h1>
         <p>{t.successText}</p>
 
-        <div className="referral-success-info">
-          <strong>{t.approvalInfoTitle}</strong>
+        <div className="referral-success-grid">
+          <div className="referral-success-info">
+            <strong>{t.approvalInfoTitle}</strong>
 
-          <ul>
-            <li>{t.approvalInfoOne}</li>
-            <li>{t.approvalInfoTwo}</li>
-            <li className="important">{t.approvalInfoThree}</li>
-            <li>{t.approvalInfoFour}</li>
-          </ul>
+            <ul>
+              <li>{t.approvalInfoOne}</li>
+              <li>{t.approvalInfoTwo}</li>
+              <li className="important">{t.approvalInfoThree}</li>
+              <li>{t.approvalInfoFour}</li>
+            </ul>
+          </div>
+
+          <div className="referral-premium-teaser">
+            <strong>✨ {t.premiumBadge}</strong>
+            <p>{t.popupTitle}</p>
+
+            <div className="referral-premium-badges">
+              <span>{t.rewardBadgeOne}</span>
+              <span>{t.rewardBadgeTwo}</span>
+            </div>
+          </div>
         </div>
 
         {!botInviteUrl && <p>{t.missingBot}</p>}
@@ -580,7 +768,15 @@ export default function ReferralInvitePopup({
             {t.botButton}
           </button>
 
-          <a href="/profile">Server-Dashboard öffnen</a>
+          <button
+            className="premium-link"
+            type="button"
+            onClick={openReferralPopup}
+          >
+            {t.inviteFriendsButton}
+          </button>
+
+          <a href="/profile">{t.dashboardButton}</a>
         </div>
       </section>
 
