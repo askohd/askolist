@@ -1780,7 +1780,6 @@ export default async function ServerDetailPage({
                     id="server-share-url"
                     readOnly
                     value={serverSeoUrl}
-                    onFocus={(event) => event.currentTarget.select()}
                   />
 
                   <label htmlFor="server-share-text">
@@ -1790,7 +1789,6 @@ export default async function ServerDetailPage({
                     id="server-share-text"
                     readOnly
                     value={shareText}
-                    onFocus={(event) => event.currentTarget.select()}
                   />
                 </div>
 
