@@ -597,6 +597,12 @@ export default async function ServerDetailPage({
     : "rgba(246,243,255,0.78)";
 
   const glowColor = server.premium_glow_color || "#8b5cf6";
+  const shareServerName = String(server.server_name || "unser Discord Server");
+  const shareTitle = `Bewerte ${shareServerName} auf Asko Cafe`;
+  const shareText = `${shareTitle}: ${serverSeoUrl}`;
+  const xShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+    shareTitle
+  )}&url=${encodeURIComponent(serverSeoUrl)}`;
 
   return (
     <main
@@ -624,6 +630,95 @@ export default async function ServerDetailPage({
       />
 
       <style>{`
+        .server-detail-share-box {
+          padding: 22px;
+          border-radius: 24px;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(116,223,255,0.16), transparent 34%),
+            linear-gradient(180deg, rgba(80,34,116,0.42), rgba(37,61,92,0.28));
+          border: 1px solid rgba(116,223,255,0.22);
+          box-shadow:
+            0 0 0 1px rgba(255,255,255,0.025) inset,
+            0 0 24px rgba(116,223,255,0.10);
+        }
+
+        .server-detail-share-box h3 {
+          margin: 0 0 8px;
+          font-size: 20px;
+          font-weight: 950;
+          letter-spacing: -0.025em;
+        }
+
+        .server-detail-share-box p {
+          margin: 0;
+          color: rgba(246,243,255,0.70);
+          font-size: 13px;
+          line-height: 1.55;
+          font-weight: 700;
+        }
+
+        .server-detail-share-actions {
+          margin-top: 14px;
+          display: grid;
+          gap: 9px;
+        }
+
+        .server-detail-share-actions a {
+          min-height: 42px;
+          padding: 0 14px;
+          border-radius: 14px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          color: #ffffff;
+          text-decoration: none;
+          font-size: 13px;
+          font-weight: 950;
+          background:
+            linear-gradient(135deg, rgba(181,76,255,0.86), rgba(116,223,255,0.70));
+          border: 1px solid rgba(255,255,255,0.12);
+          box-shadow: 0 0 18px rgba(116,223,255,0.12);
+        }
+
+        .server-detail-share-copy {
+          margin-top: 14px;
+          display: grid;
+          gap: 9px;
+        }
+
+        .server-detail-share-copy label {
+          color: rgba(255,255,255,0.82);
+          font-size: 12px;
+          font-weight: 950;
+        }
+
+        .server-detail-share-copy input,
+        .server-detail-share-copy textarea {
+          width: 100%;
+          min-width: 0;
+          resize: vertical;
+          padding: 11px 12px;
+          border-radius: 14px;
+          background: rgba(255,255,255,0.07);
+          border: 1px solid rgba(255,255,255,0.12);
+          color: rgba(255,255,255,0.90);
+          outline: none;
+          font-size: 12px;
+          font-weight: 800;
+          line-height: 1.45;
+        }
+
+        .server-detail-share-copy textarea {
+          min-height: 74px;
+        }
+
+        .server-detail-share-hint {
+          margin-top: 10px !important;
+          color: rgba(246,243,255,0.54) !important;
+          font-size: 12px !important;
+          line-height: 1.45 !important;
+        }
+
         @media (max-width: 900px) {
           .server-detail-page-mobile {
             padding: 22px 12px 70px !important;
@@ -766,7 +861,8 @@ export default async function ServerDetailPage({
 
           .server-detail-report-box,
           .server-detail-info-box,
-          .server-detail-community-box {
+          .server-detail-community-box,
+          .server-detail-share-box {
             padding: 18px !important;
             border-radius: 22px !important;
           }
@@ -828,7 +924,8 @@ export default async function ServerDetailPage({
           .server-detail-main-column > section,
           .server-detail-report-box,
           .server-detail-info-box,
-          .server-detail-community-box {
+          .server-detail-community-box,
+          .server-detail-share-box {
             padding: 15px !important;
           }
         }
@@ -1662,6 +1759,46 @@ export default async function ServerDetailPage({
               >
                 Discord beitreten
               </a>
+
+              <div className="server-detail-share-box">
+                <h3>Server teilen</h3>
+                <p>
+                  Teile diese Asko-Cafe-Seite in deinem Discord, auf deiner
+                  Website oder in Social Media. So können neue Mitglieder deinen
+                  Server schneller finden und bewerten.
+                </p>
+
+                <div className="server-detail-share-actions">
+                  <a href={xShareUrl} target="_blank" rel="noreferrer">
+                    Auf X / Twitter teilen
+                  </a>
+                </div>
+
+                <div className="server-detail-share-copy">
+                  <label htmlFor="server-share-url">Server-Link</label>
+                  <input
+                    id="server-share-url"
+                    readOnly
+                    value={serverSeoUrl}
+                    onFocus={(event) => event.currentTarget.select()}
+                  />
+
+                  <label htmlFor="server-share-text">
+                    Text für Discord, Bio oder Website
+                  </label>
+                  <textarea
+                    id="server-share-text"
+                    readOnly
+                    value={shareText}
+                    onFocus={(event) => event.currentTarget.select()}
+                  />
+                </div>
+
+                <p className="server-detail-share-hint">
+                  Tipp: Wenn Serverbesitzer diese Seite verlinken, finden neue
+                  Nutzer deinen Discord Server leichter über Asko Cafe.
+                </p>
+              </div>
 
               <div
                 className="server-detail-report-box"
