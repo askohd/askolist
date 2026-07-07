@@ -182,9 +182,9 @@ export default function ProfileReferralBox({
     <section className="profile-referral-box">
       <style>{`
         .profile-referral-box {
-          margin: 26px 0 30px;
-          padding: 24px;
-          border-radius: 28px;
+          margin: 18px 0 22px;
+          padding: 18px;
+          border-radius: 22px;
           background:
             radial-gradient(circle at 0% 0%, rgba(255, 207, 64, 0.18), transparent 34%),
             radial-gradient(circle at 100% 0%, rgba(116, 223, 255, 0.15), transparent 36%),
@@ -197,18 +197,18 @@ export default function ProfileReferralBox({
 
         .profile-referral-header {
           display: grid;
-          gap: 9px;
+          gap: 7px;
         }
 
         .profile-referral-badge {
           width: fit-content;
-          min-height: 32px;
-          padding: 0 12px;
+          min-height: 28px;
+          padding: 0 10px;
           border-radius: 999px;
           display: inline-flex;
           align-items: center;
           color: #ffe68a;
-          font-size: 0.78rem;
+          font-size: 0.72rem;
           font-weight: 950;
           text-transform: uppercase;
           letter-spacing: 0.04em;
@@ -218,8 +218,8 @@ export default function ProfileReferralBox({
 
         .profile-referral-header h2 {
           margin: 0;
-          font-size: clamp(26px, 4vw, 42px);
-          line-height: 1.02;
+          font-size: clamp(22px, 3vw, 32px);
+          line-height: 1.05;
           letter-spacing: -0.055em;
           font-weight: 950;
           color: #ffffff;
@@ -233,40 +233,40 @@ export default function ProfileReferralBox({
         .profile-referral-header p {
           margin: 0;
           color: rgba(236,240,255,0.76);
-          font-size: 0.96rem;
-          line-height: 1.65;
+          font-size: 0.80rem;
+          line-height: 1.55;
           font-weight: 750;
         }
 
         .profile-referral-rewards {
-          margin-top: 16px;
+          margin-top: 12px;
           display: flex;
-          gap: 9px;
+          gap: 7px;
           flex-wrap: wrap;
         }
 
         .profile-referral-rewards span {
-          min-height: 34px;
-          padding: 0 12px;
+          min-height: 30px;
+          padding: 0 10px;
           border-radius: 999px;
           display: inline-flex;
           align-items: center;
           color: #ffe68a;
-          font-size: 0.82rem;
+          font-size: 0.76rem;
           font-weight: 950;
           background: rgba(255,207,64,0.10);
           border: 1px solid rgba(255,207,64,0.22);
         }
 
         .profile-referral-link-area {
-          margin-top: 18px;
+          margin-top: 12px;
           display: grid;
           gap: 8px;
         }
 
         .profile-referral-link-area label {
           color: rgba(255,255,255,0.84);
-          font-size: 0.82rem;
+          font-size: 0.76rem;
           font-weight: 950;
         }
 
@@ -279,19 +279,19 @@ export default function ProfileReferralBox({
         .profile-referral-copy-row input {
           width: 100%;
           min-width: 0;
-          min-height: 46px;
-          padding: 0 14px;
+          min-height: 40px;
+          padding: 0 12px;
           border-radius: 15px;
           background: rgba(255,255,255,0.07);
           border: 1px solid rgba(255,255,255,0.13);
           color: #9deaff;
           outline: none;
-          font-size: 0.88rem;
+          font-size: 0.80rem;
           font-weight: 850;
         }
 
         .profile-referral-copy-row button {
-          min-height: 46px;
+          min-height: 40px;
           padding: 0 16px;
           border: 0;
           border-radius: 15px;
@@ -308,8 +308,8 @@ export default function ProfileReferralBox({
         }
 
         .profile-referral-progress {
-          margin-top: 18px;
-          padding: 15px;
+          margin-top: 12px;
+          padding: 12px;
           border-radius: 18px;
           background: rgba(255,255,255,0.055);
           border: 1px solid rgba(255,255,255,0.10);
@@ -320,13 +320,13 @@ export default function ProfileReferralBox({
           justify-content: space-between;
           gap: 12px;
           color: rgba(255,255,255,0.88);
-          font-size: 0.88rem;
+          font-size: 0.80rem;
           font-weight: 950;
         }
 
         .profile-referral-progress-track {
           margin-top: 10px;
-          height: 10px;
+          height: 8px;
           border-radius: 999px;
           overflow: hidden;
           background: rgba(255,255,255,0.08);
@@ -345,7 +345,7 @@ export default function ProfileReferralBox({
         .profile-referral-missing {
           margin: 10px 0 0;
           color: rgba(236,240,255,0.72);
-          font-size: 0.88rem;
+          font-size: 0.80rem;
           line-height: 1.55;
           font-weight: 750;
         }
