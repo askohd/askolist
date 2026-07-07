@@ -1,6 +1,11 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 import { supabaseRequest } from "@/lib/supabase";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "force-no-store";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -78,11 +83,26 @@ type ServerRow = {
   tags?: string[] | null;
   logo_url?: string | null;
   discord_server_icon_url?: string | null;
+  banner_url?: string | null;
+  premium_banner_url?: string | null;
   member_count?: number | null;
   online_count?: number | null;
   last_bump?: string | null;
   created_at?: string | null;
+  premium_status?: boolean | string | number | null;
+  partner_status?: boolean | string | number | null;
+  premium_layout?: string | null;
+  premium_glow_color?: string | null;
+  server_name_color?: string | null;
+  server_text_color?: string | null;
+  banner_position_x?: number | null;
+  banner_position_y?: number | null;
+  banner_zoom?: number | null;
 };
+
+function isEnabled(value: unknown) {
+  return value === true || value === "true" || value === 1 || value === "1";
+}
 
 function cleanText(value: unknown) {
   return String(value ?? "").replace(/\s+/g, " ").trim();
@@ -108,6 +128,10 @@ function getServerIcon(server: ServerRow) {
     server.logo_url ||
     "/asko-cafe-icon.png"
   );
+}
+
+function getServerBanner(server: ServerRow) {
+  return server.premium_banner_url || server.banner_url || "";
 }
 
 function getTimeValue(value: string | null | undefined) {
@@ -175,13 +199,90 @@ function formatOnlineCount(server: ServerRow) {
   return `${online.toLocaleString("de-DE")} online`;
 }
 
+function formatLastBump(value: string | null | undefined) {
+  if (!value) return "Noch nicht gebumpt";
+
+  const diff = Date.now() - new Date(value).getTime();
+  const minutes = Math.floor(diff / 1000 / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (minutes < 1) return "Gerade eben";
+  if (minutes < 60) return `vor ${minutes} Min.`;
+  if (hours < 24) return `vor ${hours} Std.`;
+  if (days === 1) return "vor 1 Tag";
+
+  return `vor ${days} Tagen`;
+}
+
+function normalizePremiumLayout(value: unknown) {
+  const layout = String(value ?? "glow")
+    .trim()
+    .toLowerCase()
+    .replace(/_/g, "-")
+    .replace(/\s+/g, "-");
+
+  const aliases: Record<string, string> = {
+    glow: "glow",
+    starborder: "starborder",
+    "star-border": "starborder",
+    "sternen-rand": "starborder",
+    sunset: "sunset",
+    "sunset-dark": "sunset",
+    aurora: "aurora",
+    "aurora-flow": "aurora",
+    neon: "neon",
+    "neon-pulse": "neon",
+    galaxy: "galaxy",
+    "galaxy-dust": "galaxy",
+    flame: "flame",
+    fire: "flame",
+    "fire-core": "flame",
+    ocean: "ocean",
+    "ocean-wave": "ocean",
+  };
+
+  const mapped = aliases[layout] || layout;
+
+  if (
+    [
+      "glow",
+      "starborder",
+      "sunset",
+      "aurora",
+      "neon",
+      "galaxy",
+      "flame",
+      "ocean",
+    ].includes(mapped)
+  ) {
+    return mapped;
+  }
+
+  return "glow";
+}
+
+function getPremiumCardStyle(server: ServerRow): CSSProperties {
+  const glow = server.premium_glow_color || "#8b5cf6";
+
+  return {
+    "--premium-glow": glow,
+    borderColor: `${glow}88`,
+    boxShadow: `
+      0 0 0 1px rgba(255,255,255,0.035) inset,
+      0 0 34px ${glow}55,
+      0 0 72px rgba(112,219,255,0.14)
+    `,
+  } as CSSProperties;
+}
+
 async function getFeaturedServers() {
   try {
     const servers = await supabaseRequest(
       [
         "servers?approved=eq.true",
         "status=eq.approved",
-        "select=id,slug,server_name,description,category,language,tags,logo_url,discord_server_icon_url,member_count,online_count,last_bump,created_at",
+        "select=id,slug,server_name,description,category,language,tags,logo_url,discord_server_icon_url,banner_url,premium_banner_url,member_count,online_count,last_bump,created_at,premium_status,partner_status,premium_layout,premium_glow_color,server_name_color,server_text_color,banner_position_x,banner_position_y,banner_zoom",
         "order=last_bump.desc.nullslast",
         "limit=9",
       ].join("&")
@@ -191,7 +292,9 @@ async function getFeaturedServers() {
       return [];
     }
 
-    return sortServers(servers).filter((server) => Boolean(getServerPath(server)));
+    return sortServers(servers)
+      .filter((server) => Boolean(getServerPath(server)))
+      .slice(0, 9);
   } catch (error) {
     console.error("Could not load Discord server search landing servers:", error);
     return [];
@@ -281,7 +384,7 @@ export default async function DiscordServerSuchenPage() {
 
         .discord-search-shell {
           width: 100%;
-          max-width: 1180px;
+          max-width: 1220px;
           margin: 0 auto;
           padding: 64px 22px 90px;
         }
@@ -411,12 +514,12 @@ export default async function DiscordServerSuchenPage() {
         }
 
         .discord-search-section-head {
-          max-width: 760px;
+          max-width: 820px;
         }
 
         .discord-search-section-head h2 {
           margin: 0;
-          font-size: clamp(30px, 4vw, 52px);
+          font-size: clamp(30px, 4vw, 54px);
           line-height: 1;
           letter-spacing: -0.05em;
           font-weight: 950;
@@ -470,25 +573,79 @@ export default async function DiscordServerSuchenPage() {
         }
 
         .discord-search-server-card {
-          padding: 18px;
+          position: relative;
+          overflow: hidden;
           color: #ffffff;
           text-decoration: none;
+          min-height: 326px;
+          isolation: isolate;
+        }
+
+        .discord-search-server-card.premium {
+          background:
+            radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--premium-glow) 28%, transparent), transparent 38%),
+            linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.035));
+        }
+
+        .discord-search-server-card.premium::before {
+          content: "";
+          position: absolute;
+          inset: -2px;
+          z-index: 0;
+          background:
+            radial-gradient(circle at 20% 10%, color-mix(in srgb, var(--premium-glow) 34%, transparent), transparent 30%),
+            radial-gradient(circle at 85% 18%, rgba(116,223,255,0.22), transparent 32%);
+          opacity: 0.9;
+          pointer-events: none;
+        }
+
+        .discord-search-server-banner {
+          position: relative;
+          z-index: 1;
+          height: 118px;
+          overflow: hidden;
+          background:
+            radial-gradient(circle at 20% 10%, rgba(181,76,255,0.20), transparent 36%),
+            linear-gradient(135deg, rgba(24,16,48,1), rgba(14,28,48,1));
+        }
+
+        .discord-search-server-banner img {
+          width: 100%;
+          height: 100%;
+          display: block;
+          object-fit: cover;
+          filter: brightness(0.72) saturate(1.14);
+        }
+
+        .discord-search-server-overlay {
+          position: absolute;
+          inset: 0;
+          background:
+            linear-gradient(180deg, rgba(9,8,24,0.08), rgba(9,8,24,0.74));
+        }
+
+        .discord-search-server-body {
+          position: relative;
+          z-index: 2;
+          padding: 16px;
         }
 
         .discord-search-server-top {
           display: grid;
-          grid-template-columns: 54px minmax(0, 1fr);
+          grid-template-columns: 58px minmax(0, 1fr);
           gap: 12px;
           align-items: center;
+          margin-top: -36px;
         }
 
         .discord-search-server-icon {
-          width: 54px;
-          height: 54px;
-          border-radius: 16px;
+          width: 58px;
+          height: 58px;
+          border-radius: 17px;
           object-fit: cover;
           background: rgba(255,255,255,0.08);
-          border: 1px solid rgba(255,255,255,0.12);
+          border: 1px solid rgba(255,255,255,0.18);
+          box-shadow: 0 14px 28px rgba(0,0,0,0.28);
         }
 
         .discord-search-server-card h3 {
@@ -496,7 +653,7 @@ export default async function DiscordServerSuchenPage() {
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
-          font-size: 17px;
+          font-size: 18px;
           line-height: 1.12;
           font-weight: 950;
         }
@@ -504,17 +661,56 @@ export default async function DiscordServerSuchenPage() {
         .discord-search-server-card small {
           display: block;
           margin-top: 5px;
-          color: rgba(246,243,255,0.58);
+          color: rgba(246,243,255,0.64);
           font-size: 12px;
           font-weight: 850;
         }
 
         .discord-search-server-card p {
-          margin: 13px 0 0;
-          color: rgba(246,243,255,0.70);
+          min-height: 62px;
+          margin: 14px 0 0;
+          color: rgba(246,243,255,0.72);
           font-size: 13px;
           line-height: 1.6;
           font-weight: 650;
+        }
+
+        .discord-search-server-badges {
+          position: absolute;
+          top: 12px;
+          left: 12px;
+          right: 12px;
+          z-index: 3;
+          display: flex;
+          gap: 7px;
+          flex-wrap: wrap;
+        }
+
+        .discord-search-server-badge {
+          min-height: 27px;
+          padding: 0 10px;
+          border-radius: 999px;
+          display: inline-flex;
+          align-items: center;
+          color: #ffffff;
+          font-size: 10.5px;
+          font-weight: 950;
+          text-transform: uppercase;
+          background: rgba(15,16,36,0.76);
+          border: 1px solid rgba(255,255,255,0.14);
+          backdrop-filter: blur(12px);
+        }
+
+        .discord-search-server-badge.premium {
+          color: #ffe68a;
+          background: rgba(255,207,64,0.14);
+          border-color: rgba(255,207,64,0.34);
+        }
+
+        .discord-search-server-badge.partner {
+          color: #9deaff;
+          background: rgba(86,209,255,0.14);
+          border-color: rgba(86,209,255,0.34);
         }
 
         .discord-search-server-stats {
@@ -526,15 +722,35 @@ export default async function DiscordServerSuchenPage() {
         }
 
         .discord-search-server-stats span {
-          min-height: 28px;
+          min-height: 29px;
+          padding: 0 10px;
+          border-radius: 999px;
+          display: inline-flex;
+          align-items: center;
+          color: rgba(255,255,255,0.82);
+          font-size: 11.5px;
+          font-weight: 900;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.09);
+        }
+
+        .discord-search-server-tags {
+          margin-top: 12px;
+          display: flex;
+          gap: 7px;
+          flex-wrap: wrap;
+        }
+
+        .discord-search-server-tags span {
+          min-height: 26px;
           padding: 0 9px;
           border-radius: 999px;
           display: inline-flex;
           align-items: center;
-          color: rgba(255,255,255,0.78);
-          font-size: 11.5px;
-          font-weight: 900;
-          background: rgba(255,255,255,0.055);
+          color: rgba(255,255,255,0.74);
+          font-size: 11px;
+          font-weight: 850;
+          background: rgba(255,255,255,0.045);
           border: 1px solid rgba(255,255,255,0.08);
         }
 
@@ -622,6 +838,10 @@ export default async function DiscordServerSuchenPage() {
           .discord-search-actions a {
             width: 100%;
           }
+
+          .discord-search-server-card {
+            min-height: 310px;
+          }
         }
       `}</style>
 
@@ -688,6 +908,136 @@ export default async function DiscordServerSuchenPage() {
 
         <section className="discord-search-section">
           <div className="discord-search-section-head">
+            <h2>Aktuelle Discord Server</h2>
+            <p>
+              Diese 9 Server wurden zuletzt mit dem Bot gebumpt oder
+              aktualisiert. Premium- und Partner-Server werden hier mit ihrem
+              besonderen Layout, Banner und Glow angezeigt.
+            </p>
+          </div>
+
+          <div className="discord-search-grid">
+            {servers.map((server) => {
+              const serverPath = getServerPath(server);
+              const icon = getServerIcon(server);
+              const banner = getServerBanner(server);
+              const premium = isEnabled(server.premium_status);
+              const partner = isEnabled(server.partner_status);
+              const premiumLayout = normalizePremiumLayout(server.premium_layout);
+              const isSpecial = premium || partner;
+              const tags = Array.isArray(server.tags)
+                ? server.tags.filter(Boolean).slice(0, 3)
+                : [];
+
+              return (
+                <Link
+                  key={server.id}
+                  href={`/servers/${encodeURIComponent(serverPath)}`}
+                  className={`discord-search-server-card ${
+                    isSpecial ? `premium premium-layout-${premiumLayout}` : ""
+                  }`}
+                  style={isSpecial ? getPremiumCardStyle(server) : undefined}
+                >
+                  <div className="discord-search-server-badges">
+                    {premium && (
+                      <span className="discord-search-server-badge premium">
+                        👑 Premium
+                      </span>
+                    )}
+
+                    {partner && (
+                      <span className="discord-search-server-badge partner">
+                        🤝 Partner
+                      </span>
+                    )}
+
+                    <span className="discord-search-server-badge">
+                      ⚡ {formatLastBump(server.last_bump)}
+                    </span>
+                  </div>
+
+                  <div className="discord-search-server-banner">
+                    {banner ? (
+                      <img
+                        src={banner}
+                        alt={server.server_name || "Discord Server Banner"}
+                        style={{
+                          objectPosition: `${server.banner_position_x ?? 50}% ${
+                            server.banner_position_y ?? 50
+                          }%`,
+                          transform: `scale(${server.banner_zoom ?? 1})`,
+                          transformOrigin: `${server.banner_position_x ?? 50}% ${
+                            server.banner_position_y ?? 50
+                          }%`,
+                        }}
+                      />
+                    ) : null}
+
+                    <div className="discord-search-server-overlay" />
+                  </div>
+
+                  <div className="discord-search-server-body">
+                    <div className="discord-search-server-top">
+                      <img
+                        className="discord-search-server-icon"
+                        src={icon}
+                        alt={server.server_name || "Discord Server"}
+                      />
+
+                      <div>
+                        <h3
+                          style={{
+                            color: isSpecial
+                              ? server.server_name_color || "#ffffff"
+                              : undefined,
+                          }}
+                        >
+                          {server.server_name || "Discord Server"}
+                        </h3>
+
+                        <small>
+                          {server.category || "Community"} •{" "}
+                          {server.language || "Deutsch"}
+                        </small>
+                      </div>
+                    </div>
+
+                    <p
+                      style={{
+                        color: isSpecial
+                          ? server.server_text_color ||
+                            "rgba(246,243,255,0.72)"
+                          : undefined,
+                      }}
+                    >
+                      {shortText(
+                        server.description ||
+                          "Entdecke diesen Discord Server auf Asko Cafe.",
+                        150
+                      )}
+                    </p>
+
+                    <div className="discord-search-server-stats">
+                      <span>{formatOnlineCount(server)}</span>
+                      <span>{formatMemberCount(server)}</span>
+                    </div>
+
+                    {tags.length > 0 && (
+                      <div className="discord-search-server-tags">
+                        {tags.map((tag) => (
+                          <span key={tag}>#{tag}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="discord-search-section">
+          <div className="discord-search-section-head">
             <h2>Discord Server nach Kategorie entdecken</h2>
             <p>
               Wähle eine Kategorie und finde passende Server für deine
@@ -746,63 +1096,6 @@ export default async function DiscordServerSuchenPage() {
             </Link>
           </div>
         </section>
-
-        {servers.length > 0 && (
-          <section className="discord-search-section">
-            <div className="discord-search-section-head">
-              <h2>Aktuelle Discord Server</h2>
-              <p>
-                Diese Server wurden zuletzt aktualisiert oder gebumpt. Klicke
-                auf einen Server, um mehr Details zu sehen und dem Discord
-                Server beizutreten.
-              </p>
-            </div>
-
-            <div className="discord-search-grid">
-              {servers.map((server) => {
-                const serverPath = getServerPath(server);
-                const icon = getServerIcon(server);
-
-                return (
-                  <Link
-                    key={server.id}
-                    href={`/servers/${encodeURIComponent(serverPath)}`}
-                    className="discord-search-server-card"
-                  >
-                    <div className="discord-search-server-top">
-                      <img
-                        className="discord-search-server-icon"
-                        src={icon}
-                        alt={server.server_name || "Discord Server"}
-                      />
-
-                      <div>
-                        <h3>{server.server_name || "Discord Server"}</h3>
-                        <small>
-                          {server.category || "Community"} •{" "}
-                          {server.language || "Deutsch"}
-                        </small>
-                      </div>
-                    </div>
-
-                    <p>
-                      {shortText(
-                        server.description ||
-                          "Entdecke diesen Discord Server auf Asko Cafe.",
-                        140
-                      )}
-                    </p>
-
-                    <div className="discord-search-server-stats">
-                      <span>{formatOnlineCount(server)}</span>
-                      <span>{formatMemberCount(server)}</span>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </section>
-        )}
 
         <section className="discord-search-text-block">
           <h2>Was ist eine Discord Server Liste?</h2>
