@@ -32,12 +32,6 @@ const SUBMIT_TEXT = {
     descriptionHelpTitle: "Tipp für eine gute Beschreibung",
     descriptionHelpText:
       "Eine gute Beschreibung hilft neuen Mitgliedern und Google. Schreibe kurz, worum es auf deinem Server geht, für wen er ist und was Mitglieder dort machen können.",
-    descriptionHelpPoints: [
-      "Thema und Zielgruppe des Servers",
-      "Sprache, Kategorie und Community-Art",
-      "Gaming, Anime, Minecraft, Valorant, Events oder andere Themen",
-      "Warum man deinem Discord Server beitreten sollte",
-    ],
     banner: "Server-Banner",
     category: "Kategorie",
     language: "Sprache",
@@ -84,12 +78,6 @@ const SUBMIT_TEXT = {
     descriptionHelpTitle: "Tip for a good description",
     descriptionHelpText:
       "A good description helps new members and Google. Explain what your server is about, who it is for and what members can do there.",
-    descriptionHelpPoints: [
-      "Server topic and target audience",
-      "Language, category and community type",
-      "Gaming, anime, Minecraft, Valorant, events or other topics",
-      "Why people should join your Discord server",
-    ],
     banner: "Server banner",
     category: "Category",
     language: "Language",
@@ -137,12 +125,6 @@ const SUBMIT_TEXT = {
     descriptionHelpTitle: "Conseil pour une bonne description",
     descriptionHelpText:
       "Une bonne description aide les nouveaux membres et Google. Explique le sujet du serveur, pour qui il est fait et ce que les membres peuvent y faire.",
-    descriptionHelpPoints: [
-      "Sujet du serveur et public cible",
-      "Langue, catégorie et type de communauté",
-      "Gaming, anime, Minecraft, Valorant, événements ou autres sujets",
-      "Pourquoi rejoindre ton serveur Discord",
-    ],
     banner: "Bannière du serveur",
     category: "Catégorie",
     language: "Langue",
@@ -190,12 +172,6 @@ const SUBMIT_TEXT = {
     descriptionHelpTitle: "Consiglio per una buona descrizione",
     descriptionHelpText:
       "Una buona descrizione aiuta i nuovi membri e Google. Spiega di cosa parla il server, per chi è pensato e cosa possono fare i membri.",
-    descriptionHelpPoints: [
-      "Tema del server e pubblico target",
-      "Lingua, categoria e tipo di community",
-      "Gaming, anime, Minecraft, Valorant, eventi o altri temi",
-      "Perché entrare nel tuo server Discord",
-    ],
     banner: "Banner del server",
     category: "Categoria",
     language: "Lingua",
@@ -242,12 +218,6 @@ const SUBMIT_TEXT = {
     descriptionHelpTitle: "Wskazówka do dobrego opisu",
     descriptionHelpText:
       "Dobry opis pomaga nowym członkom i Google. Napisz, o czym jest serwer, dla kogo jest i co członkowie mogą tam robić.",
-    descriptionHelpPoints: [
-      "Temat serwera i grupa docelowa",
-      "Język, kategoria i typ społeczności",
-      "Gaming, anime, Minecraft, Valorant, wydarzenia lub inne tematy",
-      "Dlaczego warto dołączyć do twojego serwera Discord",
-    ],
     banner: "Banner serwera",
     category: "Kategoria",
     language: "Język",
@@ -273,6 +243,39 @@ const SUBMIT_TEXT = {
     step3Title: "Sprawdzenie przez admina",
     step3Text: "Po zatwierdzeniu serwer będzie można bumpować.",
   },
+} as const;
+
+const SUBMIT_DESCRIPTION_HELP_POINTS = {
+  de: [
+    "Thema und Zielgruppe des Servers",
+    "Sprache, Kategorie und Community-Art",
+    "Gaming, Anime, Minecraft, Valorant, Events oder andere Themen",
+    "Warum man deinem Discord Server beitreten sollte",
+  ],
+  en: [
+    "Server topic and target audience",
+    "Language, category and community type",
+    "Gaming, anime, Minecraft, Valorant, events or other topics",
+    "Why people should join your Discord server",
+  ],
+  fr: [
+    "Sujet du serveur et public cible",
+    "Langue, catégorie et type de communauté",
+    "Gaming, anime, Minecraft, Valorant, événements ou autres sujets",
+    "Pourquoi rejoindre ton serveur Discord",
+  ],
+  it: [
+    "Tema del server e pubblico target",
+    "Lingua, categoria e tipo di community",
+    "Gaming, anime, Minecraft, Valorant, eventi o altri temi",
+    "Perché entrare nel tuo server Discord",
+  ],
+  pl: [
+    "Temat serwera i grupa docelowa",
+    "Język, kategoria i typ społeczności",
+    "Gaming, anime, Minecraft, Valorant, wydarzenia lub inne tematy",
+    "Dlaczego warto dołączyć do twojego serwera Discord",
+  ],
 } as const;
 
 const SUBMIT_ERROR_TEXT = {
@@ -736,7 +739,7 @@ export default async function SubmitPage({ searchParams }: SubmitPageProps) {
                 <p>{text(pageLanguage, "descriptionHelpText")}</p>
 
                 <ul>
-                  {SUBMIT_TEXT[pageLanguage].descriptionHelpPoints.map((point) => (
+                  {SUBMIT_DESCRIPTION_HELP_POINTS[pageLanguage].map((point) => (
                     <li key={point}>{point}</li>
                   ))}
                 </ul>
