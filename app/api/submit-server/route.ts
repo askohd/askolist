@@ -7,6 +7,10 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 const MAX_DESCRIPTION_WORDS = 1500;
 const TERMS_VERSION = "2026-06-10";
 const PRIVACY_VERSION = "2026-06-10";
+const REFERRAL_FIRST_REWARD_COUNT = 2;
+const REFERRAL_SECOND_REWARD_COUNT = 4;
+const REFERRAL_FIRST_REWARD_MONTHS = 1;
+const REFERRAL_SECOND_REWARD_MONTHS = 2;
 
 function limitWords(text: string, maxWords: number) {
   const cleanText = text.trim();
@@ -42,6 +46,27 @@ function cleanTags(tagsText: string) {
     .filter(Boolean);
 
   return Array.from(new Set(tags)).slice(0, 5);
+}
+
+function normalizeReferralCode(value: unknown) {
+  return String(value ?? "")
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9-]/g, "")
+    .slice(0, 32);
+}
+
+function createReferralCodeCandidate() {
+  const randomPart = Math.random().toString(36).slice(2, 8).toUpperCase();
+  const timePart = Date.now().toString(36).slice(-3).toUpperCase();
+
+  return `ASKO-${randomPart}${timePart}`;
+}
+
+function addMonths(date: Date, months: number) {
+  const nextDate = new Date(date);
+  nextDate.setMonth(nextDate.getMonth() + months);
+  return nextDate;
 }
 
 function slugifyFileName(name: string) {
@@ -91,12 +116,6 @@ async function createUniqueServerSlug(serverName: string) {
 
 function redirectToSubmit(request: Request, query: string) {
   return NextResponse.redirect(new URL(`/submit?${query}`, request.url), {
-    status: 303,
-  });
-}
-
-function redirectToProfile(request: Request, query: string) {
-  return NextResponse.redirect(new URL(`/profile?${query}`, request.url), {
     status: 303,
   });
 }
@@ -265,12 +284,12 @@ async function discordServerAlreadyExists(discordServerId: string | null) {
   return Array.isArray(rows) && rows.length > 0;
 }
 
-async function redirectToBotInvite(request: Request, inviteLink: string) {
+async function buildBotInviteUrl(inviteLink: string) {
   const botClientId =
     process.env.DISCORD_BOT_CLIENT_ID || process.env.DISCORD_CLIENT_ID;
 
   if (!botClientId) {
-    return redirectToProfile(request, "submitted=1&bot_invite=missing");
+    return "";
   }
 
   const guild = await getDiscordGuildFromInvite(inviteLink);
@@ -286,7 +305,226 @@ async function redirectToBotInvite(request: Request, inviteLink: string) {
     inviteUrl.searchParams.set("disable_guild_select", "true");
   }
 
-  return NextResponse.redirect(inviteUrl, { status: 303 });
+  return inviteUrl.toString();
+}
+
+function redirectToSubmitSuccess({
+  request,
+  botInviteUrl,
+  referralCode,
+}: {
+  request: Request;
+  botInviteUrl: string;
+  referralCode: string;
+}) {
+  const successUrl = new URL("/submit/success", request.url);
+
+  successUrl.searchParams.set("submitted", "1");
+
+  if (botInviteUrl) {
+    successUrl.searchParams.set("bot_invite_url", botInviteUrl);
+  } else {
+    successUrl.searchParams.set("bot_invite", "missing");
+  }
+
+  if (referralCode) {
+    successUrl.searchParams.set("referral_code", referralCode);
+  }
+
+  return NextResponse.redirect(successUrl, { status: 303 });
+}
+
+async function getServerBySlug(slug: string) {
+  const rows = await supabaseRequest(
+    `servers?slug=eq.${encodeURIComponent(
+      slug
+    )}&select=id,owner_discord_user_id,premium_until&limit=1`
+  );
+
+  return Array.isArray(rows) ? rows[0] ?? null : null;
+}
+
+async function getOrCreateReferralCode(ownerDiscordUserId: string) {
+  const existingRows = await supabaseRequest(
+    `server_referral_codes?owner_discord_user_id=eq.${encodeURIComponent(
+      ownerDiscordUserId
+    )}&select=code&limit=1`
+  );
+
+  if (Array.isArray(existingRows) && existingRows[0]?.code) {
+    return normalizeReferralCode(existingRows[0].code);
+  }
+
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    const code = createReferralCodeCandidate();
+
+    try {
+      await supabaseRequest("server_referral_codes", {
+        method: "POST",
+        body: JSON.stringify({
+          owner_discord_user_id: ownerDiscordUserId,
+          code,
+          successful_referrals: 0,
+          rewarded_months: 0,
+        }),
+      });
+
+      return code;
+    } catch (error) {
+      console.error("Could not create referral code, retrying:", error);
+    }
+  }
+
+  return "";
+}
+
+async function updateReferrerPremium(
+  referrerDiscordUserId: string,
+  additionalMonths: number
+) {
+  if (additionalMonths <= 0) {
+    return;
+  }
+
+  const rows = await supabaseRequest(
+    `servers?owner_discord_user_id=eq.${encodeURIComponent(
+      referrerDiscordUserId
+    )}&select=id,premium_until&limit=1`
+  );
+
+  const server = Array.isArray(rows) ? rows[0] : null;
+
+  if (!server?.id) {
+    return;
+  }
+
+  const now = new Date();
+  const currentPremiumUntil = server.premium_until
+    ? new Date(server.premium_until)
+    : null;
+
+  const premiumStart =
+    currentPremiumUntil && currentPremiumUntil.getTime() > now.getTime()
+      ? currentPremiumUntil
+      : now;
+
+  const premiumUntil = addMonths(premiumStart, additionalMonths);
+
+  try {
+    await supabaseRequest(`servers?id=eq.${encodeURIComponent(server.id)}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        premium_status: true,
+        premium_until: premiumUntil.toISOString(),
+      }),
+    });
+  } catch (error) {
+    console.error(
+      "Could not update premium_until, trying premium_status only:",
+      error
+    );
+
+    await supabaseRequest(`servers?id=eq.${encodeURIComponent(server.id)}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        premium_status: true,
+      }),
+    });
+  }
+}
+
+async function processReferralRegistration({
+  referralCode,
+  referredDiscordUserId,
+  referredServerId,
+}: {
+  referralCode: string;
+  referredDiscordUserId: string;
+  referredServerId: string;
+}) {
+  const normalizedCode = normalizeReferralCode(referralCode);
+
+  if (!normalizedCode || !referredDiscordUserId || !referredServerId) {
+    return;
+  }
+
+  const codeRows = await supabaseRequest(
+    `server_referral_codes?code=eq.${encodeURIComponent(
+      normalizedCode
+    )}&select=*&limit=1`
+  );
+
+  const referralOwner = Array.isArray(codeRows) ? codeRows[0] : null;
+
+  if (!referralOwner?.owner_discord_user_id) {
+    return;
+  }
+
+  const referrerDiscordUserId = String(referralOwner.owner_discord_user_id);
+
+  if (referrerDiscordUserId === referredDiscordUserId) {
+    return;
+  }
+
+  try {
+    await supabaseRequest("server_referrals", {
+      method: "POST",
+      body: JSON.stringify({
+        referral_code: normalizedCode,
+        referrer_discord_user_id: referrerDiscordUserId,
+        referred_discord_user_id: referredDiscordUserId,
+        referred_server_id: referredServerId,
+        status: "completed",
+        completed_at: new Date().toISOString(),
+      }),
+    });
+  } catch (error) {
+    if (!isDuplicateDatabaseError(error)) {
+      console.error("Could not save server referral:", error);
+    }
+  }
+
+  const referrals = await supabaseRequest(
+    `server_referrals?referrer_discord_user_id=eq.${encodeURIComponent(
+      referrerDiscordUserId
+    )}&status=eq.completed&select=id`
+  );
+
+  const successfulReferrals = Array.isArray(referrals) ? referrals.length : 0;
+  const alreadyRewardedMonths = Number(referralOwner.rewarded_months ?? 0);
+
+  const targetRewardMonths =
+    successfulReferrals >= REFERRAL_SECOND_REWARD_COUNT
+      ? REFERRAL_SECOND_REWARD_MONTHS
+      : successfulReferrals >= REFERRAL_FIRST_REWARD_COUNT
+      ? REFERRAL_FIRST_REWARD_MONTHS
+      : 0;
+
+  const additionalMonths = Math.max(
+    0,
+    targetRewardMonths - alreadyRewardedMonths
+  );
+
+  if (additionalMonths > 0) {
+    await updateReferrerPremium(referrerDiscordUserId, additionalMonths);
+  }
+
+  await supabaseRequest(
+    `server_referral_codes?owner_discord_user_id=eq.${encodeURIComponent(
+      referrerDiscordUserId
+    )}`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({
+        successful_referrals: successfulReferrals,
+        rewarded_months: Math.max(alreadyRewardedMonths, targetRewardMonths),
+        last_rewarded_at:
+          additionalMonths > 0
+            ? new Date().toISOString()
+            : referralOwner.last_rewarded_at,
+      }),
+    }
+  );
 }
 
 async function uploadPublicFile(
@@ -360,6 +598,9 @@ export async function POST(request: Request) {
     }
 
     const formData = await request.formData();
+    const referralCodeFromForm = normalizeReferralCode(
+      formData.get("referral_code")
+    );
 
     const legalAccepted = getLegalAcceptance(formData);
 
@@ -488,7 +729,24 @@ export async function POST(request: Request) {
       throw error;
     }
 
-    return await redirectToBotInvite(request, inviteLink);
+    const createdServer = await getServerBySlug(slug);
+    const ownReferralCode = await getOrCreateReferralCode(ownerDiscordUserId);
+
+    if (createdServer?.id) {
+      await processReferralRegistration({
+        referralCode: referralCodeFromForm,
+        referredDiscordUserId: ownerDiscordUserId,
+        referredServerId: String(createdServer.id),
+      });
+    }
+
+    const botInviteUrl = await buildBotInviteUrl(inviteLink);
+
+    return redirectToSubmitSuccess({
+      request,
+      botInviteUrl,
+      referralCode: ownReferralCode,
+    });
   } catch (error: any) {
     console.error("Submit server failed:", error);
 
