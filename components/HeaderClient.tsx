@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoginButton from "./LoginButton";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useLanguage } from "@/components/useLanguage";
@@ -113,6 +113,88 @@ function t(language: UiLanguage, key: keyof typeof HEADER_TEXT.de) {
   return HEADER_TEXT[language][key] || HEADER_TEXT.de[key];
 }
 
+function getCookieValue(name: string) {
+  if (typeof document === "undefined") {
+    return "";
+  }
+
+  const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
+  const cookie = cookies.find((item) => item.startsWith(`${name}=`));
+
+  if (!cookie) {
+    return "";
+  }
+
+  return decodeURIComponent(cookie.slice(name.length + 1));
+}
+
+function setLanguageCookie(language: UiLanguage, source: "auto" | "manual") {
+  const maxAge = 60 * 60 * 24 * 365;
+
+  document.cookie = `asko_language=${encodeURIComponent(
+    language
+  )}; path=/; max-age=${maxAge}; SameSite=Lax`;
+
+  document.cookie = `asko_language_source=${encodeURIComponent(
+    source
+  )}; path=/; max-age=${maxAge}; SameSite=Lax`;
+}
+
+function detectLanguageFromBrowser(): UiLanguage {
+  if (typeof navigator === "undefined") {
+    return "de";
+  }
+
+  const browserLanguages =
+    navigator.languages && navigator.languages.length > 0
+      ? navigator.languages
+      : [navigator.language];
+
+  const normalizedLanguages = browserLanguages
+    .filter(Boolean)
+    .map((value) => value.toLowerCase());
+
+  for (const language of normalizedLanguages) {
+    if (language.startsWith("fr")) return "fr";
+    if (language.startsWith("it")) return "it";
+    if (language.startsWith("pl")) return "pl";
+    if (language.startsWith("en")) return "en";
+    if (language.startsWith("de")) return "de";
+  }
+
+  return "de";
+}
+
+function useAutoLanguageDetection() {
+  useEffect(() => {
+    const existingLanguage = getCookieValue("asko_language");
+    const languageSource = getCookieValue("asko_language_source");
+
+    if (existingLanguage && languageSource === "manual") {
+      return;
+    }
+
+    if (existingLanguage) {
+      return;
+    }
+
+    const detectedLanguage = detectLanguageFromBrowser();
+
+    setLanguageCookie(detectedLanguage, "auto");
+
+    window.dispatchEvent(
+      new CustomEvent("asko-language-change", {
+        detail: {
+          language: detectedLanguage,
+          source: "auto",
+        },
+      })
+    );
+
+    window.location.reload();
+  }, []);
+}
+
 export default function HeaderClient({
   isAdmin,
   hasDashboardAlert,
@@ -120,6 +202,8 @@ export default function HeaderClient({
   isAdmin: boolean;
   hasDashboardAlert?: boolean;
 }) {
+  useAutoLanguageDetection();
+
   const language = normalizeLanguage(useLanguage());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
