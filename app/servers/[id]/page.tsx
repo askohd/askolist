@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { supabaseRequest } from "@/lib/supabase";
+import ServerShareBox from "@/components/ServerShareBox";
 
 const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
 
@@ -598,12 +599,6 @@ export default async function ServerDetailPage({
 
   const glowColor = server.premium_glow_color || "#8b5cf6";
   const shareServerName = String(server.server_name || "unser Discord Server");
-  const shareTitle = `Bewerte ${shareServerName} auf Asko Cafe`;
-  const shareText = `${shareTitle}: ${serverSeoUrl}`;
-  const xShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-    shareTitle
-  )}&url=${encodeURIComponent(serverSeoUrl)}`;
-
   return (
     <main
       className="server-detail-page-mobile"
@@ -1760,43 +1755,10 @@ export default async function ServerDetailPage({
                 Discord beitreten
               </a>
 
-              <div className="server-detail-share-box">
-                <h3>Server teilen</h3>
-                <p>
-                  Teile diese Asko-Cafe-Seite in deinem Discord, auf deiner
-                  Website oder in Social Media. So können neue Mitglieder deinen
-                  Server schneller finden und bewerten.
-                </p>
-
-                <div className="server-detail-share-actions">
-                  <a href={xShareUrl} target="_blank" rel="noreferrer">
-                    Auf X / Twitter teilen
-                  </a>
-                </div>
-
-                <div className="server-detail-share-copy">
-                  <label htmlFor="server-share-url">Server-Link</label>
-                  <input
-                    id="server-share-url"
-                    readOnly
-                    value={serverSeoUrl}
-                  />
-
-                  <label htmlFor="server-share-text">
-                    Text für Discord, Bio oder Website
-                  </label>
-                  <textarea
-                    id="server-share-text"
-                    readOnly
-                    value={shareText}
-                  />
-                </div>
-
-                <p className="server-detail-share-hint">
-                  Tipp: Wenn Serverbesitzer diese Seite verlinken, finden neue
-                  Nutzer deinen Discord Server leichter über Asko Cafe.
-                </p>
-              </div>
+              <ServerShareBox
+                serverName={shareServerName}
+                serverUrl={serverSeoUrl}
+              />
 
               <div
                 className="server-detail-report-box"
