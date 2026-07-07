@@ -4,8 +4,14 @@ import Link from "next/link";
 import { authOptions } from "@/lib/auth";
 import { supabaseRequest } from "@/lib/supabase";
 import ProfileServerEditor from "@/components/ProfileServerEditor";
+import ProfileReferralBox from "@/components/ProfileReferralBox";
 
 type LanguageCode = "de" | "en" | "fr" | "it" | "pl";
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  process.env.NEXT_PUBLIC_APP_URL ||
+  "https://www.askocafe.com";
 
 const PROFILE_TEXT = {
   de: {
@@ -141,6 +147,92 @@ function text(language: LanguageCode, key: keyof typeof PROFILE_TEXT.de) {
   return PROFILE_TEXT[language][key] || PROFILE_TEXT.de[key];
 }
 
+function getBaseUrl() {
+  return SITE_URL.replace(/\/$/, "");
+}
+
+function normalizeReferralCode(value: unknown) {
+  return String(value ?? "")
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9-]/g, "")
+    .slice(0, 32);
+}
+
+function createReferralCodeCandidate() {
+  const randomPart = Math.random().toString(36).slice(2, 8).toUpperCase();
+  const timePart = Date.now().toString(36).slice(-3).toUpperCase();
+
+  return `ASKO-${randomPart}${timePart}`;
+}
+
+async function getOrCreateReferralInfo(ownerDiscordUserId: string) {
+  try {
+    const existingRows = await supabaseRequest(
+      `server_referral_codes?owner_discord_user_id=eq.${encodeURIComponent(
+        ownerDiscordUserId
+      )}&select=code,successful_referrals,rewarded_months&limit=1`
+    );
+
+    const existing = Array.isArray(existingRows) ? existingRows[0] : null;
+
+    if (existing?.code) {
+      return {
+        code: normalizeReferralCode(existing.code),
+        successfulReferrals: Number(existing.successful_referrals ?? 0),
+        rewardedMonths: Number(existing.rewarded_months ?? 0),
+      };
+    }
+
+    for (let attempt = 0; attempt < 8; attempt += 1) {
+      const code = createReferralCodeCandidate();
+
+      try {
+        await supabaseRequest("server_referral_codes", {
+          method: "POST",
+          body: JSON.stringify({
+            owner_discord_user_id: ownerDiscordUserId,
+            code,
+            successful_referrals: 0,
+            rewarded_months: 0,
+          }),
+        });
+
+        return {
+          code,
+          successfulReferrals: 0,
+          rewardedMonths: 0,
+        };
+      } catch (error) {
+        console.error("Could not create dashboard referral code:", error);
+      }
+    }
+  } catch (error) {
+    console.error("Could not load dashboard referral info:", error);
+  }
+
+  return {
+    code: "",
+    successfulReferrals: 0,
+    rewardedMonths: 0,
+  };
+}
+
+async function getSuccessfulReferralCount(ownerDiscordUserId: string) {
+  try {
+    const rows = await supabaseRequest(
+      `server_referrals?referrer_discord_user_id=eq.${encodeURIComponent(
+        ownerDiscordUserId
+      )}&status=eq.completed&select=id`
+    );
+
+    return Array.isArray(rows) ? rows.length : 0;
+  } catch (error) {
+    console.error("Could not load successful referrals:", error);
+    return 0;
+  }
+}
+
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
   const cookieStore = await cookies();
@@ -165,17 +257,42 @@ export default async function ProfilePage() {
   }
 
   const user = session.user as any;
-  const discordUserId = user.id || user.discordId;
+  const discordUserId = String(user.id || user.discordId || "").trim();
 
   let myServers: any[] = [];
 
   if (discordUserId) {
     myServers = await supabaseRequest(
       "servers?owner_discord_user_id=eq." +
-        discordUserId +
+        encodeURIComponent(discordUserId) +
         "&select=*&order=created_at.desc"
     );
   }
+
+  const hasServer = myServers.length > 0;
+
+  const referralInfo =
+    discordUserId && hasServer
+      ? await getOrCreateReferralInfo(discordUserId)
+      : {
+          code: "",
+          successfulReferrals: 0,
+          rewardedMonths: 0,
+        };
+
+  const successfulReferralCount =
+    discordUserId && hasServer
+      ? await getSuccessfulReferralCount(discordUserId)
+      : 0;
+
+  const successfulReferrals = Math.max(
+    Number(referralInfo.successfulReferrals || 0),
+    successfulReferralCount
+  );
+
+  const referralUrl = referralInfo.code
+    ? `${getBaseUrl()}/submit?ref=${encodeURIComponent(referralInfo.code)}`
+    : "";
 
   return (
     <main className="container profile-page">
@@ -194,11 +311,20 @@ export default async function ProfilePage() {
             <h1>{session.user?.name}</h1>
             <p>
               {text(pageLanguage, "discordUserId")}:{" "}
-              {discordUserId ?? text(pageLanguage, "notAvailable")}
+              {discordUserId || text(pageLanguage, "notAvailable")}
             </p>
           </div>
         </div>
       </section>
+
+      {hasServer && (
+        <ProfileReferralBox
+          language={pageLanguage}
+          referralUrl={referralUrl}
+          successfulReferrals={successfulReferrals}
+          rewardedMonths={referralInfo.rewardedMonths}
+        />
+      )}
 
       <section className="section">
         <div className="section-title">
