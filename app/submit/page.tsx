@@ -607,6 +607,12 @@ export default async function SubmitPage({ searchParams }: SubmitPageProps) {
           border: 1px solid rgba(116,223,255,0.16);
           border-radius: 999px;
           padding: 2px 8px;
+          display: inline-flex;
+          margin: 2px 2px 0 0;
+        }
+
+        .description-help-box-left {
+          margin: 0 0 18px;
         }
 
         .submit-error-box {
@@ -733,24 +739,6 @@ export default async function SubmitPage({ searchParams }: SubmitPageProps) {
               <small className="char-counter">
                 {text(pageLanguage, "maxWords")}
               </small>
-
-              <div className="description-help-box">
-                <strong>{text(pageLanguage, "descriptionHelpTitle")}</strong>
-                <p>{text(pageLanguage, "descriptionHelpText")}</p>
-
-                <ul>
-                  {SUBMIT_DESCRIPTION_HELP_POINTS[pageLanguage].map((point) => (
-                    <li key={point}>{point}</li>
-                  ))}
-                </ul>
-
-                <p style={{ marginTop: "12px" }}>
-                  Gute Wörter sind zum Beispiel: <code>Gaming</code>{" "}
-                  <code>Anime</code> <code>Minecraft</code>{" "}
-                  <code>Valorant</code> <code>Community</code>{" "}
-                  <code>Deutsch</code>
-                </p>
-              </div>
             </label>
 
             <label className="field">
@@ -804,6 +792,24 @@ export default async function SubmitPage({ searchParams }: SubmitPageProps) {
         </form>
 
         <aside className="submit-info">
+          <div className="description-help-box description-help-box-left">
+            <strong>{text(pageLanguage, "descriptionHelpTitle")}</strong>
+            <p>{text(pageLanguage, "descriptionHelpText")}</p>
+
+            <ul>
+              {SUBMIT_DESCRIPTION_HELP_POINTS[pageLanguage].map((point) => (
+                <li key={point}>{point}</li>
+              ))}
+            </ul>
+
+            <p style={{ marginTop: "12px" }}>
+              Gute Wörter sind zum Beispiel: <code>Gaming</code>{" "}
+              <code>Anime</code> <code>Minecraft</code>{" "}
+              <code>Valorant</code> <code>Community</code>{" "}
+              <code>Deutsch</code>
+            </p>
+          </div>
+
           <h2>{text(pageLanguage, "approvalTitle")}</h2>
 
           <div className="info-step">
