@@ -27,8 +27,17 @@ const SUBMIT_TEXT = {
     serverNamePlaceholder: "Beispiel: Asko Community",
     inviteLink: "Discord Einladungslink",
     description: "Beschreibung",
-    descriptionPlaceholder: "Beschreibe deinen Discord Server...",
-    maxWords: "Maximal 1500 Wörter.",
+    descriptionPlaceholder: "Beschreibe deinen Discord Server: Thema, Sprache, Community, Aktivitäten, Regeln, Events und warum neue Mitglieder beitreten sollten.",
+    maxWords: "Mindestens 180 Zeichen. Maximal 1500 Wörter.",
+    descriptionHelpTitle: "Tipp für eine gute Beschreibung",
+    descriptionHelpText:
+      "Eine gute Beschreibung hilft neuen Mitgliedern und Google. Schreibe kurz, worum es auf deinem Server geht, für wen er ist und was Mitglieder dort machen können.",
+    descriptionHelpPoints: [
+      "Thema und Zielgruppe des Servers",
+      "Sprache, Kategorie und Community-Art",
+      "Gaming, Anime, Minecraft, Valorant, Events oder andere Themen",
+      "Warum man deinem Discord Server beitreten sollte",
+    ],
     banner: "Server-Banner",
     category: "Kategorie",
     language: "Sprache",
@@ -70,8 +79,17 @@ const SUBMIT_TEXT = {
     serverNamePlaceholder: "Example: Asko Community",
     inviteLink: "Discord invite link",
     description: "Description",
-    descriptionPlaceholder: "Describe your Discord server...",
-    maxWords: "Maximum 1500 words.",
+    descriptionPlaceholder: "Describe your Discord server: topic, language, community, activities, rules, events and why new members should join.",
+    maxWords: "Minimum 180 characters. Maximum 1500 words.",
+    descriptionHelpTitle: "Tip for a good description",
+    descriptionHelpText:
+      "A good description helps new members and Google. Explain what your server is about, who it is for and what members can do there.",
+    descriptionHelpPoints: [
+      "Server topic and target audience",
+      "Language, category and community type",
+      "Gaming, anime, Minecraft, Valorant, events or other topics",
+      "Why people should join your Discord server",
+    ],
     banner: "Server banner",
     category: "Category",
     language: "Language",
@@ -114,8 +132,17 @@ const SUBMIT_TEXT = {
     serverNamePlaceholder: "Exemple : Asko Community",
     inviteLink: "Lien d'invitation Discord",
     description: "Description",
-    descriptionPlaceholder: "Décris ton serveur Discord...",
-    maxWords: "Maximum 1500 mots.",
+    descriptionPlaceholder: "Décris ton serveur Discord : sujet, langue, communauté, activités, règles, événements et pourquoi de nouveaux membres devraient rejoindre.",
+    maxWords: "Minimum 180 caractères. Maximum 1500 mots.",
+    descriptionHelpTitle: "Conseil pour une bonne description",
+    descriptionHelpText:
+      "Une bonne description aide les nouveaux membres et Google. Explique le sujet du serveur, pour qui il est fait et ce que les membres peuvent y faire.",
+    descriptionHelpPoints: [
+      "Sujet du serveur et public cible",
+      "Langue, catégorie et type de communauté",
+      "Gaming, anime, Minecraft, Valorant, événements ou autres sujets",
+      "Pourquoi rejoindre ton serveur Discord",
+    ],
     banner: "Bannière du serveur",
     category: "Catégorie",
     language: "Langue",
@@ -158,8 +185,17 @@ const SUBMIT_TEXT = {
     serverNamePlaceholder: "Esempio: Asko Community",
     inviteLink: "Link di invito Discord",
     description: "Descrizione",
-    descriptionPlaceholder: "Descrivi il tuo server Discord...",
-    maxWords: "Massimo 1500 parole.",
+    descriptionPlaceholder: "Descrivi il tuo server Discord: tema, lingua, community, attività, regole, eventi e perché nuovi membri dovrebbero entrare.",
+    maxWords: "Minimo 180 caratteri. Massimo 1500 parole.",
+    descriptionHelpTitle: "Consiglio per una buona descrizione",
+    descriptionHelpText:
+      "Una buona descrizione aiuta i nuovi membri e Google. Spiega di cosa parla il server, per chi è pensato e cosa possono fare i membri.",
+    descriptionHelpPoints: [
+      "Tema del server e pubblico target",
+      "Lingua, categoria e tipo di community",
+      "Gaming, anime, Minecraft, Valorant, eventi o altri temi",
+      "Perché entrare nel tuo server Discord",
+    ],
     banner: "Banner del server",
     category: "Categoria",
     language: "Lingua",
@@ -201,8 +237,17 @@ const SUBMIT_TEXT = {
     serverNamePlaceholder: "Przykład: Asko Community",
     inviteLink: "Link zaproszenia Discord",
     description: "Opis",
-    descriptionPlaceholder: "Opisz swój serwer Discord...",
-    maxWords: "Maksymalnie 1500 słów.",
+    descriptionPlaceholder: "Opisz swój serwer Discord: temat, język, społeczność, aktywności, zasady, wydarzenia i dlaczego nowi członkowie powinni dołączyć.",
+    maxWords: "Minimum 180 znaków. Maksymalnie 1500 słów.",
+    descriptionHelpTitle: "Wskazówka do dobrego opisu",
+    descriptionHelpText:
+      "Dobry opis pomaga nowym członkom i Google. Napisz, o czym jest serwer, dla kogo jest i co członkowie mogą tam robić.",
+    descriptionHelpPoints: [
+      "Temat serwera i grupa docelowa",
+      "Język, kategoria i typ społeczności",
+      "Gaming, anime, Minecraft, Valorant, wydarzenia lub inne tematy",
+      "Dlaczego warto dołączyć do twojego serwera Discord",
+    ],
     banner: "Banner serwera",
     category: "Kategoria",
     language: "Język",
@@ -515,6 +560,52 @@ export default async function SubmitPage({ searchParams }: SubmitPageProps) {
           line-height: 1.55;
         }
 
+        .description-help-box {
+          margin-top: 12px;
+          padding: 16px;
+          border-radius: 18px;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(116, 223, 255, 0.12), transparent 38%),
+            rgba(255,255,255,0.055);
+          border: 1px solid rgba(116, 223, 255, 0.18);
+          box-shadow: 0 0 22px rgba(116,223,255,0.08);
+        }
+
+        .description-help-box strong {
+          display: block;
+          color: #ffffff;
+          font-size: 0.95rem;
+          margin-bottom: 6px;
+        }
+
+        .description-help-box p {
+          margin: 0;
+          color: rgba(236, 240, 255, 0.72);
+          font-size: 0.88rem;
+          line-height: 1.6;
+        }
+
+        .description-help-box ul {
+          margin: 12px 0 0;
+          padding-left: 18px;
+          color: rgba(236, 240, 255, 0.72);
+          font-size: 0.88rem;
+          line-height: 1.65;
+        }
+
+        .description-help-box li + li {
+          margin-top: 4px;
+        }
+
+        .description-help-box code {
+          color: #9deaff;
+          font-weight: 950;
+          background: rgba(116,223,255,0.10);
+          border: 1px solid rgba(116,223,255,0.16);
+          border-radius: 999px;
+          padding: 2px 8px;
+        }
+
         .submit-error-box {
           margin: 0 0 22px;
           padding: 18px;
@@ -632,11 +723,31 @@ export default async function SubmitPage({ searchParams }: SubmitPageProps) {
               <textarea
                 name="description"
                 placeholder={text(pageLanguage, "descriptionPlaceholder")}
+                minLength={180}
+                maxLength={9000}
                 required
               />
               <small className="char-counter">
                 {text(pageLanguage, "maxWords")}
               </small>
+
+              <div className="description-help-box">
+                <strong>{text(pageLanguage, "descriptionHelpTitle")}</strong>
+                <p>{text(pageLanguage, "descriptionHelpText")}</p>
+
+                <ul>
+                  {SUBMIT_TEXT[pageLanguage].descriptionHelpPoints.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+
+                <p style={{ marginTop: "12px" }}>
+                  Gute Wörter sind zum Beispiel: <code>Gaming</code>{" "}
+                  <code>Anime</code> <code>Minecraft</code>{" "}
+                  <code>Valorant</code> <code>Community</code>{" "}
+                  <code>Deutsch</code>
+                </p>
+              </div>
             </label>
 
             <label className="field">
