@@ -38,6 +38,15 @@ const TEXT = {
     missingBot:
       "Bot-Einladungslink fehlt. Öffne dein Dashboard, falls der Bot noch nicht eingeladen wurde.",
     premiumBadge: "Premium Belohnung",
+    approvalInfoTitle: "Was passiert jetzt?",
+    approvalInfoOne:
+      "Dein Server wird geprüft. Die Freigabe kann bis zu 1 Tag dauern.",
+    approvalInfoTwo:
+      "Schau morgen kurz wieder im Server-Dashboard vorbei, ob dein Server verfügbar ist.",
+    approvalInfoThree:
+      "Wichtig: Lade den Bot auf deinen Discord Server ein. Nur mit Bot kann dein Server gebumpt werden und weiter oben in der Liste erscheinen.",
+    approvalInfoFour:
+      "Ohne Bot bleibt dein Server weit unten und wird deutlich schlechter gefunden.",
   },
   en: {
     successTitle: "Server submitted",
@@ -65,6 +74,15 @@ const TEXT = {
     missingBot:
       "Bot invite link is missing. Open your dashboard if the bot has not been invited yet.",
     premiumBadge: "Premium reward",
+    approvalInfoTitle: "What happens now?",
+    approvalInfoOne:
+      "Your server will be reviewed. Approval can take up to 1 day.",
+    approvalInfoTwo:
+      "Check your server dashboard again tomorrow to see whether your server is available.",
+    approvalInfoThree:
+      "Important: Invite the bot to your Discord server. Only with the bot can your server be bumped and appear higher in the list.",
+    approvalInfoFour:
+      "Without the bot, your server stays far down and is much harder to find.",
   },
   fr: {
     successTitle: "Serveur ajouté",
@@ -92,6 +110,15 @@ const TEXT = {
     missingBot:
       "Le lien d'invitation du bot manque. Ouvre ton tableau de bord si le bot n'a pas encore été invité.",
     premiumBadge: "Récompense Premium",
+    approvalInfoTitle: "Que se passe-t-il maintenant ?",
+    approvalInfoOne:
+      "Ton serveur va être vérifié. L'approbation peut prendre jusqu'à 1 jour.",
+    approvalInfoTwo:
+      "Reviens demain dans le tableau de bord pour voir si ton serveur est disponible.",
+    approvalInfoThree:
+      "Important : invite le bot sur ton serveur Discord. Seul le bot permet de bumper ton serveur et de le faire apparaître plus haut dans la liste.",
+    approvalInfoFour:
+      "Sans le bot, ton serveur reste beaucoup plus bas et sera moins visible.",
   },
   it: {
     successTitle: "Server aggiunto",
@@ -119,6 +146,15 @@ const TEXT = {
     missingBot:
       "Manca il link di invito del bot. Apri il dashboard se il bot non è ancora stato invitato.",
     premiumBadge: "Ricompensa Premium",
+    approvalInfoTitle: "Cosa succede ora?",
+    approvalInfoOne:
+      "Il tuo server verrà controllato. L'approvazione può richiedere fino a 1 giorno.",
+    approvalInfoTwo:
+      "Controlla domani la dashboard per vedere se il server è disponibile.",
+    approvalInfoThree:
+      "Importante: invita il bot nel tuo server Discord. Solo con il bot il server può essere bumpato e comparire più in alto nella lista.",
+    approvalInfoFour:
+      "Senza bot, il server rimane molto più in basso ed è più difficile da trovare.",
   },
   pl: {
     successTitle: "Serwer dodany",
@@ -146,6 +182,15 @@ const TEXT = {
     missingBot:
       "Brakuje linku zaproszenia bota. Otwórz panel, jeśli bot nie został jeszcze zaproszony.",
     premiumBadge: "Nagroda Premium",
+    approvalInfoTitle: "Co teraz?",
+    approvalInfoOne:
+      "Twój serwer zostanie sprawdzony. Akceptacja może potrwać do 1 dnia.",
+    approvalInfoTwo:
+      "Zajrzyj jutro do panelu serwera, aby sprawdzić, czy serwer jest już dostępny.",
+    approvalInfoThree:
+      "Ważne: zaproś bota na swój serwer Discord. Tylko z botem serwer może być bumpowany i pojawiać się wyżej na liście.",
+    approvalInfoFour:
+      "Bez bota serwer zostaje dużo niżej i jest trudniejszy do znalezienia.",
   },
 } as const;
 
@@ -297,6 +342,42 @@ export default function ReferralInvitePopup({
           font-size: 15px;
           line-height: 1.7;
           font-weight: 750;
+        }
+
+        .referral-success-info {
+          margin-top: 18px;
+          padding: 16px;
+          border-radius: 18px;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(116,223,255,0.11), transparent 38%),
+            rgba(255,255,255,0.055);
+          border: 1px solid rgba(116,223,255,0.18);
+        }
+
+        .referral-success-info strong {
+          display: block;
+          margin-bottom: 10px;
+          color: #ffffff;
+          font-size: 15px;
+          font-weight: 950;
+        }
+
+        .referral-success-info ul {
+          margin: 0;
+          padding-left: 20px;
+          color: rgba(246,243,255,0.78);
+          font-size: 14px;
+          line-height: 1.65;
+          font-weight: 750;
+        }
+
+        .referral-success-info li + li {
+          margin-top: 7px;
+        }
+
+        .referral-success-info .important {
+          color: #ffe68a;
+          font-weight: 950;
         }
 
         .referral-success-actions {
@@ -480,6 +561,17 @@ export default function ReferralInvitePopup({
       <section className="referral-success-card">
         <h1>{t.successTitle}</h1>
         <p>{t.successText}</p>
+
+        <div className="referral-success-info">
+          <strong>{t.approvalInfoTitle}</strong>
+
+          <ul>
+            <li>{t.approvalInfoOne}</li>
+            <li>{t.approvalInfoTwo}</li>
+            <li className="important">{t.approvalInfoThree}</li>
+            <li>{t.approvalInfoFour}</li>
+          </ul>
+        </div>
 
         {!botInviteUrl && <p>{t.missingBot}</p>}
 
