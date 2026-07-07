@@ -452,6 +452,7 @@ export default async function SubmitPage({ searchParams }: SubmitPageProps) {
   const pageLanguage = normalizeLanguage(cookieStore.get("asko_language")?.value);
   const resolvedSearchParams = await resolveSearchParams(searchParams);
   const submitError = getSearchParam(resolvedSearchParams, "error");
+  const referralCode = getSearchParam(resolvedSearchParams, "ref");
 
   if (!session) {
     return (
@@ -511,6 +512,14 @@ export default async function SubmitPage({ searchParams }: SubmitPageProps) {
 
             <input type="hidden" name="terms_version" value={TERMS_VERSION} />
             <input type="hidden" name="privacy_version" value={PRIVACY_VERSION} />
+
+            {referralCode && (
+              <input
+                type="hidden"
+                name="callbackUrl"
+                value={`/submit?ref=${encodeURIComponent(referralCode)}`}
+              />
+            )}
 
             <button className="btn" type="submit">
               {text(pageLanguage, "loginButton")}
@@ -685,7 +694,13 @@ export default async function SubmitPage({ searchParams }: SubmitPageProps) {
               </Link>
             )}
 
-            <Link href="/submit">
+            <Link
+              href={
+                referralCode
+                  ? `/submit?ref=${encodeURIComponent(referralCode)}`
+                  : "/submit"
+              }
+            >
               {SUBMIT_ERROR_TEXT[pageLanguage].tryAgainButton}
             </Link>
           </div>
@@ -705,6 +720,7 @@ export default async function SubmitPage({ searchParams }: SubmitPageProps) {
             name="accepted_privacy_version"
             value={PRIVACY_VERSION}
           />
+          <input type="hidden" name="referral_code" value={referralCode} />
 
           <div className="form-grid">
             <label className="field">
