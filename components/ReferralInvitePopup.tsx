@@ -28,7 +28,6 @@ const TEXT = {
       "Ohne Bot bleibt dein Server weit unten und wird deutlich schlechter gefunden.",
     botButton: "Bot jetzt einladen",
     dashboardButton: "Server-Dashboard öffnen",
-    inviteFriendsButton: "Premium-Link anzeigen",
     popupTitle: "1 Monat kostenlos Premium für 2 Freunde",
     introBefore:
       "Teile deinen Einladungslink mit Freunden, die einen Discord Server besitzen.",
@@ -69,7 +68,6 @@ const TEXT = {
       "Without the bot, your server stays far down and is much harder to find.",
     botButton: "Invite bot now",
     dashboardButton: "Open server dashboard",
-    inviteFriendsButton: "Show Premium link",
     popupTitle: "1 free month of Premium for 2 friends",
     introBefore:
       "Share your invite link with friends who own a Discord server.",
@@ -110,7 +108,6 @@ const TEXT = {
       "Sans le bot, ton serveur reste beaucoup plus bas et sera moins visible.",
     botButton: "Inviter le bot",
     dashboardButton: "Ouvrir le tableau de bord",
-    inviteFriendsButton: "Afficher le lien Premium",
     popupTitle: "1 mois Premium gratuit pour 2 amis",
     introBefore:
       "Partage ton lien d'invitation avec des amis qui possèdent un serveur Discord.",
@@ -151,7 +148,6 @@ const TEXT = {
       "Senza bot, il server rimane molto più in basso ed è più difficile da trovare.",
     botButton: "Invita bot",
     dashboardButton: "Apri dashboard server",
-    inviteFriendsButton: "Mostra link Premium",
     popupTitle: "1 mese Premium gratis per 2 amici",
     introBefore:
       "Condividi il tuo link con amici che possiedono un server Discord.",
@@ -192,7 +188,6 @@ const TEXT = {
       "Bez bota serwer zostaje dużo niżej i jest trudniejszy do znalezienia.",
     botButton: "Zaproś bota",
     dashboardButton: "Otwórz panel serwera",
-    inviteFriendsButton: "Pokaż link Premium",
     popupTitle: "1 miesiąc Premium za darmo za 2 znajomych",
     introBefore:
       "Udostępnij swój link znajomym, którzy mają serwer Discord.",
@@ -255,7 +250,7 @@ export default function ReferralInvitePopup({
     [storageKey]
   );
 
-  function shouldOpenPopup() {
+  function canAutoShowPopup() {
     const raw = window.localStorage.getItem(storageKey);
 
     if (!raw) {
@@ -279,10 +274,8 @@ export default function ReferralInvitePopup({
     }
   }
 
-  function openReferralPopup() {
-    if (shouldOpenPopup()) {
-      setShowPopup(true);
-    }
+  function openReferralPopupManual() {
+    setShowPopup(true);
   }
 
   useEffect(() => {
@@ -318,11 +311,17 @@ export default function ReferralInvitePopup({
       }
 
       window.sessionStorage.removeItem(afterBotStorageKey);
-      openReferralPopup();
+
+      if (canAutoShowPopup()) {
+        setShowPopup(true);
+      }
     }
 
     window.addEventListener("focus", showPopupAfterReturningFromDiscord);
-    document.addEventListener("visibilitychange", showPopupAfterReturningFromDiscord);
+    document.addEventListener(
+      "visibilitychange",
+      showPopupAfterReturningFromDiscord
+    );
 
     return () => {
       window.removeEventListener("focus", showPopupAfterReturningFromDiscord);
@@ -331,14 +330,16 @@ export default function ReferralInvitePopup({
         showPopupAfterReturningFromDiscord
       );
     };
-  }, [afterBotStorageKey]);
+  }, [afterBotStorageKey, storageKey]);
 
   function openBotInvite() {
     window.sessionStorage.setItem(afterBotStorageKey, "1");
-    openReferralPopup();
+    setShowPopup(true);
 
     if (botInviteUrl) {
-      window.open(botInviteUrl, "_blank", "noopener,noreferrer");
+      setTimeout(() => {
+        window.open(botInviteUrl, "_blank", "noopener,noreferrer");
+      }, 150);
     }
   }
 
@@ -379,13 +380,13 @@ export default function ReferralInvitePopup({
         .referral-success-card {
           position: relative;
           width: 100%;
-          max-width: 920px;
+          max-width: 820px;
           overflow: hidden;
-          padding: 32px;
+          padding: 34px;
           border-radius: 34px;
           background:
             radial-gradient(circle at 0% 0%, rgba(181,76,255,0.26), transparent 34%),
-            radial-gradient(circle at 100% 0%, rgba(116,223,255,0.18), transparent 32%),
+            radial-gradient(circle at 100% 0%, rgba(116,223,255,0.16), transparent 32%),
             linear-gradient(180deg, rgba(34,18,55,0.96), rgba(16,10,34,0.97));
           border: 1px solid rgba(255,255,255,0.13);
           box-shadow:
@@ -401,11 +402,12 @@ export default function ReferralInvitePopup({
           right: -95px;
           top: -110px;
           border-radius: 999px;
-          background: radial-gradient(circle, rgba(255,207,64,0.22), transparent 67%);
+          background: radial-gradient(circle, rgba(255,207,64,0.18), transparent 67%);
           pointer-events: none;
         }
 
         .referral-success-badge {
+          position: relative;
           min-height: 34px;
           padding: 0 13px;
           border-radius: 999px;
@@ -441,36 +443,22 @@ export default function ReferralInvitePopup({
           font-weight: 780;
         }
 
-        .referral-success-grid {
+        .referral-success-info {
           position: relative;
           margin-top: 22px;
-          display: grid;
-          grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
-          gap: 16px;
-          align-items: stretch;
-        }
-
-        .referral-success-info,
-        .referral-premium-teaser {
-          padding: 18px;
-          border-radius: 22px;
-          background: rgba(255,255,255,0.058);
-          border: 1px solid rgba(255,255,255,0.12);
-        }
-
-        .referral-success-info {
+          padding: 20px;
+          border-radius: 24px;
           background:
             radial-gradient(circle at 0% 0%, rgba(116,223,255,0.12), transparent 38%),
             rgba(255,255,255,0.055);
-          border-color: rgba(116,223,255,0.19);
+          border: 1px solid rgba(116,223,255,0.19);
         }
 
-        .referral-success-info strong,
-        .referral-premium-teaser strong {
+        .referral-success-info strong {
           display: block;
-          margin-bottom: 11px;
+          margin-bottom: 12px;
           color: #ffffff;
-          font-size: 16px;
+          font-size: 17px;
           font-weight: 950;
         }
 
@@ -484,46 +472,12 @@ export default function ReferralInvitePopup({
         }
 
         .referral-success-info li + li {
-          margin-top: 7px;
+          margin-top: 8px;
         }
 
         .referral-success-info .important {
           color: #ffe68a;
           font-weight: 950;
-        }
-
-        .referral-premium-teaser {
-          background:
-            radial-gradient(circle at 0% 0%, rgba(255,207,64,0.17), transparent 40%),
-            rgba(255,255,255,0.055);
-          border-color: rgba(255,207,64,0.22);
-        }
-
-        .referral-premium-teaser p {
-          margin: 0;
-          color: rgba(246,243,255,0.78);
-          line-height: 1.6;
-          font-size: 14px;
-          font-weight: 760;
-        }
-
-        .referral-premium-badges {
-          margin-top: 13px;
-          display: grid;
-          gap: 9px;
-        }
-
-        .referral-premium-badges span {
-          min-height: 34px;
-          padding: 0 12px;
-          border-radius: 999px;
-          display: inline-flex;
-          align-items: center;
-          color: #ffe68a;
-          font-size: 12px;
-          font-weight: 950;
-          background: rgba(255,207,64,0.11);
-          border: 1px solid rgba(255,207,64,0.24);
         }
 
         .referral-success-actions {
@@ -552,37 +506,17 @@ export default function ReferralInvitePopup({
           box-shadow: 0 0 20px rgba(116,223,255,0.12);
         }
 
-        .referral-success-actions a,
-        .referral-success-actions .ghost {
+        .referral-success-actions a {
           background: rgba(255,255,255,0.075);
           border: 1px solid rgba(255,255,255,0.14);
           box-shadow: none;
         }
 
-        .referral-success-actions .premium-link {
-          color: #ffe68a;
-          background: rgba(255,207,64,0.10);
-          border: 1px solid rgba(255,207,64,0.25);
-          box-shadow: 0 0 18px rgba(255,207,64,0.08);
-        }
-
-        .referral-popup-backdrop {
-          position: fixed;
-          inset: 0;
-          z-index: 9999;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 18px;
-          background: rgba(4,0,12,0.72);
-          backdrop-filter: blur(16px);
-        }
-
-        .referral-popup {
+        .referral-popup-page {
           width: 100%;
-          max-width: 580px;
-          padding: 24px;
-          border-radius: 28px;
+          max-width: 660px;
+          padding: 28px;
+          border-radius: 32px;
           background:
             radial-gradient(circle at 0% 0%, rgba(255,207,64,0.25), transparent 33%),
             radial-gradient(circle at 100% 0%, rgba(116,223,255,0.18), transparent 36%),
@@ -611,37 +545,37 @@ export default function ReferralInvitePopup({
           box-shadow: 0 0 18px rgba(255,207,64,0.10);
         }
 
-        .referral-popup h2 {
+        .referral-popup-page h2 {
           margin: 0;
-          font-size: clamp(32px, 6vw, 48px);
+          font-size: clamp(34px, 6vw, 52px);
           line-height: 0.96;
           letter-spacing: -0.055em;
           font-weight: 950;
           color: #ffffff;
         }
 
-        .referral-popup h2 .premium-word,
+        .referral-popup-page h2 .premium-word,
         .referral-premium-highlight {
           color: #ffe68a;
           text-shadow: 0 0 18px rgba(255,207,64,0.28);
         }
 
-        .referral-popup p {
+        .referral-popup-page p {
           margin: 13px 0 0;
           color: rgba(246,243,255,0.78);
           line-height: 1.72;
           font-weight: 780;
         }
 
-        .referral-popup strong {
+        .referral-popup-page strong {
           color: #ffffff;
           font-weight: 950;
         }
 
         .referral-reward-card {
-          margin-top: 15px;
-          padding: 15px;
-          border-radius: 18px;
+          margin-top: 16px;
+          padding: 16px;
+          border-radius: 20px;
           background:
             linear-gradient(135deg, rgba(255,207,64,0.13), rgba(255,255,255,0.055));
           border: 1px solid rgba(255,207,64,0.24);
@@ -706,13 +640,10 @@ export default function ReferralInvitePopup({
         }
 
         @media (max-width: 760px) {
-          .referral-success-card {
+          .referral-success-card,
+          .referral-popup-page {
             padding: 24px;
             border-radius: 28px;
-          }
-
-          .referral-success-grid {
-            grid-template-columns: 1fr;
           }
 
           .referral-success-actions button,
@@ -739,27 +670,15 @@ export default function ReferralInvitePopup({
           <h1>{t.successTitle}</h1>
           <p>{t.successText}</p>
 
-          <div className="referral-success-grid">
-            <div className="referral-success-info">
-              <strong>{t.approvalInfoTitle}</strong>
+          <div className="referral-success-info">
+            <strong>{t.approvalInfoTitle}</strong>
 
-              <ul>
-                <li>{t.approvalInfoOne}</li>
-                <li>{t.approvalInfoTwo}</li>
-                <li className="important">{t.approvalInfoThree}</li>
-                <li>{t.approvalInfoFour}</li>
-              </ul>
-            </div>
-
-            <div className="referral-premium-teaser">
-              <strong>✨ {t.premiumBadge}</strong>
-              <p>{t.popupTitle}</p>
-
-              <div className="referral-premium-badges">
-                <span>{t.rewardBadgeOne}</span>
-                <span>{t.rewardBadgeTwo}</span>
-              </div>
-            </div>
+            <ul>
+              <li>{t.approvalInfoOne}</li>
+              <li>{t.approvalInfoTwo}</li>
+              <li className="important">{t.approvalInfoThree}</li>
+              <li>{t.approvalInfoFour}</li>
+            </ul>
           </div>
 
           {!botInviteUrl && <p>{t.missingBot}</p>}
@@ -769,79 +688,69 @@ export default function ReferralInvitePopup({
               {t.botButton}
             </button>
 
-            <button
-              className="premium-link"
-              type="button"
-              onClick={openReferralPopup}
-            >
-              {t.inviteFriendsButton}
-            </button>
-
             <a href="/profile">{t.dashboardButton}</a>
           </div>
         </section>
       )}
 
       {showPopup && (
-        <div className="referral-popup-backdrop" role="dialog" aria-modal="true">
-          <div className="referral-popup">
-            <span className="referral-popup-premium-badge">
-              ✨ {t.premiumBadge}
-            </span>
+        <section className="referral-popup-page">
+          <span className="referral-popup-premium-badge">
+            ✨ {t.premiumBadge}
+          </span>
 
-            <h2>
-              {t.popupTitle.includes("Premium") ? (
-                <>
-                  {t.popupTitle.split("Premium")[0]}
-                  <span className="premium-word">Premium</span>
-                  {t.popupTitle.split("Premium").slice(1).join("Premium")}
-                </>
-              ) : (
-                t.popupTitle
-              )}
-            </h2>
+          <h2>
+            {t.popupTitle.includes("Premium") ? (
+              <>
+                {t.popupTitle.split("Premium")[0]}
+                <span className="premium-word">Premium</span>
+                {t.popupTitle.split("Premium").slice(1).join("Premium")}
+              </>
+            ) : (
+              t.popupTitle
+            )}
+          </h2>
 
-            <p>{t.introBefore}</p>
+          <p>{t.introBefore}</p>
 
-            <div className="referral-reward-card">
-              <p>
-                {t.rewardTwoBefore} <strong>{t.rewardTwoStrong}</strong>{" "}
-                {t.rewardTwoAfter}{" "}
-                <strong className="referral-premium-highlight">
-                  {t.rewardTwoPremium}
-                </strong>
-              </p>
+          <div className="referral-reward-card">
+            <p>
+              {t.rewardTwoBefore} <strong>{t.rewardTwoStrong}</strong>{" "}
+              {t.rewardTwoAfter}{" "}
+              <strong className="referral-premium-highlight">
+                {t.rewardTwoPremium}
+              </strong>
+            </p>
 
-              <p>
-                {t.rewardFourBefore} <strong>{t.rewardFourStrong}</strong>{" "}
-                {t.rewardFourAfter}{" "}
-                <strong className="referral-premium-highlight">
-                  {t.rewardFourPremium}
-                </strong>
-              </p>
-            </div>
-
-            <p>{t.laterText}</p>
-
-            <div className="referral-popup-link">{referralUrl}</div>
-
-            <div className="referral-popup-actions">
-              <button className="copy" type="button" onClick={copyReferralUrl}>
-                {t.copyButton}
-              </button>
-
-              <button className="later" type="button" onClick={remindLater}>
-                {t.closeButton}
-              </button>
-
-              <button className="dismiss" type="button" onClick={dismissForever}>
-                {t.dismissButton}
-              </button>
-            </div>
-
-            {status && <p className="referral-popup-status">{status}</p>}
+            <p>
+              {t.rewardFourBefore} <strong>{t.rewardFourStrong}</strong>{" "}
+              {t.rewardFourAfter}{" "}
+              <strong className="referral-premium-highlight">
+                {t.rewardFourPremium}
+              </strong>
+            </p>
           </div>
-        </div>
+
+          <p>{t.laterText}</p>
+
+          <div className="referral-popup-link">{referralUrl}</div>
+
+          <div className="referral-popup-actions">
+            <button className="copy" type="button" onClick={copyReferralUrl}>
+              {t.copyButton}
+            </button>
+
+            <button className="later" type="button" onClick={remindLater}>
+              {t.closeButton}
+            </button>
+
+            <button className="dismiss" type="button" onClick={dismissForever}>
+              {t.dismissButton}
+            </button>
+          </div>
+
+          {status && <p className="referral-popup-status">{status}</p>}
+        </section>
       )}
     </>
   );
