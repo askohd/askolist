@@ -732,53 +732,55 @@ export default function ReferralInvitePopup({
         }
       `}</style>
 
-      <section className="referral-success-card">
-        <span className="referral-success-badge">✅ {t.successBadge}</span>
+      {!showPopup && (
+        <section className="referral-success-card">
+          <span className="referral-success-badge">✅ {t.successBadge}</span>
 
-        <h1>{t.successTitle}</h1>
-        <p>{t.successText}</p>
+          <h1>{t.successTitle}</h1>
+          <p>{t.successText}</p>
 
-        <div className="referral-success-grid">
-          <div className="referral-success-info">
-            <strong>{t.approvalInfoTitle}</strong>
+          <div className="referral-success-grid">
+            <div className="referral-success-info">
+              <strong>{t.approvalInfoTitle}</strong>
 
-            <ul>
-              <li>{t.approvalInfoOne}</li>
-              <li>{t.approvalInfoTwo}</li>
-              <li className="important">{t.approvalInfoThree}</li>
-              <li>{t.approvalInfoFour}</li>
-            </ul>
-          </div>
+              <ul>
+                <li>{t.approvalInfoOne}</li>
+                <li>{t.approvalInfoTwo}</li>
+                <li className="important">{t.approvalInfoThree}</li>
+                <li>{t.approvalInfoFour}</li>
+              </ul>
+            </div>
 
-          <div className="referral-premium-teaser">
-            <strong>✨ {t.premiumBadge}</strong>
-            <p>{t.popupTitle}</p>
+            <div className="referral-premium-teaser">
+              <strong>✨ {t.premiumBadge}</strong>
+              <p>{t.popupTitle}</p>
 
-            <div className="referral-premium-badges">
-              <span>{t.rewardBadgeOne}</span>
-              <span>{t.rewardBadgeTwo}</span>
+              <div className="referral-premium-badges">
+                <span>{t.rewardBadgeOne}</span>
+                <span>{t.rewardBadgeTwo}</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        {!botInviteUrl && <p>{t.missingBot}</p>}
+          {!botInviteUrl && <p>{t.missingBot}</p>}
 
-        <div className="referral-success-actions">
-          <button type="button" onClick={openBotInvite}>
-            {t.botButton}
-          </button>
+          <div className="referral-success-actions">
+            <button type="button" onClick={openBotInvite}>
+              {t.botButton}
+            </button>
 
-          <button
-            className="premium-link"
-            type="button"
-            onClick={openReferralPopup}
-          >
-            {t.inviteFriendsButton}
-          </button>
+            <button
+              className="premium-link"
+              type="button"
+              onClick={openReferralPopup}
+            >
+              {t.inviteFriendsButton}
+            </button>
 
-          <a href="/profile">{t.dashboardButton}</a>
-        </div>
-      </section>
+            <a href="/profile">{t.dashboardButton}</a>
+          </div>
+        </section>
+      )}
 
       {showPopup && (
         <div className="referral-popup-backdrop" role="dialog" aria-modal="true">
