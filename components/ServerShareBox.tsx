@@ -18,6 +18,10 @@ function getShareText(serverName: string, serverUrl: string) {
   ].join("\n");
 }
 
+function getBadgeHtml(serverName: string, serverUrl: string) {
+  return `<a href="${serverUrl}" target="_blank" rel="noopener noreferrer">Unser Discord Server ${serverName} auf Asko Cafe</a>`;
+}
+
 export default function ServerShareBox({
   serverName,
   serverUrl,
@@ -29,6 +33,11 @@ export default function ServerShareBox({
     [serverName, serverUrl]
   );
 
+  const badgeHtml = useMemo(
+    () => getBadgeHtml(serverName, serverUrl),
+    [serverName, serverUrl]
+  );
+
   const xShareUrl = useMemo(() => {
     const text = `Bewerte ${serverName} auf Asko Cafe ⭐`;
     return `https://twitter.com/intent/tweet?text=${encodeURIComponent(
@@ -36,17 +45,17 @@ export default function ServerShareBox({
     )}&url=${encodeURIComponent(serverUrl)}`;
   }, [serverName, serverUrl]);
 
-  async function copyShareText(message = "Kopiert.") {
+  async function copyText(text: string, message: string) {
     try {
-      await navigator.clipboard.writeText(shareText);
+      await navigator.clipboard.writeText(text);
       setStatus(message);
     } catch {
-      setStatus("Bitte Text manuell kopieren.");
+      setStatus("Kopieren fehlgeschlagen. Bitte Text manuell kopieren.");
     }
   }
 
   async function copyAndOpen(url: string, message: string) {
-    await copyShareText(message);
+    await copyText(shareText, message);
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
@@ -105,7 +114,6 @@ export default function ServerShareBox({
         }
 
         .server-detail-share-button.copy {
-          grid-column: 1 / -1;
           background: linear-gradient(135deg, #b54cff 0%, #6fddff 100%);
         }
 
@@ -125,6 +133,11 @@ export default function ServerShareBox({
           background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
         }
 
+        .server-detail-share-button.badge {
+          grid-column: 1 / -1;
+          background: linear-gradient(135deg, #22c55e 0%, #14b8a6 50%, #6fddff 100%);
+        }
+
         .server-detail-share-button:active {
           transform: translateY(1px);
         }
@@ -141,11 +154,10 @@ export default function ServerShareBox({
           font-weight: 950;
         }
 
-        .server-detail-share-text textarea {
+        .server-detail-share-text textarea,
+        .server-detail-share-text input {
           width: 100%;
           min-width: 0;
-          min-height: 92px;
-          resize: vertical;
           padding: 11px 12px;
           border-radius: 14px;
           background: rgba(255,255,255,0.07);
@@ -155,6 +167,11 @@ export default function ServerShareBox({
           font-size: 12px;
           font-weight: 800;
           line-height: 1.45;
+        }
+
+        .server-detail-share-text textarea {
+          min-height: 92px;
+          resize: vertical;
         }
 
         .server-detail-share-status {
@@ -181,7 +198,7 @@ export default function ServerShareBox({
             grid-template-columns: 1fr;
           }
 
-          .server-detail-share-button.copy {
+          .server-detail-share-button.badge {
             grid-column: auto;
           }
         }
@@ -199,7 +216,7 @@ export default function ServerShareBox({
         <button
           type="button"
           className="server-detail-share-button copy"
-          onClick={() => copyShareText("Link und Text wurden kopiert.")}
+          onClick={() => copyText(serverUrl, "Server-Link wurde kopiert.")}
         >
           🔗 Link kopieren
         </button>
@@ -250,18 +267,35 @@ export default function ServerShareBox({
         >
           𝕏 Posten
         </button>
+
+        <button
+          type="button"
+          className="server-detail-share-button badge"
+          onClick={() =>
+            copyText(
+              badgeHtml,
+              "Website-Badge wurde kopiert. Du kannst ihn jetzt auf deiner Website einfügen."
+            )
+          }
+        >
+          🌐 Website-Badge kopieren
+        </button>
       </div>
 
       <div className="server-detail-share-text">
         <label htmlFor="server-share-text">Vorbereiteter Text</label>
         <textarea id="server-share-text" readOnly value={shareText} />
+
+        <label htmlFor="server-share-badge">Website-Badge HTML</label>
+        <textarea id="server-share-badge" readOnly value={badgeHtml} />
       </div>
 
       {status && <p className="server-detail-share-status">{status}</p>}
 
       <p className="server-detail-share-hint">
-        So können Serverbesitzer ihre Asko-Cafe-Seite schnell teilen und neue
-        Mitglieder auf ihren Discord Server bringen.
+        Tipp: Der Website-Badge ist wichtig für Google. Wenn Serverbesitzer
+        diesen Link auf ihrer Website, Bio oder Partnerseite einbauen, bekommt
+        deine Asko-Cafe-Seite echte Verlinkungen.
       </p>
     </div>
   );
