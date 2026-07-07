@@ -13,7 +13,7 @@ type ProfileReferralBoxProps = {
 
 const REFERRAL_TEXT = {
   de: {
-    title: "Freunde einladen und Premium verdienen",
+    title: "1 Monat kostenlos Premium für 2 Freunde",
     text:
       "Lade Freunde ein, die einen Discord Server besitzen. Wenn sich 2 Serverbesitzer über deinen Link registrieren und ihren Server eintragen, bekommst du 1 Monat Premium. Bei 4 erfolgreichen Einladungen bekommst du 2 Monate Premium.",
     later:
@@ -28,9 +28,12 @@ const REFERRAL_TEXT = {
     completed: "2 Monate Premium erreicht.",
     rewardOne: "2 Einladungen = 1 Monat Premium",
     rewardTwo: "4 Einladungen = 2 Monate Premium",
+    missingLinkTitle: "Einladungslink wird vorbereitet",
+    missingLinkText:
+      "Falls hier noch kein Link steht, wurde der Referral-Code noch nicht erstellt. Prüfe bitte, ob die Supabase-Tabelle server_referral_codes vorhanden ist und lade das Dashboard danach neu.",
   },
   en: {
-    title: "Invite friends and earn Premium",
+    title: "1 free month of Premium for 2 friends",
     text:
       "Invite friends who own a Discord server. When 2 server owners register through your link and submit their server, you get 1 month of Premium. With 4 successful invites, you get 2 months of Premium.",
     later:
@@ -45,9 +48,12 @@ const REFERRAL_TEXT = {
     completed: "2 months of Premium reached.",
     rewardOne: "2 invites = 1 month Premium",
     rewardTwo: "4 invites = 2 months Premium",
+    missingLinkTitle: "Invite link is being prepared",
+    missingLinkText:
+      "If no link appears here yet, the referral code has not been created. Please check whether the Supabase table server_referral_codes exists and reload the dashboard.",
   },
   fr: {
-    title: "Invite des amis et gagne Premium",
+    title: "1 mois Premium gratuit pour 2 amis",
     text:
       "Invite des amis qui possèdent un serveur Discord. Si 2 propriétaires s'inscrivent via ton lien et ajoutent leur serveur, tu reçois 1 mois de Premium. Avec 4 invitations réussies, tu reçois 2 mois de Premium.",
     later:
@@ -62,9 +68,12 @@ const REFERRAL_TEXT = {
     completed: "2 mois de Premium atteints.",
     rewardOne: "2 invitations = 1 mois Premium",
     rewardTwo: "4 invitations = 2 mois Premium",
+    missingLinkTitle: "Lien d'invitation en préparation",
+    missingLinkText:
+      "Si aucun lien n'apparaît ici, le code de parrainage n'a pas encore été créé. Vérifie si la table Supabase server_referral_codes existe puis recharge le tableau de bord.",
   },
   it: {
-    title: "Invita amici e guadagna Premium",
+    title: "1 mese Premium gratis per 2 amici",
     text:
       "Invita amici che possiedono un server Discord. Quando 2 proprietari si registrano tramite il tuo link e aggiungono il server, ricevi 1 mese di Premium. Con 4 inviti riusciti, ricevi 2 mesi di Premium.",
     later:
@@ -79,9 +88,12 @@ const REFERRAL_TEXT = {
     completed: "2 mesi di Premium raggiunti.",
     rewardOne: "2 inviti = 1 mese Premium",
     rewardTwo: "4 inviti = 2 mesi Premium",
+    missingLinkTitle: "Link di invito in preparazione",
+    missingLinkText:
+      "Se qui non appare ancora nessun link, il codice referral non è stato creato. Controlla se la tabella Supabase server_referral_codes esiste e ricarica la dashboard.",
   },
   pl: {
-    title: "Zaproś znajomych i zdobądź Premium",
+    title: "1 miesiąc Premium za darmo za 2 znajomych",
     text:
       "Zaproś znajomych, którzy mają serwer Discord. Jeśli 2 właścicieli zarejestruje się przez twój link i doda swój serwer, dostajesz 1 miesiąc Premium. Za 4 skuteczne zaproszenia dostajesz 2 miesiące Premium.",
     later:
@@ -96,6 +108,9 @@ const REFERRAL_TEXT = {
     completed: "2 miesiące Premium osiągnięte.",
     rewardOne: "2 zaproszenia = 1 miesiąc Premium",
     rewardTwo: "4 zaproszenia = 2 miesiące Premium",
+    missingLinkTitle: "Link zaproszenia jest przygotowywany",
+    missingLinkText:
+      "Jeśli link jeszcze się tu nie pojawia, kod referral nie został utworzony. Sprawdź, czy tabela Supabase server_referral_codes istnieje i odśwież panel.",
   },
 } as const;
 
@@ -129,6 +144,7 @@ export default function ProfileReferralBox({
 
   const safeSuccessfulReferrals = Math.max(0, Number(successfulReferrals || 0));
   const progressPercent = Math.min(100, (safeSuccessfulReferrals / 4) * 100);
+  const hasReferralUrl = Boolean(referralUrl);
 
   const nextRewardText = useMemo(() => {
     if (safeSuccessfulReferrals >= 4 || rewardedMonths >= 2) {
@@ -136,13 +152,24 @@ export default function ProfileReferralBox({
     }
 
     if (safeSuccessfulReferrals >= 2 || rewardedMonths >= 1) {
-      return replaceCount(t.secondRewardOpen, Math.max(0, 4 - safeSuccessfulReferrals));
+      return replaceCount(
+        t.secondRewardOpen,
+        Math.max(0, 4 - safeSuccessfulReferrals)
+      );
     }
 
-    return replaceCount(t.firstRewardOpen, Math.max(0, 2 - safeSuccessfulReferrals));
+    return replaceCount(
+      t.firstRewardOpen,
+      Math.max(0, 2 - safeSuccessfulReferrals)
+    );
   }, [rewardedMonths, safeSuccessfulReferrals, t]);
 
   async function copyReferralUrl() {
+    if (!referralUrl) {
+      setStatus(t.missingLinkText);
+      return;
+    }
+
     try {
       await navigator.clipboard.writeText(referralUrl);
       setStatus(t.copied);
@@ -155,15 +182,17 @@ export default function ProfileReferralBox({
     <section className="profile-referral-box">
       <style>{`
         .profile-referral-box {
-          margin-top: 22px;
-          padding: 22px;
-          border-radius: 26px;
+          margin: 26px 0 30px;
+          padding: 24px;
+          border-radius: 28px;
           background:
-            radial-gradient(circle at 0% 0%, rgba(255, 207, 64, 0.16), transparent 34%),
-            radial-gradient(circle at 100% 0%, rgba(116, 223, 255, 0.16), transparent 36%),
+            radial-gradient(circle at 0% 0%, rgba(255, 207, 64, 0.18), transparent 34%),
+            radial-gradient(circle at 100% 0%, rgba(116, 223, 255, 0.15), transparent 36%),
             rgba(255,255,255,0.055);
-          border: 1px solid rgba(255,255,255,0.13);
-          box-shadow: 0 0 30px rgba(139,92,246,0.16);
+          border: 1px solid rgba(255,207,64,0.22);
+          box-shadow:
+            0 0 0 1px rgba(255,255,255,0.025) inset,
+            0 0 34px rgba(139,92,246,0.16);
         }
 
         .profile-referral-header {
@@ -171,13 +200,34 @@ export default function ProfileReferralBox({
           gap: 9px;
         }
 
+        .profile-referral-badge {
+          width: fit-content;
+          min-height: 32px;
+          padding: 0 12px;
+          border-radius: 999px;
+          display: inline-flex;
+          align-items: center;
+          color: #ffe68a;
+          font-size: 0.78rem;
+          font-weight: 950;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          background: rgba(255,207,64,0.12);
+          border: 1px solid rgba(255,207,64,0.28);
+        }
+
         .profile-referral-header h2 {
           margin: 0;
-          font-size: clamp(24px, 4vw, 36px);
+          font-size: clamp(26px, 4vw, 42px);
           line-height: 1.02;
-          letter-spacing: -0.045em;
+          letter-spacing: -0.055em;
           font-weight: 950;
           color: #ffffff;
+        }
+
+        .profile-referral-header h2 span {
+          color: #ffe68a;
+          text-shadow: 0 0 18px rgba(255,207,64,0.25);
         }
 
         .profile-referral-header p {
@@ -201,11 +251,11 @@ export default function ProfileReferralBox({
           border-radius: 999px;
           display: inline-flex;
           align-items: center;
-          color: #ffffff;
+          color: #ffe68a;
           font-size: 0.82rem;
           font-weight: 950;
-          background: rgba(255,255,255,0.08);
-          border: 1px solid rgba(255,255,255,0.13);
+          background: rgba(255,207,64,0.10);
+          border: 1px solid rgba(255,207,64,0.22);
         }
 
         .profile-referral-link-area {
@@ -252,6 +302,11 @@ export default function ProfileReferralBox({
           box-shadow: 0 0 20px rgba(116,223,255,0.13);
         }
 
+        .profile-referral-copy-row button:disabled {
+          opacity: 0.65;
+          cursor: not-allowed;
+        }
+
         .profile-referral-progress {
           margin-top: 18px;
           padding: 15px;
@@ -286,7 +341,8 @@ export default function ProfileReferralBox({
         }
 
         .profile-referral-progress p,
-        .profile-referral-status {
+        .profile-referral-status,
+        .profile-referral-missing {
           margin: 10px 0 0;
           color: rgba(236,240,255,0.72);
           font-size: 0.88rem;
@@ -298,6 +354,11 @@ export default function ProfileReferralBox({
           color: #9deaff;
           font-weight: 950;
           overflow-wrap: anywhere;
+        }
+
+        .profile-referral-missing {
+          color: #ffe68a;
+          font-weight: 850;
         }
 
         @media (max-width: 620px) {
@@ -312,7 +373,16 @@ export default function ProfileReferralBox({
       `}</style>
 
       <div className="profile-referral-header">
-        <h2>{t.title}</h2>
+        <span className="profile-referral-badge">✨ Premium Belohnung</span>
+        <h2>
+          {safeLanguage === "de" ? (
+            <>
+              1 Monat kostenlos <span>Premium</span> für 2 Freunde
+            </>
+          ) : (
+            t.title
+          )}
+        </h2>
         <p>{t.text}</p>
         <p>{t.later}</p>
       </div>
@@ -326,11 +396,24 @@ export default function ProfileReferralBox({
         <label>{t.linkLabel}</label>
 
         <div className="profile-referral-copy-row">
-          <input value={referralUrl} readOnly />
-          <button type="button" onClick={copyReferralUrl}>
+          <input
+            value={
+              hasReferralUrl
+                ? referralUrl
+                : "Referral-Link konnte noch nicht geladen werden"
+            }
+            readOnly
+          />
+          <button type="button" onClick={copyReferralUrl} disabled={!hasReferralUrl}>
             {t.copy}
           </button>
         </div>
+
+        {!hasReferralUrl && (
+          <p className="profile-referral-missing">
+            <strong>{t.missingLinkTitle}:</strong> {t.missingLinkText}
+          </p>
+        )}
 
         {status && <p className="profile-referral-status">{status}</p>}
       </div>
