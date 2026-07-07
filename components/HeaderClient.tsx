@@ -13,7 +13,7 @@ const HEADER_TEXT = {
   de: {
     home: "Home",
     servers: "Serverliste",
-    discordSearch: "Discord Server suchen",
+    discordInfo: "Discord Server Info",
     submit: "Server eintragen",
     myServer: "Mein Server",
     shop: "Shop",
@@ -26,7 +26,7 @@ const HEADER_TEXT = {
   en: {
     home: "Home",
     servers: "Server List",
-    discordSearch: "Find Discord Servers",
+    discordInfo: "Discord Server Info",
     submit: "Submit Server",
     myServer: "My Server",
     shop: "Shop",
@@ -39,7 +39,7 @@ const HEADER_TEXT = {
   fr: {
     home: "Accueil",
     servers: "Liste des serveurs",
-    discordSearch: "Trouver des serveurs Discord",
+    discordInfo: "Info serveurs Discord",
     submit: "Ajouter un serveur",
     myServer: "Mon serveur",
     shop: "Boutique",
@@ -52,7 +52,7 @@ const HEADER_TEXT = {
   it: {
     home: "Home",
     servers: "Lista server",
-    discordSearch: "Trova server Discord",
+    discordInfo: "Info server Discord",
     submit: "Aggiungi server",
     myServer: "Il mio server",
     shop: "Shop",
@@ -65,7 +65,7 @@ const HEADER_TEXT = {
   pl: {
     home: "Start",
     servers: "Lista serwerów",
-    discordSearch: "Znajdź serwery Discord",
+    discordInfo: "Info serwerów Discord",
     submit: "Dodaj serwer",
     myServer: "Mój serwer",
     shop: "Sklep",
@@ -80,22 +80,22 @@ const HEADER_TEXT = {
 const NAV_LINKS = [
   { href: "/", icon: "🏠", key: "home" },
   { href: "/servers", icon: "📋", key: "servers" },
-  { href: "/discord-server-suchen", icon: "🔎", key: "discordSearch" },
   { href: "/submit", icon: "🚀", key: "submit" },
   { href: "/shop", icon: "🛒", key: "shop" },
   { href: "/support", icon: "💬", key: "support" },
   { href: "/info", icon: "ℹ️", key: "info" },
+  { href: "/discord-server-suchen", icon: "🔎", key: "discordInfo" },
 ] as const;
 
 const MOBILE_NAV_LINKS = [
   { href: "/", icon: "🏠", key: "home" },
   { href: "/servers", icon: "📋", key: "servers" },
-  { href: "/discord-server-suchen", icon: "🔎", key: "discordSearch" },
   { href: "/submit", icon: "🚀", key: "submit" },
   { href: "/profile", icon: "🧩", key: "myServer" },
   { href: "/shop", icon: "🛒", key: "shop" },
   { href: "/support", icon: "💬", key: "support" },
   { href: "/info", icon: "ℹ️", key: "info" },
+  { href: "/discord-server-suchen", icon: "🔎", key: "discordInfo" },
 ] as const;
 
 function normalizeLanguage(language: unknown): UiLanguage {
@@ -242,15 +242,6 @@ export default function HeaderClient({
               onClick={closeMobileMenu}
             >
               📋
-            </Link>
-
-            <Link
-              className="mobile-icon-link"
-              href="/discord-server-suchen"
-              aria-label={t(language, "discordSearch")}
-              onClick={closeMobileMenu}
-            >
-              🔎
             </Link>
 
             <div className="mobile-language-wrap">
