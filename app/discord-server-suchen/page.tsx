@@ -88,6 +88,12 @@ type ServerRow = {
   member_count?: number | null;
   online_count?: number | null;
   last_bump?: string | null;
+  last_bumped_at?: string | null;
+  last_bumped?: string | null;
+  bumped_at?: string | null;
+  lastBump?: string | null;
+  lastBumpedAt?: string | null;
+  updated_at?: string | null;
   created_at?: string | null;
   premium_status?: boolean | string | number | null;
   partner_status?: boolean | string | number | null;
@@ -146,16 +152,35 @@ function getTimeValue(value: string | null | undefined) {
   return time;
 }
 
+function getServerLastBumpRaw(server: ServerRow) {
+  return (
+    server.last_bump ||
+    server.last_bumped_at ||
+    server.last_bumped ||
+    server.bumped_at ||
+    server.lastBump ||
+    server.lastBumpedAt ||
+    null
+  );
+}
+
+function getServerLastActivityRaw(server: ServerRow) {
+  return getServerLastBumpRaw(server) || server.updated_at || server.created_at || null;
+}
+
 function sortServers(servers: ServerRow[]) {
   return [...servers].sort((a, b) => {
-    const aBump = getTimeValue(a.last_bump);
-    const bBump = getTimeValue(b.last_bump);
+    const aBump = getTimeValue(getServerLastBumpRaw(a));
+    const bBump = getTimeValue(getServerLastBumpRaw(b));
 
     if (aBump !== bBump) {
       return bBump - aBump;
     }
 
-    return getTimeValue(b.created_at) - getTimeValue(a.created_at);
+    return (
+      getTimeValue(getServerLastActivityRaw(b)) -
+      getTimeValue(getServerLastActivityRaw(a))
+    );
   });
 }
 
@@ -277,28 +302,44 @@ function getPremiumCardStyle(server: ServerRow): CSSProperties {
 }
 
 async function getFeaturedServers() {
-  try {
-    const servers = await supabaseRequest(
-      [
-        "servers?approved=eq.true",
-        "status=eq.approved",
-        "select=id,slug,server_name,description,category,language,tags,logo_url,discord_server_icon_url,banner_url,premium_banner_url,member_count,online_count,last_bump,created_at,premium_status,partner_status,premium_layout,premium_glow_color,server_name_color,server_text_color,banner_position_x,banner_position_y,banner_zoom",
-        "order=last_bump.desc.nullslast",
-        "limit=9",
-      ].join("&")
-    );
+  const queries = [
+    [
+      "servers?approved=eq.true",
+      "status=eq.approved",
+      "select=*",
+      "order=last_bump.desc.nullslast",
+      "limit=5000",
+    ].join("&"),
+    [
+      "servers?approved=eq.true",
+      "status=eq.approved",
+      "select=*",
+      "order=created_at.desc",
+      "limit=5000",
+    ].join("&"),
+    [
+      "servers?approved=is.true",
+      "status=eq.approved",
+      "select=*",
+      "limit=5000",
+    ].join("&"),
+  ];
 
-    if (!Array.isArray(servers)) {
-      return [];
+  for (const query of queries) {
+    try {
+      const servers = await supabaseRequest(query);
+
+      if (Array.isArray(servers) && servers.length > 0) {
+        return sortServers(servers)
+          .filter((server) => Boolean(getServerPath(server)))
+          .slice(0, 9);
+      }
+    } catch (error) {
+      console.error("Could not load Discord server search landing servers:", query, error);
     }
-
-    return sortServers(servers)
-      .filter((server) => Boolean(getServerPath(server)))
-      .slice(0, 9);
-  } catch (error) {
-    console.error("Could not load Discord server search landing servers:", error);
-    return [];
   }
+
+  return [];
 }
 
 export default async function DiscordServerSuchenPage() {
@@ -517,20 +558,103 @@ export default async function DiscordServerSuchenPage() {
           max-width: 820px;
         }
 
+        .discord-search-section-head-featured {
+          position: relative;
+          max-width: 900px;
+          padding: 22px 24px;
+          border-radius: 30px;
+          overflow: hidden;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(181, 76, 255, 0.24), transparent 36%),
+            radial-gradient(circle at 100% 0%, rgba(116, 223, 255, 0.16), transparent 34%),
+            linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.035));
+          border: 1px solid rgba(255,255,255,0.11);
+          box-shadow:
+            0 0 0 1px rgba(255,255,255,0.025) inset,
+            0 0 28px rgba(139,92,246,0.18),
+            0 0 42px rgba(116,223,255,0.08);
+        }
+
+        .discord-search-section-head-featured::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background:
+            linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+          transform: translateX(-100%);
+          animation: discordSearchHeadShine 5.5s ease-in-out infinite;
+          pointer-events: none;
+        }
+
+        @keyframes discordSearchHeadShine {
+          0% {
+            transform: translateX(-100%);
+            opacity: 0;
+          }
+
+          32% {
+            opacity: 1;
+          }
+
+          68% {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+
+          100% {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+        }
+
+        .discord-search-section-kicker {
+          position: relative;
+          z-index: 1;
+          min-height: 30px;
+          padding: 0 12px;
+          border-radius: 999px;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          color: #9deaff;
+          font-size: 12px;
+          font-weight: 950;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          background: rgba(116,223,255,0.10);
+          border: 1px solid rgba(116,223,255,0.24);
+          box-shadow: 0 0 18px rgba(116,223,255,0.12);
+        }
+
         .discord-search-section-head h2 {
+          position: relative;
+          z-index: 1;
           margin: 0;
           font-size: clamp(30px, 4vw, 54px);
           line-height: 1;
           letter-spacing: -0.05em;
           font-weight: 950;
+          color: #ffffff;
+          text-shadow: 0 14px 36px rgba(0,0,0,0.35);
+        }
+
+        .discord-search-section-head-featured h2 {
+          margin-top: 14px;
+          background: linear-gradient(90deg, #ffffff 0%, #d9b7ff 48%, #9deaff 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
         }
 
         .discord-search-section-head p {
+          position: relative;
+          z-index: 1;
+          max-width: 620px;
           margin: 12px 0 0;
-          color: rgba(246,243,255,0.72);
+          color: rgba(232, 242, 255, 0.78);
           font-size: 15px;
           line-height: 1.7;
-          font-weight: 700;
+          font-weight: 750;
         }
 
         .discord-search-grid {
@@ -907,12 +1031,13 @@ export default async function DiscordServerSuchenPage() {
         </section>
 
         <section className="discord-search-section">
-          <div className="discord-search-section-head">
-            <h2>Aktuelle Discord Server</h2>
+          <div className="discord-search-section-head discord-search-section-head-featured">
+            <span className="discord-search-section-kicker">⚡ Live Bumps</span>
+
+            <h2>Zuletzt gebumpte Discord Server</h2>
+
             <p>
-              Diese 9 Server wurden zuletzt mit dem Bot gebumpt oder
-              aktualisiert. Premium- und Partner-Server werden hier mit ihrem
-              besonderen Layout, Banner und Glow angezeigt.
+              Hier werden die zuletzt gebumpten Discord Server angezeigt.
             </p>
           </div>
 
@@ -952,7 +1077,7 @@ export default async function DiscordServerSuchenPage() {
                     )}
 
                     <span className="discord-search-server-badge">
-                      ⚡ {formatLastBump(server.last_bump)}
+                      ⚡ {formatLastBump(getServerLastBumpRaw(server))}
                     </span>
                   </div>
 
