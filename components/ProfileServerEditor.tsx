@@ -135,6 +135,24 @@ const DASHBOARD_TEXT = {
     botInviteButton: "Bot einladen",
     botInviteMissingConfig:
       "Die Bot Client-ID fehlt noch in den Website-Einstellungen.",
+    moderationTitle: "Wichtige Dashboard-Information",
+    serverLockedTitle: "Server gesperrt",
+    serverLockedText:
+      "Dein Server ist aktuell eingeschränkt. Bitte prüfe den Grund und behebe das Problem, bevor du weitere Änderungen erwartest.",
+    bumpLockedTitle: "Bump-Sperre aktiv",
+    bumpLockedText:
+      "Dein Server kann aktuell nicht gebumpt werden. Nach Ablauf der Sperre oder nach Staff-Prüfung ist Bumpen wieder möglich.",
+    dashboardNoticeTitle: "Hinweis vom Team",
+    reasonLabel: "Grund",
+    untilLabel: "Gesperrt bis",
+    noReasonGiven: "Kein Grund angegeben.",
+    noUntilGiven: "Kein Ablaufdatum angegeben.",
+    actionLabel: "Was du tun kannst",
+    serverLockedAction:
+      "Kontrolliere Beschreibung, Invite, NSFW-Angabe, Banner und Regeln. Wenn alles passt, warte auf die Staff-Prüfung oder kontaktiere den Support.",
+    bumpLockedAction:
+      "Lade den Bot ein, vermeide Spam-Bumps und warte bis die Sperre abläuft. Wenn du denkst, dass die Sperre falsch ist, kontaktiere den Support.",
+    supportButton: "Support kontaktieren",
   },
 
   en: {
@@ -203,6 +221,24 @@ const DASHBOARD_TEXT = {
     botInviteButton: "Invite bot",
     botInviteMissingConfig:
       "The bot client ID is still missing in the website settings.",
+    moderationTitle: "Important dashboard information",
+    serverLockedTitle: "Server locked",
+    serverLockedText:
+      "Your server is currently restricted. Please check the reason and fix the issue before expecting further changes.",
+    bumpLockedTitle: "Bump lock active",
+    bumpLockedText:
+      "Your server cannot be bumped right now. Bumping will be possible again after the lock expires or after staff review.",
+    dashboardNoticeTitle: "Team notice",
+    reasonLabel: "Reason",
+    untilLabel: "Locked until",
+    noReasonGiven: "No reason provided.",
+    noUntilGiven: "No end date provided.",
+    actionLabel: "What you can do",
+    serverLockedAction:
+      "Check description, invite, NSFW setting, banner and rules. If everything is correct, wait for staff review or contact support.",
+    bumpLockedAction:
+      "Invite the bot, avoid bump spam and wait until the lock expires. If you think the lock is wrong, contact support.",
+    supportButton: "Contact support",
   },
 
   fr: {
@@ -274,6 +310,24 @@ const DASHBOARD_TEXT = {
     botInviteButton: "Inviter le bot",
     botInviteMissingConfig:
       "L'ID client du bot manque encore dans les paramètres du site.",
+    moderationTitle: "Information importante du tableau de bord",
+    serverLockedTitle: "Serveur bloqué",
+    serverLockedText:
+      "Ton serveur est actuellement limité. Vérifie la raison et corrige le problème avant d'attendre d'autres changements.",
+    bumpLockedTitle: "Blocage de bump actif",
+    bumpLockedText:
+      "Ton serveur ne peut pas être bumpé actuellement. Le bump sera de nouveau possible après expiration du blocage ou après vérification staff.",
+    dashboardNoticeTitle: "Message de l'équipe",
+    reasonLabel: "Raison",
+    untilLabel: "Bloqué jusqu'à",
+    noReasonGiven: "Aucune raison indiquée.",
+    noUntilGiven: "Aucune date de fin indiquée.",
+    actionLabel: "Ce que tu peux faire",
+    serverLockedAction:
+      "Vérifie la description, l'invitation, le réglage NSFW, la bannière et les règles. Si tout est correct, attends la vérification staff ou contacte le support.",
+    bumpLockedAction:
+      "Invite le bot, évite les bumps spam et attends la fin du blocage. Si tu penses que le blocage est une erreur, contacte le support.",
+    supportButton: "Contacter le support",
   },
 
   it: {
@@ -342,6 +396,24 @@ const DASHBOARD_TEXT = {
     botInviteButton: "Invita bot",
     botInviteMissingConfig:
       "L'ID client del bot manca ancora nelle impostazioni del sito.",
+    moderationTitle: "Informazione importante della dashboard",
+    serverLockedTitle: "Server bloccato",
+    serverLockedText:
+      "Il tuo server è attualmente limitato. Controlla il motivo e correggi il problema prima di aspettarti altre modifiche.",
+    bumpLockedTitle: "Blocco bump attivo",
+    bumpLockedText:
+      "Il tuo server non può essere bumpato al momento. Il bump sarà di nuovo possibile dopo la scadenza del blocco o dopo una verifica dello staff.",
+    dashboardNoticeTitle: "Messaggio del team",
+    reasonLabel: "Motivo",
+    untilLabel: "Bloccato fino a",
+    noReasonGiven: "Nessun motivo indicato.",
+    noUntilGiven: "Nessuna data di fine indicata.",
+    actionLabel: "Cosa puoi fare",
+    serverLockedAction:
+      "Controlla descrizione, invito, impostazione NSFW, banner e regole. Se tutto è corretto, attendi la verifica dello staff o contatta il supporto.",
+    bumpLockedAction:
+      "Invita il bot, evita bump spam e attendi la fine del blocco. Se pensi che il blocco sia sbagliato, contatta il supporto.",
+    supportButton: "Contatta supporto",
   },
 
   pl: {
@@ -410,6 +482,24 @@ const DASHBOARD_TEXT = {
     botInviteButton: "Zaproś bota",
     botInviteMissingConfig:
       "Brakuje jeszcze ID klienta bota w ustawieniach strony.",
+    moderationTitle: "Ważna informacja w panelu",
+    serverLockedTitle: "Serwer zablokowany",
+    serverLockedText:
+      "Twój serwer jest obecnie ograniczony. Sprawdź powód i napraw problem, zanim oczekujesz dalszych zmian.",
+    bumpLockedTitle: "Blokada bump aktywna",
+    bumpLockedText:
+      "Twój serwer nie może być teraz bumpowany. Bump będzie możliwy po zakończeniu blokady albo po sprawdzeniu przez staff.",
+    dashboardNoticeTitle: "Wiadomość od zespołu",
+    reasonLabel: "Powód",
+    untilLabel: "Zablokowane do",
+    noReasonGiven: "Nie podano powodu.",
+    noUntilGiven: "Nie podano daty końca.",
+    actionLabel: "Co możesz zrobić",
+    serverLockedAction:
+      "Sprawdź opis, zaproszenie, ustawienie NSFW, banner i zasady. Jeśli wszystko jest poprawne, poczekaj na sprawdzenie przez staff lub skontaktuj się z supportem.",
+    bumpLockedAction:
+      "Zaproś bota, unikaj spamowania bumpami i poczekaj do końca blokady. Jeśli uważasz, że blokada jest błędna, skontaktuj się z supportem.",
+    supportButton: "Skontaktuj się z supportem",
   },
 } as const;
 
@@ -645,6 +735,321 @@ function getBotInviteUrl(server: any) {
   return `https://discord.com/oauth2/authorize?${params.toString()}`;
 }
 
+
+function getFirstTextValue(server: any, fieldNames: string[]) {
+  for (const fieldName of fieldNames) {
+    const value = server?.[fieldName];
+
+    if (value !== null && value !== undefined && String(value).trim()) {
+      return String(value).trim();
+    }
+  }
+
+  return "";
+}
+
+function getFirstDateValue(server: any, fieldNames: string[]) {
+  for (const fieldName of fieldNames) {
+    const value = server?.[fieldName];
+
+    if (value !== null && value !== undefined && String(value).trim()) {
+      return String(value).trim();
+    }
+  }
+
+  return "";
+}
+
+function isModerationEnabled(value: unknown) {
+  const normalized = String(value ?? "").trim().toLowerCase();
+
+  return (
+    value === true ||
+    value === 1 ||
+    normalized === "true" ||
+    normalized === "1" ||
+    normalized === "yes" ||
+    normalized === "on" ||
+    normalized === "locked" ||
+    normalized === "blocked" ||
+    normalized === "banned" ||
+    normalized === "suspended" ||
+    normalized === "disabled"
+  );
+}
+
+function isServerLocked(server: any) {
+  const status = String(server?.status ?? "").trim().toLowerCase();
+  const moderationStatus = String(
+    server?.moderation_status ?? server?.moderationStatus ?? ""
+  )
+    .trim()
+    .toLowerCase();
+
+  return (
+    isModerationEnabled(server?.locked) ||
+    isModerationEnabled(server?.server_locked) ||
+    isModerationEnabled(server?.serverLocked) ||
+    isModerationEnabled(server?.is_locked) ||
+    isModerationEnabled(server?.isLocked) ||
+    isModerationEnabled(server?.blocked) ||
+    isModerationEnabled(server?.server_blocked) ||
+    isModerationEnabled(server?.serverBlocked) ||
+    isModerationEnabled(server?.is_blocked) ||
+    isModerationEnabled(server?.isBlocked) ||
+    isModerationEnabled(server?.suspended) ||
+    isModerationEnabled(server?.server_suspended) ||
+    isModerationEnabled(server?.serverSuspended) ||
+    isModerationEnabled(server?.banned) ||
+    isModerationEnabled(server?.server_banned) ||
+    isModerationEnabled(server?.serverBanned) ||
+    isModerationEnabled(server?.disabled) ||
+    ["locked", "blocked", "banned", "suspended", "disabled", "rejected"].includes(status) ||
+    ["locked", "blocked", "banned", "suspended", "disabled", "rejected"].includes(moderationStatus)
+  );
+}
+
+function isBumpLocked(server: any) {
+  const bumpStatus = String(
+    server?.bump_status ?? server?.bumpStatus ?? server?.bump_moderation_status ?? ""
+  )
+    .trim()
+    .toLowerCase();
+
+  return (
+    isModerationEnabled(server?.bump_locked) ||
+    isModerationEnabled(server?.bumpLocked) ||
+    isModerationEnabled(server?.bump_blocked) ||
+    isModerationEnabled(server?.bumpBlocked) ||
+    isModerationEnabled(server?.bump_suspended) ||
+    isModerationEnabled(server?.bumpSuspended) ||
+    isModerationEnabled(server?.bump_banned) ||
+    isModerationEnabled(server?.bumpBanned) ||
+    isModerationEnabled(server?.bump_disabled) ||
+    isModerationEnabled(server?.bumpDisabled) ||
+    isModerationEnabled(server?.bump_restricted) ||
+    isModerationEnabled(server?.bumpRestricted) ||
+    server?.can_bump === false ||
+    server?.canBump === false ||
+    ["locked", "blocked", "banned", "suspended", "disabled", "restricted"].includes(bumpStatus)
+  );
+}
+
+function formatModerationDate(value: string, language: UiLanguage) {
+  if (!value) {
+    return tr(language, "noUntilGiven");
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  try {
+    return new Intl.DateTimeFormat(
+      language === "de"
+        ? "de-DE"
+        : language === "fr"
+        ? "fr-FR"
+        : language === "it"
+        ? "it-IT"
+        : language === "pl"
+        ? "pl-PL"
+        : "en-US",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    ).format(date);
+  } catch {
+    return date.toLocaleString();
+  }
+}
+
+function getDashboardNotice(server: any) {
+  return getFirstTextValue(server, [
+    "dashboard_message",
+    "dashboardMessage",
+    "dashboard_notice",
+    "dashboardNotice",
+    "admin_message",
+    "adminMessage",
+    "moderation_message",
+    "moderationMessage",
+    "staff_message",
+    "staffMessage",
+    "user_message",
+    "userMessage",
+    "notice",
+    "message",
+  ]);
+}
+
+function getServerLockReason(server: any) {
+  return getFirstTextValue(server, [
+    "lock_reason",
+    "lockReason",
+    "locked_reason",
+    "lockedReason",
+    "server_lock_reason",
+    "serverLockReason",
+    "server_locked_reason",
+    "serverLockedReason",
+    "block_reason",
+    "blockReason",
+    "blocked_reason",
+    "blockedReason",
+    "ban_reason",
+    "banReason",
+    "banned_reason",
+    "bannedReason",
+    "suspension_reason",
+    "suspensionReason",
+    "moderation_reason",
+    "moderationReason",
+    "rejection_reason",
+    "rejectionReason",
+    "admin_reason",
+    "adminReason",
+  ]);
+}
+
+function getServerLockUntil(server: any) {
+  return getFirstDateValue(server, [
+    "locked_until",
+    "lockedUntil",
+    "lock_until",
+    "lockUntil",
+    "server_locked_until",
+    "serverLockedUntil",
+    "blocked_until",
+    "blockedUntil",
+    "block_until",
+    "blockUntil",
+    "banned_until",
+    "bannedUntil",
+    "ban_until",
+    "banUntil",
+    "suspended_until",
+    "suspendedUntil",
+    "suspension_until",
+    "suspensionUntil",
+    "restriction_until",
+    "restrictionUntil",
+  ]);
+}
+
+function getBumpLockReason(server: any) {
+  return getFirstTextValue(server, [
+    "bump_lock_reason",
+    "bumpLockReason",
+    "bump_locked_reason",
+    "bumpLockedReason",
+    "bump_block_reason",
+    "bumpBlockReason",
+    "bump_blocked_reason",
+    "bumpBlockedReason",
+    "bump_ban_reason",
+    "bumpBanReason",
+    "bump_banned_reason",
+    "bumpBannedReason",
+    "bump_suspension_reason",
+    "bumpSuspensionReason",
+    "bump_restriction_reason",
+    "bumpRestrictionReason",
+    "bump_moderation_reason",
+    "bumpModerationReason",
+  ]);
+}
+
+function getBumpLockUntil(server: any) {
+  return getFirstDateValue(server, [
+    "bump_locked_until",
+    "bumpLockedUntil",
+    "bump_lock_until",
+    "bumpLockUntil",
+    "bump_blocked_until",
+    "bumpBlockedUntil",
+    "bump_block_until",
+    "bumpBlockUntil",
+    "bump_banned_until",
+    "bumpBannedUntil",
+    "bump_ban_until",
+    "bumpBanUntil",
+    "bump_suspended_until",
+    "bumpSuspendedUntil",
+    "bump_suspension_until",
+    "bumpSuspensionUntil",
+    "bump_restricted_until",
+    "bumpRestrictedUntil",
+    "bump_restriction_until",
+    "bumpRestrictionUntil",
+  ]);
+}
+
+function getModerationAlerts(server: any, language: UiLanguage) {
+  const alerts: Array<{
+    type: "server" | "bump" | "notice";
+    icon: string;
+    title: string;
+    text: string;
+    reason: string;
+    until: string;
+    action: string;
+  }> = [];
+
+  const dashboardNotice = getDashboardNotice(server);
+
+  if (dashboardNotice) {
+    alerts.push({
+      type: "notice",
+      icon: "ℹ️",
+      title: tr(language, "dashboardNoticeTitle"),
+      text: dashboardNotice,
+      reason: "",
+      until: "",
+      action: "",
+    });
+  }
+
+  if (isServerLocked(server)) {
+    const reason = getServerLockReason(server);
+    const until = getServerLockUntil(server);
+
+    alerts.push({
+      type: "server",
+      icon: "⛔",
+      title: tr(language, "serverLockedTitle"),
+      text: tr(language, "serverLockedText"),
+      reason: reason || tr(language, "noReasonGiven"),
+      until: formatModerationDate(until, language),
+      action: tr(language, "serverLockedAction"),
+    });
+  }
+
+  if (isBumpLocked(server)) {
+    const reason = getBumpLockReason(server);
+    const until = getBumpLockUntil(server);
+
+    alerts.push({
+      type: "bump",
+      icon: "⏳",
+      title: tr(language, "bumpLockedTitle"),
+      text: tr(language, "bumpLockedText"),
+      reason: reason || tr(language, "noReasonGiven"),
+      until: formatModerationDate(until, language),
+      action: tr(language, "bumpLockedAction"),
+    });
+  }
+
+  return alerts;
+}
+
+
 export default function ProfileServerEditor({ server }: { server: any }) {
   const language = useLanguage() as UiLanguage;
   const botInGuild = isBotInGuild(server);
@@ -715,6 +1120,8 @@ export default function ProfileServerEditor({ server }: { server: any }) {
   const cardStyle = isPremiumOrPartner
     ? getPremiumPreviewStyle(premiumLayout, glowColor)
     : undefined;
+
+  const moderationAlerts = getModerationAlerts(server, language);
 
   function showLockedNotice() {
     if (!isPremiumOrPartner) {
@@ -1226,6 +1633,134 @@ export default function ProfileServerEditor({ server }: { server: any }) {
             linear-gradient(135deg, transparent, rgba(52, 115, 255, 0.18));
         }
 
+        .dashboard-moderation-alerts {
+          display: grid;
+          gap: 14px;
+          margin: 0 0 16px;
+        }
+
+        .dashboard-moderation-alert {
+          padding: 16px;
+          border-radius: 24px;
+          background:
+            radial-gradient(circle at 0% 0%, rgba(255, 45, 85, 0.20), transparent 34%),
+            linear-gradient(135deg, rgba(255, 45, 85, 0.14), rgba(181, 76, 255, 0.10));
+          border: 1px solid rgba(255, 45, 85, 0.42);
+          box-shadow:
+            0 16px 44px rgba(0, 0, 0, 0.22),
+            0 0 30px rgba(255, 45, 85, 0.14);
+        }
+
+        .dashboard-moderation-alert.notice {
+          background:
+            radial-gradient(circle at 0% 0%, rgba(116, 223, 255, 0.18), transparent 34%),
+            linear-gradient(135deg, rgba(116, 223, 255, 0.11), rgba(181, 76, 255, 0.09));
+          border-color: rgba(116, 223, 255, 0.32);
+          box-shadow:
+            0 16px 44px rgba(0, 0, 0, 0.20),
+            0 0 30px rgba(116, 223, 255, 0.12);
+        }
+
+        .dashboard-moderation-alert.bump {
+          background:
+            radial-gradient(circle at 0% 0%, rgba(255, 207, 64, 0.18), transparent 34%),
+            linear-gradient(135deg, rgba(255, 207, 64, 0.12), rgba(181, 76, 255, 0.09));
+          border-color: rgba(255, 207, 64, 0.34);
+          box-shadow:
+            0 16px 44px rgba(0, 0, 0, 0.20),
+            0 0 30px rgba(255, 207, 64, 0.12);
+        }
+
+        .dashboard-moderation-head {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+        }
+
+        .dashboard-moderation-icon {
+          width: 42px;
+          height: 42px;
+          border-radius: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex: 0 0 auto;
+          font-size: 20px;
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .dashboard-moderation-alert h4 {
+          margin: 0;
+          color: #ffffff;
+          font-size: 15px;
+          font-weight: 950;
+        }
+
+        .dashboard-moderation-alert p {
+          margin: 6px 0 0;
+          color: rgba(255, 235, 240, 0.86);
+          font-size: 13px;
+          line-height: 1.5;
+        }
+
+        .dashboard-moderation-meta {
+          margin-top: 12px;
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 10px;
+        }
+
+        .dashboard-moderation-meta div {
+          min-width: 0;
+          padding: 12px;
+          border-radius: 16px;
+          background: rgba(255, 255, 255, 0.065);
+          border: 1px solid rgba(255, 255, 255, 0.10);
+        }
+
+        .dashboard-moderation-meta span {
+          display: block;
+          margin-bottom: 5px;
+          color: rgba(246, 243, 255, 0.62);
+          font-size: 11px;
+          font-weight: 950;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+        }
+
+        .dashboard-moderation-meta strong {
+          color: #ffffff;
+          font-size: 13px;
+          line-height: 1.45;
+          overflow-wrap: anywhere;
+        }
+
+        .dashboard-moderation-action {
+          margin-top: 12px;
+          padding: 12px;
+          border-radius: 16px;
+          color: rgba(246, 243, 255, 0.82);
+          font-size: 13px;
+          line-height: 1.5;
+          font-weight: 750;
+          background: rgba(255, 255, 255, 0.055);
+          border: 1px solid rgba(255, 255, 255, 0.10);
+        }
+
+        .dashboard-moderation-actions {
+          margin-top: 12px;
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+
+        .dashboard-moderation-actions .btn {
+          min-height: 40px;
+          padding: 0 14px;
+          border-radius: 14px;
+        }
+
         .bot-invite-alert {
           margin: 0 0 16px;
           padding: 16px;
@@ -1323,6 +1858,46 @@ export default function ProfileServerEditor({ server }: { server: any }) {
           }
 
           .bot-invite-alert .btn {
+            width: 100%;
+            justify-content: center;
+          }
+
+          .dashboard-moderation-alerts {
+            gap: 12px;
+            margin-bottom: 12px;
+          }
+
+          .dashboard-moderation-alert {
+            padding: 14px;
+            border-radius: 22px;
+          }
+
+          .dashboard-moderation-head {
+            gap: 10px;
+          }
+
+          .dashboard-moderation-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            font-size: 18px;
+          }
+
+          .dashboard-moderation-alert h4 {
+            font-size: 14px;
+          }
+
+          .dashboard-moderation-alert p,
+          .dashboard-moderation-action {
+            font-size: 12px;
+          }
+
+          .dashboard-moderation-meta {
+            grid-template-columns: 1fr;
+            gap: 8px;
+          }
+
+          .dashboard-moderation-actions .btn {
             width: 100%;
             justify-content: center;
           }
@@ -1869,6 +2444,53 @@ export default function ProfileServerEditor({ server }: { server: any }) {
               </a>
             )}
           </div>
+        </div>
+      )}
+
+      {moderationAlerts.length > 0 && (
+        <div className="dashboard-moderation-alerts">
+          {moderationAlerts.map((alert, index) => (
+            <div
+              className={`dashboard-moderation-alert ${alert.type}`}
+              key={`${alert.type}-${index}`}
+            >
+              <div className="dashboard-moderation-head">
+                <div className="dashboard-moderation-icon">{alert.icon}</div>
+
+                <div>
+                  <h4>{alert.title}</h4>
+                  <p>{alert.text}</p>
+                </div>
+              </div>
+
+              {alert.type !== "notice" && (
+                <>
+                  <div className="dashboard-moderation-meta">
+                    <div>
+                      <span>{tr(language, "reasonLabel")}</span>
+                      <strong>{alert.reason}</strong>
+                    </div>
+
+                    <div>
+                      <span>{tr(language, "untilLabel")}</span>
+                      <strong>{alert.until}</strong>
+                    </div>
+                  </div>
+
+                  <div className="dashboard-moderation-action">
+                    <strong>{tr(language, "actionLabel")}:</strong>{" "}
+                    {alert.action}
+                  </div>
+                </>
+              )}
+
+              <div className="dashboard-moderation-actions">
+                <Link className="btn secondary" href="/support">
+                  {tr(language, "supportButton")}
+                </Link>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
