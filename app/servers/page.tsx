@@ -72,6 +72,14 @@ export const metadata: Metadata = {
 type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
 type ServerLanguage = "Deutsch" | "English" | "Français" | "Italiano" | "Polski";
 
+export type ServersSeoContext = {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  breadcrumbName?: string;
+  about?: string[];
+};
+
 const SEO_CATEGORY_LINKS = [
   { href: "/servers/deutsch", label: "Deutsche Discord Server" },
   { href: "/servers/gaming", label: "Gaming Discord Server" },
@@ -646,6 +654,7 @@ function getPremiumDirectoryStyle(
 
 export default async function ServersPage({
   searchParams,
+  seoContext,
 }: {
   searchParams?: Promise<{
     q?: string;
@@ -655,8 +664,28 @@ export default async function ServersPage({
     lang?: string;
     locale?: string;
   }>;
+  seoContext?: ServersSeoContext;
 }) {
   const params = (await searchParams) ?? {};
+
+  const structuredTitle = seoContext?.title || pageTitle;
+  const structuredDescription = seoContext?.description || pageDescription;
+  const structuredCanonical =
+    seoContext?.canonical || `${SITE_URL}/servers`;
+  const structuredBreadcrumbName =
+    seoContext?.breadcrumbName || "Discord Server Liste";
+  const structuredAbout =
+    seoContext?.about?.length
+      ? seoContext.about
+      : [
+          "Discord Server Liste",
+          "Deutsche Discord Server",
+          "Gaming Discord Server",
+          "Anime Discord Server",
+          "Minecraft Discord Server",
+          "Valorant Discord Server",
+          "Community Discord Server",
+        ];
 
   const rawQuery = String(params.q ?? "").trim();
   const selectedLanguageFromUrl = String(params.language ?? "").trim();
@@ -718,9 +747,9 @@ export default async function ServersPage({
   const collectionJsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: pageTitle,
-    description: pageDescription,
-    url: `${SITE_URL}/servers`,
+    name: structuredTitle,
+    description: structuredDescription,
+    url: structuredCanonical,
     isPartOf: {
       "@type": "WebSite",
       name: "Asko Cafe",
@@ -731,15 +760,7 @@ export default async function ServersPage({
         "query-input": "required name=search_term_string",
       },
     },
-    about: [
-      "Discord Server Liste",
-      "Deutsche Discord Server",
-      "Gaming Discord Server",
-      "Anime Discord Server",
-      "Minecraft Discord Server",
-      "Valorant Discord Server",
-      "Community Discord Server",
-    ],
+    about: structuredAbout,
     mainEntity: {
       "@type": "ItemList",
       numberOfItems: servers.length,
@@ -753,23 +774,34 @@ export default async function ServersPage({
     },
   };
 
+  const breadcrumbItems = [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: SITE_URL,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Discord Server Liste",
+      item: `${SITE_URL}/servers`,
+    },
+  ];
+
+  if (structuredCanonical !== `${SITE_URL}/servers`) {
+    breadcrumbItems.push({
+      "@type": "ListItem",
+      position: 3,
+      name: structuredBreadcrumbName,
+      item: structuredCanonical,
+    });
+  }
+
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: SITE_URL,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Discord Server Liste",
-        item: `${SITE_URL}/servers`,
-      },
-    ],
+    itemListElement: breadcrumbItems,
   };
 
   const faqJsonLd = {
