@@ -30,8 +30,19 @@ function getBaseUrl() {
   return SITE_URL.replace(/\/$/, "");
 }
 
-function getServerPublicPath(server: ServerSitemapRow) {
-  return String(server.slug || server.id || "").trim();
+function isUuidLike(value: string) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    value.trim()
+  );
+}
+
+/**
+ * Für Google werden ausschließlich lesbare Slug-URLs ausgegeben.
+ * Ein Fallback auf die Datenbank-ID ist absichtlich nicht erlaubt,
+ * damit alte UUID-URLs nicht wieder in der Sitemap landen.
+ */
+function getServerPublicSlug(server: ServerSitemapRow) {
+  return String(server.slug || "").trim();
 }
 
 function getValidDate(...values: Array<string | null | undefined>) {
@@ -45,49 +56,62 @@ function getValidDate(...values: Array<string | null | undefined>) {
     }
   }
 
-  return new Date();
+  return undefined;
 }
 
 function getNewestDate(servers: ServerSitemapRow[]) {
-  if (servers.length === 0) {
-    return new Date();
-  }
-
   const times = servers
     .map((server) =>
-      getValidDate(server.updated_at, server.last_bump, server.created_at).getTime()
+      getValidDate(
+        server.updated_at,
+        server.last_bump,
+        server.created_at
+      )?.getTime()
     )
-    .filter((time) => Number.isFinite(time));
+    .filter((time): time is number => Number.isFinite(time));
 
   if (times.length === 0) {
-    return new Date();
+    return undefined;
   }
 
   return new Date(Math.max(...times));
 }
 
 function getServerLastModified(server: ServerSitemapRow) {
-  return getValidDate(server.updated_at, server.last_bump, server.created_at);
+  return getValidDate(
+    server.updated_at,
+    server.last_bump,
+    server.created_at
+  );
 }
 
 async function getApprovedServers(): Promise<ServerSitemapRow[]> {
   const queries = [
     "servers?approved=eq.true&status=eq.approved&select=id,slug,updated_at,created_at,last_bump&order=created_at.desc&limit=5000",
     "servers?approved=eq.true&status=eq.approved&select=id,slug,created_at,last_bump&order=created_at.desc&limit=5000",
-    "servers?approved=eq.true&status=eq.approved&select=id,slug&limit=5000",
+    "servers?approved=eq.true&status=eq.approved&select=id,slug&order=created_at.desc&limit=5000",
     "servers?approved=is.true&status=eq.approved&select=id,slug&limit=5000",
   ];
 
   for (const query of queries) {
     try {
-      const servers = await supabaseRequest(query);
+      const result = await supabaseRequest(query);
 
-      if (Array.isArray(servers) && servers.length > 0) {
-        return servers.filter((server) => {
-          const publicPath = getServerPublicPath(server);
-          return Boolean(server?.id && publicPath);
-        });
+      if (!Array.isArray(result)) {
+        continue;
       }
+
+      return result.filter((server: ServerSitemapRow) => {
+        const slug = getServerPublicSlug(server);
+        const normalizedSlug = slug.toLowerCase();
+
+        return Boolean(
+          server?.id &&
+            slug &&
+            !isUuidLike(slug) &&
+            !RESERVED_SERVER_PATHS.has(normalizedSlug)
+        );
+      });
     } catch (error) {
       console.error("Sitemap server query failed:", query, error);
     }
@@ -104,14 +128,16 @@ function createSitemapEntry({
 }: {
   url: string;
   lastModified?: Date;
-  changeFrequency: NonNullable<MetadataRoute.Sitemap[number]["changeFrequency"]>;
-  priority: number;
+  changeFrequency?: NonNullable<
+    MetadataRoute.Sitemap[number]["changeFrequency"]
+  >;
+  priority?: number;
 }): MetadataRoute.Sitemap[number] {
   return {
     url,
-    lastModified,
-    changeFrequency,
-    priority,
+    ...(lastModified ? { lastModified } : {}),
+    ...(changeFrequency ? { changeFrequency } : {}),
+    ...(typeof priority === "number" ? { priority } : {}),
   };
 }
 
@@ -184,7 +210,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
     createSitemapEntry({
       url: `${baseUrl}/submit`,
-      lastModified: latestServerUpdate,
       changeFrequency: "weekly",
       priority: 0.78,
     }),
@@ -220,23 +245,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
   ];
 
-  const serverPages: MetadataRoute.Sitemap = servers
-    .map((server) => {
-      const publicPath = getServerPublicPath(server);
-      const normalizedPath = publicPath.toLowerCase();
-
-      if (!publicPath || RESERVED_SERVER_PATHS.has(normalizedPath)) {
-        return null;
-      }
-
-      return createSitemapEntry({
-        url: `${baseUrl}/servers/${encodeURIComponent(publicPath)}`,
-        lastModified: getServerLastModified(server),
-        changeFrequency: "daily",
-        priority: 0.84,
-      });
+  const serverPages: MetadataRoute.Sitemap = servers.map((server) =>
+    createSitemapEntry({
+      url: `${baseUrl}/servers/${encodeURIComponent(
+        getServerPublicSlug(server)
+      )}`,
+      lastModified: getServerLastModified(server),
+      changeFrequency: "daily",
+      priority: 0.84,
     })
-    .filter((entry): entry is MetadataRoute.Sitemap[number] => Boolean(entry));
+  );
 
   return dedupeSitemap([...staticPages, ...serverPages]);
 }
