@@ -1,9 +1,23 @@
 import type { Metadata } from "next";
 import ServersPage from "../page";
 
-const title = "Gaming Discord Server finden | Discord Server Liste";
+const SITE_URL = "https://www.askocafe.com";
+const canonical = `${SITE_URL}/servers/gaming`;
+
+const title = "Gaming Discord Server Deutsch finden | Asko Cafe";
 const description =
-  "Finde Gaming Discord Server auf Asko Cafe. Entdecke aktive Gaming Communities, Mitspieler, Events, Clans und Discord Server für verschiedene Spiele.";
+  "Finde Gaming Discord Server auf Asko Cafe. Entdecke aktive deutschsprachige Gaming Communities, Mitspieler, Events, Clans und Server für verschiedene Spiele.";
+
+const about = [
+  "Gaming Discord Server",
+  "Deutsche Gaming Discord Server",
+  "Gaming Communities",
+  "Mitspieler finden",
+  "Gaming Clans",
+  "Minecraft Discord Server",
+  "Valorant Discord Server",
+  "Discord Server Liste",
+];
 
 export const metadata: Metadata = {
   title,
@@ -26,18 +40,18 @@ export const metadata: Metadata = {
     "Asko Cafe",
   ],
   alternates: {
-    canonical: "https://www.askocafe.com/servers/gaming",
+    canonical,
   },
   openGraph: {
     title,
     description,
-    url: "https://www.askocafe.com/servers/gaming",
+    url: canonical,
     siteName: "Asko Cafe",
     type: "website",
     locale: "de_DE",
     images: [
       {
-        url: "https://www.askocafe.com/asko-cafe-hero.png",
+        url: `${SITE_URL}/asko-cafe-hero.png`,
         width: 1200,
         height: 630,
         alt: "Gaming Discord Server finden auf Asko Cafe",
@@ -48,7 +62,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    images: ["https://www.askocafe.com/asko-cafe-hero.png"],
+    images: [`${SITE_URL}/asko-cafe-hero.png`],
   },
   robots: {
     index: true,
@@ -64,38 +78,16 @@ export const metadata: Metadata = {
 };
 
 export default function GamingDiscordServerPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: title,
-    description,
-    url: "https://www.askocafe.com/servers/gaming",
-    isPartOf: {
-      "@type": "WebSite",
-      name: "Asko Cafe",
-      url: "https://www.askocafe.com",
-    },
-    about: [
-      "Gaming Discord Server",
-      "Gaming Communities",
-      "Discord Server Liste",
-      "Mitspieler finden",
-      "Gaming Clans",
-      "Minecraft Discord Server",
-      "Valorant Discord Server",
-    ],
-  };
-
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLd),
-        }}
-      />
-
-      <ServersPage searchParams={Promise.resolve({ q: "gaming" })} />
-    </>
+    <ServersPage
+      searchParams={Promise.resolve({ q: "gaming" })}
+      seoContext={{
+        title,
+        description,
+        canonical,
+        breadcrumbName: "Gaming Discord Server",
+        about,
+      }}
+    />
   );
 }
