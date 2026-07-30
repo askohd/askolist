@@ -1,9 +1,24 @@
 import type { Metadata } from "next";
 import ServersPage from "../page";
 
-const title = "Minecraft Discord Server finden | Discord Server Liste";
+const SITE_URL = "https://www.askocafe.com";
+const canonical = `${SITE_URL}/servers/minecraft`;
+
+const title = "Minecraft Discord Server Deutsch finden | Asko Cafe";
 const description =
   "Finde Minecraft Discord Server auf Asko Cafe. Entdecke deutsche Minecraft Communities für SMP, Survival, Citybuild, Events, Minigames und neue Mitspieler.";
+
+const about = [
+  "Minecraft Discord Server",
+  "Deutsche Minecraft Discord Server",
+  "Minecraft Communities",
+  "Minecraft SMP",
+  "Minecraft Survival",
+  "Minecraft Citybuild",
+  "Minecraft Minigames",
+  "Gaming Discord Server",
+  "Discord Server Liste",
+];
 
 export const metadata: Metadata = {
   title,
@@ -26,18 +41,18 @@ export const metadata: Metadata = {
     "Asko Cafe",
   ],
   alternates: {
-    canonical: "https://www.askocafe.com/servers/minecraft",
+    canonical,
   },
   openGraph: {
     title,
     description,
-    url: "https://www.askocafe.com/servers/minecraft",
+    url: canonical,
     siteName: "Asko Cafe",
     type: "website",
     locale: "de_DE",
     images: [
       {
-        url: "https://www.askocafe.com/asko-cafe-hero.png",
+        url: `${SITE_URL}/asko-cafe-hero.png`,
         width: 1200,
         height: 630,
         alt: "Minecraft Discord Server finden auf Asko Cafe",
@@ -48,7 +63,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    images: ["https://www.askocafe.com/asko-cafe-hero.png"],
+    images: [`${SITE_URL}/asko-cafe-hero.png`],
   },
   robots: {
     index: true,
@@ -64,39 +79,16 @@ export const metadata: Metadata = {
 };
 
 export default function MinecraftDiscordServerPage() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: title,
-    description,
-    url: "https://www.askocafe.com/servers/minecraft",
-    isPartOf: {
-      "@type": "WebSite",
-      name: "Asko Cafe",
-      url: "https://www.askocafe.com",
-    },
-    about: [
-      "Minecraft Discord Server",
-      "Minecraft Communities",
-      "Minecraft SMP",
-      "Minecraft Survival",
-      "Minecraft Citybuild",
-      "Minecraft Minigames",
-      "Gaming Discord Server",
-      "Discord Server Liste",
-    ],
-  };
-
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLd),
-        }}
-      />
-
-      <ServersPage searchParams={Promise.resolve({ q: "minecraft" })} />
-    </>
+    <ServersPage
+      searchParams={Promise.resolve({ q: "minecraft" })}
+      seoContext={{
+        title,
+        description,
+        canonical,
+        breadcrumbName: "Minecraft Discord Server",
+        about,
+      }}
+    />
   );
 }
