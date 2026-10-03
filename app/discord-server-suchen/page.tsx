@@ -15,7 +15,7 @@ const SITE_URL =
 const baseUrl = SITE_URL.replace(/\/$/, "");
 
 export const metadata: Metadata = {
-  title: "Discord Server suchen | Deutsche Discord Server Liste",
+  title: "Discord Server suchen und finden",
   description:
     "Discord Server suchen und finden auf Asko Cafe. Entdecke deutsche Discord Server, Gaming Discords, Anime Server, Minecraft Server, Valorant Server und Community Server.",
   keywords: [
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     canonical: `${baseUrl}/discord-server-suchen`,
   },
   openGraph: {
-    title: "Discord Server suchen | Deutsche Discord Server Liste",
+    title: "Discord Server suchen und finden",
     description:
       "Finde aktive Discord Server für Gaming, Anime, Minecraft, Valorant, Community und mehr auf Asko Cafe.",
     url: `${baseUrl}/discord-server-suchen`,
@@ -46,19 +46,19 @@ export const metadata: Metadata = {
     locale: "de_DE",
     images: [
       {
-        url: `${baseUrl}/asko-cafe-hero.png`,
-        width: 1200,
-        height: 630,
+        url: `${baseUrl}/asko-cafe-banner.png`,
+        width: 960,
+        height: 540,
         alt: "Discord Server suchen auf Asko Cafe",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Discord Server suchen | Deutsche Discord Server Liste",
+    title: "Discord Server suchen und finden",
     description:
       "Suche und finde deutsche Discord Server, Gaming Discords, Anime Server, Minecraft Server, Valorant Server und Community Server.",
-    images: [`${baseUrl}/asko-cafe-hero.png`],
+    images: [`${baseUrl}/asko-cafe-banner.png`],
   },
   robots: {
     index: true,

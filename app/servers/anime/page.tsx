@@ -4,9 +4,9 @@ import ServersPage from "../page";
 const SITE_URL = "https://www.askocafe.com";
 const canonical = `${SITE_URL}/servers/anime`;
 
-const title = "Anime Discord Server Deutsch finden | Asko Cafe";
+const title = "Anime Discord Server finden";
 const description =
-  "Finde Anime Discord Server auf Asko Cafe. Entdecke deutschsprachige Anime Communities, Manga Server, Otaku Discords, Chill Server und neue Mitglieder.";
+  "Finde Anime Discord Server und Manga-Communities auf Asko Cafe. Vergleiche Themen, Beschreibungen, Sprache und Tags, bevor du einer Community beitrittst.";
 
 const about = [
   "Anime Discord Server",
@@ -50,9 +50,9 @@ export const metadata: Metadata = {
     locale: "de_DE",
     images: [
       {
-        url: `${SITE_URL}/asko-cafe-hero.png`,
-        width: 1200,
-        height: 630,
+        url: `${SITE_URL}/asko-cafe-banner.png`,
+        width: 960,
+        height: 540,
         alt: "Anime Discord Server finden auf Asko Cafe",
       },
     ],
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    images: [`${SITE_URL}/asko-cafe-hero.png`],
+    images: [`${SITE_URL}/asko-cafe-banner.png`],
   },
   robots: {
     index: true,
@@ -86,6 +86,24 @@ export default function AnimeDiscordServerPage() {
         canonical,
         breadcrumbName: "Anime Discord Server",
         about,
+        heading: "Anime Discord Server",
+        intro: description,
+        guideTitle: "Anime- und Manga-Communities entdecken",
+        guideText:
+          "Anime-Communities können sich bestimmten Serien, Manga oder dem allgemeinen Austausch widmen. Lies die Beschreibung und Serverregeln, besonders den Umgang mit Spoilern und Altersbeschränkungen. Nutze Sprache und Tags, um passende Einträge auszuwählen.",
+        faqTitle: "Fragen zu Anime Discord Servern",
+        faq: [
+          {
+            question: "Welche Anime Discord Server werden hier angezeigt?",
+            answer:
+              "Die Seite sucht nach Anime im Servernamen, in der Beschreibung, den Tags oder der Kategorie. Lies das Serverprofil, um zu sehen, welche Serien, Manga oder weiteren Themen dort beschrieben werden.",
+          },
+          {
+            question: "Wie finde ich einen Server zu einer bestimmten Serie?",
+            answer:
+              "Suche nach dem Namen der Serie oder einem passenden Tag. Prüfe vor dem Beitritt die Beschreibung sowie die Regeln zu Spoilern und zulässigen Inhalten.",
+          },
+        ],
       }}
     />
   );

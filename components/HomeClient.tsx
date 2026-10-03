@@ -11,13 +11,13 @@ const SHOWCASE_ROTATION_MS = 10000;
 
 const HOME_TEXT = {
   de: {
-    badge: "Asko Cafe Network",
-    title: "Entdecke Discord Server",
-    text: "Finde aktive Communities, bewerte Server und entdecke neue Discord Netzwerke auf Asko Cafe.",
+    badge: "Discord Server Liste",
+    title: "Discord Server finden",
+    text: "Entdecke Communities für Gaming, Anime, Musik, Lernen und vieles mehr. Suche nach deinem Thema oder trage deinen Discord Server kostenlos ein.",
     searchPlaceholder: "Server suchen",
     search: "Suchen",
     discover: "Server entdecken",
-    submit: "Server eintragen",
+    submit: "Kostenlos eintragen",
     myServer: "Mein Server",
     cardBadge: "Offizieller Discord",
     cardTitle: "Asko Cafe",
@@ -46,13 +46,13 @@ const HOME_TEXT = {
     visibleNow: "Server aktuell sichtbar",
   },
   en: {
-    badge: "Asko Cafe Network",
+    badge: "Discord Server Directory",
     title: "Discover Discord Servers",
-    text: "Find active communities, rate servers and discover new Discord networks on Asko Cafe.",
+    text: "Discover communities for gaming, anime, music, learning and more. Search for your interests or list your Discord server for free.",
     searchPlaceholder: "Search servers",
     search: "Search",
     discover: "Discover servers",
-    submit: "Submit server",
+    submit: "List for free",
     myServer: "My Server",
     cardBadge: "Official Discord",
     cardTitle: "Asko Cafe",
@@ -81,13 +81,13 @@ const HOME_TEXT = {
     visibleNow: "servers currently visible",
   },
   fr: {
-    badge: "Réseau Asko Cafe",
+    badge: "Annuaire de serveurs Discord",
     title: "Découvre des serveurs Discord",
-    text: "Trouve des communautés actives, note des serveurs et découvre de nouveaux réseaux Discord sur Asko Cafe.",
+    text: "Découvre des communautés de gaming, anime, musique, apprentissage et plus encore. Recherche tes centres d'intérêt ou ajoute gratuitement ton serveur Discord.",
     searchPlaceholder: "Rechercher des serveurs",
     search: "Rechercher",
     discover: "Découvrir les serveurs",
-    submit: "Ajouter un serveur",
+    submit: "Ajouter gratuitement",
     myServer: "Mon serveur",
     cardBadge: "Discord officiel",
     cardTitle: "Asko Cafe",
@@ -116,13 +116,13 @@ const HOME_TEXT = {
     visibleNow: "serveurs visibles actuellement",
   },
   it: {
-    badge: "Asko Cafe Network",
+    badge: "Lista di server Discord",
     title: "Scopri server Discord",
-    text: "Trova community attive, valuta server e scopri nuovi network Discord su Asko Cafe.",
+    text: "Scopri community di gaming, anime, musica, apprendimento e altro. Cerca i tuoi interessi o aggiungi gratis il tuo server Discord.",
     searchPlaceholder: "Cerca server",
     search: "Cerca",
     discover: "Scopri server",
-    submit: "Aggiungi server",
+    submit: "Aggiungi gratis",
     myServer: "Il mio server",
     cardBadge: "Discord ufficiale",
     cardTitle: "Asko Cafe",
@@ -151,13 +151,13 @@ const HOME_TEXT = {
     visibleNow: "server visibili ora",
   },
   pl: {
-    badge: "Asko Cafe Network",
+    badge: "Lista serwerów Discord",
     title: "Odkryj serwery Discord",
-    text: "Znajdź aktywne społeczności, oceniaj serwery i odkrywaj nowe sieci Discord na Asko Cafe.",
+    text: "Odkrywaj społeczności związane z grami, anime, muzyką, nauką i nie tylko. Szukaj swoich zainteresowań lub dodaj swój serwer Discord za darmo.",
     searchPlaceholder: "Szukaj serwerów",
     search: "Szukaj",
     discover: "Odkryj serwery",
-    submit: "Dodaj serwer",
+    submit: "Dodaj za darmo",
     myServer: "Mój serwer",
     cardBadge: "Oficjalny Discord",
     cardTitle: "Asko Cafe",
@@ -273,18 +273,18 @@ const HOME_OVERVIEW_TEXT = {
 
 const SEO_TEXT = {
   de: {
-    title: "Discord Server Liste für deutsche Communities",
+    title: "Deine Discord Server Liste für neue Communities",
     intro:
-      "Asko Cafe ist eine Discord Server Liste für aktive deutsche und internationale Communities. Finde neue Discord Server für Gaming, Anime, Minecraft, Valorant, Community, Freundschaften und Support oder trage deinen eigenen Server kostenlos ein.",
+      "Asko Cafe bringt Menschen und Discord Communities zusammen. Entdecke deutsche und internationale Server für Gaming, Anime, Roleplay, Musik, Lernen, Freundschaften und weitere Interessen. Kategorien, Tags und Sprachfilter helfen dir bei der Auswahl.",
     categoriesTitle: "Beliebte Discord Server Kategorien",
     categoriesText:
       "Stöbere durch thematische Serverlisten und finde passende Communities schneller über unsere Kategorie-Seiten.",
     whyTitle: "Warum Asko Cafe für Discord Server?",
     whyText:
-      "Unsere Serverliste zeigt freigegebene Discord Server mit Kategorien, Sprache, Bumps, Premium-Markierungen und aktuellen Community-Daten. So können Nutzer leichter aktive Server entdecken und Server-Besitzer mehr Reichweite aufbauen.",
+      "Vergleiche Serverbeschreibungen, Sprachen und Bewertungen. Auf dem Serverprofil findest du weitere Informationen und den Link zum Beitreten. Der letzte Bump zeigt, wann ein Eintrag zuletzt hervorgehoben wurde.",
     submitTitle: "Eigenen Discord Server eintragen",
     submitText:
-      "Du betreibst einen Discord Server? Trage ihn bei Asko Cafe ein, lade den Bot ein und nutze Bumps, um deine Community sichtbarer zu machen.",
+      "Melde dich mit Discord an und trage deinen Server kostenlos mit einer passenden Beschreibung, Tags und einer gültigen Einladung ein. Nach der Freigabe kannst du deinen Eintrag verwalten, mit dem Bot bumpen und dein öffentliches Serverprofil in deiner Community teilen.",
     allServers: "Discord Server Liste",
     germanServers: "Deutsche Discord Server",
     gamingServers: "Gaming Discord Server",
@@ -393,6 +393,14 @@ const SEO_CATEGORY_LINKS = [
   { href: "/servers/valorant", key: "valorantServers" },
   { href: "/servers/community", key: "communityServers" },
   { href: "/submit", key: "submitServer" },
+] as const;
+
+const HOME_CATEGORY_LINKS = [
+  { href: "/servers/community", label: "Community" },
+  { href: "/servers/gaming", label: "Gaming" },
+  { href: "/servers/anime", label: "Anime" },
+  { href: "/servers/minecraft", label: "Minecraft" },
+  { href: "/servers/valorant", label: "Valorant" },
 ] as const;
 
 function st(language: UiLanguage, key: keyof typeof SEO_TEXT.de) {
@@ -1259,6 +1267,32 @@ export default function HomeClient({
         }
 
 
+        .home-category-links {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 8px;
+          margin-top: 16px;
+        }
+
+        .home-category-links a {
+          padding: 8px 13px;
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.05);
+          color: #e7ddff;
+          font-size: 13px;
+          font-weight: 700;
+          text-decoration: none;
+        }
+
+        .home-category-links a:hover,
+        .home-category-links a:focus-visible {
+          background: rgba(139, 92, 246, 0.2);
+          outline: 2px solid #9deaff;
+          outline-offset: 2px;
+        }
+
         .home-seo-section {
           position: relative;
           z-index: 2;
@@ -1942,6 +1976,7 @@ export default function HomeClient({
                 className="home-search-input"
                 type="text"
                 name="q"
+                aria-label={t(language, "searchPlaceholder")}
                 placeholder={t(language, "searchPlaceholder")}
                 style={{
                   flex: 1,
@@ -1979,6 +2014,14 @@ export default function HomeClient({
                 {t(language, "search")}
               </button>
             </form>
+
+            <nav className="home-category-links" aria-label={st(language, "categoriesTitle")}>
+              {HOME_CATEGORY_LINKS.map((category) => (
+                <Link key={category.href} href={category.href}>
+                  {category.label}
+                </Link>
+              ))}
+            </nav>
 
             <div
               className="home-hero-actions"

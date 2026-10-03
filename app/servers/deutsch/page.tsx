@@ -4,7 +4,7 @@ import ServersPage from "../page";
 const SITE_URL = "https://www.askocafe.com";
 const canonical = `${SITE_URL}/servers/deutsch`;
 
-const title = "Deutsche Discord Server finden | Asko Cafe";
+const title = "Deutsche Discord Server finden";
 const description =
   "Finde deutsche Discord Server auf Asko Cafe. Entdecke deutschsprachige Gaming-, Anime-, Minecraft-, Valorant- und Community-Server.";
 
@@ -50,9 +50,9 @@ export const metadata: Metadata = {
     locale: "de_DE",
     images: [
       {
-        url: `${SITE_URL}/asko-cafe-hero.png`,
-        width: 1200,
-        height: 630,
+        url: `${SITE_URL}/asko-cafe-banner.png`,
+        width: 960,
+        height: 540,
         alt: "Deutsche Discord Server finden auf Asko Cafe",
       },
     ],
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    images: [`${SITE_URL}/asko-cafe-hero.png`],
+    images: [`${SITE_URL}/asko-cafe-banner.png`],
   },
   robots: {
     index: true,
@@ -86,6 +86,24 @@ export default function DeutscheDiscordServerPage() {
         canonical,
         breadcrumbName: "Deutsche Discord Server",
         about,
+        heading: "Deutsche Discord Server",
+        intro: description,
+        guideTitle: "Eine deutschsprachige Community finden",
+        guideText:
+          "Diese Liste ist nach der Serversprache Deutsch gefiltert. Vergleiche Themen, Tags und Beschreibungen, um eine Community für Gaming, Anime oder den Austausch im Alltag zu finden. Die Serversprache sagt nichts über den Wohnort der Mitglieder aus.",
+        faqTitle: "Fragen zu deutschen Discord Servern",
+        faq: [
+          {
+            question: "Was zeigt die Liste deutscher Discord Server?",
+            answer:
+              "Hier erscheinen freigegebene Server, deren Eintrag die Sprache Deutsch angibt. Die Liste kann Communities mit verschiedenen Themen und Mitgliedern aus unterschiedlichen Ländern enthalten.",
+          },
+          {
+            question: "Wie suche ich nach einem bestimmten Thema?",
+            answer:
+              "Gib beispielsweise Gaming, Anime oder einen Spielnamen in die Suche ein und behalte Deutsch im Sprachfilter ausgewählt. Tags helfen dir, die Auswahl weiter einzugrenzen.",
+          },
+        ],
       }}
     />
   );

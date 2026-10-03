@@ -1656,6 +1656,27 @@ select option {
   display: none;
 }
 
+@media (min-width: 769px) and (max-width: 1450px) {
+  .nav .container.nav-inner {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 10px 20px !important;
+    padding-top: 10px;
+    padding-bottom: 12px;
+  }
+
+  .desktop-nav-links {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    flex-wrap: wrap;
+    gap: 10px 20px !important;
+  }
+
+  .desktop-nav-actions {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
 @media (max-width: 768px) {
   html,
   body {

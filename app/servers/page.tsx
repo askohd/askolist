@@ -7,9 +7,9 @@ import { languages } from "@/lib/demoData";
 
 const SITE_URL = "https://www.askocafe.com";
 
-const pageTitle = "Discord Server Liste | Deutsche Discord Server finden";
+const pageTitle = "Discord Server Liste – Communities finden";
 const pageDescription =
-  "Finde aktive deutsche Discord Server für Gaming, Anime, Community, Minecraft, Valorant und mehr. Entdecke neue Communities oder trage deinen Server kostenlos ein.";
+  "Finde Discord Server für Gaming, Anime, Community, Minecraft, Valorant und mehr. Suche nach Sprache und Tags oder trage deine eigene Community kostenlos ein.";
 
 const baseMetadata: Metadata = {
   title: pageTitle,
@@ -44,9 +44,9 @@ const baseMetadata: Metadata = {
     locale: "de_DE",
     images: [
       {
-        url: `${SITE_URL}/asko-cafe-hero.png`,
-        width: 1200,
-        height: 630,
+        url: `${SITE_URL}/asko-cafe-banner.png`,
+        width: 960,
+        height: 540,
         alt: "Asko Cafe Discord Server Liste",
       },
     ],
@@ -55,7 +55,7 @@ const baseMetadata: Metadata = {
     card: "summary_large_image",
     title: pageTitle,
     description: pageDescription,
-    images: [`${SITE_URL}/asko-cafe-hero.png`],
+    images: [`${SITE_URL}/asko-cafe-banner.png`],
   },
   robots: {
     index: true,
@@ -106,7 +106,31 @@ export type ServersSeoContext = {
   canonical?: string;
   breadcrumbName?: string;
   about?: string[];
+  heading?: string;
+  intro?: string;
+  guideTitle?: string;
+  guideText?: string;
+  faqTitle?: string;
+  faq?: Array<{ question: string; answer: string }>;
 };
+
+const DIRECTORY_FAQ = [
+  {
+    question: "Wie finde ich passende Discord Server?",
+    answer:
+      "Suche nach einem Namen oder Interesse und nutze die Filter für Sprache und Tags. Öffne ein Serverprofil, um die Beschreibung und vorhandene Bewertungen vor dem Beitritt zu lesen.",
+  },
+  {
+    question: "Kann ich deutsche Discord Server suchen?",
+    answer:
+      "Ja. Die Kategorie Deutsche Discord Server zeigt deutschsprachige Communities. In der allgemeinen Liste kannst du auch andere Sprachen auswählen.",
+  },
+  {
+    question: "Kann ich meinen Discord Server kostenlos eintragen?",
+    answer:
+      "Ja. Du kannst deinen eigenen Discord Server kostenlos eintragen. Nach der Freigabe erscheint er in der Serverliste und kann von neuen Mitgliedern gefunden werden.",
+  },
+];
 
 const SEO_CATEGORY_LINKS = [
   { href: "/servers/deutsch", label: "Deutsche Discord Server" },
@@ -187,7 +211,7 @@ const UI_TEXT = {
     pageBadge: "Asko Cafe Directory",
     title: "Discord Server Liste",
     subtitle:
-      "Finde aktive Discord Server für Gaming, Anime, Community, Minecraft, Valorant und mehr.",
+      "Finde Discord Server für Gaming, Anime, Community, Minecraft, Valorant und mehr. Suche nach Sprache und Interessen.",
     submitServer: "Server eintragen",
     searchPlaceholder: "Server suchen...",
     allLanguages: "Alle Sprachen",
@@ -714,6 +738,9 @@ export default async function ServersPage({
           "Valorant Discord Server",
           "Community Discord Server",
         ];
+  const faqItems = seoContext?.faq?.length
+    ? [...seoContext.faq, DIRECTORY_FAQ[2]]
+    : DIRECTORY_FAQ;
 
   const rawQuery = String(params.q ?? "").trim();
   const selectedLanguageFromUrl = String(params.language ?? "").trim();
@@ -835,35 +862,14 @@ export default async function ServersPage({
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "Wie finde ich gute Discord Server?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text:
-            "Auf Asko Cafe kannst du Discord Server nach Namen, Sprache, Tags und Kategorien suchen. Die Serverliste zeigt aktive Communities für Gaming, Anime, Minecraft, Valorant, Community und weitere Themen.",
-        },
+    mainEntity: faqItems.map(({ question, answer }) => ({
+      "@type": "Question",
+      name: question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: answer,
       },
-      {
-        "@type": "Question",
-        name: "Kann ich deutsche Discord Server suchen?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text:
-            "Ja. Auf der Seite Deutsche Discord Server findest du deutschsprachige Discord Communities. Du kannst zusätzlich nach Gaming, Anime, Minecraft, Valorant oder Community filtern.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Kann ich meinen Discord Server kostenlos eintragen?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text:
-            "Ja. Serverbesitzer können ihren Discord Server kostenlos auf Asko Cafe eintragen und so neue Mitglieder erreichen.",
-        },
-      },
-    ],
+    })),
   };
 
   return (
@@ -871,7 +877,7 @@ export default async function ServersPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify([collectionJsonLd, breadcrumbJsonLd, faqJsonLd]),
+          __html: JSON.stringify([collectionJsonLd, breadcrumbJsonLd, faqJsonLd]).replace(/</g, "\\u003c"),
         }}
       />
 
@@ -1220,8 +1226,8 @@ export default async function ServersPage({
       <section className="servers-directory-header">
         <div>
           <span className="page-badge">{t(uiLanguage, "pageBadge")}</span>
-          <h1>{t(uiLanguage, "title")}</h1>
-          <p>{t(uiLanguage, "subtitle")}</p>
+          <h1>{seoContext?.heading || t(uiLanguage, "title")}</h1>
+          <p>{seoContext?.intro || t(uiLanguage, "subtitle")}</p>
         </div>
 
         <Link href="/submit" className="btn">
@@ -1515,13 +1521,12 @@ export default async function ServersPage({
         </span>
 
         <h2 id="discord-server-suchen-title">
-          Discord Server suchen
+          {seoContext?.guideTitle || "Discord Server suchen"}
         </h2>
 
         <p>
-          Auf Asko Cafe findest du eine Discord Server Liste für deutsche und
-          internationale Communities. Suche nach Gaming, Anime, Minecraft,
-          Valorant oder Community Servern und entdecke neue Discord Server.
+          {seoContext?.guideText ||
+            "Auf Asko Cafe findest du Discord Server für deutsche und internationale Communities. Suche nach einem Thema, lies die Serverbeschreibung und wähle eine Community, die zu deinen Interessen passt."}
         </p>
 
         <div className="server-directory-seo-guide-grid">
@@ -1539,8 +1544,8 @@ export default async function ServersPage({
             <h3>Gaming Discord Server</h3>
             <p>
               Finde Gaming Discords für Mitspieler, Clans, Teams, Ranked,
-              Events und verschiedene Spiele. Besonders beliebt sind Minecraft,
-              Valorant und allgemeine Gaming Communities.
+              Events und verschiedene Spiele, etwa Minecraft und Valorant,
+              sowie allgemeine Gaming Communities.
             </p>
             <Link href="/servers/gaming">Gaming Server ansehen</Link>
           </article>
@@ -1557,34 +1562,13 @@ export default async function ServersPage({
         </div>
 
         <div className="server-directory-seo-faq">
-          <h3>Häufige Fragen zur Discord Server Liste</h3>
-
-          <details>
-            <summary>Wie finde ich gute Discord Server?</summary>
-            <p>
-              Nutze die Suche, die Sprache, Tags und Kategorien auf Asko Cafe.
-              So findest du passende Discord Server für Gaming, Anime,
-              Minecraft, Valorant, Community oder andere Interessen.
-            </p>
-          </details>
-
-          <details>
-            <summary>Kann ich deutsche Discord Server suchen?</summary>
-            <p>
-              Ja. Auf Asko Cafe gibt es eine eigene Seite für deutsche Discord
-              Server. Dort findest du deutschsprachige Communities aus
-              verschiedenen Bereichen.
-            </p>
-          </details>
-
-          <details>
-            <summary>Kann ich meinen Discord Server kostenlos eintragen?</summary>
-            <p>
-              Ja. Du kannst deinen eigenen Discord Server kostenlos eintragen.
-              Nach der Freigabe erscheint er in der Serverliste und kann von
-              neuen Mitgliedern gefunden werden.
-            </p>
-          </details>
+          <h3>{seoContext?.faqTitle || "Häufige Fragen zur Discord Server Liste"}</h3>
+          {faqItems.map(({ question, answer }) => (
+            <details key={question}>
+              <summary>{question}</summary>
+              <p>{answer}</p>
+            </details>
+          ))}
         </div>
       </section>
 

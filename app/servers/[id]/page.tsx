@@ -72,7 +72,7 @@ function getAbsoluteUrl(pathOrUrl: string | null | undefined) {
   const value = String(pathOrUrl ?? "").trim();
 
   if (!value) {
-    return `${getBaseUrl()}/asko-cafe-hero.png`;
+    return `${getBaseUrl()}/asko-cafe-banner.png`;
   }
 
   if (value.startsWith("http://") || value.startsWith("https://")) {
@@ -88,14 +88,14 @@ function getServerSeoImage(server: ServerMetadataRow) {
       server.banner_url ||
       server.logo_url ||
       server.discord_server_icon_url ||
-      "/asko-cafe-hero.png"
+      "/asko-cafe-banner.png"
   );
 }
 
 function getServerSeoDescription(server: ServerMetadataRow) {
   const name = cleanSeoText(server.server_name || "Discord Server");
   const category = cleanSeoText(server.category || "Community");
-  const language = cleanSeoText(server.language || "Deutsch");
+  const language = cleanSeoText(server.language || "");
   const description = cleanSeoText(server.description);
   const tags = Array.isArray(server.tags)
     ? server.tags.filter(Boolean).slice(0, 5).join(", ")
@@ -103,12 +103,12 @@ function getServerSeoDescription(server: ServerMetadataRow) {
 
   const text =
     description ||
-    `Tritt dem ${name} Discord Server bei. Entdecke eine aktive ${language} ${category} Community auf Asko Cafe.`;
+    `Entdecke ${name}, einen Discord Server für ${category}${language ? ` mit der Serversprache ${language}` : ""}, auf Asko Cafe.`;
 
   const tagText = tags ? ` Tags: ${tags}.` : "";
 
   return truncateSeoText(
-    `${text} Finde ${category} Discord Server, deutsche Discord Server und neue Communities auf Asko Cafe.${tagText}`,
+    `${text}${tagText}`,
     300
   );
 }
@@ -142,7 +142,7 @@ export async function generateMetadata({
 
   if (!lookupValue) {
     return {
-      title: "Discord Server nicht gefunden | Asko Cafe",
+      title: "Discord Server nicht gefunden",
       description:
         "Dieser Discord Server wurde nicht gefunden oder ist noch nicht freigegeben.",
       robots: {
@@ -156,7 +156,7 @@ export async function generateMetadata({
 
   if (!server) {
     return {
-      title: "Discord Server nicht gefunden | Asko Cafe",
+      title: "Discord Server nicht gefunden",
       description:
         "Dieser Discord Server wurde nicht gefunden oder ist noch nicht freigegeben.",
       robots: {
@@ -168,8 +168,8 @@ export async function generateMetadata({
 
   const serverName = cleanSeoText(server.server_name || "Discord Server");
   const category = cleanSeoText(server.category || "Community");
-  const language = cleanSeoText(server.language || "Deutsch");
-  const title = `${serverName} Discord Server beitreten | Asko Cafe`;
+  const language = cleanSeoText(server.language || "");
+  const title = `${serverName} Discord Server beitreten`;
   const description = getServerSeoDescription(server);
   const serverPath = getServerPublicPath(server);
   const serverUrl = `${getBaseUrl()}/servers/${encodeURIComponent(serverPath)}`;
@@ -193,19 +193,14 @@ export async function generateMetadata({
       `${serverName} Discord beitreten`,
       `${serverName} Server`,
       `${category} Discord Server`,
-      `${language} Discord Server`,
-      `${language} ${category} Discord Server`,
+      ...(language
+        ? [`${language} Discord Server`, `${language} ${category} Discord Server`]
+        : []),
       "Discord Server",
-      "deutsche Discord Server",
       "Discord Server Liste",
       "Discord Server finden",
       "Discord Server beitreten",
       "Discord Server eintragen",
-      "Gaming Discord Server",
-      "Anime Discord Server",
-      "Minecraft Discord Server",
-      "Valorant Discord Server",
-      "Community Discord Server",
       "Asko Cafe",
       ...tagKeywords,
     ],
@@ -222,8 +217,6 @@ export async function generateMetadata({
       images: [
         {
           url: imageUrl,
-          width: 1200,
-          height: 630,
           alt: `${serverName} Discord Server beitreten`,
         },
       ],
