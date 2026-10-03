@@ -8,6 +8,14 @@ import type { Server } from "@/lib/types";
 type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
 
 const SHOWCASE_ROTATION_MS = 10000;
+const RESERVED_SERVER_SLUGS = new Set([
+  "deutsch",
+  "gaming",
+  "anime",
+  "minecraft",
+  "valorant",
+  "community",
+]);
 
 const HOME_TEXT = {
   de: {
@@ -455,8 +463,13 @@ function getServerId(serverData: any) {
 }
 
 function getServerDetailsHref(serverData: any) {
-  const serverId = getServerId(serverData);
-  return serverId ? `/servers/${serverId}` : "/servers";
+  const slug = String(serverData.slug ?? "").trim();
+  const publicPath =
+    slug && !RESERVED_SERVER_SLUGS.has(slug.toLowerCase())
+      ? slug
+      : String(getServerId(serverData)).trim();
+
+  return publicPath ? `/servers/${encodeURIComponent(publicPath)}` : "/servers";
 }
 
 function getServerName(serverData: any) {

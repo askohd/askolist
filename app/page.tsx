@@ -12,7 +12,7 @@ const SITE_URL =
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Discord Server finden und kostenlos eintragen",
+  title: { absolute: "Discord Server finden und kostenlos eintragen | Asko Cafe" },
   description:
     "Entdecke deutsche und internationale Discord Server für Gaming, Anime, Community, Roleplay, Musik, Lernen und mehr. Finde deine Community oder trage deinen Server kostenlos ein.",
   keywords: [
