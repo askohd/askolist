@@ -77,9 +77,9 @@ export const metadata: Metadata = {
   },
 
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    icon: "/asko-cafe-icon.png",
+    shortcut: "/asko-cafe-icon.png",
+    apple: "/asko-cafe-icon.png",
   },
 
   category: "Discord Server Directory",
