@@ -1413,19 +1413,44 @@ export default function HomeClient({
           }
         }
 
-        @media (max-width: 1150px) {
+        @media (max-width: 1600px) {
           .hero-premium-showcase {
             display: none;
           }
-        }
 
-        @media (max-width: 1250px) {
+          .home-hero-section {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1fr) 390px;
+            gap: 40px;
+          }
+
+          .home-hero-shell {
+            min-height: 0 !important;
+          }
+
           .right-discord-card {
             position: relative !important;
             right: auto !important;
             top: auto !important;
             transform: none !important;
+            margin: 0 !important;
+          }
+        }
+
+        @media (max-width: 1100px) {
+          .home-hero-section {
+            display: block !important;
+          }
+
+          .right-discord-card {
+            width: 100% !important;
+            max-width: 390px !important;
             margin: 44px auto 0 !important;
+          }
+
+          .right-discord-card article {
+            width: 100% !important;
+            max-width: 100% !important;
           }
         }
 
