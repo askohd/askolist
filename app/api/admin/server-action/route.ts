@@ -31,9 +31,9 @@ function getDurationValue(formData: FormData, fallback = "3") {
   return String(formData.get("duration") || fallback).trim();
 }
 
-function getUntilFromDuration(duration: string) {
+function getUntilFromDuration(duration: string, permanentAsFarFuture = false) {
   if (duration === "permanent") {
-    return null;
+    return permanentAsFarFuture ? "9999-12-31T23:59:59.000Z" : null;
   }
 
   const days = Number(duration);
@@ -234,7 +234,7 @@ export async function POST(request: Request) {
         action === "bump_ban_7d" ? "7" : action === "bump_ban_3d" ? "3" : "3";
 
       const duration = getDurationValue(formData, fallbackDuration);
-      const until = getUntilFromDuration(duration);
+      const until = getUntilFromDuration(duration, true);
 
       const finalReason =
         reason || `Bump-Sperre für ${duration === "permanent" ? "Permanent" : `${duration} Tage`}`;

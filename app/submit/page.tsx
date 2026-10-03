@@ -4,6 +4,13 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { categories, languages } from "@/lib/demoData";
 import TagInput from "@/components/TagInput";
+import { publicPageMetadata } from "@/lib/pageMetadata";
+
+export const metadata = publicPageMetadata(
+  "/submit",
+  "Discord Server kostenlos eintragen",
+  "Trage deinen eigenen Discord Server kostenlos auf Asko Cafe ein. Füge Beschreibung, Kategorie, Sprache und Tags hinzu und lass deine Community freigeben."
+);
 
 type LanguageCode = "de" | "en" | "fr" | "it" | "pl";
 

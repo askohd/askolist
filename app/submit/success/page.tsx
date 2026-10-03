@@ -1,5 +1,12 @@
 import { cookies } from "next/headers";
 import ReferralInvitePopup from "@/components/ReferralInvitePopup";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Server eingetragen",
+  robots: { index: false, follow: false },
+  alternates: { canonical: "/submit/success" },
+};
 
 type LanguageCode = "de" | "en" | "fr" | "it" | "pl";
 

@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { supabaseRequest } from "@/lib/supabase";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { validateServerInviteUpdate } from "@/lib/discord-invite";
 
 const MAX_DESCRIPTION_WORDS = 1500;
 
@@ -228,8 +229,8 @@ export async function POST(request: Request) {
     const bannerFile = formData.get("banner");
 
     const serverQuery = serverId
-      ? `servers?id=eq.${serverId}&owner_discord_user_id=eq.${discordUserId}&select=*`
-      : `servers?owner_discord_user_id=eq.${discordUserId}&select=*`;
+      ? `servers?id=eq.${encodeURIComponent(serverId)}&owner_discord_user_id=eq.${encodeURIComponent(discordUserId)}&select=*`
+      : `servers?owner_discord_user_id=eq.${encodeURIComponent(discordUserId)}&select=*`;
 
     const servers = await supabaseRequest(serverQuery);
     const server = servers?.[0];
@@ -238,11 +239,28 @@ export async function POST(request: Request) {
       return redirectToProfile(request, "error=no_server");
     }
 
+    const inviteUpdate = await validateServerInviteUpdate(formData, server);
+
+    if (!inviteUpdate.ok) {
+      return redirectToProfile(request, `error=${inviteUpdate.error}`);
+    }
+
+    if (inviteUpdate.update.discord_server_id) {
+      const existingServers = await supabaseRequest(
+        `servers?discord_server_id=eq.${encodeURIComponent(inviteUpdate.update.discord_server_id)}&id=neq.${encodeURIComponent(server.id)}&select=id&limit=1`
+      );
+
+      if (existingServers?.length) {
+        return redirectToProfile(request, "error=invite_server_conflict");
+      }
+    }
+
     const isPremiumOrPartner = Boolean(
       server.premium_status || server.partner_status
     );
 
     const updateData: any = {
+      ...inviteUpdate.update,
       server_name: serverName || server.server_name,
       description: description || server.description,
       language: safeLanguage(language, server.language || "Deutsch"),
@@ -266,13 +284,24 @@ export async function POST(request: Request) {
       );
     }
 
-    await supabaseRequest(
-      `servers?id=eq.${server.id}&owner_discord_user_id=eq.${discordUserId}`,
-      {
-        method: "PATCH",
-        body: JSON.stringify(updateData),
+    try {
+      await supabaseRequest(
+        `servers?id=eq.${encodeURIComponent(server.id)}&owner_discord_user_id=eq.${encodeURIComponent(discordUserId)}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify(updateData),
+        }
+      );
+    } catch (error) {
+      const message = String((error as Error)?.message || error).toLowerCase();
+      if (
+        inviteUpdate.update.discord_server_id &&
+        (message.includes("23505") || message.includes("duplicate key"))
+      ) {
+        return redirectToProfile(request, "error=invite_server_conflict");
       }
-    );
+      throw error;
+    }
 
     return redirectToProfile(request, "saved=1");
   } catch (error: any) {

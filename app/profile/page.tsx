@@ -36,6 +36,12 @@ const PROFILE_TEXT = {
     partner: "Partner",
     bumps: "Bumps",
     openInvite: "Discord Einladung öffnen",
+    saved: "Deine Server-Einstellungen wurden gespeichert.",
+    invalidInvite: "Der Discord-Invite ist ungültig oder abgelaufen. Bitte verwende einen gültigen Einladungslink.",
+    inviteUnavailable: "Die Discord-Einladung konnte gerade nicht geprüft werden. Bitte versuche es später erneut.",
+    inviteDifferentServer: "Die Einladung gehört zu einem anderen Discord-Server. Verwende eine Einladung für deinen eingetragenen Server.",
+    inviteServerConflict: "Dieser Discord-Server ist bereits eingetragen. Die Änderungen wurden nicht gespeichert.",
+    saveFailed: "Die Änderungen konnten nicht gespeichert werden. Bitte versuche es erneut.",
   },
 
   en: {
@@ -58,6 +64,12 @@ const PROFILE_TEXT = {
     partner: "Partner",
     bumps: "Bumps",
     openInvite: "Open Discord Invite",
+    saved: "Your server settings have been saved.",
+    invalidInvite: "The Discord invite is invalid or expired. Please use a valid invite link.",
+    inviteUnavailable: "The Discord invite could not be checked right now. Please try again later.",
+    inviteDifferentServer: "The invite belongs to a different Discord server. Use an invite for your listed server.",
+    inviteServerConflict: "This Discord server is already listed. Your changes were not saved.",
+    saveFailed: "Your changes could not be saved. Please try again.",
   },
 
   fr: {
@@ -81,6 +93,12 @@ const PROFILE_TEXT = {
     partner: "Partenaire",
     bumps: "Bumps",
     openInvite: "Ouvrir l'invitation Discord",
+    saved: "Les paramètres de ton serveur ont été enregistrés.",
+    invalidInvite: "L'invitation Discord est invalide ou a expiré. Utilise un lien d'invitation valide.",
+    inviteUnavailable: "L'invitation Discord n'a pas pu être vérifiée pour le moment. Réessaie plus tard.",
+    inviteDifferentServer: "L'invitation appartient à un autre serveur Discord. Utilise une invitation pour ton serveur inscrit.",
+    inviteServerConflict: "Ce serveur Discord est déjà inscrit. Tes modifications n'ont pas été enregistrées.",
+    saveFailed: "Tes modifications n'ont pas pu être enregistrées. Réessaie.",
   },
 
   it: {
@@ -104,6 +122,12 @@ const PROFILE_TEXT = {
     partner: "Partner",
     bumps: "Bump",
     openInvite: "Apri invito Discord",
+    saved: "Le impostazioni del tuo server sono state salvate.",
+    invalidInvite: "L'invito Discord non è valido o è scaduto. Usa un link di invito valido.",
+    inviteUnavailable: "Non è stato possibile verificare l'invito Discord. Riprova più tardi.",
+    inviteDifferentServer: "L'invito appartiene a un altro server Discord. Usa un invito per il server che hai inserito.",
+    inviteServerConflict: "Questo server Discord è già presente. Le modifiche non sono state salvate.",
+    saveFailed: "Non è stato possibile salvare le modifiche. Riprova.",
   },
 
   pl: {
@@ -127,6 +151,12 @@ const PROFILE_TEXT = {
     partner: "Partner",
     bumps: "Bumpy",
     openInvite: "Otwórz zaproszenie Discord",
+    saved: "Ustawienia twojego serwera zostały zapisane.",
+    invalidInvite: "Zaproszenie Discord jest nieprawidłowe lub wygasło. Użyj prawidłowego linku zaproszenia.",
+    inviteUnavailable: "Nie udało się teraz sprawdzić zaproszenia Discord. Spróbuj ponownie później.",
+    inviteDifferentServer: "Zaproszenie należy do innego serwera Discord. Użyj zaproszenia do swojego dodanego serwera.",
+    inviteServerConflict: "Ten serwer Discord jest już dodany. Zmiany nie zostały zapisane.",
+    saveFailed: "Nie udało się zapisać zmian. Spróbuj ponownie.",
   },
 } as const;
 
@@ -234,12 +264,31 @@ async function getSuccessfulReferralCount(ownerDiscordUserId: string) {
   }
 }
 
-export default async function ProfilePage() {
+export default async function ProfilePage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const session = await getServerSession(authOptions);
   const cookieStore = await cookies();
   const pageLanguage = normalizeLanguage(
     cookieStore.get("asko_language")?.value
   );
+  const query = await searchParams;
+  const error = typeof query.error === "string" ? query.error : "";
+  const inviteErrorMessages: Record<string, keyof typeof PROFILE_TEXT.de> = {
+    invalid_invite: "invalidInvite",
+    invite_unavailable: "inviteUnavailable",
+    invite_different_server: "inviteDifferentServer",
+    invite_server_conflict: "inviteServerConflict",
+  };
+  const statusMessage = error
+    ? Object.prototype.hasOwnProperty.call(inviteErrorMessages, error)
+      ? inviteErrorMessages[error]
+      : "saveFailed"
+    : query.saved === "1"
+    ? "saved"
+    : null;
 
   if (!session) {
     return (
@@ -317,6 +366,19 @@ export default async function ProfilePage() {
           </div>
         </div>
       </section>
+
+      {statusMessage && (
+        <section
+          className="card"
+          role={error ? "alert" : "status"}
+          style={{
+            marginTop: 16,
+            borderColor: error ? "rgba(255, 107, 129, 0.6)" : "rgba(116, 220, 160, 0.6)",
+          }}
+        >
+          <p style={{ margin: 0 }}>{text(pageLanguage, statusMessage)}</p>
+        </section>
+      )}
 
       {hasServer && (
         <ProfileModerationAlerts servers={myServers} language={pageLanguage} />

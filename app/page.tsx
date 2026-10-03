@@ -12,10 +12,9 @@ const SITE_URL =
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title:
-    "Asko Cafe – Discord Server Liste für deutsche Gaming, Anime & Community Server",
+  title: "Discord Server finden und kostenlos eintragen",
   description:
-    "Finde aktive Discord Server auf Asko Cafe: deutsche Discord Server, Gaming Discords, Anime Server, Minecraft Server, Valorant Server und Community Server. Trage deinen Discord Server kostenlos ein.",
+    "Entdecke deutsche und internationale Discord Server für Gaming, Anime, Community, Roleplay, Musik, Lernen und mehr. Finde deine Community oder trage deinen Server kostenlos ein.",
   keywords: [
     "Discord Server",
     "Discord Server Liste",
@@ -33,8 +32,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title:
-      "Asko Cafe – Discord Server Liste für deutsche Gaming, Anime & Community Server",
+    title: "Discord Server finden und kostenlos eintragen | Asko Cafe",
     description:
       "Entdecke aktive Discord Server und trage deine eigene Community kostenlos auf Asko Cafe ein.",
     url: "/",
@@ -43,17 +41,17 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/asko-cafe-banner.png",
-        width: 1200,
-        height: 630,
+        width: 960,
+        height: 540,
         alt: "Asko Cafe Discord Server Liste",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Asko Cafe – Discord Server Liste",
+    title: "Discord Server finden | Asko Cafe",
     description:
-      "Finde deutsche Discord Server, Gaming Discords, Anime Server, Minecraft Server und mehr.",
+      "Entdecke Discord Communities für deine Interessen und trage deinen eigenen Server kostenlos ein.",
     images: ["/asko-cafe-banner.png"],
   },
   robots: {
@@ -104,7 +102,7 @@ function getJsonLd() {
         url,
         inLanguage: "de-DE",
         description:
-          "Discord Server Liste für deutsche und internationale Gaming, Anime, Minecraft, Valorant und Community Server.",
+          "Discord Server Liste für deutsche und internationale Communities rund um Gaming, Anime, Roleplay, Musik, Lernen und weitere Interessen.",
         potentialAction: {
           "@type": "SearchAction",
           target: `${url}/servers?q={search_term_string}`,

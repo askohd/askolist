@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { supabaseRequest } from "@/lib/supabase";
+import { publicPageMetadata } from "@/lib/pageMetadata";
+
+export const metadata = publicPageMetadata(
+  "/info",
+  "Über die Discord Serverliste",
+  "Erfahre mehr über Asko Cafe: Discord Server finden und eintragen, Bumps und Bewertungen nutzen sowie das Projekt und sein Team kennenlernen."
+);
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

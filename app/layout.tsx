@@ -10,12 +10,12 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
 
   title: {
-    default: "Asko Cafe – Deutsche Discord Server Liste",
+    default: "Discord Server Liste | Asko Cafe",
     template: "%s | Asko Cafe",
   },
 
   description:
-    "Entdecke deutsche Discord Server für Gaming, Anime, Community, Events, Chill, Support und mehr. Finde aktive Discord Communities oder trage deinen eigenen Discord Server kostenlos bei Asko Cafe ein.",
+    "Entdecke Discord Server für Gaming, Anime, Community und mehr. Suche nach Sprache und Interessen oder trage deine eigene Community kostenlos auf Asko Cafe ein.",
 
   keywords: [
     "Discord Server",
@@ -39,10 +39,6 @@ export const metadata: Metadata = {
 
   applicationName: "Asko Cafe",
 
-  alternates: {
-    canonical: siteUrl,
-  },
-
   robots: {
     index: true,
     follow: true,
@@ -56,18 +52,17 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: "Asko Cafe – Deutsche Discord Server Liste",
+    title: "Discord Server Liste | Asko Cafe",
     description:
-      "Finde aktive deutsche Discord Server für Gaming, Anime, Community, Events und mehr. Liste deinen eigenen Discord Server kostenlos auf Asko Cafe.",
-    url: siteUrl,
+      "Finde Discord Communities für Gaming, Anime und weitere Interessen. Entdecke Server oder trage deinen eigenen Discord Server ein.",
     siteName: "Asko Cafe",
     type: "website",
     locale: "de_DE",
     images: [
       {
-        url: "/asko-cafe-hero.png",
-        width: 1200,
-        height: 630,
+        url: "/asko-cafe-banner.png",
+        width: 960,
+        height: 540,
         alt: "Asko Cafe Discord Server Liste",
       },
     ],
@@ -75,10 +70,10 @@ export const metadata: Metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Asko Cafe – Deutsche Discord Server Liste",
+    title: "Discord Server Liste | Asko Cafe",
     description:
-      "Entdecke deutsche Discord Server für Gaming, Anime, Community und mehr.",
-    images: ["/asko-cafe-hero.png"],
+      "Entdecke Discord Server für Gaming, Anime, Community und weitere Interessen.",
+    images: ["/asko-cafe-banner.png"],
   },
 
   icons: {
