@@ -11,7 +11,7 @@ const pageTitle = "Discord Server Liste | Deutsche Discord Server finden";
 const pageDescription =
   "Finde aktive deutsche Discord Server für Gaming, Anime, Community, Minecraft, Valorant und mehr. Entdecke neue Communities oder trage deinen Server kostenlos ein.";
 
-export const metadata: Metadata = {
+const baseMetadata: Metadata = {
   title: pageTitle,
   description: pageDescription,
   keywords: [
@@ -69,6 +69,34 @@ export const metadata: Metadata = {
     },
   },
 };
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}): Promise<Metadata> {
+  const params = (await searchParams) ?? {};
+  const hasQueryParameters = Object.values(params).some((value) => {
+    const values = Array.isArray(value) ? value : [value];
+    return values.some((item) => String(item ?? "").trim().length > 0);
+  });
+
+  return {
+    ...baseMetadata,
+    robots: {
+      index: !hasQueryParameters,
+      follow: true,
+      googleBot: {
+        index: !hasQueryParameters,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
+    },
+  };
+}
+
 type UiLanguage = "de" | "en" | "fr" | "it" | "pl";
 type ServerLanguage = "Deutsch" | "English" | "Français" | "Italiano" | "Polski";
 
