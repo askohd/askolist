@@ -6,6 +6,8 @@ export const authOptions: NextAuthOptions = {
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID ?? "",
       clientSecret: process.env.DISCORD_CLIENT_SECRET ?? "",
+      // Discord can include `iss` in the OAuth callback; NextAuth must validate it.
+      issuer: "https://discord.com",
       authorization: {
         params: {
           scope: "identify email",
